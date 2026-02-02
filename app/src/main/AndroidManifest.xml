@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ScoreHub">
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".games.yahtzee.YahtzeePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+        
+        <activity
+            android:name=".games.yahtzee.YahtzeeGameActivity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".games.yahtzee.YahtzeeStatsActivity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+        
+        <activity
+            android:name=".games.yahtzee.YahtzeeTop20Activity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+        
+        <activity
+            android:name=".GeneralStatsActivity"
+            android:parentActivityName=".MainActivity" />
+        
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity" />
+    </application>
+
+</manifest>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">ScoreHub</string>
+
+    <!-- Main Screen -->
+    <string name="select_game">Sélectionner un jeu</string>
+
+    <!-- Games -->
+    <string name="yahtzee_game">Yams</string>
+
+    <!-- Player Selection -->
+    <string name="player_selection_title">Sélection des joueurs</string>
+    <string name="selected_players">Joueurs sélectionnés</string>
+    <string name="add_player">Ajouter un joueur</string>
+    <string name="player_name">Nom du joueur</string>
+    <string name="enter_player_name">Entrez le nom du joueur</string>
+    <string name="select_color">Sélectionnez une couleur</string>
+    <string name="start_game">Démarrer la partie</string>
+    <string name="minimum_two_players">Minimum 2 joueurs requis</string>
+    <string name="minimum_one_player">Minimum 1 joueur requis</string>
+    <string name="player_already_added">Joueur déjà ajouté</string>
+    <string name="player_already_exists">Le joueur existe déjà dans la liste</string>
+    <string name="player_name_already_exists">Un joueur avec ce nom existe déjà</string>
+    <string name="player_name_empty">Le nom du joueur ne peut pas être vide</string>
+    <string name="player_added">Joueur %1$s ajouté</string>
+    <string name="player_updated">Joueur %1$s modifié</string>
+    <string name="player_deleted">Joueur %1$s supprimé</string>
+    <string name="delete">Supprimer</string>
+    <string name="edit">Modifier</string>
+    <string name="edit_player">Modifier le joueur</string>
+    <string name="save">Enregistrer</string>
+    <string name="delete_player">Supprimer le joueur</string>
+    <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
+    <string name="reorder">Réorganiser</string>
+
+    <!-- Yahtzee Categories -->
+    <string name="category">Catégorie</string>
+    <string name="yahtzee_ones">As</string>
+    <string name="yahtzee_twos">Deux</string>
+    <string name="yahtzee_threes">Trois</string>
+    <string name="yahtzee_fours">Quatre</string>
+    <string name="yahtzee_fives">Cinq</string>
+    <string name="yahtzee_sixes">Six</string>
+    <string name="yahtzee_three_kind">Brelan</string>
+    <string name="yahtzee_four_kind">Carré</string>
+    <string name="yahtzee_full_house">Full</string>
+    <string name="yahtzee_small_straight">Petite suite</string>
+    <string name="yahtzee_large_straight">Grande suite</string>
+    <string name="yahtzee_yahtzee">Yahtzee</string>
+    <string name="yahtzee_chance">Chance</string>
+    <string name="total">Total</string>
+
+    <!-- Yahtzee Game -->
+    <string name="player_name_label">Joueur</string>
+    <string name="upper_total">Total supérieur</string>
+    <string name="bonus">Bonus</string>
+    <string name="lower_total">Total inférieur</string>
+    <string name="clear_score">—</string>
+
+    <!-- Game -->
+    <string name="game_complete">Partie terminée ?</string>
+    <string name="game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="game_results">Résultats de la partie</string>
+    <string name="final_scores">Scores finaux :</string>
+    <string name="winner_message">Vainqueur : %1$s !</string>
+    <string name="draw_message">Match nul !</string>
+    <string name="solo_game_message">Partie solo terminée ! (ne compte pas pour les statistiques de victoire)</string>
+    <string name="quit_game">Quitter la partie</string>
+    <string name="quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
+    <!-- Statistics -->
+    <string name="general_statistics">Statistiques générales</string>
+    <string name="game_statistics">Statistiques du jeu</string>
+    <string name="top_20">Top 20</string>
+    <string name="most_wins_player">Joueur avec le plus de victoires : %1$s</string>
+    <string name="best_score_player">Meilleur score : %1$s (%2$d pts)</string>
+    <string name="best_score_label">Meilleur Score</string>
+    <string name="best_player_label">Meilleur Joueur</string>
+    <string name="best_ratio_player">Meilleur ratio de victoire : %1$s</string>
+    <string name="no_games_played">Aucune partie jouée</string>
+    <string name="games_played">Parties jouées</string>
+    <string name="games_info">Total : %1$d | Comptées : %2$d</string>
+    <string name="win_percentage">Pourcentage de victoires</string>
+    <string name="draw_percentage">Pourcentage de nuls</string>
+    <string name="loss_percentage">Pourcentage de défaites</string>
+    <string name="win_percentage_short">Victoire : %.1f%%</string>
+    <string name="draw_percentage_short">Nul : %.1f%%</string>
+    <string name="loss_percentage_short">Défaite : %.1f%%</string>
+    <string name="best_score">Meilleur score</string>
+    <string name="worst_score">Pire score</string>
+    <string name="best_score_short">Meilleur : %1$d</string>
+    <string name="worst_score_short">Pire : %1$d</string>
+    <string name="wins">victoires</string>
+
+    <!-- Settings -->
+    <string name="settings">Paramètres</string>
+    <string name="language">Langue</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
+
+    <!-- Common -->
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="add">Ajouter</string>
+</resources>
