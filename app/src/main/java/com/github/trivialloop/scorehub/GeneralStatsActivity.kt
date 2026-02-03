@@ -63,7 +63,6 @@ class GeneralStatsActivity : AppCompatActivity() {
                             .getWinsByPlayer(player.id, "yahtzee")
                         val draws = database.gameResultDao()
                             .getDrawsByPlayer(player.id, "yahtzee")
-                        val losses = countedGames - wins - draws
                         val winPercentage = (wins * 100f / countedGames)
                         val drawPercentage = (draws * 100f / countedGames)
                         val bestScore = database.gameResultDao()
