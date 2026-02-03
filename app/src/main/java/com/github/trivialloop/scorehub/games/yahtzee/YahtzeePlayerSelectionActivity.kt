@@ -222,7 +222,6 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
 
     private fun updatePlayer(player: Player, newName: String, newColor: Int) {
         lifecycleScope.launch {
-            // Vérifier si le nouveau nom existe déjà (sauf si c'est le même joueur)
             val existingPlayer = database.playerDao().getPlayerByName(newName)
             if (existingPlayer != null && existingPlayer.id != player.id) {
                 Toast.makeText(
@@ -234,7 +233,6 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
                 val updatedPlayer = player.copy(name = newName, color = newColor)
                 database.playerDao().updatePlayer(updatedPlayer)
 
-                // Mettre à jour les noms dans les résultats de jeux
                 database.gameResultDao().updatePlayerNameInResults(player.id, newName)
 
                 Toast.makeText(
@@ -268,7 +266,6 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
     private fun startGame() {
         val playersInOrder = allPlayers.filter { it in selectedPlayers }
 
-        // Sauvegarder l'ordre des joueurs
         savePlayerOrder(playersInOrder)
 
         val intent = Intent(this, YahtzeeGameActivity::class.java)
@@ -293,12 +290,10 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
                 val savedIds = savedOrder.split(",").mapNotNull { it.toLongOrNull() }
                 val orderedPlayers = mutableListOf<Player>()
 
-                // Réorganiser selon l'ordre sauvegardé
                 for (id in savedIds) {
                     allPlayers.find { it.id == id }?.let { orderedPlayers.add(it) }
                 }
 
-                // Ajouter les joueurs qui n'étaient pas dans la liste sauvegardée
                 for (player in allPlayers) {
                     if (!orderedPlayers.contains(player)) {
                         orderedPlayers.add(player)

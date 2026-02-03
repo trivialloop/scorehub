@@ -56,7 +56,7 @@ class YahtzeeStatsActivity : AppCompatActivity() {
                         .getGamesPlayedByPlayer(player.id, GAME_TYPE)
 
                     if (totalGames > 0) {
-                        // Compter les parties qui comptent (non solo)
+                        // Count only not solo games
                         val countedGames = database.gameResultDao()
                             .getCountedGamesPlayedByPlayer(player.id, GAME_TYPE)
 
@@ -89,12 +89,11 @@ class YahtzeeStatsActivity : AppCompatActivity() {
                     }
                 }
 
-                // Tri selon les critères demandés
                 statsList.sortWith(
                     compareByDescending<PlayerStatsEntry> { it.winPercentage }
                         .thenByDescending { it.drawPercentage }
-                        .thenByDescending { (it.winPercentage / 100f * it.countedGames).toInt() } // Nombre de victoires
-                        .thenBy { (it.lossPercentage / 100f * it.countedGames).toInt() } // Nombre de défaites (croissant)
+                        .thenByDescending { (it.winPercentage / 100f * it.countedGames).toInt() } // Victory number
+                        .thenBy { (it.lossPercentage / 100f * it.countedGames).toInt() } // Lose number
                         .thenByDescending { it.bestScore }
                         .thenByDescending { it.worstScore }
                         .thenBy { it.player.id }
@@ -155,7 +154,7 @@ class PlayerStatsAdapter(private val stats: List<PlayerStatsEntry>) :
         val stat = stats[position]
         val context = holder.itemView.context
 
-        // Position avec trophée pour les 3 premiers
+        // Trophy for the 3 firsts players
         holder.textPosition.text = when (position) {
             0 -> "🥇"
             1 -> "🥈"
@@ -163,14 +162,14 @@ class PlayerStatsAdapter(private val stats: List<PlayerStatsEntry>) :
             else -> "${position + 1}"
         }
 
-        // Couleur du joueur
+        // Player color
         val drawable = holder.colorIndicator.background as? GradientDrawable
         drawable?.setColor(stat.player.color)
 
-        // Nom
+        // Name
         holder.textPlayerName.text = stat.player.name
 
-        // Infos des parties
+        // Games info
         holder.textGamesInfo.text = context.getString(
             R.string.games_info,
             stat.totalGames,
@@ -181,7 +180,7 @@ class PlayerStatsAdapter(private val stats: List<PlayerStatsEntry>) :
         holder.textBestScore.text = context.getString(R.string.best_score_short, stat.bestScore)
         holder.textWorstScore.text = context.getString(R.string.worst_score_short, stat.worstScore)
 
-        // Barres de pourcentage
+        // Percentage bar
         val winWeight = stat.winPercentage / 100f
         val drawWeight = stat.drawPercentage / 100f
         val lossWeight = stat.lossPercentage / 100f
@@ -198,7 +197,7 @@ class PlayerStatsAdapter(private val stats: List<PlayerStatsEntry>) :
         lossParams.weight = lossWeight
         holder.barLoss.layoutParams = lossParams
 
-        // Textes des pourcentages
+        // Percentage texts
         holder.textWinPercentage.text = context.getString(
             R.string.win_percentage_short,
             stat.winPercentage

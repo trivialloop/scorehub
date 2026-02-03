@@ -104,7 +104,7 @@ class Top20Adapter(private val entries: List<Top20Entry>) :
         val entry = entries[position]
         val result = entry.result
 
-        // Position avec trophée pour les 3 premiers
+        // Trophy for the 3 firsts players
         holder.textPosition.text = when (position) {
             0 -> "🥇"
             1 -> "🥈"
@@ -112,14 +112,14 @@ class Top20Adapter(private val entries: List<Top20Entry>) :
             else -> "${position + 1}"
         }
 
-        // Couleur du joueur
+        // Player color
         val drawable = holder.colorIndicator.background as? GradientDrawable
         drawable?.setColor(entry.color)
 
-        // Nom du joueur
+        // Player name
         holder.textPlayerName.text = result.playerName
 
-        // Date (sans heure)
+        // Date
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         holder.textDate.text = dateFormat.format(Date(result.playedAt))
 

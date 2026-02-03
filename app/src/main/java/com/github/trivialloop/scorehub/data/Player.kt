@@ -8,6 +8,6 @@ data class Player(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val color: Int, // Couleur ARGB
+    val color: Int, // Color ARGB
     val createdAt: Long = System.currentTimeMillis()
 )

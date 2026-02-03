@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Card pour Yahtzee -->
+            <!-- Card for Yahtzee -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Titre du jeu -->
+                    <!-- Game title -->
                     <TextView
                         android:id="@+id/textGameTitle"
                         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                         android:layout_marginBottom="16dp"
                         android:gravity="center" />
 
-                    <!-- Section Meilleur Joueur (en premier) -->
+                    <!-- Section best player -->
                     <LinearLayout
                         android:id="@+id/bestPlayerSection"
                         android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Section Meilleur Score (en second) -->
+                    <!-- Section best score -->
                     <LinearLayout
                         android:id="@+id/bestScoreSection"
                         android:layout_width="match_parent"
@@ -170,7 +170,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Message si pas de données -->
+                    <!-- Message if no data -->
                     <TextView
                         android:id="@+id/textNoData"
                         android:layout_width="match_parent"

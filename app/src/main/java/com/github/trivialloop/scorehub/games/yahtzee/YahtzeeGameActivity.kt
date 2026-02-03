@@ -6,14 +6,10 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
-import android.view.View
 import android.widget.LinearLayout
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
@@ -111,7 +107,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         )
 
         val categories = listOf(
-            "", // Ligne vide pour les noms des joueurs
+            "", // Empty line for the players names
             getString(R.string.yahtzee_ones),
             getString(R.string.yahtzee_twos),
             getString(R.string.yahtzee_threes),
@@ -238,7 +234,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
         textView.gravity = Gravity.CENTER
-        // Utiliser layout_weight pour distribuer la hauteur équitablement
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             0,
@@ -256,7 +251,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
         textView.gravity = Gravity.CENTER
-        // Utiliser layout_weight pour distribuer la hauteur équitablement
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             0,
@@ -273,7 +267,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
         textView.text = score?.toString() ?: ""
         textView.setPadding(16, 16, 16, 16)
         textView.gravity = Gravity.CENTER
-        // Utiliser layout_weight pour distribuer la hauteur équitablement
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             0,
@@ -361,7 +354,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
             val results = mutableListOf<GameResult>()
 
             for (playerScore in playerScores) {
-                // Pour les parties solo, pas de gagnant/match nul
+                // For the solo games, no winner or draw
                 val isWinner = if (isSoloGame) false else (playerScore.playerName in winners && !isDraw)
                 val isDrawResult = if (isSoloGame) false else (isDraw && playerScore.playerName in winners)
 
