@@ -125,7 +125,8 @@ jobs:
             apt-get update
             apt-get install -y jq
           fi
-          VERSION_NAME=$(jq -r '.elements[0].versionName' "app/build/outputs/apk/foss/release/output-metadata.json")
+          ls artifacts
+          VERSION_NAME=$(jq -r '.elements[0].versionName' "artifacts/app/build/outputs/apk/foss/release/output-metadata.json")
           echo "version_name=v${VERSION_NAME}" >> ${GITHUB_OUTPUT}
       
       - name: "Create GitHub Release"
