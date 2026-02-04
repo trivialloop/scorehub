@@ -418,11 +418,15 @@ class ColorSelectionAdapter(
         holder.checkIcon.visibility = if (position == selectedPosition) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {
-            val oldPosition = selectedPosition
-            selectedPosition = position
-            notifyItemChanged(oldPosition)
-            notifyItemChanged(selectedPosition)
-            onColorSelected(color)
+            val adapterPosition = holder.bindingAdapterPosition
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                val oldPosition = selectedPosition
+                selectedPosition = adapterPosition
+                val currentColor = colors[adapterPosition]
+                notifyItemChanged(oldPosition)
+                notifyItemChanged(selectedPosition)
+                onColorSelected(currentColor)
+            }
         }
     }
 
