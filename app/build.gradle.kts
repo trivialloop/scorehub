@@ -9,13 +9,25 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.github.trivialloop.scorehub"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions.add("distribution")
+    productFlavors {
+        create("foss") {
+            dimension = "distribution"
+            applicationId = "com.github.trivialloop.scorehub"
+        }
+
+        create("gplay") {
+            dimension = "distribution"
+            applicationId = "com.github.trivialloop.scorehub"
+        }
     }
 
     buildTypes {

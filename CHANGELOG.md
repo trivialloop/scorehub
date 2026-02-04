@@ -1,15 +1,6 @@
-# Changelog
+# [1.0.0]
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-## [1.0.0] - 2026-02-03
-
-### Added
+## Added
 - Initial release
 - Yahtzee (Yams) game support with full scorecard
 - Player management system with custom colors
@@ -21,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-language support (English and French)
 - Game history persistence
 
-### Features
+## Features
 - Support for 1+ players per game
 - Color-coded player identification
 - Automatic player rotation during games
