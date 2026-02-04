@@ -3,10 +3,10 @@ name: "Android CI/CD"
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'app/**'
-      - 'gradle/**'
-      - '*.gradle'
+    # paths:
+    #   - 'app/**'
+    #   - 'gradle/**'
+    #   - '*.gradle'
   pull_request:
     branches: [ "main" ]
 
