@@ -125,8 +125,7 @@ jobs:
             apt-get update
             apt-get install -y jq
           fi
-          ls artifacts
-          VERSION_NAME=$(jq -r '.elements[0].versionName' "artifacts/app/build/outputs/apk/foss/release/output-metadata.json")
+          VERSION_NAME=$(jq -r '.elements[0].versionName' "artifacts/output-metadata.json")
           echo "version_name=v${VERSION_NAME}" >> ${GITHUB_OUTPUT}
       
       - name: "Create GitHub Release"
@@ -135,7 +134,7 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.version_name }}
           body_path: CHANGELOG.md
           files: |
-            artifacts/**/*.apk
+            artifacts/*.apk
           generate_release_notes: true
           draft: true
           prerelease: false
