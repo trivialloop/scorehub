@@ -29,7 +29,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         
       - name: "Run unit tests"
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testFossDebugUnitTest
       
       - name: "Upload unit test reports"
         if: always()
@@ -39,7 +39,7 @@ jobs:
           path: app/build/reports/tests/
       
       - name: "Run lint"
-        run: ./gradlew lintDebug
+        run: ./gradlew lintFossDebug
       
       - name: "Upload lint reports"
         if: always()
@@ -121,7 +121,7 @@ jobs:
             apt-get update
             apt-get install -y jq
           fi
-          VERSION_NAME=$(jq -r '.applicationId' "app/build/outputs/apk/foss/release/output-metadata.json")
+          VERSION_NAME=$(jq -r '.elements[0].versionName' "app/build/outputs/apk/foss/release/output-metadata.json")
           echo "version_name=v${VERSION_NAME}" >> ${GITHUB_OUTPUT}
       
       - name: "Create GitHub Release"
