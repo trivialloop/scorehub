@@ -75,7 +75,9 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: app-debug
-          path: app/build/outputs/apk/foss/debug/*.apk
+          path: |
+            app/build/outputs/apk/foss/debug/*.apk
+            app/build/outputs/apk/foss/debug/*.json
       
       - name: "Build release APK"
         if: github.ref == 'refs/heads/main'
@@ -86,7 +88,9 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: app-release
-          path: app/build/outputs/apk/foss/release/*.apk
+          path: |
+            app/build/outputs/apk/foss/release/*.apk
+            app/build/outputs/apk/foss/release/*.json
 
   release:
     name: "Create GitHub Release"
