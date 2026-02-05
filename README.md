@@ -6,6 +6,10 @@
 
 A simple and intuitive Android application for tracking game scores across multiple players.
 
+## 🚀 Download
+
+_Coming soon_
+
 ## 📱 Features
 
 - **Score Tracking**: Keep detailed records of all game sessions
@@ -28,18 +32,14 @@ A simple and intuitive Android application for tracking game scores across multi
 
 ## 📸 Screenshots
 
-_Coming soon_
+| Yahztee                                        | Player selection                               | Statistics                                   |
+|------------------------------------------------|------------------------------------------------|----------------------------------------------|
+| ![](metadata/screenshots/en-US/03-yahztee.png) | ![](metadata/screenshots/en-US/02-players.png) | ![](metadata/screenshots/en-US/04-stats.png) |
 
 ## 📋 Requirements
 
 - Android 7.0 (API 24) or higher
 - ~10 MB storage space
-
-## 🚀 Download
-
-### From F-Droid (Recommended)
-
-_Coming soon_
 
 ## 📞 Support
 
