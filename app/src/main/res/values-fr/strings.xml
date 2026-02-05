@@ -36,7 +36,7 @@
 
     <!-- Yahtzee Categories -->
     <string name="category">Catégorie</string>
-    <string name="yahtzee_ones">As</string>
+    <string name="yahtzee_ones">Un</string>
     <string name="yahtzee_twos">Deux</string>
     <string name="yahtzee_threes">Trois</string>
     <string name="yahtzee_fours">Quatre</string>
@@ -47,7 +47,7 @@
     <string name="yahtzee_full_house">Full</string>
     <string name="yahtzee_small_straight">Petite suite</string>
     <string name="yahtzee_large_straight">Grande suite</string>
-    <string name="yahtzee_yahtzee">Yahtzee</string>
+    <string name="yahtzee_yahtzee">Yams</string>
     <string name="yahtzee_chance">Chance</string>
     <string name="total">Total</string>
 
