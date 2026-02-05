@@ -52,6 +52,18 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    applicationVariants.all {
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val versionName = defaultConfig.versionName
+            
+            output.outputFileName = when {
+                flavorName == "foss" && buildType.name == "release" -> "scorehub-v${versionName}.apk"
+                else -> "scorehub-${flavorName}-${buildType.name}-v${versionName}.apk"
+            }
+        }
+    }
 }
 
 dependencies {

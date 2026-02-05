@@ -1,5 +1,3 @@
-# [1.0.0]
-
 ## Added
 - Initial release
 - Yahtzee (Yams) game support with full scorecard
