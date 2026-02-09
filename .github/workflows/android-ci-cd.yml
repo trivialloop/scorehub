@@ -125,14 +125,16 @@ jobs:
             apt-get update
             apt-get install -y jq
           fi
+          VERSION_CODE=$(jq -r '.elements[0].versionCode' "artifacts/output-metadata.json")
           VERSION_NAME=$(jq -r '.elements[0].versionName' "artifacts/output-metadata.json")
+          echo "version_code=${VERSION_CODE}" >> ${GITHUB_OUTPUT}
           echo "version_name=v${VERSION_NAME}" >> ${GITHUB_OUTPUT}
       
       - name: "Create GitHub Release"
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.version_name }}
-          body_path: CHANGELOG.md
+          body_path: fastlane/metadata/android/en-US/changelogs/${{ steps.get_version.outputs.version_code }}.txt
           files: |
             artifacts/*.apk
           token: ${{ secrets.RELEASE_GITHUB_TOKEN }}

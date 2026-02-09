@@ -1,0 +1,15 @@
+ScoreHub is a simple and intuitive application for tracking game scores across multiple players.
+
+Features:
+• Multi-game support
+• Player management with custom colors
+• Comprehensive statistics and rankings
+• Top 20 high scores leaderboard
+• Win/loss/draw tracking
+• Multi-language support (English and French)
+• Fully offline - all data stored locally
+
+Perfect for board game enthusiasts who want to keep detailed records of their gaming sessions!
+
+Currently supported games:
+- Yahtzee

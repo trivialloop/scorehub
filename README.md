@@ -32,9 +32,9 @@ _Coming soon_
 
 ## 📸 Screenshots
 
-| Yahztee                                        | Player selection                               | Statistics                                   |
-|------------------------------------------------|------------------------------------------------|----------------------------------------------|
-| ![](metadata/screenshots/en-US/03-yahztee.png) | ![](metadata/screenshots/en-US/02-players.png) | ![](metadata/screenshots/en-US/04-stats.png) |
+| Player selection                                                            | Statistics                                                                | Yahtzee                                                                     |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/02-players.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/04-stats.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/03-yahztee.png) |
 
 ## 📋 Requirements
 

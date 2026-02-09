@@ -1,0 +1,15 @@
+ScoreHub est une application simple et intuitive pour suivre les scores de jeu sur plusieurs joueurs.
+
+Fonctionnalités :
+• Support multi-jeux
+• Gestion des joueurs avec couleurs personnalisées
+• Statistiques complètes et classements
+• Tableau des 20 meilleurs scores
+• Suivi des victoires/défaites/nuls
+• Support multilingue (anglais et français)
+• Entièrement hors ligne - toutes les données stockées localement
+
+Parfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions de jeu !
+
+Jeux actuellement supportés :
+- Yams

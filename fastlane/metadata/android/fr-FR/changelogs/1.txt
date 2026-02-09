@@ -1,0 +1,18 @@
+### Ajout
+- Version initiale
+- Support du jeu Yams avec feuille de score complète
+- Système de gestion des joueurs avec couleurs personnalisées
+- Suivi complet des statistiques
+    - Pourcentages de victoires/défaites/égalités
+    - Meilleurs et pires scores par joueur
+    - Classement des joueurs
+- Tableau des 20 meilleurs scores
+- Support multilingue (anglais et français)
+- Persistence de l'historique des jeux
+
+### Fonctionnalités
+- Support pour 1+ joueurs par jeu
+- Identification des joueurs par code couleur
+- Rotation automatique des joueurs pendant les jeux
+- Écran de statistiques avec performance détaillée des joueurs
+- Statistiques générales avec mise en évidence du meilleur joueur et score
