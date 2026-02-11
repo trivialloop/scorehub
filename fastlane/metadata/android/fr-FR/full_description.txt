@@ -1,8 +1,11 @@
-ScoreHub est une application simple pour suivre les scores de jeu sur plusieurs joueurs.
+ScoreHub est une application simple et intuitive pour suivre les scores de jeu sur plusieurs joueurs.
 
 Fonctionnalités :
-• Gestion des joueurs
+• Support multi-jeux
+• Gestion des joueurs avec couleurs personnalisées
 • Statistiques complètes et classements
+• Tableau des 20 meilleurs scores
+• Suivi des victoires/défaites/nuls
 • Support multilingue (anglais et français)
 • Entièrement hors ligne
 

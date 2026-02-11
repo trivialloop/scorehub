@@ -1,8 +1,11 @@
-ScoreHub is a simple application for tracking game scores across multiple players.
+ScoreHub is a simple and intuitive application for tracking game scores across multiple players.
 
 Features:
-• Player management
+• Multi-game support
+• Player management with custom colors
 • Comprehensive statistics and rankings
+• Top 20 high scores leaderboard
+• Win/loss/draw tracking
 • Multi-language support (English and French)
 • Fully offline
 
