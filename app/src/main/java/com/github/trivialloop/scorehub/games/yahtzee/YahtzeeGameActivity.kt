@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.games.yahtzee
+package com.github.trivialloop.scorehub.games.yahtzee
 
 import android.content.Context
 import android.graphics.Color
@@ -11,11 +11,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.trivialloop.scorehub.R
-import com.trivialloop.scorehub.data.AppDatabase
-import com.trivialloop.scorehub.data.GameResult
-import com.trivialloop.scorehub.databinding.ActivityYahtzeeGameBinding
-import com.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.R
+import com.github.trivialloop.scorehub.data.AppDatabase
+import com.github.trivialloop.scorehub.data.GameResult
+import com.github.trivialloop.scorehub.databinding.ActivityYahtzeeGameBinding
+import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
 class YahtzeeGameActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.games.yahtzee
+package com.github.trivialloop.scorehub.games.yahtzee
 
 data class YahtzeePlayerScore(
     val playerId: Long,

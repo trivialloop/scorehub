@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub
+package com.github.trivialloop.scorehub
 
 import android.content.Context
 import android.content.Intent
@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.trivialloop.scorehub.databinding.ActivityMainBinding
-import com.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
-import com.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.databinding.ActivityMainBinding
+import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
+import com.github.trivialloop.scorehub.utils.LocaleHelper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

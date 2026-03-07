@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub
+package com.github.trivialloop.scorehub
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.trivialloop.scorehub.databinding.ActivitySettingsBinding
-import com.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
+import com.github.trivialloop.scorehub.utils.LocaleHelper
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding

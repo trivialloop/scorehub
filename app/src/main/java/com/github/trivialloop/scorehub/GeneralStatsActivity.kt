@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub
+package com.github.trivialloop.scorehub
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -7,10 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.trivialloop.scorehub.data.AppDatabase
-import com.trivialloop.scorehub.data.Player
-import com.trivialloop.scorehub.databinding.ActivityGeneralStatsBinding
-import com.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.data.AppDatabase
+import com.github.trivialloop.scorehub.data.Player
+import com.github.trivialloop.scorehub.databinding.ActivityGeneralStatsBinding
+import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
 class GeneralStatsActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.data
+package com.github.trivialloop.scorehub.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

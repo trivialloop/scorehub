@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.games.yahtzee
+package com.github.trivialloop.scorehub.games.yahtzee
 
 import org.junit.Test
 import org.junit.Assert.*

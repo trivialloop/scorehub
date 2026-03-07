@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.games.yahtzee
+package com.github.trivialloop.scorehub.games.yahtzee
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.trivialloop.scorehub.R
-import com.trivialloop.scorehub.data.AppDatabase
-import com.trivialloop.scorehub.data.Player
-import com.trivialloop.scorehub.databinding.ActivityYahtzeeStatsBinding
-import com.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.R
+import com.github.trivialloop.scorehub.data.AppDatabase
+import com.github.trivialloop.scorehub.data.Player
+import com.github.trivialloop.scorehub.databinding.ActivityYahtzeeStatsBinding
+import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
 class YahtzeeStatsActivity : AppCompatActivity() {

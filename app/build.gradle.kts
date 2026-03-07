@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.trivialloop.scorehub"
+    namespace = "com.github.trivialloop.scorehub"
     compileSdk = 34
 
     defaultConfig {
@@ -21,12 +21,12 @@ android {
     productFlavors {
         create("foss") {
             dimension = "distribution"
-            applicationId = "com.trivialloop.scorehub"
+            applicationId = "com.github.trivialloop.scorehub"
         }
 
         create("gplay") {
             dimension = "distribution"
-            applicationId = "com.trivialloop.scorehub"
+            applicationId = "com.github.trivialloop.scorehub"
         }
     }
 

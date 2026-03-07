@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.utils
+package com.github.trivialloop.scorehub.utils
 
 import android.graphics.Color
 import kotlin.random.Random

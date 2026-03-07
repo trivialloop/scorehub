@@ -1,4 +1,4 @@
-package com.trivialloop.scorehub.games.yahtzee
+package com.github.trivialloop.scorehub.games.yahtzee
 
 import android.content.Context
 import android.content.Intent
@@ -15,12 +15,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.trivialloop.scorehub.R
-import com.trivialloop.scorehub.data.AppDatabase
-import com.trivialloop.scorehub.data.Player
-import com.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
-import com.trivialloop.scorehub.utils.LocaleHelper
-import com.trivialloop.scorehub.utils.PlayerColors
+import com.github.trivialloop.scorehub.R
+import com.github.trivialloop.scorehub.data.AppDatabase
+import com.github.trivialloop.scorehub.data.Player
+import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
+import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
 import java.util.Collections
 
