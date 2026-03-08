@@ -27,8 +27,17 @@ jobs:
       
       - name: "Setup Gradle"
         uses: gradle/actions/setup-gradle@v5
+
+      - name: "Decode keystore"
+        if: github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.SIGNING_KEYSTORE_FILE_BASE64 }}" | base64 --decode > app/${{ secrets.SIGNING_STORE_FILE_PATH }}
         
       - name: "Run unit tests"
+        env:
+          SIGNING_STORE_FILE_PATH: ${{ secrets.SIGNING_STORE_FILE_PATH }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: ./gradlew testFossDebugUnitTest
       
       - name: "Upload unit test reports"
@@ -39,6 +48,11 @@ jobs:
           path: app/build/reports/tests/
       
       - name: "Run lint"
+        env:
+          SIGNING_STORE_FILE_PATH: ${{ secrets.SIGNING_STORE_FILE_PATH }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: ./gradlew lintFossDebug
       
       - name: "Upload lint reports"
@@ -68,7 +82,16 @@ jobs:
       - name: "Setup Gradle"
         uses: gradle/actions/setup-gradle@v5
       
+      - name: "Decode keystore"
+        if: github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.SIGNING_KEYSTORE_FILE_BASE64 }}" | base64 --decode > app/${{ secrets.SIGNING_STORE_FILE_PATH }}
+
       - name: "Build debug APK"
+        env:
+          SIGNING_STORE_FILE_PATH: ${{ secrets.SIGNING_STORE_FILE_PATH }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: ./gradlew assembleDebug --stacktrace
       
       - name: "Upload debug APK"
@@ -79,10 +102,6 @@ jobs:
             app/build/outputs/apk/foss/debug/*.apk
             app/build/outputs/apk/foss/debug/*.json
 
-      - name: "Decode keystore"
-        if: github.ref == 'refs/heads/main'
-        run: echo "${{ secrets.SIGNING_KEYSTORE_FILE_BASE64 }}" | base64 --decode > app/${{ secrets.SIGNING_STORE_FILE_PATH }}
-      
       - name: "Build release APK"
         if: github.ref == 'refs/heads/main'
         env:
@@ -116,9 +135,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      
-      - name: "Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
       
       - name: "Download Artifacts"
         uses: actions/download-artifact@v7
