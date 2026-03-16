@@ -1,0 +1,2 @@
+### Fixed
+- Fix the dark mode
