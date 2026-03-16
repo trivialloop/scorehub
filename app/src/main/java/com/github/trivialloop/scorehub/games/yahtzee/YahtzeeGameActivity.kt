@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
@@ -198,7 +199,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
         val bonusCell = createCalculatedCell(bonusText)
         if (playerScore.getBonusProgress() > 0) {
-            bonusCell.setTextColor(Color.LTGRAY)
+            bonusCell.setTextColor(ContextCompat.getColor(this, R.color.bonus_progress_text))
         }
         column.addView(bonusCell)
 
@@ -241,7 +242,9 @@ class YahtzeeGameActivity : AppCompatActivity() {
         )
         textView.setBackgroundResource(android.R.drawable.editbox_background)
         if (isHeader) {
-            textView.setBackgroundColor(Color.LTGRAY)
+            // Use adaptive colors from resources
+            textView.setBackgroundColor(ContextCompat.getColor(this, R.color.header_cell_background))
+            textView.setTextColor(ContextCompat.getColor(this, R.color.header_cell_text))
         }
         return textView
     }
@@ -257,7 +260,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             1f
         )
         textView.setBackgroundResource(android.R.drawable.editbox_background)
-        textView.setBackgroundColor(Color.parseColor("#F0F0F0"))
+        textView.setBackgroundColor(ContextCompat.getColor(this, R.color.calculated_cell_background))
+        textView.setTextColor(ContextCompat.getColor(this, R.color.calculated_cell_text))
         return textView
     }
 
@@ -273,6 +277,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             1f
         )
         textView.setBackgroundResource(android.R.drawable.editbox_background)
+        textView.setBackgroundColor(ContextCompat.getColor(this, R.color.score_cell_background))
+        textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
 
         if (isActive) {
             textView.setOnClickListener {

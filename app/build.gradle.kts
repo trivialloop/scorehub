@@ -1,7 +1,15 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
 android {
@@ -11,23 +19,29 @@ android {
     defaultConfig {
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("SIGNING_STORE_FILE_PATH"))
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
-
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
+            val keystorePath = localProperties.getProperty("SIGNING_STORE_FILE_PATH") ?: System.getenv("SIGNING_STORE_FILE_PATH")
+            if (!keystorePath.isNullOrEmpty() && file(keystorePath).exists()) {
+                storeFile = file(keystorePath)
+                storePassword = localProperties.getProperty("SIGNING_STORE_PASSWORD")
+                    ?: System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias = localProperties.getProperty("SIGNING_KEY_ALIAS")
+                    ?: System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = localProperties.getProperty("SIGNING_KEY_PASSWORD")
+                    ?: System.getenv("SIGNING_KEY_PASSWORD")
+                
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+                enableV4Signing = true
+            }
         }
     }
 

@@ -98,6 +98,10 @@
     <string name="language">Langue</string>
     <string name="english">English</string>
     <string name="french">Français</string>
+    <string name="theme">Thème</string>
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
 
     <!-- Common -->
     <string name="yes">Oui</string>

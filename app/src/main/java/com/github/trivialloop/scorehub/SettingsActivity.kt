@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ThemeHelper
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -26,6 +27,11 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.settings)
         
+        setupLanguageSpinner()
+        setupThemeSpinner()
+    }
+    
+    private fun setupLanguageSpinner() {
         val languages = arrayOf(
             getString(R.string.english),
             getString(R.string.french)
@@ -50,6 +56,47 @@ class SettingsActivity : AppCompatActivity() {
                     if (newLanguage != currentLanguage) {
                         LocaleHelper.setLocale(this@SettingsActivity, newLanguage)
                         restartApp()
+                    }
+                }
+                
+                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+            }
+    }
+    
+    private fun setupThemeSpinner() {
+        val themes = arrayOf(
+            getString(R.string.theme_system),
+            getString(R.string.theme_light),
+            getString(R.string.theme_dark)
+        )
+        
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, themes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerTheme.adapter = adapter
+        
+        val currentTheme = ThemeHelper.getPersistedTheme(this)
+        val position = when (currentTheme) {
+            ThemeHelper.THEME_LIGHT -> 1
+            ThemeHelper.THEME_DARK -> 2
+            else -> 0
+        }
+        binding.spinnerTheme.setSelection(position)
+        
+        binding.spinnerTheme.onItemSelectedListener = 
+            object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: android.widget.AdapterView<*>?,
+                    view: android.view.View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val newTheme = when (position) {
+                        1 -> ThemeHelper.THEME_LIGHT
+                        2 -> ThemeHelper.THEME_DARK
+                        else -> ThemeHelper.THEME_SYSTEM
+                    }
+                    if (newTheme != currentTheme) {
+                        ThemeHelper.setTheme(this@SettingsActivity, newTheme)
                     }
                 }
                 
