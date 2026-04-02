@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.github.trivialloop.scorehub.databinding.ActivityMainBinding
+import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 
@@ -26,8 +27,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.cardYahtzee.setOnClickListener {
-            val intent = Intent(this, YahtzeePlayerSelectionActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, YahtzeePlayerSelectionActivity::class.java))
+        }
+
+        binding.cardSkyjo.setOnClickListener {
+            startActivity(Intent(this, SkyjoPlayerSelectionActivity::class.java))
         }
     }
 

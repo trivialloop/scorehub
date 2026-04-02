@@ -16,4 +16,10 @@
     <color name="header_cell_background">#D3D3D3</color>
     <color name="header_cell_text">#000000</color>
     <color name="bonus_progress_text">#808080</color>
+
+    <!-- Skyjo score cell colors -->
+    <color name="skyjo_score_green">#4CAF50</color>
+    <color name="skyjo_score_orange">#FF9800</color>
+    <color name="skyjo_score_red">#F44336</color>
+    <color name="skyjo_cell_border">#CCCCCC</color>
 </resources>

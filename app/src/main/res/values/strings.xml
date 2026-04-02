@@ -57,8 +57,6 @@
     <string name="bonus">Bonus</string>
     <string name="lower_total">Lower Total</string>
     <string name="clear_score">—</string>
-
-    <!-- Game -->
     <string name="game_complete">Game Complete?</string>
     <string name="game_complete_message">Are all scores filled in and the game finished?</string>
     <string name="game_results">Game Results</string>
@@ -68,6 +66,18 @@
     <string name="solo_game_message">Solo game completed! (does not count for win statistics)</string>
     <string name="quit_game">Quit Game</string>
     <string name="quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+
+    <!-- Skyjo Game -->
+    <string name="skyjo_game">Skyjo</string>
+    <string name="skyjo_round_label">#</string>
+    <string name="skyjo_who_finished">Who finished the round?</string>
+    <string name="skyjo_enter_score">Enter score</string>
+    <string name="skyjo_minimum_players">Minimum 2 players required</string>
+    <string name="skyjo_maximum_players">Maximum 8 players allowed</string>
+    <string name="skyjo_game_over_title">Game Over?</string>
+    <string name="skyjo_game_over_confirm">A player reached 100 points. End the game?</string>
+    <string name="skyjo_best_score_short">Best: %1$d</string>
+    <string name="skyjo_worst_score_short">Worst: %1$d</string>
 
     <!-- Statistics -->
     <string name="general_statistics">General Statistics</string>

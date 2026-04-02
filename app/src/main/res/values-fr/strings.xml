@@ -57,8 +57,6 @@
     <string name="bonus">Bonus</string>
     <string name="lower_total">Total inférieur</string>
     <string name="clear_score">—</string>
-
-    <!-- Game -->
     <string name="game_complete">Partie terminée ?</string>
     <string name="game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="game_results">Résultats de la partie</string>
@@ -68,6 +66,18 @@
     <string name="solo_game_message">Partie solo terminée ! (ne compte pas pour les statistiques de victoire)</string>
     <string name="quit_game">Quitter la partie</string>
     <string name="quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
+    <!-- Skyjo Game -->
+    <string name="skyjo_game">Skyjo</string>
+    <string name="skyjo_round_label">#</string>
+    <string name="skyjo_who_finished">Qui a terminé la manche ?</string>
+    <string name="skyjo_enter_score">Entrer le score</string>
+    <string name="skyjo_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="skyjo_maximum_players">Maximum 8 joueurs autorisés</string>
+    <string name="skyjo_game_over_title">Fin de partie ?</string>
+    <string name="skyjo_game_over_confirm">Un joueur a atteint 100 points. Terminer la partie ?</string>
+    <string name="skyjo_best_score_short">Meilleur : %1$d</string>
+    <string name="skyjo_worst_score_short">Pire : %1$d</string>
 
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>
