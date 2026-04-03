@@ -8,7 +8,8 @@ A simple and intuitive Android application for tracking game scores across multi
 
 ## 🚀 Download
 
-_Coming soon_
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.github.trivialloop.scorehub)
 
 ## 📱 Features
 
@@ -25,10 +26,12 @@ _Coming soon_
 
 ### Yahtzee (Yams)
 - Full scorecard implementation
-- Upper section with bonus tracking
-- Lower section with all standard categories
 - Support for 1-4+ players
 - Solo game mode (non-competitive)
+
+### Skyjo (Skyjo)
+- Full scorecard implementation
+- Support for 2-8 players
 
 ## 📸 Screenshots
 
