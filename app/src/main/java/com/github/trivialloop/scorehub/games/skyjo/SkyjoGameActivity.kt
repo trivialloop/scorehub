@@ -5,9 +5,12 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -71,10 +74,6 @@ class SkyjoGameActivity : AppCompatActivity() {
 
     // ─── Adaptive sizing ───────────────────────────────────────────────────────
     //
-    // Portrait mode: column width = (screen width - label column) / nbPlayers
-    // We reduce font size and vertical padding as the number of players grows
-    // so everything stays legible without scrolling horizontally.
-    //
     //  2–3 players : 14sp, 14dp vertical padding
     //  4–5 players : 13sp, 10dp vertical padding
     //  6–8 players : 11sp,  7dp vertical padding
@@ -87,13 +86,11 @@ class SkyjoGameActivity : AppCompatActivity() {
         }
 
     private val cellPaddingV: Int
-        get() = dpToPx(
-            when {
-                players.size <= 3 -> 14
-                players.size <= 5 -> 10
-                else -> 7
-            }
-        )
+        get() = dpToPx(when {
+            players.size <= 3 -> 14
+            players.size <= 5 -> 10
+            else -> 7
+        })
 
     // ─── Table construction ────────────────────────────────────────────────────
 
@@ -116,7 +113,6 @@ class SkyjoGameActivity : AppCompatActivity() {
             val cell = makePlayerCell(player.playerName, bold = true)
             cell.background = cellDrawable(player.playerColor)
             cell.setTextColor(Color.WHITE)
-            // Name always truncated with ellipsis — essential with 6-8 narrow columns
             cell.maxLines = 1
             cell.ellipsize = TextUtils.TruncateAt.END
             row.addView(cell)
@@ -138,41 +134,72 @@ class SkyjoGameActivity : AppCompatActivity() {
         }
         if (isLast && !gameOver) {
             labelCell.setOnClickListener { showFinisherPicker(round) }
-            // Visual hint: dimmed when no finisher selected yet
             if (finisher == null) labelCell.alpha = 0.6f
         }
         row.addView(labelCell)
 
         // ── Score cells ───────────────────────────────────────────────────
         for (player in players) {
-            val rawScore = round.scores[player.playerId]
+            val rawScore  = round.scores[player.playerId]
             val finalScore = round.finalScores[player.playerId]
-            val cell = makePlayerCell(finalScore?.toString() ?: "")
 
+            // Display raw score immediately once entered; switch to final when round complete
+            val displayText = when {
+                roundComplete  -> finalScore?.toString() ?: ""
+                rawScore != null -> rawScore.toString()
+                else           -> ""
+            }
+
+            val cell = makePlayerCell(displayText)
+
+            // ── Color logic ───────────────────────────────────────────────
+            // Finisher cell  : background green if strictly lowest, background red otherwise.
+            //                  Text stays neutral (white on colored bg).
+            // Other players  : text green if their score equals the global minimum,
+            //                  text red if their score equals the global maximum,
+            //                  neutral otherwise. Background stays neutral.
             if (roundComplete) {
-                when (round.getCellColor(player.playerId, playerIdList)) {
-                    SkyjoCellColor.GREEN -> {
-                        cell.background = cellDrawable(ContextCompat.getColor(this, R.color.skyjo_score_green))
-                        cell.setTextColor(Color.WHITE)
+                val rawScores = playerIdList.mapNotNull { id -> round.scores[id]?.let { id to it } }.toMap()
+                if (rawScores.size == playerIdList.size) {
+                    val minScore = rawScores.values.min()
+                    val maxScore = rawScores.values.max()
+                    val finisherIsStrictlyLowest = round.finisherId != null &&
+                            rawScores[round.finisherId] == minScore &&
+                            rawScores.values.count { it == minScore } == 1
+
+                    if (player.playerId == round.finisherId) {
+                        // Finisher: colored background, white text
+                        val bgColor = if (finisherIsStrictlyLowest)
+                            ContextCompat.getColor(this, R.color.skyjo_score_green)
+                        else
+                            ContextCompat.getColor(this, R.color.skyjo_score_red)
+                        cell.background = cellDrawable(bgColor)
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
+                    } else {
+                        // Regular player: colored text, neutral background
+                        val raw = rawScores[player.playerId]
+                        when {
+                            raw == minScore -> {
+                                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_green))
+                                cell.setTypeface(null, Typeface.BOLD)
+                            }
+                            raw == maxScore -> {
+                                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_red))
+                                cell.setTypeface(null, Typeface.BOLD)
+                            }
+                        }
                     }
-                    SkyjoCellColor.ORANGE -> {
-                        cell.background = cellDrawable(ContextCompat.getColor(this, R.color.skyjo_score_orange))
-                        cell.setTextColor(Color.WHITE)
-                    }
-                    SkyjoCellColor.RED -> {
-                        cell.background = cellDrawable(ContextCompat.getColor(this, R.color.skyjo_score_red))
-                        cell.setTextColor(Color.WHITE)
-                    }
-                    SkyjoCellColor.DEFAULT -> Unit
                 }
             }
 
-            val canEnter = isLast && round.finisherId != null && rawScore == null && !roundComplete && !gameOver
+            // Editable on last round as long as the round isn't complete yet,
+            // whether a score is already entered or not (allows correction before last player submits)
+            val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
             val canEditPrev = isPrev && !gameOver
 
             when {
-                canEnter -> cell.setOnClickListener { showScoreEntry(round, player) }
-                canEditPrev -> cell.setOnClickListener { showScoreEditDialog(round, player) }
+                canEnter    -> cell.setOnClickListener { showScoreInput(round, player, isEdit = rawScore != null) }
+                canEditPrev -> cell.setOnClickListener { showScoreInput(round, player, isEdit = true) }
             }
 
             row.addView(cell)
@@ -189,8 +216,7 @@ class SkyjoGameActivity : AppCompatActivity() {
             val total = player.getTotal(rounds)
             val cell = makePlayerCell(total.toString(), bold = true)
             if (gameOver && total == minTotal) {
-                cell.background = cellDrawable(ContextCompat.getColor(this, R.color.skyjo_score_green))
-                cell.setTextColor(Color.WHITE)
+                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_green))
             }
             row.addView(cell)
         }
@@ -210,37 +236,57 @@ class SkyjoGameActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showScoreEntry(round: SkyjoRound, player: SkyjoPlayerState) {
+    /**
+     * Shows a keyboard input dialog for the player to type their score.
+     * Accepts integers from -2 to 99 (Skyjo range), validated before confirming.
+     * isEdit=true is used when correcting the previous round's score.
+     */
+    private fun showScoreInput(round: SkyjoRound, player: SkyjoPlayerState, isEdit: Boolean = false) {
         val playerIdList = players.map { it.playerId }
-        val scores = (-2..12).toList()
+
+        val editText = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+            hint = getString(R.string.skyjo_score_hint)
+            gravity = Gravity.CENTER
+            textSize = 20f
+            // Max 3 chars: optional minus + up to 2 digits (Skyjo max is 12, min is -2)
+            filters = arrayOf(InputFilter.LengthFilter(3))
+            // Pre-fill current value when editing
+            if (isEdit) round.scores[player.playerId]?.let { setText(it.toString()) }
+        }
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
+            addView(editText)
+        }
+
         AlertDialog.Builder(this)
             .setTitle("${player.playerName} — ${getString(R.string.skyjo_enter_score)}")
-            .setItems(scores.map { it.toString() }.toTypedArray()) { _, which ->
-                round.scores[player.playerId] = scores[which]
+            .setView(container)
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                val input = editText.text.toString().trim()
+                val value = input.toIntOrNull()
+                if (value == null) {
+                    // Invalid input — reopen dialog
+                    showScoreInput(round, player, isEdit)
+                    return@setPositiveButton
+                }
+                round.scores[player.playerId] = value
+
                 if (round.allScoresEntered(playerIdList)) {
                     round.computeFinalScores(playerIdList)
                     buildTable()
-                    updateTotalsAndCheckEnd()
+                    if (!isEdit) updateTotalsAndCheckEnd()
                 } else {
                     buildTable()
                 }
             }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
-    }
 
-    private fun showScoreEditDialog(round: SkyjoRound, player: SkyjoPlayerState) {
-        val playerIdList = players.map { it.playerId }
-        val scores = (-2..12).toList()
-        AlertDialog.Builder(this)
-            .setTitle("${player.playerName} — ${getString(R.string.skyjo_enter_score)}")
-            .setItems(scores.map { it.toString() }.toTypedArray()) { _, which ->
-                round.scores[player.playerId] = scores[which]
-                if (round.allScoresEntered(playerIdList)) {
-                    round.computeFinalScores(playerIdList)
-                }
-                buildTable()
-            }
-            .show()
+        // Auto-focus keyboard
+        editText.requestFocus()
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
@@ -323,10 +369,6 @@ class SkyjoGameActivity : AppCompatActivity() {
         )
     }
 
-    /**
-     * Fixed-width label cell for the left column (round number or "Total").
-     * Width is fixed at 42dp so player columns share all remaining space equally.
-     */
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
         this.text = text
         gravity = Gravity.CENTER
@@ -338,10 +380,6 @@ class SkyjoGameActivity : AppCompatActivity() {
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_text))
     }
 
-    /**
-     * Equal-weight player cell. Uses weight=1 so all player columns are identical width
-     * regardless of player count. Text is always single-line with ellipsis truncation.
-     */
     private fun makePlayerCell(text: String, bold: Boolean = false): TextView = TextView(this).apply {
         this.text = text
         gravity = Gravity.CENTER

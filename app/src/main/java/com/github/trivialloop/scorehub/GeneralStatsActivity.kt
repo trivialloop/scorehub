@@ -28,7 +28,6 @@ class GeneralStatsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         database = AppDatabase.getDatabase(this)
-
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.general_statistics)
@@ -38,120 +37,146 @@ class GeneralStatsActivity : AppCompatActivity() {
 
     private fun loadGeneralStats() {
         lifecycleScope.launch {
-            var hasData = false
-
-            // Best player first
             database.playerDao().getAllPlayers().collect { players ->
-                data class PlayerRanking(
-                    val player: Player,
-                    val wins: Int,
-                    val countedGames: Int,
-                    val winPercentage: Float,
-                    val drawPercentage: Float,
-                    val bestScore: Int,
-                    val worstScore: Int
+
+                // ── Yahtzee ───────────────────────────────────────────────
+                loadGameStats(
+                    gameType        = "yahtzee",
+                    players         = players,
+                    bestPlayerView  = binding.textBestPlayerYahtzee,
+                    bestPlayerColor = binding.bestPlayerColorIndicatorYahtzee,
+                    bestPlayerSection = binding.bestPlayerSectionYahtzee,
+                    bestScoreView   = binding.textBestScoreYahtzee,
+                    bestScoreColor  = binding.bestScoreColorIndicatorYahtzee,
+                    bestScoreSection = binding.bestScoreSectionYahtzee,
+                    noDataView      = binding.textNoDataYahtzee,
+                    // Yahtzee: higher score = better → use MAX for best score query
+                    bestScoreIsLowest = false
                 )
 
-                val rankings = mutableListOf<PlayerRanking>()
-
-                for (player in players) {
-                    val countedGames = database.gameResultDao()
-                        .getCountedGamesPlayedByPlayer(player.id, "yahtzee")
-
-                    if (countedGames > 0) {
-                        val wins = database.gameResultDao()
-                            .getWinsByPlayer(player.id, "yahtzee")
-                        val draws = database.gameResultDao()
-                            .getDrawsByPlayer(player.id, "yahtzee")
-                        val winPercentage = (wins * 100f / countedGames)
-                        val drawPercentage = (draws * 100f / countedGames)
-                        val bestScore = database.gameResultDao()
-                            .getBestScoreByPlayer(player.id, "yahtzee") ?: 0
-                        val worstScore = database.gameResultDao()
-                            .getWorstScoreByPlayer(player.id, "yahtzee") ?: 0
-
-                        rankings.add(
-                            PlayerRanking(
-                                player = player,
-                                wins = wins,
-                                countedGames = countedGames,
-                                winPercentage = winPercentage,
-                                drawPercentage = drawPercentage,
-                                bestScore = bestScore,
-                                worstScore = worstScore
-                            )
-                        )
-                    }
-                }
-
-                // Same sorting as stats page
-                rankings.sortWith(
-                    compareByDescending<PlayerRanking> { it.winPercentage }
-                        .thenByDescending { it.drawPercentage }
-                        .thenByDescending { it.wins }
-                        .thenBy { (it.countedGames - it.wins - (it.drawPercentage / 100f * it.countedGames).toInt()) }
-                        .thenByDescending { it.bestScore }
-                        .thenByDescending { it.worstScore }
-                        .thenBy { it.player.id }
+                // ── Skyjo ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType        = "skyjo",
+                    players         = players,
+                    bestPlayerView  = binding.textBestPlayerSkyjo,
+                    bestPlayerColor = binding.bestPlayerColorIndicatorSkyjo,
+                    bestPlayerSection = binding.bestPlayerSectionSkyjo,
+                    bestScoreView   = binding.textBestScoreSkyjo,
+                    bestScoreColor  = binding.bestScoreColorIndicatorSkyjo,
+                    bestScoreSection = binding.bestScoreSectionSkyjo,
+                    noDataView      = binding.textNoDataSkyjo,
+                    // Skyjo: lower score = better → best score is the minimum
+                    bestScoreIsLowest = true
                 )
-
-                if (rankings.isNotEmpty()) {
-                    hasData = true
-                    val bestPlayer = rankings.first()
-                    binding.textBestPlayer.text = "${bestPlayer.player.name}: ${bestPlayer.wins} ${getString(R.string.wins)} (${"%.1f".format(bestPlayer.winPercentage)}%)"
-
-                    // Display player color as a circle
-                    val drawable = GradientDrawable()
-                    drawable.shape = GradientDrawable.OVAL
-                    drawable.setColor(bestPlayer.player.color)
-                    binding.bestPlayerColorIndicator.background = drawable
-                    binding.bestPlayerColorIndicator.visibility = View.VISIBLE
-
-                    binding.bestPlayerSection.visibility = View.VISIBLE
-                } else {
-                    binding.bestPlayerSection.visibility = View.GONE
-                }
-
-                // Best score second (top 1 from Top20)
-                val top20 = database.gameResultDao().getTop20ByGameType("yahtzee")
-                if (top20.isNotEmpty()) {
-                    hasData = true
-                    val bestResult = top20.first()
-                    binding.textBestScore.text = "${bestResult.playerName}: ${bestResult.score} pts"
-
-                    // Display color for player with best score
-                    val bestScorePlayer = players.find { it.name == bestResult.playerName }
-                    if (bestScorePlayer != null) {
-                        val drawable = GradientDrawable()
-                        drawable.shape = GradientDrawable.OVAL
-                        drawable.setColor(bestScorePlayer.color)
-                        binding.bestScoreColorIndicator.background = drawable
-                        binding.bestScoreColorIndicator.visibility = View.VISIBLE
-                    }
-
-                    binding.bestScoreSection.visibility = View.VISIBLE
-                } else {
-                    binding.bestScoreSection.visibility = View.GONE
-                }
-
-                // Show or hide "no data" message
-                if (!hasData) {
-                    binding.textNoData.visibility = View.VISIBLE
-                    binding.bestPlayerSection.visibility = View.GONE
-                    binding.bestScoreSection.visibility = View.GONE
-                } else {
-                    binding.textNoData.visibility = View.GONE
-                }
             }
         }
     }
 
+    /**
+     * Fills the stat section for one game type.
+     *
+     * @param bestScoreIsLowest  true for Skyjo (lowest total wins),
+     *                           false for Yahtzee (highest score wins).
+     */
+    private suspend fun loadGameStats(
+        gameType: String,
+        players: List<Player>,
+        bestPlayerView: android.widget.TextView,
+        bestPlayerColor: View,
+        bestPlayerSection: View,
+        bestScoreView: android.widget.TextView,
+        bestScoreColor: View,
+        bestScoreSection: View,
+        noDataView: android.widget.TextView,
+        bestScoreIsLowest: Boolean
+    ) {
+        data class PlayerRanking(
+            val player: Player,
+            val wins: Int,
+            val countedGames: Int,
+            val winPercentage: Float,
+            val drawPercentage: Float,
+            val bestScore: Int,
+            val worstScore: Int
+        )
+
+        val rankings = mutableListOf<PlayerRanking>()
+
+        for (player in players) {
+            val countedGames = database.gameResultDao()
+                .getCountedGamesPlayedByPlayer(player.id, gameType)
+            if (countedGames > 0) {
+                val wins   = database.gameResultDao().getWinsByPlayer(player.id, gameType)
+                val draws  = database.gameResultDao().getDrawsByPlayer(player.id, gameType)
+                val best   = database.gameResultDao().getBestScoreByPlayer(player.id, gameType) ?: 0
+                val worst  = database.gameResultDao().getWorstScoreByPlayer(player.id, gameType) ?: 0
+                rankings.add(
+                    PlayerRanking(
+                        player        = player,
+                        wins          = wins,
+                        countedGames  = countedGames,
+                        winPercentage = wins * 100f / countedGames,
+                        drawPercentage = draws * 100f / countedGames,
+                        bestScore     = best,
+                        worstScore    = worst
+                    )
+                )
+            }
+        }
+
+        // Same ranking logic as stats screens
+        rankings.sortWith(
+            compareByDescending<PlayerRanking> { it.winPercentage }
+                .thenByDescending { it.drawPercentage }
+                .thenByDescending { it.wins }
+                .thenBy { (it.countedGames - it.wins - (it.drawPercentage / 100f * it.countedGames).toInt()) }
+                .thenByDescending { it.bestScore }
+                .thenByDescending { it.worstScore }
+                .thenBy { it.player.id }
+        )
+
+        val hasData = rankings.isNotEmpty()
+
+        if (hasData) {
+            // Best player (most wins / best ratio)
+            val best = rankings.first()
+            bestPlayerView.text = "${best.player.name}: ${best.wins} ${getString(R.string.wins)} (${"%.1f".format(best.winPercentage)}%)"
+            bestPlayerColor.background = ovalDrawable(best.player.color)
+            bestPlayerColor.visibility = View.VISIBLE
+            bestPlayerSection.visibility = View.VISIBLE
+
+            // Best score
+            val top20 = database.gameResultDao().getTop20ByGameType(gameType)
+            if (top20.isNotEmpty()) {
+                // Yahtzee → first entry is highest; Skyjo → last entry is lowest (sorted DESC)
+                val bestResult = if (bestScoreIsLowest) top20.minByOrNull { it.score }!! else top20.first()
+                bestScoreView.text = "${bestResult.playerName}: ${bestResult.score} pts"
+                val scorePlayer = players.find { it.id == bestResult.playerId }
+                if (scorePlayer != null) {
+                    bestScoreColor.background = ovalDrawable(scorePlayer.color)
+                    bestScoreColor.visibility = View.VISIBLE
+                }
+                bestScoreSection.visibility = View.VISIBLE
+            } else {
+                bestScoreSection.visibility = View.GONE
+            }
+
+            noDataView.visibility = View.GONE
+        } else {
+            bestPlayerSection.visibility = View.GONE
+            bestScoreSection.visibility  = View.GONE
+            noDataView.visibility        = View.VISIBLE
+        }
+    }
+
+    private fun ovalDrawable(color: Int): GradientDrawable = GradientDrawable().apply {
+        shape = GradientDrawable.OVAL
+        setColor(color)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
+            android.R.id.home -> { finish(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

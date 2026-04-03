@@ -39,6 +39,18 @@ data class SkyjoRound(
         }
     }
 
+    /**
+     * Returns the display color for a player's cell in a completed round.
+     *
+     * Finisher (background color):
+     *   - GREEN if they are the strictly sole lowest scorer
+     *   - RED   otherwise (tied for lowest, or higher than lowest)
+     *
+     * Other players (text color):
+     *   - GREEN if their raw score equals the global minimum (finisher included)
+     *   - RED   if their raw score equals the global maximum (finisher included)
+     *   - DEFAULT otherwise
+     */
     fun getCellColor(playerId: Long, playerIds: List<Long>): SkyjoCellColor {
         if (!allScoresEntered(playerIds)) return SkyjoCellColor.DEFAULT
         val raw = scores[playerId] ?: return SkyjoCellColor.DEFAULT
@@ -46,21 +58,25 @@ data class SkyjoRound(
         val minScore = allRaw.minOrNull() ?: return SkyjoCellColor.DEFAULT
         val maxScore = allRaw.maxOrNull() ?: return SkyjoCellColor.DEFAULT
 
-        val playersWithMin = playerIds.filter { scores[it] == minScore }
-        val finisherIsAloneLowest = finisherId != null &&
-                playersWithMin.size == 1 &&
-                playersWithMin.contains(finisherId)
+        val finisherIsStrictlyLowest = finisherId != null &&
+                scores[finisherId] == minScore &&
+                allRaw.count { it == minScore } == 1
 
-        return when {
-            raw == maxScore && raw != minScore -> SkyjoCellColor.RED
-            raw == minScore -> SkyjoCellColor.GREEN
-            finisherId == playerId && !finisherIsAloneLowest -> SkyjoCellColor.ORANGE
-            else -> SkyjoCellColor.DEFAULT
+        return if (playerId == finisherId) {
+            // Finisher: background color indicator
+            if (finisherIsStrictlyLowest) SkyjoCellColor.GREEN else SkyjoCellColor.RED
+        } else {
+            // Regular player: text color indicator
+            when (raw) {
+                minScore -> SkyjoCellColor.GREEN
+                maxScore -> SkyjoCellColor.RED
+                else     -> SkyjoCellColor.DEFAULT
+            }
         }
     }
 }
 
-enum class SkyjoCellColor { DEFAULT, GREEN, ORANGE, RED }
+enum class SkyjoCellColor { DEFAULT, GREEN, RED }
 
 data class SkyjoPlayerState(
     val playerId: Long,

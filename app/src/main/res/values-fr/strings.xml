@@ -78,6 +78,8 @@
     <string name="skyjo_game_over_confirm">Un joueur a atteint 100 points. Terminer la partie ?</string>
     <string name="skyjo_best_score_short">Meilleur : %1$d</string>
     <string name="skyjo_worst_score_short">Pire : %1$d</string>
+    <string name="skyjo_score_hint">ex: -2 or 7</string>
+    <string name="skyjo_best_score_label">Meilleur Score (le plus bas)</string>
 
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>
