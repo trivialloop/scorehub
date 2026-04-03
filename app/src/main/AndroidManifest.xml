@@ -25,8 +25,7 @@
         
         <activity
             android:name=".games.yahtzee.YahtzeeGameActivity"
-            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity"
-            android:screenOrientation="portrait" />
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
         
         <activity
             android:name=".games.yahtzee.YahtzeeStatsActivity"
@@ -35,6 +34,22 @@
         <activity
             android:name=".games.yahtzee.YahtzeeTop20Activity"
             android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.skyjo.SkyjoGameActivity"
+            android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.skyjo.SkyjoStatsActivity"
+            android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.skyjo.SkyjoTop20Activity"
+            android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
         
         <activity
             android:name=".GeneralStatsActivity"

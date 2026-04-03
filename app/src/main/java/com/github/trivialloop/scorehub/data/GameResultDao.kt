@@ -36,6 +36,9 @@ interface GameResultDao {
 
     @Query("SELECT playerId, COUNT(*) as wins FROM game_results WHERE gameType = :gameType AND isWinner = 1 GROUP BY playerId ORDER BY wins DESC LIMIT 1")
     suspend fun getPlayerWithMostWins(gameType: String): PlayerWins?
+
+    @Query("SELECT * FROM game_results WHERE gameType = :gameType ORDER BY score ASC, playedAt ASC, id ASC LIMIT 20")
+    suspend fun getTop20ByGameTypeAsc(gameType: String): List<GameResult>
 }
 
 data class PlayerWins(
