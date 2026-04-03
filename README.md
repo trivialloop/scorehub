@@ -32,9 +32,9 @@ _Coming soon_
 
 ## 📸 Screenshots
 
-| Player selection                                                            | Statistics                                                                | Yahtzee                                                                     |
-|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/02-players.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/04-stats.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/03-yahztee.png) |
+| Player selection                                                            | Statistics                                                                | Yahtzee                                                                     | Skyjo                                                                     |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/02-players.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/04-stats.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/03-yahztee.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/06-skyjo.png) |
 
 ## 📋 Requirements
 
