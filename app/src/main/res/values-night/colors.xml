@@ -2,6 +2,8 @@
     <!-- Adaptive colors for Yahtzee game - Dark mode -->
     <color name="score_cell_background">#2C2C2C</color>
     <color name="score_cell_text">#FFFFFF</color>
+    <color name="yahtzee_cell_border">#555555</color>
+    <color name="yahtzee_score_filled_text">#666666</color>
     <color name="calculated_cell_background">#1E1E1E</color>
     <color name="calculated_cell_text">#E0E0E0</color>
     <color name="header_cell_background">#3A3A3A</color>

@@ -16,6 +16,7 @@
     <string name="player_name">Player Name</string>
     <string name="enter_player_name">Enter player name</string>
     <string name="select_color">Select a color</string>
+    <string name="selected_color_preview">Selected color</string>
     <string name="start_game">Start Game</string>
     <string name="minimum_two_players">Minimum 2 players required</string>
     <string name="minimum_one_player">Minimum 1 player required</string>

@@ -19,6 +19,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
+import com.github.trivialloop.scorehub.ui.ColorPickerView
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
@@ -135,31 +136,26 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
 
     private fun showAddPlayerDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorRecyclerView = dialogView.findViewById<RecyclerView>(R.id.colorRecyclerView)
+        val editName    = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker = dialogView.findViewById<com.github.trivialloop.scorehub.ui.ColorPickerView>(R.id.colorPickerView)
+        val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
 
         var selectedColor = PlayerColors.getNextColor()
+        colorPicker.setColor(selectedColor)
+        (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(selectedColor)
 
-        val colorAdapter = ColorSelectionAdapter(
-            PlayerColors.getAvailableColors(),
-            initialColor = selectedColor
-        ) { color ->
+        colorPicker.onColorChanged = { color ->
             selectedColor = color
+            (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(color)
         }
-
-        colorRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        colorRecyclerView.adapter = colorAdapter
 
         AlertDialog.Builder(this)
             .setTitle(R.string.add_player)
             .setView(dialogView)
             .setPositiveButton(R.string.add) { _, _ ->
                 val name = editName.text.toString().trim()
-                if (name.isEmpty()) {
-                    Toast.makeText(this, R.string.player_name_empty, Toast.LENGTH_SHORT).show()
-                } else {
-                    addPlayer(name, selectedColor)
-                }
+                if (name.isEmpty()) Toast.makeText(this, R.string.player_name_empty, Toast.LENGTH_SHORT).show()
+                else addPlayer(name, selectedColor)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -167,32 +163,27 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
 
     private fun showEditPlayerDialog(player: Player) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorRecyclerView = dialogView.findViewById<RecyclerView>(R.id.colorRecyclerView)
+        val editName    = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker = dialogView.findViewById<com.github.trivialloop.scorehub.ui.ColorPickerView>(R.id.colorPickerView)
+        val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
 
         editName.setText(player.name)
         var selectedColor = player.color
+        colorPicker.setColor(selectedColor)
+        (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(selectedColor)
 
-        val colorAdapter = ColorSelectionAdapter(
-            PlayerColors.getAvailableColors(),
-            initialColor = player.color
-        ) { color ->
+        colorPicker.onColorChanged = { color ->
             selectedColor = color
+            (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(color)
         }
-
-        colorRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        colorRecyclerView.adapter = colorAdapter
 
         AlertDialog.Builder(this)
             .setTitle(R.string.edit_player)
             .setView(dialogView)
             .setPositiveButton(R.string.save) { _, _ ->
                 val name = editName.text.toString().trim()
-                if (name.isEmpty()) {
-                    Toast.makeText(this, R.string.player_name_empty, Toast.LENGTH_SHORT).show()
-                } else {
-                    updatePlayer(player, name, selectedColor)
-                }
+                if (name.isEmpty()) Toast.makeText(this, R.string.player_name_empty, Toast.LENGTH_SHORT).show()
+                else updatePlayer(player, name, selectedColor)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -387,48 +378,4 @@ class PlayerSelectionAdapter(
     }
 
     override fun getItemCount() = players.size
-}
-
-class ColorSelectionAdapter(
-    private val colors: List<Int>,
-    private val initialColor: Int? = null,
-    private val onColorSelected: (Int) -> Unit
-) : RecyclerView.Adapter<ColorSelectionAdapter.ViewHolder>() {
-
-    private var selectedPosition = initialColor?.let { color ->
-        colors.indexOf(color).takeIf { it >= 0 } ?: 0
-    } ?: 0
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val colorCircle: View = view.findViewById(R.id.colorCircle)
-        val checkIcon: android.widget.ImageView = view.findViewById(R.id.checkIcon)
-    }
-
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
-        val view = android.view.LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_color_selection, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val color = colors[position]
-        val drawable = holder.colorCircle.background as? GradientDrawable
-        drawable?.setColor(color)
-
-        holder.checkIcon.visibility = if (position == selectedPosition) View.VISIBLE else View.GONE
-
-        holder.itemView.setOnClickListener {
-            val adapterPosition = holder.bindingAdapterPosition
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                val oldPosition = selectedPosition
-                selectedPosition = adapterPosition
-                val currentColor = colors[adapterPosition]
-                notifyItemChanged(oldPosition)
-                notifyItemChanged(selectedPosition)
-                onColorSelected(currentColor)
-            }
-        }
-    }
-
-    override fun getItemCount() = colors.size
 }

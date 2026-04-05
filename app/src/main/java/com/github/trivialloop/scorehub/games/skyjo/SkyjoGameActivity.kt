@@ -22,6 +22,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivitySkyjoGameBinding
+import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
@@ -96,13 +97,23 @@ class SkyjoGameActivity : AppCompatActivity() {
 
     private fun buildTable() {
         binding.tableContainer.removeAllViews()
+
+        // Header (player names)
         binding.tableContainer.addView(buildHeaderRow())
+        addDivider(strong = true)   // thick separator under header
+
+        // Round rows
         for ((index, round) in rounds.withIndex()) {
             val isLast = index == rounds.lastIndex
             val isPrev = index == rounds.lastIndex - 1
             binding.tableContainer.addView(buildRoundRow(round, isLast, isPrev))
+            addDivider(strong = false)  // thin separator between rounds
         }
+
+        // Total row
+        addDivider(strong = true)   // thick separator above total
         binding.tableContainer.addView(buildTotalRow())
+
         binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
@@ -340,23 +351,27 @@ class SkyjoGameActivity : AppCompatActivity() {
         winners: Set<SkyjoPlayerState>,
         isDraw: Boolean
     ) {
-        val sb = StringBuilder()
-        sb.append(getString(R.string.final_scores)).append("\n\n")
-        totals.entries.sortedBy { it.value }.forEach { (player, score) ->
-            sb.append("${player.playerName}: $score pts")
-            if (player in winners) sb.append(" ★")
-            sb.append("\n")
+        // Build ranked entries (Skyjo: lowest score = rank 1)
+        val sorted = totals.entries.sortedBy { it.value }
+        var currentRank = 1
+        val entries = sorted.mapIndexed { index, (player, score) ->
+            val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
+                       else { currentRank = index + 1; currentRank }
+            GameResultsDialog.PlayerResult(
+                playerName  = player.playerName,
+                playerColor = player.playerColor,
+                score       = score,
+                rank        = rank
+            )
         }
-        sb.append("\n")
-        if (isDraw) sb.append(getString(R.string.draw_message))
-        else sb.append(getString(R.string.winner_message, winners.first().playerName))
 
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.game_results))
-            .setMessage(sb.toString())
-            .setPositiveButton(getString(R.string.ok)) { _, _ -> finish() }
-            .setCancelable(false)
-            .show()
+        GameResultsDialog.show(
+            context    = this,
+            entries    = entries,
+            isDraw     = isDraw,
+            scoreLabel = " pts",
+            onDismiss  = { finish() }
+        )
     }
 
     // ─── Cell helpers ──────────────────────────────────────────────────────────
@@ -367,6 +382,24 @@ class SkyjoGameActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    /**
+     * Adds a horizontal divider line to the table container.
+     * @param strong  true = 2dp thick with primary color tint, false = 1dp light grey.
+     */
+    private fun addDivider(strong: Boolean) {
+        val divider = android.view.View(this)
+        val height = if (strong) dpToPx(2) else dpToPx(1)
+        divider.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, height
+        )
+        divider.setBackgroundColor(
+            if (strong) ContextCompat.getColor(this, R.color.skyjo_cell_border)
+            else ContextCompat.getColor(this, R.color.skyjo_cell_border)
+        )
+        divider.alpha = if (strong) 1f else 0.5f
+        binding.tableContainer.addView(divider)
     }
 
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
