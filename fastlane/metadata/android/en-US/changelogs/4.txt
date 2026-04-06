@@ -1,0 +1,6 @@
+### Added
+- Allow to use custom color for the player
+
+### Changed
+- Improve readibility for games
+- Improve popup end of games

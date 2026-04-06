@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0]
+
+### Added
+- Allow to use custom color for the player
+
+### Changed
+- Improve readibility for games
+- Improve popup end of games
+
 ## [1.1.0]
 
 ### Added
@@ -36,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.2.0...HEAD
+[1.0.1]:https://github.com/trivialloop/scorehub/compare/v1.1.0...v1.2.0
 [1.0.1]:https://github.com/trivialloop/scorehub/compare/v1.0.1...v1.1.0
 [1.0.1]:https://github.com/trivialloop/scorehub/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/trivialloop/scorehub/releases/tag/v1.0.0
