@@ -247,7 +247,7 @@ class SkyjoGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow()
-        row.addView(makeLabelCell(getString(R.string.total)))
+        row.addView(makeLabelCell(getString(R.string.skyjo_total)))
         val minTotal = if (gameOver) players.minOf { it.getTotal(rounds) } else Int.MAX_VALUE
         for (player in players) {
             val total = player.getTotal(rounds)
@@ -447,8 +447,8 @@ class SkyjoGameActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 AlertDialog.Builder(this)
-                    .setTitle(R.string.quit_game)
-                    .setMessage(R.string.quit_game_message)
+                    .setTitle(R.string.skyjo_quit_game)
+                    .setMessage(R.string.skyjo_quit_game_message)
                     .setPositiveButton(R.string.yes) { _, _ -> finish() }
                     .setNegativeButton(R.string.no, null)
                     .show()

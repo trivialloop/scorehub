@@ -64,7 +64,7 @@ app/src/main/java/com/github/trivialloop/scorehub/
 - Always use **semantic colors** (`?attr/colorPrimary`, `?android:attr/colorBackground`, etc.) rather than hardcoded values, so dark mode works automatically.
 - Adaptive colors (game cells) are defined in `res/values/colors.xml` **and** `res/values-night/colors.xml`.
 - Skyjo-specific colors: `skyjo_score_green`, `skyjo_score_red`, `skyjo_cell_border`.
-- Yahtzee-specific colors: `score_cell_background`, `score_cell_text`, `calculated_cell_background`, `header_cell_background`, `bonus_progress_text`.
+- Yahtzee-specific colors: `score_cell_background`, `score_cell_text`, `yahtzee_calculated_cell_background`, `header_cell_background`, `yahtzee_bonus_progress_text`.
 
 ### Localisation
 - The app supports **English** (`res/values/strings.xml`) and **French** (`res/values-fr/strings.xml`).

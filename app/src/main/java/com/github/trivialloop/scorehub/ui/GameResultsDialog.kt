@@ -47,11 +47,11 @@ object GameResultsDialog {
         // Header
         if (isDraw) {
             textHeader.text = "🤝"
-            textSubtitle.text = context.getString(R.string.draw_message)
+            textSubtitle.text = context.getString(R.string.yahtzee_draw_message)
         } else {
             textHeader.text = "🏆"
             val winner = entries.first { it.rank == 1 }
-            textSubtitle.text = context.getString(R.string.winner_message, winner.playerName)
+            textSubtitle.text = context.getString(R.string.yahtzee_winner_message, winner.playerName)
         }
 
         // Score rows
@@ -117,7 +117,7 @@ object GameResultsDialog {
         }
 
         AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.game_results))
+            .setTitle(context.getString(R.string.yahtzee_game_results))
             .setView(dialogView)
             .setPositiveButton(context.getString(R.string.ok)) { _, _ -> onDismiss() }
             .setCancelable(false)

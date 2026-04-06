@@ -6,9 +6,6 @@
     <!-- Main Screen -->
     <string name="select_game">Sélectionner un jeu</string>
 
-    <!-- Games -->
-    <string name="yahtzee_game">Yams</string>
-
     <!-- Player Selection -->
     <string name="player_selection_title">Sélection des joueurs</string>
     <string name="selected_players">Joueurs sélectionnés</string>
@@ -35,8 +32,8 @@
     <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
     <string name="reorder">Réorganiser</string>
 
-    <!-- Yahtzee Categories -->
-    <string name="category">Catégorie</string>
+    <!-- Yahtzee Game -->
+    <string name="yahtzee_game">Yams</string>
     <string name="yahtzee_ones">Un</string>
     <string name="yahtzee_twos">Deux</string>
     <string name="yahtzee_threes">Trois</string>
@@ -50,27 +47,22 @@
     <string name="yahtzee_large_straight">Grande suite</string>
     <string name="yahtzee_yahtzee">Yams</string>
     <string name="yahtzee_chance">Chance</string>
-    <string name="total">Total</string>
-
-    <!-- Yahtzee Game -->
-    <string name="player_name_label">Joueur</string>
-    <string name="upper_total">Total supérieur</string>
-    <string name="bonus">Bonus</string>
-    <string name="lower_total">Total inférieur</string>
-    <string name="clear_score">—</string>
-    <string name="game_complete">Partie terminée ?</string>
-    <string name="game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
-    <string name="game_results">Résultats de la partie</string>
-    <string name="final_scores">Scores finaux :</string>
-    <string name="winner_message">Vainqueur : %1$s !</string>
-    <string name="draw_message">Match nul !</string>
-    <string name="solo_game_message">Partie solo terminée ! (ne compte pas pour les statistiques de victoire)</string>
-    <string name="quit_game">Quitter la partie</string>
-    <string name="quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="yahtzee_total">Total</string>
+    <string name="yahtzee_upper_total">Total supérieur</string>
+    <string name="yahtzee_bonus">Bonus</string>
+    <string name="yahtzee_lower_total">Total inférieur</string>
+    <string name="yahtzee_game_complete">Partie terminée ?</string>
+    <string name="yahtzee_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="yahtzee_game_results">Résultats de la partie</string>
+    <string name="yahtzee_winner_message">Vainqueur : %1$s !</string>
+    <string name="yahtzee_draw_message">Match nul !</string>
+    <string name="yahtzee_quit_game">Quitter la partie</string>
+    <string name="yahtzee_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
+    <string name="skyjo_total">Total</string>
     <string name="skyjo_who_finished">Qui a terminé la manche ?</string>
     <string name="skyjo_enter_score">Entrer le score</string>
     <string name="skyjo_minimum_players">Minimum 2 joueurs requis</string>
@@ -81,6 +73,8 @@
     <string name="skyjo_worst_score_short">Pire : %1$d</string>
     <string name="skyjo_score_hint">ex: -2 or 7</string>
     <string name="skyjo_best_score_label">Meilleur Score (le plus bas)</string>
+    <string name="skyjo_quit_game">Quitter la partie</string>
+    <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>

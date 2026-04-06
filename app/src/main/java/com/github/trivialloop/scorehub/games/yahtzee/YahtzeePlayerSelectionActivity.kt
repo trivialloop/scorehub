@@ -299,7 +299,7 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_player_selection, menu)
+        menuInflater.inflate(R.menu.menu_yahtzee_player_selection, menu)
         return true
     }
 

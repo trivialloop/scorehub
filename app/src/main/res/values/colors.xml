@@ -7,19 +7,22 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
-    <!-- Adaptive colors for Yahtzee game - Light mode -->
+
+    <!-- Light mode -->
+    <!-- Common UI colors -->
     <color name="score_cell_background">#FFFFFF</color>
     <color name="score_cell_text">#000000</color>
-    <color name="yahtzee_cell_border">#CCCCCC</color>
-    <color name="yahtzee_score_filled_text">#AAAAAA</color>
-    <color name="calculated_cell_background">#F0F0F0</color>
-    <color name="calculated_cell_text">#000000</color>
     <color name="header_cell_background">#D3D3D3</color>
     <color name="header_cell_text">#000000</color>
-    <color name="bonus_progress_text">#808080</color>
+
+    <!-- Yahtzee UI colors -->
+    <color name="yahtzee_cell_border">#CCCCCC</color>
+    <color name="yahtzee_score_filled_text">#AAAAAA</color>
+    <color name="yahtzee_calculated_cell_background">#F0F0F0</color>
+    <color name="yahtzee_calculated_cell_text">#000000</color>
+    <color name="yahtzee_bonus_progress_text">#808080</color>
     
-    <!-- Skyjo score cell colors -->
+    <!-- Skyjo UI colors -->
     <color name="skyjo_score_green">#4CAF50</color>
     <color name="skyjo_score_orange">#FF9800</color>
     <color name="skyjo_score_red">#F44336</color>
