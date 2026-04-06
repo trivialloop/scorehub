@@ -1,0 +1,6 @@
+### Ajout
+- Permet la sélection de couleur personnalisées pour les joueurs
+
+### Change
+- Améliore la lisibilité des score des jeux
+- Améliore le pop de fin de partie
