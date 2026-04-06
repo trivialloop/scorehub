@@ -116,8 +116,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             getString(R.string.yahtzee_fours),
             getString(R.string.yahtzee_fives),
             getString(R.string.yahtzee_sixes),
-            getString(R.string.upper_total),
-            getString(R.string.bonus),
+            getString(R.string.yahtzee_upper_total),
+            getString(R.string.yahtzee_bonus),
             getString(R.string.yahtzee_chance),
             getString(R.string.yahtzee_three_kind),
             getString(R.string.yahtzee_four_kind),
@@ -125,8 +125,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             getString(R.string.yahtzee_small_straight),
             getString(R.string.yahtzee_large_straight),
             getString(R.string.yahtzee_yahtzee),
-            getString(R.string.lower_total),
-            getString(R.string.total)
+            getString(R.string.yahtzee_lower_total),
+            getString(R.string.yahtzee_total)
         )
 
         for (category in categories) {
@@ -200,7 +200,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
         val bonusCell = createCalculatedCell(bonusText)
         if (playerScore.getBonusProgress() > 0) {
-            bonusCell.setTextColor(ContextCompat.getColor(this, R.color.bonus_progress_text))
+            bonusCell.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_bonus_progress_text))
         }
         column.addView(bonusCell)
 
@@ -264,10 +264,10 @@ class YahtzeeGameActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
         textView.background = cellBorderDrawable(
-            ContextCompat.getColor(this, R.color.calculated_cell_background),
+            ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_background),
             strong = isGrandTotal   // extra-thick border on the grand total row
         )
-        textView.setTextColor(ContextCompat.getColor(this, R.color.calculated_cell_text))
+        textView.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text))
         return textView
     }
 
@@ -378,8 +378,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
 
     private fun showGameCompletionDialog() {
         AlertDialog.Builder(this)
-            .setTitle(R.string.game_complete)
-            .setMessage(R.string.game_complete_message)
+            .setTitle(R.string.yahtzee_game_complete)
+            .setMessage(R.string.yahtzee_game_complete_message)
             .setPositiveButton(R.string.yes) { _, _ ->
                 calculateAndSaveResults()
             }
@@ -453,8 +453,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 AlertDialog.Builder(this)
-                    .setTitle(R.string.quit_game)
-                    .setMessage(R.string.quit_game_message)
+                    .setTitle(R.string.yahtzee_quit_game)
+                    .setMessage(R.string.yahtzee_quit_game_message)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         finish()
                     }
