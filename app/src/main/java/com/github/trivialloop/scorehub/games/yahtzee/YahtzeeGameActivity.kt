@@ -16,6 +16,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityYahtzeeGameBinding
+import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
@@ -223,7 +224,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         column.addView(createCalculatedCell(playerScore.getLowerTotal().toString()))
 
         // Grand total
-        val grandTotalCell = createCalculatedCell(playerScore.getGrandTotal().toString())
+        val grandTotalCell = createCalculatedCell(playerScore.getGrandTotal().toString(), isGrandTotal = true)
         grandTotalCell.setTypeface(null, Typeface.BOLD)
         column.addView(grandTotalCell)
 
@@ -233,56 +234,85 @@ class YahtzeeGameActivity : AppCompatActivity() {
     private fun createCellTextView(text: String, isHeader: Boolean): TextView {
         val textView = TextView(this)
         textView.text = text
-        textView.setPadding(16, 16, 16, 16)
+        textView.setPadding(12, 16, 12, 16)
         textView.gravity = Gravity.CENTER
         textView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0,
-            1f
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
-        textView.setBackgroundResource(android.R.drawable.editbox_background)
         if (isHeader) {
-            // Use adaptive colors from resources
-            textView.setBackgroundColor(ContextCompat.getColor(this, R.color.header_cell_background))
+            textView.background = cellBorderDrawable(
+                ContextCompat.getColor(this, R.color.header_cell_background),
+                strong = false
+            )
             textView.setTextColor(ContextCompat.getColor(this, R.color.header_cell_text))
+        } else {
+            textView.background = cellBorderDrawable(
+                ContextCompat.getColor(this, R.color.score_cell_background),
+                strong = false
+            )
+            textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
         }
         return textView
     }
 
-    private fun createCalculatedCell(text: String): TextView {
+    private fun createCalculatedCell(text: String, isGrandTotal: Boolean = false): TextView {
         val textView = TextView(this)
         textView.text = text
-        textView.setPadding(16, 16, 16, 16)
+        textView.setPadding(12, 16, 12, 16)
         textView.gravity = Gravity.CENTER
         textView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0,
-            1f
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
-        textView.setBackgroundResource(android.R.drawable.editbox_background)
-        textView.setBackgroundColor(ContextCompat.getColor(this, R.color.calculated_cell_background))
+        textView.background = cellBorderDrawable(
+            ContextCompat.getColor(this, R.color.calculated_cell_background),
+            strong = isGrandTotal   // extra-thick border on the grand total row
+        )
         textView.setTextColor(ContextCompat.getColor(this, R.color.calculated_cell_text))
         return textView
     }
 
-    private fun createScoreCell(playerScore: YahtzeePlayerScore, category: YahtzeeCategory, isActive: Boolean): TextView {
+    private fun createScoreCell(
+        playerScore: YahtzeePlayerScore,
+        category: YahtzeeCategory,
+        isActive: Boolean
+    ): TextView {
         val textView = TextView(this)
         val score = playerScore.scores[category]
         textView.text = score?.toString() ?: ""
-        textView.setPadding(16, 16, 16, 16)
+        textView.setPadding(12, 16, 12, 16)
         textView.gravity = Gravity.CENTER
         textView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0,
-            1f
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
-        textView.setBackgroundResource(android.R.drawable.editbox_background)
-        textView.setBackgroundColor(ContextCompat.getColor(this, R.color.score_cell_background))
-        textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
 
-        if (isActive) {
-            textView.setOnClickListener {
-                showScoreSelectionDialog(playerScore, category)
+        val alreadyFilled = score != null
+
+        // Background
+        textView.background = cellBorderDrawable(
+            ContextCompat.getColor(this, R.color.score_cell_background),
+            strong = false
+        )
+
+        when {
+            alreadyFilled -> {
+                // Score already entered: muted text to indicate it's done
+                textView.setTextColor(
+                    ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
+                )
+                textView.setTypeface(null, android.graphics.Typeface.ITALIC)
+                // Slightly dimmed background
+                textView.alpha = 0.6f
+            }
+            isActive -> {
+                // Empty cell for active player: normal style, clickable
+                textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
+                textView.setOnClickListener {
+                    showScoreSelectionDialog(playerScore, category)
+                }
+            }
+            else -> {
+                // Other player's cell: neutral style
+                textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
             }
         }
 
@@ -308,6 +338,14 @@ class YahtzeeGameActivity : AppCompatActivity() {
                 checkGameCompletion()
             }
             .show()
+    }
+
+    private fun cellBorderDrawable(bgColor: Int, strong: Boolean): android.graphics.drawable.GradientDrawable {
+        return android.graphics.drawable.GradientDrawable().apply {
+            setColor(bgColor)
+            val strokeWidth = if (strong) 2 else 1
+            setStroke(strokeWidth, ContextCompat.getColor(this@YahtzeeGameActivity, R.color.yahtzee_cell_border))
+        }
     }
 
     private fun nextPlayer() {
@@ -387,32 +425,28 @@ class YahtzeeGameActivity : AppCompatActivity() {
         isDraw: Boolean,
         isSoloGame: Boolean
     ) {
-        val message = StringBuilder()
-        message.append(getString(R.string.final_scores)).append("\n\n")
-
-        totals.entries.sortedByDescending { it.value }.forEach { (name, score) ->
-            message.append("$name: $score")
-            if (!isSoloGame && name in winners) {
-                message.append(" ★")
-            }
-            message.append("\n")
+        // Build ranked entries (Yahtzee: highest score = rank 1)
+        val sorted = totals.entries.sortedByDescending { it.value }
+        var currentRank = 1
+        val entries = sorted.mapIndexed { index, (name, score) ->
+            val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
+                       else { currentRank = index + 1; currentRank }
+            val player = playerScores.find { it.playerName == name }
+            GameResultsDialog.PlayerResult(
+                playerName  = name,
+                playerColor = player?.playerColor ?: android.graphics.Color.GRAY,
+                score       = score,
+                rank        = rank
+            )
         }
 
-        message.append("\n")
-        if (isDraw) {
-            message.append(getString(R.string.draw_message))
-        } else if (!isSoloGame) {
-            message.append(getString(R.string.winner_message, winners.first()))
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.game_results)
-            .setMessage(message.toString())
-            .setPositiveButton(R.string.ok) { _, _ ->
-                finish()
-            }
-            .setCancelable(false)
-            .show()
+        GameResultsDialog.show(
+            context    = this,
+            entries    = entries,
+            isDraw     = isDraw && !isSoloGame,
+            scoreLabel = " pts",
+            onDismiss  = { finish() }
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

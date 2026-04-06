@@ -95,15 +95,49 @@ class SkyjoGameActivity : AppCompatActivity() {
     // ─── Table construction ────────────────────────────────────────────────────
 
     private fun buildTable() {
-        binding.tableContainer.removeAllViews()
-        binding.tableContainer.addView(buildHeaderRow())
-        for ((index, round) in rounds.withIndex()) {
-            val isLast = index == rounds.lastIndex
-            val isPrev = index == rounds.lastIndex - 1
-            binding.tableContainer.addView(buildRoundRow(round, isLast, isPrev))
+        // Build all rows first so we can measure their natural height
+        val headerRow = buildHeaderRow()
+        val roundRows = rounds.mapIndexed { index, round ->
+            buildRoundRow(
+                round  = round,
+                isLast = index == rounds.lastIndex,
+                isPrev = index == rounds.lastIndex - 1
+            )
         }
-        binding.tableContainer.addView(buildTotalRow())
-        binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        val totalRow = buildTotalRow()
+
+        // Measure the total natural height of all rows combined
+        val screenHeight = resources.displayMetrics.heightPixels
+        val appBarHeight = binding.toolbar.layoutParams?.height
+            ?.takeIf { it > 0 } ?: dpToPx(56)
+
+        // Estimate row height from padding (actual measure would require a layout pass)
+        val rowHeight = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
+        val totalNaturalHeight = rowHeight * (roundRows.size + 3) // +2 for header + total
+        val availableHeight = screenHeight - appBarHeight
+
+        if (totalNaturalHeight > availableHeight) {
+            // Scroll mode: header and total pinned, only rounds scroll
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
+            binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        } else {
+            // Compact mode: everything in tableContainer, total sits right below last round
+            binding.headerContainer.removeAllViews()
+            binding.tableContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.addView(headerRow)
+            roundRows.forEach { binding.tableContainer.addView(it) }
+            binding.tableContainer.addView(totalRow)
+        }
     }
 
     private fun buildHeaderRow(): LinearLayout {
@@ -195,7 +229,10 @@ class SkyjoGameActivity : AppCompatActivity() {
             // Editable on last round as long as the round isn't complete yet,
             // whether a score is already entered or not (allows correction before last player submits)
             val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
-            val canEditPrev = isPrev && !gameOver
+            // Previous round is only editable if the current round has no finisher selected yet
+            // (once a finisher is picked for the new round, the previous one is locked)
+            val currentRound = rounds.last()
+            val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
 
             when {
                 canEnter    -> cell.setOnClickListener { showScoreInput(round, player, isEdit = rawScore != null) }
@@ -340,23 +377,27 @@ class SkyjoGameActivity : AppCompatActivity() {
         winners: Set<SkyjoPlayerState>,
         isDraw: Boolean
     ) {
-        val sb = StringBuilder()
-        sb.append(getString(R.string.final_scores)).append("\n\n")
-        totals.entries.sortedBy { it.value }.forEach { (player, score) ->
-            sb.append("${player.playerName}: $score pts")
-            if (player in winners) sb.append(" ★")
-            sb.append("\n")
+        // Build ranked entries — Skyjo: lowest score = rank 1
+        val sorted = totals.entries.sortedBy { it.value }
+        var currentRank = 1
+        val entries = sorted.mapIndexed { index, (player, score) ->
+            val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
+                       else { currentRank = index + 1; currentRank }
+            com.github.trivialloop.scorehub.ui.GameResultsDialog.PlayerResult(
+                playerName  = player.playerName,
+                playerColor = player.playerColor,
+                score       = score,
+                rank        = rank
+            )
         }
-        sb.append("\n")
-        if (isDraw) sb.append(getString(R.string.draw_message))
-        else sb.append(getString(R.string.winner_message, winners.first().playerName))
 
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.game_results))
-            .setMessage(sb.toString())
-            .setPositiveButton(getString(R.string.ok)) { _, _ -> finish() }
-            .setCancelable(false)
-            .show()
+        com.github.trivialloop.scorehub.ui.GameResultsDialog.show(
+            context    = this,
+            entries    = entries,
+            isDraw     = isDraw,
+            scoreLabel = " pts",
+            onDismiss  = { finish() }
+        )
     }
 
     // ─── Cell helpers ──────────────────────────────────────────────────────────

@@ -16,6 +16,7 @@
     <string name="player_name">Nom du joueur</string>
     <string name="enter_player_name">Entrez le nom du joueur</string>
     <string name="select_color">Sélectionnez une couleur</string>
+    <string name="selected_color_preview">Couleur sélectionnée</string>
     <string name="start_game">Démarrer la partie</string>
     <string name="minimum_two_players">Minimum 2 joueurs requis</string>
     <string name="minimum_one_player">Minimum 1 joueur requis</string>

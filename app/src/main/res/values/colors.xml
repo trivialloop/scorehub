@@ -11,12 +11,14 @@
     <!-- Adaptive colors for Yahtzee game - Light mode -->
     <color name="score_cell_background">#FFFFFF</color>
     <color name="score_cell_text">#000000</color>
+    <color name="yahtzee_cell_border">#CCCCCC</color>
+    <color name="yahtzee_score_filled_text">#AAAAAA</color>
     <color name="calculated_cell_background">#F0F0F0</color>
     <color name="calculated_cell_text">#000000</color>
     <color name="header_cell_background">#D3D3D3</color>
     <color name="header_cell_text">#000000</color>
     <color name="bonus_progress_text">#808080</color>
-
+    
     <!-- Skyjo score cell colors -->
     <color name="skyjo_score_green">#4CAF50</color>
     <color name="skyjo_score_orange">#FF9800</color>

@@ -19,7 +19,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
-import com.github.trivialloop.scorehub.games.yahtzee.ColorSelectionAdapter
+import com.github.trivialloop.scorehub.ui.ColorPickerView
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
@@ -124,13 +124,18 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
 
     private fun showAddPlayerDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorRecyclerView = dialogView.findViewById<RecyclerView>(R.id.colorRecyclerView)
-        var selectedColor = PlayerColors.getNextColor()
+        val editName    = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker = dialogView.findViewById<com.github.trivialloop.scorehub.ui.ColorPickerView>(R.id.colorPickerView)
+        val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
 
-        val colorAdapter = ColorSelectionAdapter(PlayerColors.getAvailableColors(), selectedColor) { selectedColor = it }
-        colorRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        colorRecyclerView.adapter = colorAdapter
+        var selectedColor = PlayerColors.getNextColor()
+        colorPicker.setColor(selectedColor)
+        (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(selectedColor)
+
+        colorPicker.onColorChanged = { color ->
+            selectedColor = color
+            (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(color)
+        }
 
         AlertDialog.Builder(this)
             .setTitle(R.string.add_player)
@@ -146,14 +151,19 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
 
     private fun showEditPlayerDialog(player: Player) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorRecyclerView = dialogView.findViewById<RecyclerView>(R.id.colorRecyclerView)
+        val editName    = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker = dialogView.findViewById<com.github.trivialloop.scorehub.ui.ColorPickerView>(R.id.colorPickerView)
+        val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
+
         editName.setText(player.name)
         var selectedColor = player.color
+        colorPicker.setColor(selectedColor)
+        (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(selectedColor)
 
-        val colorAdapter = ColorSelectionAdapter(PlayerColors.getAvailableColors(), player.color) { selectedColor = it }
-        colorRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        colorRecyclerView.adapter = colorAdapter
+        colorPicker.onColorChanged = { color ->
+            selectedColor = color
+            (colorPreview.background as? android.graphics.drawable.GradientDrawable)?.setColor(color)
+        }
 
         AlertDialog.Builder(this)
             .setTitle(R.string.edit_player)
