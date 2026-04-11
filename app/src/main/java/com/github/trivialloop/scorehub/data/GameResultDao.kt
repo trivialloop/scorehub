@@ -39,6 +39,19 @@ interface GameResultDao {
 
     @Query("SELECT * FROM game_results WHERE gameType = :gameType ORDER BY score ASC, playedAt ASC, id ASC LIMIT 20")
     suspend fun getTop20ByGameTypeAsc(gameType: String): List<GameResult>
+
+    // ── New queries used by MainActivity for sort ──────────────────────────
+
+    /** Returns the timestamp of the most recent session for a given game type. */
+    @Query("SELECT MAX(playedAt) FROM game_results WHERE gameType = :gameType")
+    suspend fun getLastPlayedAt(gameType: String): Long?
+
+    /**
+     * Returns the total number of distinct game sessions for a given game type.
+     * A session is identified by its unique [playedAt] timestamp.
+     */
+    @Query("SELECT COUNT(DISTINCT playedAt) FROM game_results WHERE gameType = :gameType")
+    suspend fun getTotalSessionCount(gameType: String): Int
 }
 
 data class PlayerWins(
