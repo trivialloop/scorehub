@@ -1,0 +1,5 @@
+### Added
+- Add wingspan game
+
+### Changed
+- Improve game selection

@@ -1,0 +1,5 @@
+### Ajout
+- Ajoute le jeu Wingspan
+
+### Changement
+- Améliore la sélection des jeux
