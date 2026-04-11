@@ -39,6 +39,12 @@ interface GameResultDao {
 
     @Query("SELECT * FROM game_results WHERE gameType = :gameType ORDER BY score ASC, playedAt ASC, id ASC LIMIT 20")
     suspend fun getTop20ByGameTypeAsc(gameType: String): List<GameResult>
+
+    @Query("SELECT MAX(playedAt) FROM game_results WHERE gameType = :gameType")
+    suspend fun getLastPlayedAt(gameType: String): Long?
+
+    @Query("SELECT COUNT(DISTINCT playedAt) FROM game_results WHERE gameType = :gameType")
+    suspend fun getTotalSessionCount(gameType: String): Int
 }
 
 data class PlayerWins(
