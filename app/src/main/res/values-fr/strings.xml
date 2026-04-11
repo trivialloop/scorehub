@@ -76,6 +76,24 @@
     <string name="skyjo_quit_game">Quitter la partie</string>
     <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
+    <!-- Wingspan Game -->
+    <string name="wingspan_game">Wingspan</string>
+    <string name="wingspan_category_label">Catégorie</string>
+    <string name="wingspan_birds">Oiseaux</string>
+    <string name="wingspan_bonus_cards">Cartes bonus</string>
+    <string name="wingspan_end_of_round">Fin de manche</string>
+    <string name="wingspan_eggs">Œufs</string>
+    <string name="wingspan_food_on_cards">Nourriture</string>
+    <string name="wingspan_tucked_cards">Cartes glissées</string>
+    <string name="wingspan_total">Total</string>
+    <string name="wingspan_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="wingspan_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="wingspan_game_complete">Partie terminée ?</string>
+    <string name="wingspan_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="wingspan_quit_game">Quitter la partie</string>
+    <string name="wingspan_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="wingspan_best_score_label">Meilleur Score</string>
+
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>
     <string name="game_statistics">Statistiques du jeu</string>

@@ -76,6 +76,24 @@
     <string name="skyjo_quit_game">Quit Game</string>
     <string name="skyjo_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
+    <!-- Wingspan Game -->
+    <string name="wingspan_game">Wingspan</string>
+    <string name="wingspan_category_label">Category</string>
+    <string name="wingspan_birds">Birds</string>
+    <string name="wingspan_bonus_cards">Bonus cards</string>
+    <string name="wingspan_end_of_round">End of round</string>
+    <string name="wingspan_eggs">Eggs</string>
+    <string name="wingspan_food_on_cards">Food on cards</string>
+    <string name="wingspan_tucked_cards">Tucked cards</string>
+    <string name="wingspan_total">Total</string>
+    <string name="wingspan_minimum_players">Minimum 2 players required</string>
+    <string name="wingspan_maximum_players">Maximum 5 players allowed</string>
+    <string name="wingspan_game_complete">Game Complete?</string>
+    <string name="wingspan_game_complete_message">Are all scores filled in and the game finished?</string>
+    <string name="wingspan_quit_game">Quit Game</string>
+    <string name="wingspan_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="wingspan_best_score_label">Best Score</string>
+
     <!-- Statistics -->
     <string name="general_statistics">General Statistics</string>
     <string name="game_statistics">Game Statistics</string>

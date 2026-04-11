@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScoreHub">
-        
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -18,19 +18,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".games.yahtzee.YahtzeePlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
-        
+
         <activity
             android:name=".games.yahtzee.YahtzeeGameActivity"
             android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
-        
+
         <activity
             android:name=".games.yahtzee.YahtzeeStatsActivity"
             android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
-        
+
         <activity
             android:name=".games.yahtzee.YahtzeeTop20Activity"
             android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
@@ -50,11 +50,27 @@
         <activity
             android:name=".games.skyjo.SkyjoTop20Activity"
             android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
-        
+
+        <activity
+            android:name=".games.wingspan.WingspanPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.wingspan.WingspanGameActivity"
+            android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.wingspan.WingspanStatsActivity"
+            android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.wingspan.WingspanTop20Activity"
+            android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity" />
+
         <activity
             android:name=".GeneralStatsActivity"
             android:parentActivityName=".MainActivity" />
-        
+
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity" />

@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        Placeholder: generic bird-in-flight silhouette.
+        Replace with your custom Wingspan asset when ready.
+    -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M21,3L15,5.5L12,3L9,5.5L3,3C3,3 4,9 8,11C8.83,11.38 9.7,11.63 10.59,11.77L7,22H9L12,15L15,22H17L13.41,11.77C14.3,11.63 15.17,11.38 16,11C20,9 21,3 21,3Z" />
+</vector>

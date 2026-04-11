@@ -41,43 +41,49 @@ class GeneralStatsActivity : AppCompatActivity() {
 
                 // ── Yahtzee ───────────────────────────────────────────────
                 loadGameStats(
-                    gameType        = "yahtzee",
-                    players         = players,
-                    bestPlayerView  = binding.textBestPlayerYahtzee,
-                    bestPlayerColor = binding.bestPlayerColorIndicatorYahtzee,
+                    gameType          = "yahtzee",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerYahtzee,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorYahtzee,
                     bestPlayerSection = binding.bestPlayerSectionYahtzee,
-                    bestScoreView   = binding.textBestScoreYahtzee,
-                    bestScoreColor  = binding.bestScoreColorIndicatorYahtzee,
-                    bestScoreSection = binding.bestScoreSectionYahtzee,
-                    noDataView      = binding.textNoDataYahtzee,
-                    // Yahtzee: higher score = better → use MAX for best score query
+                    bestScoreView     = binding.textBestScoreYahtzee,
+                    bestScoreColor    = binding.bestScoreColorIndicatorYahtzee,
+                    bestScoreSection  = binding.bestScoreSectionYahtzee,
+                    noDataView        = binding.textNoDataYahtzee,
                     bestScoreIsLowest = false
                 )
 
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
-                    gameType        = "skyjo",
-                    players         = players,
-                    bestPlayerView  = binding.textBestPlayerSkyjo,
-                    bestPlayerColor = binding.bestPlayerColorIndicatorSkyjo,
+                    gameType          = "skyjo",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerSkyjo,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorSkyjo,
                     bestPlayerSection = binding.bestPlayerSectionSkyjo,
-                    bestScoreView   = binding.textBestScoreSkyjo,
-                    bestScoreColor  = binding.bestScoreColorIndicatorSkyjo,
-                    bestScoreSection = binding.bestScoreSectionSkyjo,
-                    noDataView      = binding.textNoDataSkyjo,
-                    // Skyjo: lower score = better → best score is the minimum
+                    bestScoreView     = binding.textBestScoreSkyjo,
+                    bestScoreColor    = binding.bestScoreColorIndicatorSkyjo,
+                    bestScoreSection  = binding.bestScoreSectionSkyjo,
+                    noDataView        = binding.textNoDataSkyjo,
                     bestScoreIsLowest = true
+                )
+
+                // ── Wingspan ──────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "wingspan",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerWingspan,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorWingspan,
+                    bestPlayerSection = binding.bestPlayerSectionWingspan,
+                    bestScoreView     = binding.textBestScoreWingspan,
+                    bestScoreColor    = binding.bestScoreColorIndicatorWingspan,
+                    bestScoreSection  = binding.bestScoreSectionWingspan,
+                    noDataView        = binding.textNoDataWingspan,
+                    bestScoreIsLowest = false
                 )
             }
         }
     }
 
-    /**
-     * Fills the stat section for one game type.
-     *
-     * @param bestScoreIsLowest  true for Skyjo (lowest total wins),
-     *                           false for Yahtzee (highest score wins).
-     */
     private suspend fun loadGameStats(
         gameType: String,
         players: List<Player>,
@@ -106,19 +112,19 @@ class GeneralStatsActivity : AppCompatActivity() {
             val countedGames = database.gameResultDao()
                 .getCountedGamesPlayedByPlayer(player.id, gameType)
             if (countedGames > 0) {
-                val wins   = database.gameResultDao().getWinsByPlayer(player.id, gameType)
-                val draws  = database.gameResultDao().getDrawsByPlayer(player.id, gameType)
-                val best   = database.gameResultDao().getBestScoreByPlayer(player.id, gameType) ?: 0
-                val worst  = database.gameResultDao().getWorstScoreByPlayer(player.id, gameType) ?: 0
+                val wins  = database.gameResultDao().getWinsByPlayer(player.id, gameType)
+                val draws = database.gameResultDao().getDrawsByPlayer(player.id, gameType)
+                val best  = database.gameResultDao().getBestScoreByPlayer(player.id, gameType) ?: 0
+                val worst = database.gameResultDao().getWorstScoreByPlayer(player.id, gameType) ?: 0
                 rankings.add(
                     PlayerRanking(
-                        player        = player,
-                        wins          = wins,
-                        countedGames  = countedGames,
-                        winPercentage = wins * 100f / countedGames,
+                        player         = player,
+                        wins           = wins,
+                        countedGames   = countedGames,
+                        winPercentage  = wins * 100f / countedGames,
                         drawPercentage = draws * 100f / countedGames,
-                        bestScore     = best,
-                        worstScore    = worst
+                        bestScore      = best,
+                        worstScore     = worst
                     )
                 )
             }
