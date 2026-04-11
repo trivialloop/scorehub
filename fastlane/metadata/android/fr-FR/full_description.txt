@@ -13,3 +13,5 @@ Parfait pour les amateurs de jeux de société qui souhaitent conserver des enre
 
 Jeux actuellement supportés :
 - Yams
+- Skyjo
+- Wingspan

@@ -13,3 +13,5 @@ Perfect for board game enthusiasts who want to keep detailed records of their ga
 
 Currently supported games:
 - Yahtzee
+- Skyjo
+- Wingspan
