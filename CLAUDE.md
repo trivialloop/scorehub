@@ -146,16 +146,26 @@ For each new version:
 
 ## Adding a new game
 
-1. Create a `games/<gamename>/` package with:
+The main screen reads its game list from a **central registry** — no change to
+`MainActivity` or `activity_main.xml` is needed when adding a game.
+
+### Steps
+1. **Register the game** in `GameRegistry.kt` — add one `GameDefinition` entry
+   to `ALL_GAMES`. This is the only change that makes the game appear on the
+   home screen (with search + sort support automatically).
+2. **Create the game package** `games/<gamename>/` with:
    - `<Game>ScoreManager.kt` — data model and business rules
    - `<Game>PlayerSelectionActivity.kt` — reuse `ActivityPlayerSelectionBinding`
    - `<Game>GameActivity.kt` — grid built in code
    - `<Game>StatsActivity.kt` — reuse `item_player_stats.xml`
    - `<Game>Top20Activity.kt` — reuse `item_top20.xml`
-2. Add layouts `activity_<game>_game/stats/top20.xml`
-3. Add the card in `activity_main.xml` and the listener in `MainActivity.kt`
-4. Declare the 4 activities in `AndroidManifest.xml`
-5. Add a `menu_<game>_player_selection.xml`
-6. Add strings in `strings.xml` and `strings-fr.xml`
-7. Add a section in `activity_general_stats.xml` and `GeneralStatsActivity.kt`
-8. Add unit tests in `<Game>ScoreManagerTest.kt`
+3. **Add layouts** `activity_<game>_game.xml`, `activity_<game>_stats.xml`,
+   `activity_<game>_top20.xml`.
+4. **Declare the activities** in `AndroidManifest.xml`.
+5. **Add a menu** `menu_<game>_player_selection.xml`.
+6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`
+   (including the game name string referenced by `GameDefinition.nameResId`).
+7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
+8. **Add a section** in `activity_general_stats.xml` and
+   `GeneralStatsActivity.kt`.
+9. **Add unit tests** in `<Game>ScoreManagerTest.kt`.

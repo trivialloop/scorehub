@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.databinding.ActivityMainBinding
-import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
-import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -33,22 +31,12 @@ enum class GameSortOrder {
     MOST_PLAYED
 }
 
-// ─── Game entry model ─────────────────────────────────────────────────────────
+// ─── Runtime game entry (definition + live DB stats) ─────────────────────────
 
 data class GameEntry(
-    /** Internal game type key, used for DB queries (e.g. "yahtzee", "skyjo"). */
-    val gameType: String,
-    /** English name — used for search filtering regardless of locale. */
-    val nameEn: String,
-    /** Localised display name. */
+    val definition: GameRegistry.GameDefinition,
     val nameLocalized: String,
-    /** Icon resource id. */
-    val iconRes: Int,
-    /** Target activity class. */
-    val activityClass: Class<*>,
-    /** Timestamp of the most recent game session (null = never played). */
     var lastPlayedAt: Long? = null,
-    /** Total number of game sessions. */
     var totalGames: Int = 0
 )
 
@@ -59,7 +47,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var database: AppDatabase
 
+    /** Full list built from [GameRegistry], enriched with DB stats. */
     private val allGames = mutableListOf<GameEntry>()
+
+    /** Filtered + sorted subset shown in the RecyclerView. */
     private val filteredGames = mutableListOf<GameEntry>()
     private lateinit var adapter: GameListAdapter
 
@@ -102,35 +93,30 @@ class MainActivity : AppCompatActivity() {
     // ─── Game list construction ───────────────────────────────────────────────
 
     /**
-     * Builds the static list of supported games, then enriches it with DB stats
-     * (last played date, total games played) so sorting works correctly.
+     * Converts every [GameRegistry.GameDefinition] into a runtime [GameEntry],
+     * then fetches DB stats (last played, session count) asynchronously.
+     *
+     * Adding a new game to the app only requires registering it in [GameRegistry].
+     * No change to this function is ever needed.
      */
     private fun buildGameList() {
         allGames.clear()
         allGames.addAll(
-            listOf(
+            GameRegistry.ALL_GAMES.map { def ->
                 GameEntry(
-                    gameType = "yahtzee",
-                    nameEn = "Yahtzee",
-                    nameLocalized = getString(R.string.yahtzee_game),
-                    iconRes = R.drawable.ic_yahtzee_game,
-                    activityClass = YahtzeePlayerSelectionActivity::class.java
-                ),
-                GameEntry(
-                    gameType = "skyjo",
-                    nameEn = "Skyjo",
-                    nameLocalized = getString(R.string.skyjo_game),
-                    iconRes = R.drawable.ic_skyjo_game,
-                    activityClass = SkyjoPlayerSelectionActivity::class.java
+                    definition    = def,
+                    nameLocalized = getString(def.nameResId)
                 )
-            )
+            }
         )
 
-        // Enrich with DB stats asynchronously, then refresh the list
+        // Show the list immediately with static data, then enrich with DB stats
+        applyFilterAndSort()
+
         lifecycleScope.launch {
             for (game in allGames) {
-                game.lastPlayedAt = database.gameResultDao().getLastPlayedAt(game.gameType)
-                game.totalGames = database.gameResultDao().getTotalSessionCount(game.gameType)
+                game.lastPlayedAt = database.gameResultDao().getLastPlayedAt(game.definition.gameType)
+                game.totalGames   = database.gameResultDao().getTotalSessionCount(game.definition.gameType)
             }
             applyFilterAndSort()
         }
@@ -140,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = GameListAdapter(filteredGames) { game ->
-            startActivity(Intent(this, game.activityClass))
+            startActivity(Intent(this, game.definition.activityClass))
         }
         binding.recyclerViewGames.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewGames.adapter = adapter
@@ -168,10 +154,9 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.sort_recently_played),
                 getString(R.string.sort_most_played)
             )
-            val checkedItem = currentSort.ordinal
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.sort_games))
-                .setSingleChoiceItems(options, checkedItem) { dialog, which ->
+                .setSingleChoiceItems(options, currentSort.ordinal) { dialog, which ->
                     currentSort = GameSortOrder.entries[which]
                     saveSortOrder(currentSort)
                     applyFilterAndSort()
@@ -193,10 +178,11 @@ class MainActivity : AppCompatActivity() {
     // ─── Filter + Sort logic ──────────────────────────────────────────────────
 
     /**
-     * Applies the active search query and sort order, then notifies the adapter.
+     * Filters by the active search query (matched against both the English
+     * fallback name and the localised name), then sorts by [currentSort].
      *
-     * Search matches against BOTH the English name and the localised name so that
-     * typing "yahtzee" always works regardless of the current locale.
+     * The English fallback ensures that typing "yahtzee" always matches
+     * regardless of the active locale.
      */
     private fun applyFilterAndSort() {
         val query = currentQuery.lowercase(Locale.getDefault())
@@ -205,15 +191,15 @@ class MainActivity : AppCompatActivity() {
             allGames.toMutableList()
         } else {
             allGames.filter { game ->
-                game.nameEn.lowercase(Locale.getDefault()).contains(query) ||
+                game.definition.nameEnFallback.lowercase(Locale.getDefault()).contains(query) ||
                         game.nameLocalized.lowercase(Locale.getDefault()).contains(query)
             }.toMutableList()
         }
 
         val sorted = when (currentSort) {
-            GameSortOrder.ALPHABETICAL -> filtered.sortedBy { it.nameLocalized }
+            GameSortOrder.ALPHABETICAL    -> filtered.sortedBy { it.nameLocalized }
             GameSortOrder.RECENTLY_PLAYED -> filtered.sortedByDescending { it.lastPlayedAt ?: Long.MIN_VALUE }
-            GameSortOrder.MOST_PLAYED -> filtered.sortedByDescending { it.totalGames }
+            GameSortOrder.MOST_PLAYED     -> filtered.sortedByDescending { it.totalGames }
         }
 
         filteredGames.clear()
@@ -269,8 +255,8 @@ class GameListAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageIcon: ImageView = view.findViewById(R.id.imageGameIcon)
-        val textName: TextView = view.findViewById(R.id.textGameName)
-        val textMeta: TextView = view.findViewById(R.id.textGameMeta)
+        val textName: TextView   = view.findViewById(R.id.textGameName)
+        val textMeta: TextView   = view.findViewById(R.id.textGameMeta)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -281,12 +267,10 @@ class GameListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val game = games[position]
-        val ctx = holder.itemView.context
+        val ctx  = holder.itemView.context
 
-        holder.imageIcon.setImageResource(game.iconRes)
+        holder.imageIcon.setImageResource(game.definition.iconResId)
         holder.textName.text = game.nameLocalized
-
-        // Meta line: last played date + session count
         holder.textMeta.text = buildMetaText(ctx, game)
 
         holder.itemView.setOnClickListener { onClick(game) }
@@ -298,9 +282,9 @@ class GameListAdapter(
         val parts = mutableListOf<String>()
 
         if (game.totalGames > 0) {
-            parts.add(ctx.resources.getQuantityString(
-                R.plurals.games_count, game.totalGames, game.totalGames
-            ))
+            parts.add(
+                ctx.resources.getQuantityString(R.plurals.games_count, game.totalGames, game.totalGames)
+            )
         }
 
         game.lastPlayedAt?.let { ts ->
