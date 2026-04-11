@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.github.trivialloop.scorehub.databinding.ActivityMainBinding
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.cardSkyjo.setOnClickListener {
             startActivity(Intent(this, SkyjoPlayerSelectionActivity::class.java))
+        }
+
+        binding.cardWingspan.setOnClickListener {
+            startActivity(Intent(this, WingspanPlayerSelectionActivity::class.java))
         }
     }
 

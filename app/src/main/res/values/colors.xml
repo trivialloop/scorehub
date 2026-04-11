@@ -21,10 +21,15 @@
     <color name="yahtzee_calculated_cell_background">#F0F0F0</color>
     <color name="yahtzee_calculated_cell_text">#000000</color>
     <color name="yahtzee_bonus_progress_text">#808080</color>
-    
+
     <!-- Skyjo UI colors -->
     <color name="skyjo_score_green">#4CAF50</color>
     <color name="skyjo_score_orange">#FF9800</color>
     <color name="skyjo_score_red">#F44336</color>
     <color name="skyjo_cell_border">#CCCCCC</color>
+
+    <!-- Wingspan UI colors -->
+    <color name="wingspan_score_green">#4CAF50</color>
+    <color name="wingspan_score_red">#F44336</color>
+    <color name="wingspan_cell_border">#CCCCCC</color>
 </resources>

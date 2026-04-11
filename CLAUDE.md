@@ -33,15 +33,21 @@ app/src/main/java/com/github/trivialloop/scorehub/
 │   ├── yahtzee/
 │   │   ├── YahtzeeScoreManager.kt   # Model (YahtzeePlayerScore, YahtzeeCategory)
 │   │   ├── YahtzeePlayerSelectionActivity.kt
-│   │   ├── YahtzeeGameActivity.kt   # Score grid built programmatically
+│   │   ├── YahtzeeGameActivity.kt   # Score grid built programmatically (column-based)
 │   │   ├── YahtzeeStatsActivity.kt
 │   │   └── YahtzeeTop20Activity.kt
-│   └── skyjo/
-│       ├── SkyjoScoreManager.kt     # Model (SkyjoRound, SkyjoPlayerState, SkyjoCellColor)
-│       ├── SkyjoPlayerSelectionActivity.kt
-│       ├── SkyjoGameActivity.kt     # Grid built programmatically
-│       ├── SkyjoStatsActivity.kt
-│       └── SkyjoTop20Activity.kt
+│   ├── skyjo/
+│   │   ├── SkyjoScoreManager.kt     # Model (SkyjoRound, SkyjoPlayerState, SkyjoCellColor)
+│   │   ├── SkyjoPlayerSelectionActivity.kt
+│   │   ├── SkyjoGameActivity.kt     # Grid built programmatically (row-based)
+│   │   ├── SkyjoStatsActivity.kt
+│   │   └── SkyjoTop20Activity.kt
+│   └── wingspan/
+│       ├── WingspanScoreManager.kt  # Model (WingspanPlayerScore, WingspanCategory)
+│       ├── WingspanPlayerSelectionActivity.kt
+│       ├── WingspanGameActivity.kt  # Score grid built programmatically (column-based)
+│       ├── WingspanStatsActivity.kt
+│       └── WingspanTop20Activity.kt
 └── utils/
     ├── LocaleHelper.kt              # Runtime language switching
     └── ThemeHelper.kt               # Light / Dark / System
@@ -65,6 +71,7 @@ app/src/main/java/com/github/trivialloop/scorehub/
 - Adaptive colors (game cells) are defined in `res/values/colors.xml` **and** `res/values-night/colors.xml`.
 - Skyjo-specific colors: `skyjo_score_green`, `skyjo_score_red`, `skyjo_cell_border`.
 - Yahtzee-specific colors: `score_cell_background`, `score_cell_text`, `yahtzee_calculated_cell_background`, `header_cell_background`, `yahtzee_bonus_progress_text`.
+- Wingspan-specific colors: `wingspan_score_green`, `wingspan_score_red`, `wingspan_cell_border`.
 
 ### Localisation
 - The app supports **English** (`res/values/strings.xml`) and **French** (`res/values-fr/strings.xml`).
