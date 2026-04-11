@@ -5,6 +5,15 @@
 
     <!-- Main Screen -->
     <string name="select_game">Select a Game</string>
+    <string name="search_game">Search a game…</string>
+    <string name="sort_games">Sort games</string>
+    <string name="sort_alphabetical">Alphabetical order</string>
+    <string name="sort_recently_played">Recently played</string>
+    <string name="sort_most_played">Most played</string>
+    <string name="sort_label_alphabetical">Sorted: A → Z</string>
+    <string name="sort_label_recently_played">Sorted: recently played</string>
+    <string name="sort_label_most_played">Sorted: most played</string>
+    <string name="last_played_date">Last played: %1$s</string>
 
     <!-- Player Selection -->
     <string name="player_selection_title">Select Players</string>
@@ -134,4 +143,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
+
+    <plurals name="games_count">
+        <item quantity="one">%d game</item>
+        <item quantity="other">%d games</item>
+    </plurals>
 </resources>

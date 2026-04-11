@@ -5,6 +5,15 @@
 
     <!-- Main Screen -->
     <string name="select_game">Sélectionner un jeu</string>
+    <string name="search_game">Rechercher un jeu…</string>
+    <string name="sort_games">Trier les jeux</string>
+    <string name="sort_alphabetical">Ordre alphabétique</string>
+    <string name="sort_recently_played">Joué récemment</string>
+    <string name="sort_most_played">Le plus joué</string>
+    <string name="sort_label_alphabetical">Tri : A → Z</string>
+    <string name="sort_label_recently_played">Tri : joué récemment</string>
+    <string name="sort_label_most_played">Tri : le plus joué</string>
+    <string name="last_played_date">Dernière partie : %1$s</string>
 
     <!-- Player Selection -->
     <string name="player_selection_title">Sélection des joueurs</string>
@@ -134,4 +143,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
+
+    <plurals name="games_count">
+        <item quantity="one">%d partie</item>
+        <item quantity="other">%d parties</item>
+    </plurals>
 </resources>
