@@ -5,138 +5,273 @@ import org.junit.Assert.*
 
 class CactusScoreManagerTest {
 
-    // ─── CactusRound.allScoresEntered ─────────────────────────────────────────
+    // ─── allScoresEntered / isComplete ────────────────────────────────────────
 
     @Test
-    fun `allScoresEntered returns false when no scores entered`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L, 2L, 3L)
-        assertFalse(round.allScoresEntered(playerIds))
+    fun `allScoresEntered returns false when partial`() {
+        val round = CactusRound(1).apply { rawScores[1L] = 5 }
+        assertFalse(round.allScoresEntered(listOf(1L, 2L)))
     }
 
     @Test
-    fun `allScoresEntered returns false when only some scores entered`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L, 2L, 3L)
-        round.scores[1L] = 0
-        round.scores[2L] = 1
-        assertFalse(round.allScoresEntered(playerIds))
+    fun `allScoresEntered returns true when all entered`() {
+        val round = CactusRound(1).apply { rawScores[1L] = 5; rawScores[2L] = 10 }
+        assertTrue(round.allScoresEntered(listOf(1L, 2L)))
     }
 
     @Test
-    fun `allScoresEntered returns true when all scores entered`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L, 2L, 3L)
-        round.scores[1L] = 0
-        round.scores[2L] = 1
-        round.scores[3L] = 0
-        assertTrue(round.allScoresEntered(playerIds))
-    }
-
-    // ─── CactusRound.isComplete ───────────────────────────────────────────────
-
-    @Test
-    fun `isComplete returns false when not all players have scores`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L, 2L)
-        round.scores[1L] = 1
-        assertFalse(round.isComplete(playerIds))
+    fun `isComplete returns false before computePoints`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 3; rawScores[2L] = 8
+        }
+        assertFalse(round.isComplete(listOf(1L, 2L)))
     }
 
     @Test
-    fun `isComplete returns true when all players have scores`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L, 2L)
-        round.scores[1L] = 0
-        round.scores[2L] = 1
-        assertTrue(round.isComplete(playerIds))
+    fun `isComplete returns true after computePoints`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 3; rawScores[2L] = 8
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertTrue(round.isComplete(listOf(1L, 2L)))
     }
 
-    // ─── CactusPlayerState.getTotal ───────────────────────────────────────────
+    // ─── computePoints — finisher wins ────────────────────────────────────────
+
+    @Test
+    fun `finisher wins - score le 5 and strictly lowest - gets 1 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 4; rawScores[2L] = 7; rawScores[3L] = 10
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(1, round.points[1L])
+    }
+
+    @Test
+    fun `finisher wins with score exactly 5`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 5; rawScores[2L] = 8
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(1, round.points[1L])
+    }
+
+    @Test
+    fun `finisher loses - score le 5 but tied - gets 0 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 5; rawScores[2L] = 5
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(0, round.points[1L])
+    }
+
+    @Test
+    fun `finisher loses - score gt 5 even if lowest - gets 0 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 6; rawScores[2L] = 10
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(0, round.points[1L])
+    }
+
+    @Test
+    fun `finisher loses - higher than others - gets 0 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 15; rawScores[2L] = 3
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(0, round.points[1L])
+    }
+
+    // ─── computePoints — non-finishers when finisher WINS ─────────────────────
+
+    @Test
+    fun `non-finishers all get 0 when finisher wins`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 3; rawScores[2L] = 8; rawScores[3L] = 12
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(1, round.points[1L])
+        assertEquals(0, round.points[2L])
+        assertEquals(0, round.points[3L])
+    }
+
+    // ─── computePoints — non-finishers when finisher LOSES ────────────────────
+    // Key rule: min is computed among NON-FINISHERS only.
+
+    @Test
+    fun `non-finisher with min score among non-finishers gets 1 pt - finisher has lower raw but loses`() {
+        // Finisher raw=8 (>5, loses). Non-finishers: 12 and 5.
+        // Min among non-finishers = 5 → player 3 gets 1 pt.
+        // Even though finisher raw (8) is NOT the global min, rule is min of non-finishers.
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 8; rawScores[2L] = 12; rawScores[3L] = 5
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(0, round.points[1L])
+        assertEquals(0, round.points[2L])
+        assertEquals(1, round.points[3L])
+    }
+
+    @Test
+    fun `non-finisher gets 1 pt when finisher loses and has lowest raw - min taken among non-finishers`() {
+        // Finisher raw=8 (>5, loses), is also global min.
+        // Min among non-finishers = 10 → player 2 gets 1 pt (not finisher).
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 8; rawScores[2L] = 10; rawScores[3L] = 20
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(0, round.points[1L])  // finisher loses (> 5)
+        assertEquals(1, round.points[2L])  // min among non-finishers = 10
+        assertEquals(0, round.points[3L])
+    }
+
+    @Test
+    fun `non-finishers tied for min among non-finishers both get 1 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 10; rawScores[2L] = 4; rawScores[3L] = 4
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(0, round.points[1L])
+        assertEquals(1, round.points[2L])
+        assertEquals(1, round.points[3L])
+    }
+
+    @Test
+    fun `non-finisher with higher score gets 0 pt when finisher loses`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 15; rawScores[2L] = 3; rawScores[3L] = 20
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(0, round.points[1L])
+        assertEquals(1, round.points[2L])
+        assertEquals(0, round.points[3L])
+    }
+
+    @Test
+    fun `two player game finisher loses - other player gets 1 pt`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 20; rawScores[2L] = 5
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(0, round.points[1L])
+        assertEquals(1, round.points[2L])
+    }
+
+    @Test
+    fun `two player game finisher loses because score gt 5 - other gets 1 pt even if finisher has lower raw`() {
+        // Finisher raw=8 (loses, >5). Other raw=15. Min non-finisher = 15 → other gets 1 pt.
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 8; rawScores[2L] = 15
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(0, round.points[1L])
+        assertEquals(1, round.points[2L])
+    }
+
+    @Test
+    fun `computePoints does nothing when not all scores entered`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 5
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertTrue(round.points.isEmpty())
+    }
+
+    // ─── getTotal ─────────────────────────────────────────────────────────────
 
     @Test
     fun `getTotal returns 0 when no rounds`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-        assertEquals(0, player.getTotal(emptyList()))
+        assertEquals(0, CactusPlayerState(1L, "Alice", 0).getTotal(emptyList()))
     }
 
     @Test
-    fun `getTotal returns 0 when all scores are 0`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-        val playerIds = listOf(1L, 2L)
-
+    fun `getTotal sums points across rounds`() {
+        val player = CactusPlayerState(1L, "Alice", 0)
         val rounds = listOf(
-            CactusRound(1).apply { scores[1L] = 0; scores[2L] = 1 },
-            CactusRound(2).apply { scores[1L] = 0; scores[2L] = 0 }
+            CactusRound(1).apply { points[1L] = 1 },
+            CactusRound(2).apply { points[1L] = 0 },
+            CactusRound(3).apply { points[1L] = 1 }
         )
-
-        assertEquals(0, player.getTotal(rounds))
+        assertEquals(2, player.getTotal(rounds))
     }
 
-    @Test
-    fun `getTotal sums scores correctly across rounds`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-
-        val rounds = listOf(
-            CactusRound(1).apply { scores[1L] = 1 },
-            CactusRound(2).apply { scores[1L] = 0 },
-            CactusRound(3).apply { scores[1L] = 1 },
-            CactusRound(4).apply { scores[1L] = 1 }
-        )
-
-        assertEquals(3, player.getTotal(rounds))
-    }
+    // ─── getCellColor — finisher ───────────────────────────────────────────────
 
     @Test
-    fun `getTotal ignores rounds with no score for this player`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-        val round = CactusRound(1) // no score for player 1
-        assertEquals(0, player.getTotal(listOf(round)))
-    }
-
-    @Test
-    fun `getTotal reaches score limit correctly`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-        val rounds = (1..10).map { i ->
-            CactusRound(i).apply { scores[1L] = 1 }
+    fun `getCellColor finisher 1 pt returns GREEN`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 3; rawScores[2L] = 8
         }
-        assertEquals(10, player.getTotal(rounds))
-    }
-
-    // ─── Score values ─────────────────────────────────────────────────────────
-
-    @Test
-    fun `scores only accept 0 or 1`() {
-        val round = CactusRound(1)
-        round.scores[1L] = 0
-        round.scores[2L] = 1
-        assertEquals(0, round.scores[1L])
-        assertEquals(1, round.scores[2L])
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(CactusCellColor.GREEN, round.getCellColor(1L, listOf(1L, 2L)))
     }
 
     @Test
-    fun `single player round is complete with one score`() {
-        val round = CactusRound(1)
-        val playerIds = listOf(1L)
-        round.scores[1L] = 0
-        assertTrue(round.isComplete(playerIds))
+    fun `getCellColor finisher 0 pt returns RED`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 10; rawScores[2L] = 3
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(CactusCellColor.RED, round.getCellColor(1L, listOf(1L, 2L)))
     }
 
     @Test
-    fun `multiple rounds total accumulates correctly`() {
-        val player = CactusPlayerState(1L, "Alice", 0xFF0000)
-        val rounds = listOf(
-            CactusRound(1).apply { scores[1L] = 1 },
-            CactusRound(2).apply { scores[1L] = 1 },
-            CactusRound(3).apply { scores[1L] = 1 },
-            CactusRound(4).apply { scores[1L] = 1 },
-            CactusRound(5).apply { scores[1L] = 1 },
-            CactusRound(6).apply { scores[1L] = 1 },
-            CactusRound(7).apply { scores[1L] = 1 },
-            CactusRound(8).apply { scores[1L] = 1 },
-            CactusRound(9).apply { scores[1L] = 1 },
-            CactusRound(10).apply { scores[1L] = 1 }
-        )
-        assertEquals(10, player.getTotal(rounds))
+    fun `getCellColor finisher gt 5 returns RED`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L; rawScores[1L] = 6; rawScores[2L] = 20
+        }
+        round.computePoints(listOf(1L, 2L))
+        assertEquals(CactusCellColor.RED, round.getCellColor(1L, listOf(1L, 2L)))
+    }
+
+    // ─── getCellColor — non-finisher (based on global raw min/max) ────────────
+
+    @Test
+    fun `getCellColor non-finisher with global min returns GREEN`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 10; rawScores[2L] = 3; rawScores[3L] = 7
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(CactusCellColor.GREEN, round.getCellColor(2L, listOf(1L, 2L, 3L)))
+    }
+
+    @Test
+    fun `getCellColor non-finisher with global max returns RED`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 5; rawScores[2L] = 3; rawScores[3L] = 30
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(CactusCellColor.RED, round.getCellColor(3L, listOf(1L, 2L, 3L)))
+    }
+
+    @Test
+    fun `getCellColor non-finisher with middle raw returns DEFAULT`() {
+        val round = CactusRound(1).apply {
+            finisherId = 1L
+            rawScores[1L] = 5; rawScores[2L] = 2; rawScores[3L] = 15
+        }
+        round.computePoints(listOf(1L, 2L, 3L))
+        assertEquals(CactusCellColor.DEFAULT, round.getCellColor(1L, listOf(1L, 2L, 3L)))
+    }
+
+    @Test
+    fun `getCellColor returns DEFAULT before all scores entered`() {
+        val round = CactusRound(1).apply { rawScores[1L] = 5 }
+        assertEquals(CactusCellColor.DEFAULT, round.getCellColor(1L, listOf(1L, 2L)))
     }
 }

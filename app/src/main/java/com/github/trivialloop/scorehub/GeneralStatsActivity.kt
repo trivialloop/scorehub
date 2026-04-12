@@ -50,7 +50,7 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreColor    = binding.bestScoreColorIndicatorCactus,
                     bestScoreSection  = binding.bestScoreSectionCactus,
                     noDataView        = binding.textNoDataCactus,
-                    bestScoreIsLowest = true
+                    bestScoreIsLowest = false   // highest score wins in Cactus
                 )
 
                 // ── Skyjo ─────────────────────────────────────────────────

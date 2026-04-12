@@ -57,9 +57,9 @@ class CactusStatsActivity : AppCompatActivity() {
                         val wins = database.gameResultDao().getWinsByPlayer(player.id, GAME_TYPE)
                         val draws = database.gameResultDao().getDrawsByPlayer(player.id, GAME_TYPE)
                         val losses = countedGames - wins - draws
-                        // In Cactus, lower score = better, so "best" = MIN
-                        val bestScore = database.gameResultDao().getWorstScoreByPlayer(player.id, GAME_TYPE) ?: 0
-                        val worstScore = database.gameResultDao().getBestScoreByPlayer(player.id, GAME_TYPE) ?: 0
+                        // In Cactus, highest score = best
+                        val bestScore = database.gameResultDao().getBestScoreByPlayer(player.id, GAME_TYPE) ?: 0
+                        val worstScore = database.gameResultDao().getWorstScoreByPlayer(player.id, GAME_TYPE) ?: 0
 
                         val winPct = if (countedGames > 0) wins * 100f / countedGames else 0f
                         val drawPct = if (countedGames > 0) draws * 100f / countedGames else 0f
@@ -79,7 +79,8 @@ class CactusStatsActivity : AppCompatActivity() {
                         .thenByDescending { it.drawPercentage }
                         .thenByDescending { (it.winPercentage / 100f * it.countedGames).toInt() }
                         .thenBy { (it.lossPercentage / 100f * it.countedGames).toInt() }
-                        .thenBy { it.bestScore }
+                        .thenByDescending { it.bestScore }
+                        .thenByDescending { it.worstScore }
                         .thenBy { it.player.id }
                 )
 
@@ -142,8 +143,8 @@ class CactusStatsAdapter(private val stats: List<CactusPlayerStatsEntry>) :
         (holder.colorIndicator.background as? GradientDrawable)?.setColor(stat.player.color)
         holder.textPlayerName.text = stat.player.name
         holder.textGamesInfo.text = ctx.getString(R.string.games_info, stat.totalGames, stat.countedGames)
-        holder.textBestScore.text = ctx.getString(R.string.cactus_best_score_short, stat.bestScore)
-        holder.textWorstScore.text = ctx.getString(R.string.cactus_worst_score_short, stat.worstScore)
+        holder.textBestScore.text = ctx.getString(R.string.best_score_short, stat.bestScore)
+        holder.textWorstScore.text = ctx.getString(R.string.worst_score_short, stat.worstScore)
 
         fun setWeight(view: View, w: Float) {
             (view.layoutParams as LinearLayout.LayoutParams).weight = w

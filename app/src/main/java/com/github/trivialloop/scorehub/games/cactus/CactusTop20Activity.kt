@@ -48,15 +48,11 @@ class CactusTop20Activity : AppCompatActivity() {
 
     private fun loadTop20() {
         lifecycleScope.launch {
-            // In Cactus, lower score = better, fetch ASC
-            val results = database.gameResultDao().getTop20ByGameType(GAME_TYPE)
-            val sorted = results.sortedBy { it.score }
-
-            val entries = sorted.map { result ->
+            // In Cactus, highest score = best — getTop20ByGameType already orders DESC
+            val entries = database.gameResultDao().getTop20ByGameType(GAME_TYPE).map { result ->
                 val player = database.playerDao().getPlayerById(result.playerId)
                 CactusTop20Entry(result, player?.color ?: android.graphics.Color.GRAY)
             }
-
             binding.recyclerView.adapter = CactusTop20Adapter(entries)
         }
     }

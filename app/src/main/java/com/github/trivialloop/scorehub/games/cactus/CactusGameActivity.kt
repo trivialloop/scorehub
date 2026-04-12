@@ -5,9 +5,12 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -39,6 +42,7 @@ class CactusGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "cactus"
         private const val SCORE_LIMIT = 10
+        private const val RAW_SCORE_MAX = 40
     }
 
     // ─── Lifecycle ─────────────────────────────────────────────────────────────
@@ -53,10 +57,10 @@ class CactusGameActivity : AppCompatActivity() {
         binding = ActivityCactusGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        database = AppDatabase.getDatabase(this)
-        playerIds = intent.getLongArrayExtra("PLAYER_IDS") ?: longArrayOf()
-        playerNames = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
-        playerColors = intent.getIntArrayExtra("PLAYER_COLORS") ?: intArrayOf()
+        database     = AppDatabase.getDatabase(this)
+        playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
+        playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
+        playerColors = intent.getIntArrayExtra("PLAYER_COLORS")   ?: intArrayOf()
 
         players = playerIds.indices.map { i ->
             CactusPlayerState(playerIds[i], playerNames[i], playerColors[i])
@@ -92,7 +96,7 @@ class CactusGameActivity : AppCompatActivity() {
         val headerRow = buildHeaderRow()
         val roundRows = rounds.mapIndexed { index, round ->
             buildRoundRow(
-                round = round,
+                round  = round,
                 isLast = index == rounds.lastIndex,
                 isPrev = index == rounds.lastIndex - 1
             )
@@ -144,46 +148,69 @@ class CactusGameActivity : AppCompatActivity() {
     private fun buildRoundRow(round: CactusRound, isLast: Boolean, isPrev: Boolean): LinearLayout {
         val row = makeRow()
         val playerIdList = players.map { it.playerId }
-        val roundComplete = round.isComplete(playerIdList)
+        val allEntered = round.allScoresEntered(playerIdList)
 
-        // Round number label cell
+        // ── Round number / finisher label cell ────────────────────────────
         val labelCell = makeLabelCell(round.roundNumber.toString())
+        val finisher = players.find { it.playerId == round.finisherId }
+        if (finisher != null) {
+            labelCell.background = cellDrawable(finisher.playerColor)
+            labelCell.setTextColor(Color.WHITE)
+        }
+        if (isLast && !gameOver) {
+            labelCell.setOnClickListener { showFinisherPicker(round) }
+            if (finisher == null) labelCell.alpha = 0.6f
+        }
         row.addView(labelCell)
 
-        // Score cells
+        // ── Score cells ───────────────────────────────────────────────────
         for (player in players) {
-            val score = round.scores[player.playerId]
-            val displayText = score?.toString() ?: ""
+            val rawScore = round.rawScores[player.playerId]
+            val point    = round.points[player.playerId]
+
+            // Display format: "point (rawScore)" — e.g. "1 (5)" or "(12)" while partial
+            val displayText = when {
+                point != null && rawScore != null -> "$point ($rawScore)"
+                rawScore != null                  -> "($rawScore)"
+                else                              -> ""
+            }
+
             val cell = makePlayerCell(displayText)
 
-            // Color coding when round is complete: green for 0, red for 1
-            if (roundComplete && score != null) {
-                val allScores = playerIdList.mapNotNull { round.scores[it] }
-                val minScore = allScores.minOrNull()
-                val maxScore = allScores.maxOrNull()
-                val allSame = minScore == maxScore
-
-                if (!allSame) {
-                    when (score) {
-                        minScore -> {
-                            cell.setTextColor(ContextCompat.getColor(this, R.color.cactus_score_green))
-                            cell.setTypeface(null, Typeface.BOLD)
+            // ── Color logic ───────────────────────────────────────────────
+            // Only apply colors once all scores are entered (so getCellColor works).
+            // For the finisher: background GREEN if 1 pt, RED if 0 pt.
+            // For others: text GREEN if global min, RED if global max, neutral otherwise.
+            if (allEntered) {
+                val cellColor = round.getCellColor(player.playerId, playerIdList)
+                when {
+                    player.playerId == round.finisherId -> {
+                        val bgColor = when (cellColor) {
+                            CactusCellColor.GREEN -> ContextCompat.getColor(this, R.color.cactus_score_green)
+                            else                  -> ContextCompat.getColor(this, R.color.cactus_score_red)
                         }
-                        maxScore -> {
-                            cell.setTextColor(ContextCompat.getColor(this, R.color.cactus_score_red))
-                            cell.setTypeface(null, Typeface.BOLD)
-                        }
+                        cell.background = cellDrawable(bgColor)
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
+                    }
+                    cellColor == CactusCellColor.GREEN -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.cactus_score_green))
+                        cell.setTypeface(null, Typeface.BOLD)
+                    }
+                    cellColor == CactusCellColor.RED -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.cactus_score_red))
+                        cell.setTypeface(null, Typeface.BOLD)
                     }
                 }
             }
 
+            // ── Tap to enter / edit ───────────────────────────────────────
             val currentRound = rounds.last()
-            val canEnter = isLast && !roundComplete && !gameOver
-            val canEditPrev = isPrev && !gameOver && !currentRound.isComplete(playerIdList)
+            val canEnter    = isLast && round.finisherId != null && !allEntered && !gameOver
+            val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
 
             when {
-                canEnter -> cell.setOnClickListener { showScoreInput(round, player) }
-                canEditPrev -> cell.setOnClickListener { showScoreInput(round, player) }
+                canEnter    -> cell.setOnClickListener { showScoreInput(round, player, isEdit = rawScore != null) }
+                canEditPrev -> cell.setOnClickListener { showScoreInput(round, player, isEdit = true) }
             }
 
             row.addView(cell)
@@ -195,11 +222,11 @@ class CactusGameActivity : AppCompatActivity() {
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow()
         row.addView(makeLabelCell(getString(R.string.cactus_total)))
-        val minTotal = if (gameOver) players.minOf { it.getTotal(rounds) } else Int.MAX_VALUE
+        val maxTotal = if (gameOver) players.maxOf { it.getTotal(rounds) } else Int.MIN_VALUE
         for (player in players) {
             val total = player.getTotal(rounds)
             val cell = makePlayerCell(total.toString(), bold = true)
-            if (gameOver && total == minTotal) {
+            if (gameOver && total == maxTotal) {
                 cell.setTextColor(ContextCompat.getColor(this, R.color.cactus_score_green))
             }
             row.addView(cell)
@@ -207,25 +234,59 @@ class CactusGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ─── Score input ───────────────────────────────────────────────────────────
+    // ─── Dialogs ───────────────────────────────────────────────────────────────
 
-    private fun showScoreInput(round: CactusRound, player: CactusPlayerState) {
+    private fun showFinisherPicker(round: CactusRound) {
+        val names = players.map { it.playerName }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.cactus_who_finished))
+            .setItems(names) { _, which ->
+                round.finisherId = players[which].playerId
+                buildTable()
+            }
+            .show()
+    }
+
+    private fun showScoreInput(round: CactusRound, player: CactusPlayerState, isEdit: Boolean = false) {
         val playerIdList = players.map { it.playerId }
-        val options = arrayOf("0", "1")
+
+        val editText = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            hint      = getString(R.string.cactus_score_hint)
+            gravity   = Gravity.CENTER
+            textSize  = 20f
+            filters   = arrayOf(InputFilter.LengthFilter(2))
+            if (isEdit) round.rawScores[player.playerId]?.let { setText(it.toString()) }
+        }
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
+            addView(editText)
+        }
 
         AlertDialog.Builder(this)
             .setTitle("${player.playerName} — ${getString(R.string.cactus_enter_score)}")
-            .setItems(options) { _, which ->
-                round.scores[player.playerId] = which  // 0 or 1
-
-                if (round.isComplete(playerIdList)) {
-                    buildTable()
+            .setView(container)
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                val value = editText.text.toString().trim().toIntOrNull()
+                if (value == null || value < 0 || value > RAW_SCORE_MAX) {
+                    showScoreInput(round, player, isEdit)
+                    return@setPositiveButton
+                }
+                round.rawScores[player.playerId] = value
+                // Recompute points whenever any raw score changes (live update)
+                round.computePoints(playerIdList)
+                buildTable()
+                // Trigger end-of-round check only when newly completing the round
+                if (!isEdit && round.isComplete(playerIdList)) {
                     checkEndOfRound()
-                } else {
-                    buildTable()
                 }
             }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
+
+        editText.requestFocus()
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
@@ -253,20 +314,20 @@ class CactusGameActivity : AppCompatActivity() {
     }
 
     private fun saveResultsAndShowSummary() {
-        val totals = players.associate { it to it.getTotal(rounds) }
-        val minScore = totals.values.minOrNull() ?: 0
-        val winners = totals.filter { it.value == minScore }.keys
-        val isDraw = winners.size > 1
+        val totals  = players.associate { it to it.getTotal(rounds) }
+        val maxScore = totals.values.maxOrNull() ?: 0
+        val winners  = totals.filter { it.value == maxScore }.keys
+        val isDraw   = winners.size > 1
 
         lifecycleScope.launch {
             val results = players.map { player ->
                 GameResult(
-                    gameType = GAME_TYPE,
-                    playerId = player.playerId,
+                    gameType   = GAME_TYPE,
+                    playerId   = player.playerId,
                     playerName = player.playerName,
-                    score = player.getTotal(rounds),
-                    isWinner = !isDraw && player in winners,
-                    isDraw = isDraw && player in winners
+                    score      = player.getTotal(rounds),
+                    isWinner   = !isDraw && player in winners,
+                    isDraw     = isDraw && player in winners
                 )
             }
             database.gameResultDao().insertGameResults(results)
@@ -279,25 +340,25 @@ class CactusGameActivity : AppCompatActivity() {
         winners: Set<CactusPlayerState>,
         isDraw: Boolean
     ) {
-        val sorted = totals.entries.sortedBy { it.value }
+        val sorted = totals.entries.sortedByDescending { it.value }
         var currentRank = 1
         val entries = sorted.mapIndexed { index, (player, score) ->
             val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
-                       else { currentRank = index + 1; currentRank }
+            else { currentRank = index + 1; currentRank }
             GameResultsDialog.PlayerResult(
-                playerName = player.playerName,
+                playerName  = player.playerName,
                 playerColor = player.playerColor,
-                score = score,
-                rank = rank
+                score       = score,
+                rank        = rank
             )
         }
 
         GameResultsDialog.show(
-            context = this,
-            entries = entries,
-            isDraw = isDraw,
+            context    = this,
+            entries    = entries,
+            isDraw     = isDraw,
             scoreLabel = " pts",
-            onDismiss = { finish() }
+            onDismiss  = { finish() }
         )
     }
 
@@ -313,9 +374,9 @@ class CactusGameActivity : AppCompatActivity() {
 
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
         this.text = text
-        gravity = Gravity.CENTER
+        gravity   = Gravity.CENTER
         setPadding(dpToPx(4), cellPaddingV, dpToPx(4), cellPaddingV)
-        textSize = cellTextSize - 1f
+        textSize  = cellTextSize - 1f
         setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(dpToPx(42), LinearLayout.LayoutParams.WRAP_CONTENT)
         background = cellDrawable(ContextCompat.getColor(this@CactusGameActivity, R.color.header_cell_background))
@@ -324,11 +385,11 @@ class CactusGameActivity : AppCompatActivity() {
 
     private fun makePlayerCell(text: String, bold: Boolean = false): TextView = TextView(this).apply {
         this.text = text
-        gravity = Gravity.CENTER
+        gravity   = Gravity.CENTER
         setPadding(dpToPx(2), cellPaddingV, dpToPx(2), cellPaddingV)
-        textSize = cellTextSize
+        textSize  = cellTextSize
         if (bold) setTypeface(null, Typeface.BOLD)
-        maxLines = 1
+        maxLines  = 1
         ellipsize = TextUtils.TruncateAt.END
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         background = cellDrawable(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_background))

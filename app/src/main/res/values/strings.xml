@@ -45,14 +45,16 @@
     <string name="cactus_game">Cactus</string>
     <string name="cactus_round_label">#</string>
     <string name="cactus_total">Total</string>
-    <string name="cactus_enter_score">Enter score</string>
+    <string name="cactus_who_finished">Who finished the round?</string>
+    <string name="cactus_enter_score">Enter round score</string>
+    <string name="cactus_score_hint">0–40</string>
     <string name="cactus_minimum_players">Minimum 2 players required</string>
     <string name="cactus_maximum_players">Maximum 8 players allowed</string>
     <string name="cactus_game_over_title">Game Over?</string>
     <string name="cactus_game_over_confirm">A player reached 10 points. End the game?</string>
     <string name="cactus_best_score_short">Best: %1$d</string>
     <string name="cactus_worst_score_short">Worst: %1$d</string>
-    <string name="cactus_best_score_label">Best Score (lowest)</string>
+    <string name="cactus_best_score_label">Best Score (highest)</string>
     <string name="cactus_quit_game">Quit Game</string>
     <string name="cactus_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
