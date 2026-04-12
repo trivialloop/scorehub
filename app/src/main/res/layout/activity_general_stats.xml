@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <!-- ══════════════════════════════════════════════ -->
-            <!-- YAHTZEE card                                   -->
+            <!-- CACTUS card                                    -->
             <!-- ══════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/yahtzee_game"
+                        android:text="@string/cactus_game"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorPrimary"
@@ -57,7 +57,7 @@
 
                     <!-- Best player -->
                     <LinearLayout
-                        android:id="@+id/bestPlayerSectionYahtzee"
+                        android:id="@+id/bestPlayerSectionCactus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -96,7 +96,7 @@
                                 android:layout_marginTop="4dp">
 
                                 <View
-                                    android:id="@+id/bestPlayerColorIndicatorYahtzee"
+                                    android:id="@+id/bestPlayerColorIndicatorCactus"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:layout_marginEnd="8dp"
@@ -104,7 +104,7 @@
                                     android:visibility="gone" />
 
                                 <TextView
-                                    android:id="@+id/textBestPlayerYahtzee"
+                                    android:id="@+id/textBestPlayerCactus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="18sp"
@@ -113,9 +113,9 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Best score -->
+                    <!-- Best score (lowest in Cactus) -->
                     <LinearLayout
-                        android:id="@+id/bestScoreSectionYahtzee"
+                        android:id="@+id/bestScoreSectionCactus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -140,7 +140,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/best_score_label"
+                                android:text="@string/cactus_best_score_label"
                                 android:textSize="14sp"
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:textStyle="bold" />
@@ -153,7 +153,7 @@
                                 android:layout_marginTop="4dp">
 
                                 <View
-                                    android:id="@+id/bestScoreColorIndicatorYahtzee"
+                                    android:id="@+id/bestScoreColorIndicatorCactus"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:layout_marginEnd="8dp"
@@ -161,7 +161,7 @@
                                     android:visibility="gone" />
 
                                 <TextView
-                                    android:id="@+id/textBestScoreYahtzee"
+                                    android:id="@+id/textBestScoreCactus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="18sp"
@@ -171,7 +171,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/textNoDataYahtzee"
+                        android:id="@+id/textNoDataCactus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/no_games_played"
@@ -482,6 +482,161 @@
 
                     <TextView
                         android:id="@+id/textNoDataWingspan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_games_played"
+                        android:textSize="16sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ══════════════════════════════════════════════ -->
+            <!-- YAHTZEE card                                   -->
+            <!-- ══════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/yahtzee_game"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center" />
+
+                    <!-- Best player -->
+                    <LinearLayout
+                        android:id="@+id/bestPlayerSectionYahtzee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:text="🏆"
+                            android:textSize="32sp"
+                            android:gravity="center"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/best_player_label"
+                                android:textSize="14sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <View
+                                    android:id="@+id/bestPlayerColorIndicatorYahtzee"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:background="@drawable/circle_shape"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/textBestPlayerYahtzee"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="18sp"
+                                    android:textColor="?android:attr/textColorPrimary" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Best score -->
+                    <LinearLayout
+                        android:id="@+id/bestScoreSectionYahtzee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:text="🥇"
+                            android:textSize="32sp"
+                            android:gravity="center"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/best_score_label"
+                                android:textSize="14sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <View
+                                    android:id="@+id/bestScoreColorIndicatorYahtzee"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:background="@drawable/circle_shape"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/textBestScoreYahtzee"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="18sp"
+                                    android:textColor="?android:attr/textColorPrimary" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textNoDataYahtzee"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/no_games_played"

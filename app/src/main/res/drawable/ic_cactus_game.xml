@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Pot -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M20,44 L44,44 L41,58 L23,58 Z" />
+
+    <!-- Pot rim -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M18,40 Q18,44 20,44 L44,44 Q46,44 46,40 L18,40 Z" />
+
+    <!-- Main cactus body -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M28,40 L28,16 Q28,10 32,10 Q36,10 36,16 L36,40 Z" />
+
+    <!-- Left arm -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M28,30 Q28,24 22,24 Q16,24 16,28 L16,32 Q16,34 18,34 L28,34 Z" />
+
+    <!-- Right arm -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M36,26 Q36,20 42,20 Q48,20 48,24 L48,28 Q48,30 46,30 L36,30 Z" />
+
+    <!-- Left arm tip -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M16,24 Q16,20 18,20 Q20,20 20,24 L20,28 Q20,28 16,28 Z" />
+
+    <!-- Right arm tip -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M48,20 Q48,16 46,16 Q44,16 44,20 L44,24 Q44,24 48,24 Z" />
+</vector>

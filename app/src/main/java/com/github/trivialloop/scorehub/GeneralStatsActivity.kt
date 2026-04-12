@@ -39,18 +39,18 @@ class GeneralStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
 
-                // ── Yahtzee ───────────────────────────────────────────────
+                // ── Cactus ────────────────────────────────────────────────
                 loadGameStats(
-                    gameType          = "yahtzee",
+                    gameType          = "cactus",
                     players           = players,
-                    bestPlayerView    = binding.textBestPlayerYahtzee,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorYahtzee,
-                    bestPlayerSection = binding.bestPlayerSectionYahtzee,
-                    bestScoreView     = binding.textBestScoreYahtzee,
-                    bestScoreColor    = binding.bestScoreColorIndicatorYahtzee,
-                    bestScoreSection  = binding.bestScoreSectionYahtzee,
-                    noDataView        = binding.textNoDataYahtzee,
-                    bestScoreIsLowest = false
+                    bestPlayerView    = binding.textBestPlayerCactus,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorCactus,
+                    bestPlayerSection = binding.bestPlayerSectionCactus,
+                    bestScoreView     = binding.textBestScoreCactus,
+                    bestScoreColor    = binding.bestScoreColorIndicatorCactus,
+                    bestScoreSection  = binding.bestScoreSectionCactus,
+                    noDataView        = binding.textNoDataCactus,
+                    bestScoreIsLowest = true
                 )
 
                 // ── Skyjo ─────────────────────────────────────────────────
@@ -78,6 +78,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreColor    = binding.bestScoreColorIndicatorWingspan,
                     bestScoreSection  = binding.bestScoreSectionWingspan,
                     noDataView        = binding.textNoDataWingspan,
+                    bestScoreIsLowest = false
+                )
+
+                // ── Yahtzee ───────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "yahtzee",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerYahtzee,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorYahtzee,
+                    bestPlayerSection = binding.bestPlayerSectionYahtzee,
+                    bestScoreView     = binding.textBestScoreYahtzee,
+                    bestScoreColor    = binding.bestScoreColorIndicatorYahtzee,
+                    bestScoreSection  = binding.bestScoreSectionYahtzee,
+                    noDataView        = binding.textNoDataYahtzee,
                     bestScoreIsLowest = false
                 )
             }
