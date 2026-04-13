@@ -100,7 +100,7 @@ class CribbageGameActivity : AppCompatActivity() {
     /**
      * Fixed column layout (7 columns total):
      *
-     *  [#] │ players[0]: En jeu │ Fin de manche │ Crib │ players[1]: En jeu │ Fin de manche │ Crib
+     *  [#] │ players[0]: In play │ End of round │ Crib │ players[1]: In play │ End of round │ Crib
      *
      * - The Crib column for the non-dealer shows a strongly-dimmed permanent placeholder.
      * - ALL cells in a row share the same fixed height (ROW_HEIGHT_DP) for visual consistency.
@@ -138,7 +138,7 @@ class CribbageGameActivity : AppCompatActivity() {
     /**
      * Two-row header:
      *  Row 1 (ROW_HEIGHT_DP): [empty] │ [Player 0 name — weight 3] │ [Player 1 name — weight 3]
-     *  Row 2 (ROW_HEIGHT_DP): [#]     │ [En jeu][Fin][Crib]        │ [En jeu][Fin][Crib]
+     *  Row 2 (ROW_HEIGHT_DP): [#]     │ [In play][End][Crib]        │ [In play][End][Crib]
      */
     private fun buildHeaderRow(): LinearLayout {
         val container = LinearLayout(this).apply {
@@ -172,17 +172,17 @@ class CribbageGameActivity : AppCompatActivity() {
 
     /**
      * One row per round:
-     *  [roundNum] │ [p0: En jeu] [p0: Fin] [p0: Crib] │ [p1: En jeu] [p1: Fin] [p1: Crib]
+     *  [roundNum] │ [p0: In play] [p0: End] [p0: Crib] │ [p1: In play] [p1: End] [p1: Crib]
      *
      * Entry order (dealer = player whose colour appears on the round label):
-     *   1. En jeu: both players simultaneously (+/−)
-     *      AND dealer Fin de manche: can also be filled during the En jeu phase.
-     *   2. When dealer Fin is entered → Pone Fin becomes editable.
-     *   3. When Pone Fin is entered   → Crib becomes editable.
+     *   1. In play: both players simultaneously (+/−)
+     *      AND dealer End of round: can also be filled during the In play phase.
+     *   2. When dealer End is entered → Pone End becomes editable.
+     *   3. When Pone End is entered   → Crib becomes editable.
      *   4. When Crib is entered       → round complete, new round appended.
      *
      * Previous round locking:
-     *   - A previous round stays editable (Fin + Crib) until the current round has
+     *   - A previous round stays editable (End + Crib) until the current round has
      *     ANY pegging activity (any +/− press). Once locked, cells show LOCKED_PREV style.
      */
     private fun buildRoundRow(round: CribbageRound, roundIndex: Int): LinearLayout {
@@ -217,7 +217,7 @@ class CribbageGameActivity : AppCompatActivity() {
             val myHand    = round.handScores[player.playerId]
             val oppHand   = if (player == p0) hand1 else hand0
 
-            // ── En jeu (Pegging) ───────────────────────────────────────────────
+            // ── In play (Pegging) ───────────────────────────────────────────────
             //
             // Editable on: last round while pegging is open, OR prev round while no new-round pegging yet.
             // On prev round: only +/− if prevRoundEditable AND round's own pegging is still open.
@@ -256,7 +256,7 @@ class CribbageGameActivity : AppCompatActivity() {
                 }
             ))
 
-            // ── Fin de manche (Hand) ───────────────────────────────────────────
+            // ── End of round (Hand) ───────────────────────────────────────────
             //
             // Entry order: dealer first, then pone (after dealer entered).
             //
@@ -602,7 +602,7 @@ class CribbageGameActivity : AppCompatActivity() {
         return container
     }
 
-    /** Hand / Fin de manche cell — tappable, MATCH_PARENT height. */
+    /** Hand / End of round cell — tappable, MATCH_PARENT height. */
     private fun makeHandCell(
         score: Int?,
         color: CribbageCellColor,
