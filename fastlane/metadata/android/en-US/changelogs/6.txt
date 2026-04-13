@@ -1,0 +1,3 @@
+### Added
+- Add cactus game
+- Add escoba game

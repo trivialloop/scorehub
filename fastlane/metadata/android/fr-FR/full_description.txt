@@ -12,6 +12,8 @@ Fonctionnalités :
 Parfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions de jeu !
 
 Jeux actuellement supportés :
-- Yams
+- Cactus
+- Escoba
 - Skyjo
 - Wingspan
+- Yams
