@@ -11,6 +11,11 @@
     <color name="cactus_score_red">#F44336</color>
     <color name="cactus_cell_border">#555555</color>
 
+    <!-- Escoba UI colors -->
+    <color name="escoba_score_green">#4CAF50</color>
+    <color name="escoba_score_red">#F44336</color>
+    <color name="escoba_cell_border">#555555</color>
+
     <!-- Skyjo UI colors -->
     <color name="skyjo_score_green">#4CAF50</color>
     <color name="skyjo_score_orange">#FF9800</color>

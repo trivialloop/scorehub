@@ -53,6 +53,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false   // highest score wins in Cactus
                 )
 
+                // ── Escoba ────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "escoba",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerEscoba,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorEscoba,
+                    bestPlayerSection = binding.bestPlayerSectionEscoba,
+                    bestScoreView     = binding.textBestScoreEscoba,
+                    bestScoreColor    = binding.bestScoreColorIndicatorEscoba,
+                    bestScoreSection  = binding.bestScoreSectionEscoba,
+                    noDataView        = binding.textNoDataEscoba,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "skyjo",
