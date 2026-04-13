@@ -41,32 +41,22 @@
     <string name="delete_player_message">Are you sure you want to delete %1$s? This will remove all their statistics.</string>
     <string name="reorder">Reorder</string>
 
-    <!-- Yahtzee Game -->
-    <string name="yahtzee_game">Yahtzee</string>
-    <string name="yahtzee_ones">Ones</string>
-    <string name="yahtzee_twos">Twos</string>
-    <string name="yahtzee_threes">Threes</string>
-    <string name="yahtzee_fours">Fours</string>
-    <string name="yahtzee_fives">Fives</string>
-    <string name="yahtzee_sixes">Sixes</string>
-    <string name="yahtzee_three_kind">Three of a Kind</string>
-    <string name="yahtzee_four_kind">Four of a Kind</string>
-    <string name="yahtzee_full_house">Full House</string>
-    <string name="yahtzee_small_straight">Small Straight</string>
-    <string name="yahtzee_large_straight">Large Straight</string>
-    <string name="yahtzee_yahtzee">Yahtzee</string>
-    <string name="yahtzee_chance">Chance</string>
-    <string name="yahtzee_total">Total</string>
-    <string name="yahtzee_upper_total">Upper Total</string>
-    <string name="yahtzee_bonus">Bonus</string>
-    <string name="yahtzee_lower_total">Lower Total</string>
-    <string name="yahtzee_game_complete">Game Complete?</string>
-    <string name="yahtzee_game_complete_message">Are all scores filled in and the game finished?</string>
-    <string name="yahtzee_game_results">Game Results</string>
-    <string name="yahtzee_winner_message">Winner: %1$s!</string>
-    <string name="yahtzee_draw_message">It\'s a draw!</string>
-    <string name="yahtzee_quit_game">Quit Game</string>
-    <string name="yahtzee_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <!-- Cactus Game -->
+    <string name="cactus_game">Cactus</string>
+    <string name="cactus_round_label">#</string>
+    <string name="cactus_total">Total</string>
+    <string name="cactus_who_finished">Who finished the round?</string>
+    <string name="cactus_enter_score">Enter round score</string>
+    <string name="cactus_score_hint">0–40</string>
+    <string name="cactus_minimum_players">Minimum 2 players required</string>
+    <string name="cactus_maximum_players">Maximum 8 players allowed</string>
+    <string name="cactus_game_over_title">Game Over?</string>
+    <string name="cactus_game_over_confirm">A player reached 10 points. End the game?</string>
+    <string name="cactus_best_score_short">Best: %1$d</string>
+    <string name="cactus_worst_score_short">Worst: %1$d</string>
+    <string name="cactus_best_score_label">Best Score (highest)</string>
+    <string name="cactus_quit_game">Quit Game</string>
+    <string name="cactus_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
@@ -102,6 +92,33 @@
     <string name="wingspan_quit_game">Quit Game</string>
     <string name="wingspan_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
     <string name="wingspan_best_score_label">Best Score</string>
+
+    <!-- Yahtzee Game -->
+    <string name="yahtzee_game">Yahtzee</string>
+    <string name="yahtzee_ones">Ones</string>
+    <string name="yahtzee_twos">Twos</string>
+    <string name="yahtzee_threes">Threes</string>
+    <string name="yahtzee_fours">Fours</string>
+    <string name="yahtzee_fives">Fives</string>
+    <string name="yahtzee_sixes">Sixes</string>
+    <string name="yahtzee_three_kind">Three of a Kind</string>
+    <string name="yahtzee_four_kind">Four of a Kind</string>
+    <string name="yahtzee_full_house">Full House</string>
+    <string name="yahtzee_small_straight">Small Straight</string>
+    <string name="yahtzee_large_straight">Large Straight</string>
+    <string name="yahtzee_yahtzee">Yahtzee</string>
+    <string name="yahtzee_chance">Chance</string>
+    <string name="yahtzee_total">Total</string>
+    <string name="yahtzee_upper_total">Upper Total</string>
+    <string name="yahtzee_bonus">Bonus</string>
+    <string name="yahtzee_lower_total">Lower Total</string>
+    <string name="yahtzee_game_complete">Game Complete?</string>
+    <string name="yahtzee_game_complete_message">Are all scores filled in and the game finished?</string>
+    <string name="yahtzee_game_results">Game Results</string>
+    <string name="yahtzee_winner_message">Winner: %1$s!</string>
+    <string name="yahtzee_draw_message">It\'s a draw!</string>
+    <string name="yahtzee_quit_game">Quit Game</string>
+    <string name="yahtzee_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
     <!-- Statistics -->
     <string name="general_statistics">General Statistics</string>

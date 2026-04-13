@@ -6,12 +6,10 @@
     <color name="header_cell_background">#3A3A3A</color>
     <color name="header_cell_text">#FFFFFF</color>
 
-    <!-- Yahtzee UI colors -->
-    <color name="yahtzee_cell_border">#555555</color>
-    <color name="yahtzee_score_filled_text">#666666</color>
-    <color name="yahtzee_calculated_cell_background">#1E1E1E</color>
-    <color name="yahtzee_calculated_cell_text">#E0E0E0</color>
-    <color name="yahtzee_bonus_progress_text">#AAAAAA</color>
+    <!-- Cactus UI colors -->
+    <color name="cactus_score_green">#4CAF50</color>
+    <color name="cactus_score_red">#F44336</color>
+    <color name="cactus_cell_border">#555555</color>
 
     <!-- Skyjo UI colors -->
     <color name="skyjo_score_green">#4CAF50</color>
@@ -23,4 +21,11 @@
     <color name="wingspan_score_green">#4CAF50</color>
     <color name="wingspan_score_red">#F44336</color>
     <color name="wingspan_cell_border">#555555</color>
+
+    <!-- Yahtzee UI colors -->
+    <color name="yahtzee_cell_border">#555555</color>
+    <color name="yahtzee_score_filled_text">#666666</color>
+    <color name="yahtzee_calculated_cell_background">#1E1E1E</color>
+    <color name="yahtzee_calculated_cell_text">#E0E0E0</color>
+    <color name="yahtzee_bonus_progress_text">#AAAAAA</color>
 </resources>

@@ -20,20 +20,20 @@
         </activity>
 
         <activity
-            android:name=".games.yahtzee.YahtzeePlayerSelectionActivity"
+            android:name=".games.cactus.CactusPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".games.yahtzee.YahtzeeGameActivity"
-            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+            android:name=".games.cactus.CactusGameActivity"
+            android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
 
         <activity
-            android:name=".games.yahtzee.YahtzeeStatsActivity"
-            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+            android:name=".games.cactus.CactusStatsActivity"
+            android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
 
         <activity
-            android:name=".games.yahtzee.YahtzeeTop20Activity"
-            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+            android:name=".games.cactus.CactusTop20Activity"
+            android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
 
         <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
@@ -66,6 +66,22 @@
         <activity
             android:name=".games.wingspan.WingspanTop20Activity"
             android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.yahtzee.YahtzeePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.yahtzee.YahtzeeGameActivity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.yahtzee.YahtzeeStatsActivity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.yahtzee.YahtzeeTop20Activity"
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
 
         <activity
             android:name=".GeneralStatsActivity"

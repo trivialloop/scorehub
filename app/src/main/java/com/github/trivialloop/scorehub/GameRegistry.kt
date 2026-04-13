@@ -1,6 +1,7 @@
 package com.github.trivialloop.scorehub
 
 import android.content.Context
+import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -27,11 +28,11 @@ object GameRegistry {
      */
     val ALL_GAMES: List<GameDefinition> = listOf(
         GameDefinition(
-            gameType        = "yahtzee",
-            nameEnFallback  = "Yahtzee",
-            nameResId       = R.string.yahtzee_game,
-            iconResId       = R.drawable.ic_yahtzee_game,
-            activityClass   = YahtzeePlayerSelectionActivity::class.java
+            gameType        = "cactus",
+            nameEnFallback  = "Cactus",
+            nameResId       = R.string.cactus_game,
+            iconResId       = R.drawable.ic_cactus_game,
+            activityClass   = CactusPlayerSelectionActivity::class.java
         ),
         GameDefinition(
             gameType        = "skyjo",
@@ -46,6 +47,13 @@ object GameRegistry {
             nameResId       = R.string.wingspan_game,
             iconResId       = R.drawable.ic_wingspan_game,
             activityClass   = WingspanPlayerSelectionActivity::class.java
+        ),
+        GameDefinition(
+            gameType        = "yahtzee",
+            nameEnFallback  = "Yahtzee",
+            nameResId       = R.string.yahtzee_game,
+            iconResId       = R.drawable.ic_yahtzee_game,
+            activityClass   = YahtzeePlayerSelectionActivity::class.java
         ),
     )
 
