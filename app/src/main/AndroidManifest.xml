@@ -36,6 +36,22 @@
             android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.escoba.EscobaPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.escoba.EscobaGameActivity"
+            android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.escoba.EscobaStatsActivity"
+            android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.escoba.EscobaTop20Activity"
+            android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

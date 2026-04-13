@@ -2,6 +2,7 @@ package com.github.trivialloop.scorehub
 
 import android.content.Context
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -33,6 +34,13 @@ object GameRegistry {
             nameResId       = R.string.cactus_game,
             iconResId       = R.drawable.ic_cactus_game,
             activityClass   = CactusPlayerSelectionActivity::class.java
+        ),
+        GameDefinition(
+            gameType        = "escoba",
+            nameEnFallback  = "Escoba",
+            nameResId       = R.string.escoba_game,
+            iconResId       = R.drawable.ic_escoba_game,
+            activityClass   = EscobaPlayerSelectionActivity::class.java
         ),
         GameDefinition(
             gameType        = "skyjo",

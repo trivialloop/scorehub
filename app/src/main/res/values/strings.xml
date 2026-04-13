@@ -58,6 +58,20 @@
     <string name="cactus_quit_game">Quit Game</string>
     <string name="cactus_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
+    <!-- Escoba Game -->
+    <string name="escoba_game">Escoba</string>
+    <string name="escoba_round_label">#</string>
+    <string name="escoba_total">Total</string>
+    <string name="escoba_enter_score">Enter score</string>
+    <string name="escoba_score_hint">0–20</string>
+    <string name="escoba_minimum_players">Minimum 2 players required</string>
+    <string name="escoba_maximum_players">Maximum 6 players allowed</string>
+    <string name="escoba_game_over_title">Game Over?</string>
+    <string name="escoba_game_over_confirm">A player reached 21 points. End the game?</string>
+    <string name="escoba_quit_game">Quit Game</string>
+    <string name="escoba_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="escoba_best_score_label">Best Score</string>
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
