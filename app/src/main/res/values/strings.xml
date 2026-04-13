@@ -62,10 +62,10 @@
     <string name="cribbage_game">Cribbage</string>
     <string name="cribbage_round_label">#</string>
     <string name="cribbage_total">Total</string>
-    <string name="cribbage_pegging">Pegging</string>
-    <string name="cribbage_hand">Hand</string>
+    <string name="cribbage_pegging">In play</string>
+    <string name="cribbage_hand">End of round</string>
     <string name="cribbage_crib">Crib</string>
-    <string name="cribbage_hand_score">Hand score</string>
+    <string name="cribbage_hand_score">End of round score</string>
     <string name="cribbage_crib_score">Crib score</string>
     <string name="cribbage_minimum_players">Exactly 2 players required</string>
     <string name="cribbage_maximum_players">Exactly 2 players required</string>

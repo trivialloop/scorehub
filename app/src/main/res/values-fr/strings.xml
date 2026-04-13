@@ -63,9 +63,9 @@
     <string name="cribbage_round_label">#</string>
     <string name="cribbage_total">Total</string>
     <string name="cribbage_pegging">En jeu</string>
-    <string name="cribbage_hand">Main</string>
+    <string name="cribbage_hand">Fin de manche</string>
     <string name="cribbage_crib">Crib</string>
-    <string name="cribbage_hand_score">Score de main</string>
+    <string name="cribbage_hand_score">Score de fin de manche</string>
     <string name="cribbage_crib_score">Score du crib</string>
     <string name="cribbage_minimum_players">Exactement 2 joueurs requis</string>
     <string name="cribbage_maximum_players">Exactement 2 joueurs requis</string>
