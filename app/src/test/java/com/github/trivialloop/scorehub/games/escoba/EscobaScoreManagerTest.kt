@@ -55,7 +55,7 @@ class EscobaScoreManagerTest {
     @Test
     fun `getTotal returns 0 when rounds have no score for this player`() {
         val player = EscobaPlayerState(1L, "Alice", 0xFF0000)
-        val round = EscobaRound(1) // scores map is empty
+        val round = EscobaRound(1)
 
         assertEquals(0, player.getTotal(listOf(round)))
     }
@@ -76,7 +76,7 @@ class EscobaScoreManagerTest {
         val player = EscobaPlayerState(1L, "Alice", 0xFF0000)
 
         val round1 = EscobaRound(1).apply { scores[1L] = 6 }
-        val round2 = EscobaRound(2) // Alice has no score here
+        val round2 = EscobaRound(2)
         val round3 = EscobaRound(3).apply { scores[1L] = 4 }
 
         assertEquals(10, player.getTotal(listOf(round1, round2, round3)))
@@ -111,7 +111,6 @@ class EscobaScoreManagerTest {
         val player = EscobaPlayerState(1L, "Alice", 0xFF0000)
 
         val rounds = (1..4).map { i -> EscobaRound(i).apply { scores[1L] = 5 } }
-        // 4 × 5 = 20, still below 21
         assertEquals(20, player.getTotal(rounds))
         assertFalse(player.getTotal(rounds) >= 21)
     }
@@ -183,13 +182,11 @@ class EscobaScoreManagerTest {
     }
 
     // ─── Cell color logic ─────────────────────────────────────────────────────
-    // These helpers mirror the color-picking logic in EscobaGameActivity
-    // so the rules are verifiable without Android context.
 
     private fun getCellColor(score: Int, allScores: List<Int>): String {
         val min = allScores.minOrNull() ?: return "DEFAULT"
         val max = allScores.maxOrNull() ?: return "DEFAULT"
-        if (min == max) return "DEFAULT"   // all scores identical → neutral
+        if (min == max) return "DEFAULT"
         return when (score) {
             max  -> "GREEN"
             min  -> "RED"
@@ -236,16 +233,15 @@ class EscobaScoreManagerTest {
     }
 
     @Test
-    fun `two-player round: high gets GREEN, low gets RED`() {
+    fun `two-player round high gets GREEN low gets RED`() {
         val scores = listOf(4, 10)
         assertEquals("GREEN", getCellColor(10, scores))
         assertEquals("RED",   getCellColor(4,  scores))
     }
 
     @Test
-    fun `single player round: only one score returns DEFAULT`() {
+    fun `single player round returns DEFAULT`() {
         val scores = listOf(8)
-        // min == max → all same → neutral
         assertEquals("DEFAULT", getCellColor(8, scores))
     }
 

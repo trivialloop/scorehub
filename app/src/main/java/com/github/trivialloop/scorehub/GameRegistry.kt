@@ -1,6 +1,5 @@
 package com.github.trivialloop.scorehub
 
-import android.content.Context
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
