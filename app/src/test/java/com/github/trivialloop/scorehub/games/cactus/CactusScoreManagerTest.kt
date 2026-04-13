@@ -106,10 +106,7 @@ class CactusScoreManagerTest {
     // Key rule: min is computed among NON-FINISHERS only.
 
     @Test
-    fun `non-finisher with min score among non-finishers gets 1 pt - finisher has lower raw but loses`() {
-        // Finisher raw=8 (>5, loses). Non-finishers: 12 and 5.
-        // Min among non-finishers = 5 → player 3 gets 1 pt.
-        // Even though finisher raw (8) is NOT the global min, rule is min of non-finishers.
+    fun `non-finisher with min score among non-finishers gets 1 pt`() {
         val round = CactusRound(1).apply {
             finisherId = 1L
             rawScores[1L] = 8; rawScores[2L] = 12; rawScores[3L] = 5
@@ -121,16 +118,16 @@ class CactusScoreManagerTest {
     }
 
     @Test
-    fun `non-finisher gets 1 pt when finisher loses and has lowest raw - min taken among non-finishers`() {
+    fun `non-finisher gets 1 pt when finisher has lowest global raw but loses`() {
         // Finisher raw=8 (>5, loses), is also global min.
-        // Min among non-finishers = 10 → player 2 gets 1 pt (not finisher).
+        // Min among non-finishers = 10 → player 2 gets 1 pt.
         val round = CactusRound(1).apply {
             finisherId = 1L
             rawScores[1L] = 8; rawScores[2L] = 10; rawScores[3L] = 20
         }
         round.computePoints(listOf(1L, 2L, 3L))
-        assertEquals(0, round.points[1L])  // finisher loses (> 5)
-        assertEquals(1, round.points[2L])  // min among non-finishers = 10
+        assertEquals(0, round.points[1L])
+        assertEquals(1, round.points[2L])
         assertEquals(0, round.points[3L])
     }
 
@@ -170,8 +167,7 @@ class CactusScoreManagerTest {
     }
 
     @Test
-    fun `two player game finisher loses because score gt 5 - other gets 1 pt even if finisher has lower raw`() {
-        // Finisher raw=8 (loses, >5). Other raw=15. Min non-finisher = 15 → other gets 1 pt.
+    fun `two player game finisher loses gt 5 - other gets 1 pt even if finisher has lower raw`() {
         val round = CactusRound(1).apply {
             finisherId = 1L
             rawScores[1L] = 8; rawScores[2L] = 15
@@ -260,13 +256,15 @@ class CactusScoreManagerTest {
     }
 
     @Test
-    fun `getCellColor non-finisher with middle raw returns DEFAULT`() {
+    fun `getCellColor non-finisher with middle raw among 4 players returns DEFAULT`() {
+        // Finisher=1L (raw=20, loses), player2=5 (global min), player3=10 (middle), player4=30 (global max)
+        // Player3 is neither global min nor global max → DEFAULT
         val round = CactusRound(1).apply {
             finisherId = 1L
-            rawScores[1L] = 5; rawScores[2L] = 2; rawScores[3L] = 15
+            rawScores[1L] = 20; rawScores[2L] = 5; rawScores[3L] = 10; rawScores[4L] = 30
         }
-        round.computePoints(listOf(1L, 2L, 3L))
-        assertEquals(CactusCellColor.DEFAULT, round.getCellColor(1L, listOf(1L, 2L, 3L)))
+        round.computePoints(listOf(1L, 2L, 3L, 4L))
+        assertEquals(CactusCellColor.DEFAULT, round.getCellColor(3L, listOf(1L, 2L, 3L, 4L)))
     }
 
     @Test
