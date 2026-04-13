@@ -1,6 +1,7 @@
 package com.github.trivialloop.scorehub
 
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
@@ -33,6 +34,13 @@ object GameRegistry {
             nameResId       = R.string.cactus_game,
             iconResId       = R.drawable.ic_cactus_game,
             activityClass   = CactusPlayerSelectionActivity::class.java
+        ),
+        GameDefinition(
+            gameType        = "cribbage",
+            nameEnFallback  = "Cribbage",
+            nameResId       = R.string.cribbage_game,
+            iconResId       = R.drawable.ic_cribbage_game,
+            activityClass   = CribbagePlayerSelectionActivity::class.java
         ),
         GameDefinition(
             gameType        = "escoba",

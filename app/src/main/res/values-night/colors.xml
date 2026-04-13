@@ -11,6 +11,13 @@
     <color name="cactus_score_red">#F44336</color>
     <color name="cactus_cell_border">#555555</color>
 
+    <!-- Cribbage UI colors -->
+    <color name="cribbage_score_green">#4CAF50</color>
+    <color name="cribbage_score_red">#F44336</color>
+    <color name="cribbage_cell_border">#555555</color>
+    <color name="cribbage_crib_background">#3E3521</color>
+    <color name="cribbage_editable_hint">#1B3A1F</color>
+
     <!-- Escoba UI colors -->
     <color name="escoba_score_green">#4CAF50</color>
     <color name="escoba_score_red">#F44336</color>

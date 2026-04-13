@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Card base -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M8,6 Q8,2 12,2 L52,2 Q56,2 56,6 L56,58 Q56,62 52,62 L12,62 Q8,62 8,58 Z" />
+
+    <!-- Card shine -->
+    <path
+        android:fillColor="#22FFFFFF"
+        android:pathData="M8,6 Q8,2 12,2 L52,2 Q56,2 56,6 L56,22 L8,22 Z" />
+
+    <!-- Heart suit symbol (top-left) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M16,14 C16,11 18,9 20,11 C22,9 24,11 24,14 C24,17 20,20 20,20 C20,20 16,17 16,14 Z" />
+
+    <!-- Club suit symbol (center) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M32,27 C32,24.8 33.8,23 36,23 C38.2,23 40,24.8 40,27 C40,28.4 39.3,29.6 38.2,30.3 C39.1,30.8 40,31.9 40,33.5 C40,35.7 38.2,37.5 36,37.5 C33.8,37.5 32,35.7 32,33.5 C32,31.9 32.9,30.8 33.8,30.3 C32.7,29.6 32,28.4 32,27 Z M28,27 C28,24.8 29.8,23 32,23 C34.2,23 36,24.8 36,27 C36,28.4 35.3,29.6 34.2,30.3 C35.1,30.8 36,31.9 36,33.5 C36,35.7 34.2,37.5 32,37.5 C29.8,37.5 28,35.7 28,33.5 C28,31.9 28.9,30.8 29.8,30.3 C28.7,29.6 28,28.4 28,27 Z M30,40 L34,40 L34,44 L30,44 Z" />
+
+    <!-- Score line decorations -->
+    <path
+        android:fillColor="#66FFFFFF"
+        android:pathData="M16,48 L48,48"
+        android:strokeColor="#66FFFFFF"
+        android:strokeWidth="2" />
+    <path
+        android:fillColor="#66FFFFFF"
+        android:pathData="M16,52 L36,52"
+        android:strokeColor="#66FFFFFF"
+        android:strokeWidth="2" />
+</vector>

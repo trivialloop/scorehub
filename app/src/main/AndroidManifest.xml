@@ -36,6 +36,18 @@
             android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.cribbage.CribbageGameActivity"
+            android:parentActivityName=".games.cribbage.CribbagePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.cribbage.CribbageStatsActivity"
+            android:parentActivityName=".games.cribbage.CribbagePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.cribbage.CribbageTop20Activity"
+            android:parentActivityName=".games.cribbage.CribbagePlayerSelectionActivity" />
+
+        <activity
             android:name=".games.escoba.EscobaPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

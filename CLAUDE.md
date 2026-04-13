@@ -168,4 +168,4 @@ The main screen reads its game list from a **central registry** — no change to
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. **Add a section** in `activity_general_stats.xml` and
    `GeneralStatsActivity.kt`.
-9. **Add unit tests** in `<Game>ScoreManagerTest.kt`.
+9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. This step is mandatory — every game must ship with tests covering scoring logic, state helpers, and edge cases.

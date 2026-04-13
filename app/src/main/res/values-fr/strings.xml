@@ -58,6 +58,21 @@
     <string name="cactus_quit_game">Quitter la partie</string>
     <string name="cactus_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
+    <!-- Cribbage Game -->
+    <string name="cribbage_game">Cribbage</string>
+    <string name="cribbage_round_label">#</string>
+    <string name="cribbage_total">Total</string>
+    <string name="cribbage_pegging">En jeu</string>
+    <string name="cribbage_hand">Main</string>
+    <string name="cribbage_crib">Crib</string>
+    <string name="cribbage_hand_score">Score de main</string>
+    <string name="cribbage_crib_score">Score du crib</string>
+    <string name="cribbage_minimum_players">Exactement 2 joueurs requis</string>
+    <string name="cribbage_maximum_players">Exactement 2 joueurs requis</string>
+    <string name="cribbage_quit_game">Quitter la partie</string>
+    <string name="cribbage_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="cribbage_best_score_label">Meilleur Score</string>
+
     <!-- Escoba Game -->
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
