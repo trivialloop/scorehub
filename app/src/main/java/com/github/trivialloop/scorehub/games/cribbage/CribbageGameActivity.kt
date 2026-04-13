@@ -43,8 +43,8 @@ class CribbageGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE      = "cribbage"
         private const val WIN_SCORE      = 121
-        private const val MAX_HAND_SCORE = 29
-        private const val MAX_CRIB_SCORE = 29
+        private const val MAX_HAND_SCORE = 99
+        private const val MAX_CRIB_SCORE = 99
 
         // Fixed row height for all cells — ensures uniform height across the row
         private const val ROW_HEIGHT_DP  = 48
@@ -297,7 +297,7 @@ class CribbageGameActivity : AppCompatActivity() {
             ))
 
             // ── Crib ───────────────────────────────────────────────────────────
-            if (isDealer) {
+            if (! isDealer) {
                 val cribEditable = !gameOver &&
                         (isLastRound && round.isPoneHandEntered() && round.cribScore == null
                                 || prevRoundEditable)
