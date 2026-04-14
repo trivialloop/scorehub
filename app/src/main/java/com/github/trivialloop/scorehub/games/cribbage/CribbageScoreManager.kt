@@ -3,36 +3,41 @@ package com.github.trivialloop.scorehub.games.cribbage
 /**
  * Represents a single Cribbage round.
  *
- * In Cribbage (2 players), players alternate holding the crib.
- * - [dealerId]    : player who holds the crib this round. Enters hand score FIRST.
- * - [nonDealerId] : the pone. Enters hand score SECOND.
+ * Terminology:
+ *  - [firstPlayerId] : plays first this round. Their colour appears on the round label.
+ *                      They enter their end-of-round score FIRST.
+ *  - [dealerId]      : deals the cards and holds the crib this round.
+ *                      They enter their end-of-round score SECOND, then the crib.
  *
- * Score entry order within a round:
- *  1. Pegging ("En jeu") — both players simultaneously via +/− buttons.
- *     Also editable: dealer's end-of-round hand (can be filled at any time during pegging phase).
- *  2. Once dealer hand is entered → pone hand becomes editable.
- *  3. Once pone hand is entered  → crib becomes editable.
- *  4. Once crib is entered       → round is complete, new round appended.
+ * Score entry order:
+ *  1. In-play ("En jeu") — both players simultaneously via +/− buttons.
+ *     The first player can also enter their end-of-round score at any time during
+ *     this phase (doing so locks pegging for both players).
+ *  2. Once the first player's end-of-round score is entered
+ *     → dealer end-of-round becomes editable.
+ *  3. Once the dealer's end-of-round score is entered
+ *     → crib becomes editable.
+ *  4. Once crib is entered → round complete, new round appended.
  *
- * Locking of the previous round:
- *  - Previous round's pegging and hand/crib scores remain editable until the NEW round
- *    has any pegging score entered (i.e. sum of pegging for either player > 0).
+ * Previous round locking:
+ *  A previous round's end-of-round and crib fields remain editable until the new
+ *  round has ANY pegging activity (first +/− press in the new round).
  */
 data class CribbageRound(
     val roundNumber: Int,
-    val dealerId: Long,
-    val nonDealerId: Long
+    val firstPlayerId: Long,   // plays first, colour on round label, enters score first
+    val dealerId: Long         // deals cards, has crib, enters score second
 ) {
-    // In-play (pegging / "En jeu") scores — start at 0
+    // In-play scores — start at 0, both players edit via +/−
     val peggingScores: MutableMap<Long, Int> = mutableMapOf(
-        dealerId    to 0,
-        nonDealerId to 0
+        firstPlayerId to 0,
+        dealerId      to 0
     )
 
     // End-of-round hand scores (null = not yet entered)
     val handScores: MutableMap<Long, Int?> = mutableMapOf(
-        dealerId    to null,
-        nonDealerId to null
+        firstPlayerId to null,
+        dealerId      to null
     )
 
     // Crib score — only the dealer has one (null = not yet entered)
@@ -40,31 +45,30 @@ data class CribbageRound(
 
     // ── State helpers ──────────────────────────────────────────────────────────
 
-    /** True once the DEALER's hand score has been entered (dealer goes first). */
-    fun isDealerHandEntered(): Boolean = handScores[dealerId] != null
+    /** True once the first player's end-of-round score has been entered. */
+    fun isFirstPlayerHandEntered(): Boolean = handScores[firstPlayerId] != null
 
-    /** True once the PONE's hand score has been entered (pone goes second). */
-    fun isPoneHandEntered(): Boolean = handScores[nonDealerId] != null
+    /** True once the dealer's end-of-round score has been entered. */
+    fun isDealerHandEntered(): Boolean = handScores[dealerId] != null
 
     /** True once the crib score has been entered (round fully complete). */
     fun isComplete(): Boolean = cribScore != null
 
     /**
-     * Pegging is editable as long as the dealer has NOT yet entered a hand score.
-     * Once the dealer submits their hand, pegging is locked for both players.
+     * Pegging is editable until the first player enters their end-of-round score.
      */
-    fun isPeggingEditable(): Boolean = !isDealerHandEntered()
+    fun isPeggingEditable(): Boolean = !isFirstPlayerHandEntered()
 
     /**
-     * Returns true if this round has any pegging activity (either player > 0).
-     * Used to determine when the previous round should be locked.
+     * True if any +/− has been pressed in this round (either player > 0).
+     * Used to lock the previous round once the new round has started.
      */
     fun hasPeggingActivity(): Boolean =
-        (peggingScores[dealerId] ?: 0) > 0 || (peggingScores[nonDealerId] ?: 0) > 0
+        (peggingScores[firstPlayerId] ?: 0) > 0 || (peggingScores[dealerId] ?: 0) > 0
 
     // ── Score totals ───────────────────────────────────────────────────────────
 
-    /** Total score contribution for a player from this round (pegging + hand + crib if dealer). */
+    /** Total score contribution from this round for a given player. */
     fun roundTotal(playerId: Long): Int {
         val pegging = peggingScores[playerId] ?: 0
         val hand    = handScores[playerId] ?: 0
@@ -83,15 +87,15 @@ data class CribbagePlayerState(
         rounds.sumOf { it.roundTotal(playerId) }
 }
 
-/** Visual state of a cell. */
+/** Visual score comparison colour for a cell. */
 enum class CribbageCellColor { DEFAULT, GREEN, RED }
 
 /**
  * Editability / visual state of a score cell.
  *
- * EDITABLE       — can be tapped / incremented right now.
- * LOCKED_SOON    — will become editable once prerequisites are met (grayed, but not permanent).
- * LOCKED_NEVER   — this player never has this type of score in this round (e.g. pone has no crib).
- * LOCKED_PREV    — previous round is now fully locked.
+ * EDITABLE     — can be tapped / incremented right now.
+ * LOCKED_SOON  — will become editable once prerequisites are met (dimmed, temporary).
+ * LOCKED_PREV  — cell belongs to a locked round (grayed, shows value if any).
+ * LOCKED_NEVER — this player never has this score type this round (first player's crib).
  */
-enum class CellState { EDITABLE, LOCKED_SOON, LOCKED_NEVER, LOCKED_PREV }
+enum class CellState { EDITABLE, LOCKED_SOON, LOCKED_PREV, LOCKED_NEVER }

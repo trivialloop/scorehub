@@ -36,17 +36,18 @@ class CribbageGameActivity : AppCompatActivity() {
     private lateinit var playerColors: IntArray
     private lateinit var players: List<CribbagePlayerState>
 
-    // players[0] is dealer in round 1, alternates each round
+    // players[0] is firstPlayer (plays first) in round 1, alternates each round.
+    // The dealer (crib holder) is always the OTHER player.
     private val rounds = mutableListOf<CribbageRound>()
     private var gameOver = false
 
     companion object {
-        const val GAME_TYPE      = "cribbage"
+        const val GAME_TYPE          = "cribbage"
         private const val WIN_SCORE      = 121
         private const val MAX_HAND_SCORE = 99
         private const val MAX_CRIB_SCORE = 99
 
-        // Fixed row height for all cells — ensures uniform height across the row
+        // Fixed row height — ensures every cell in a row has the same height
         private const val ROW_HEIGHT_DP  = 48
     }
 
@@ -82,15 +83,15 @@ class CribbageGameActivity : AppCompatActivity() {
     // ─── Round management ──────────────────────────────────────────────────────
 
     private fun addNewRound() {
-        val roundIndex  = rounds.size
-        // Even rounds: players[0] deals; odd rounds: players[1] deals
-        val dealerIndex = roundIndex % 2
-        val poneIndex   = 1 - dealerIndex
+        val roundIndex      = rounds.size
+        // Even rounds: players[0] plays first; odd rounds: players[1] plays first
+        val firstPlayerIndex = roundIndex % 2
+        val dealerIndex      = 1 - firstPlayerIndex
         rounds.add(
             CribbageRound(
-                roundNumber = roundIndex + 1,
-                dealerId    = playerIds[dealerIndex],
-                nonDealerId = playerIds[poneIndex]
+                roundNumber   = roundIndex + 1,
+                firstPlayerId = playerIds[firstPlayerIndex],
+                dealerId      = playerIds[dealerIndex]
             )
         )
     }
@@ -98,12 +99,12 @@ class CribbageGameActivity : AppCompatActivity() {
     // ─── Table construction ────────────────────────────────────────────────────
 
     /**
-     * Fixed column layout (7 columns total):
+     * Fixed column layout (7 columns total — label + 3×player0 + 3×player1):
      *
      *  [#] │ players[0]: In play │ End of round │ Crib │ players[1]: In play │ End of round │ Crib
      *
-     * - The Crib column for the non-dealer shows a strongly-dimmed permanent placeholder.
-     * - ALL cells in a row share the same fixed height (ROW_HEIGHT_DP) for visual consistency.
+     * The Crib column for the first player (non-dealer) is always LOCKED_NEVER.
+     * All cells in a row share the same fixed height (ROW_HEIGHT_DP).
      */
     private fun buildTable() {
         val headerRow = buildHeaderRow()
@@ -136,9 +137,9 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     /**
-     * Two-row header:
-     *  Row 1 (ROW_HEIGHT_DP): [empty] │ [Player 0 name — weight 3] │ [Player 1 name — weight 3]
-     *  Row 2 (ROW_HEIGHT_DP): [#]     │ [In play][End][Crib]        │ [In play][End][Crib]
+     * Two-row fixed-height header:
+     *  Row 1: [empty] │ [Player 0 name — weight 3] │ [Player 1 name — weight 3]
+     *  Row 2: [#]     │ [In play][End][Crib]        │ [In play][End][Crib]
      */
     private fun buildHeaderRow(): LinearLayout {
         val container = LinearLayout(this).apply {
@@ -149,7 +150,7 @@ class CribbageGameActivity : AppCompatActivity() {
             )
         }
 
-        // Row 1 — player names
+        // Row 1 — player names, each spanning their 3 sub-columns
         val nameRow = makeFixedRow()
         nameRow.addView(makeRoundLabelCell(""))
         for (player in players) {
@@ -171,58 +172,59 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     /**
-     * One row per round:
-     *  [roundNum] │ [p0: In play] [p0: End] [p0: Crib] │ [p1: In play] [p1: End] [p1: Crib]
+     * One row per round with fixed column order (players[0] left, players[1] right).
      *
-     * Entry order (dealer = player whose colour appears on the round label):
-     *   1. In play: both players simultaneously (+/−)
-     *      AND dealer End of round: can also be filled during the In play phase.
-     *   2. When dealer End is entered → Pone End becomes editable.
-     *   3. When Pone End is entered   → Crib becomes editable.
-     *   4. When Crib is entered       → round complete, new round appended.
+     * Entry order per round:
+     *  1. In-play: both players simultaneously via +/−.
+     *  2. First player enters end-of-round score (locks pegging for both).
+     *  3. Dealer enters end-of-round score.
+     *  4. Dealer enters crib score → round complete.
+     *
+     * The round label is tinted with the FIRST PLAYER's colour.
+     * The DEALER's crib column is interactive; the first player's crib is LOCKED_NEVER.
      *
      * Previous round locking:
-     *   - A previous round stays editable (End + Crib) until the current round has
-     *     ANY pegging activity (any +/− press). Once locked, cells show LOCKED_PREV style.
+     *  A completed round's end-of-round + crib cells stay editable until the next
+     *  round has any pegging activity.
      */
     private fun buildRoundRow(round: CribbageRound, roundIndex: Int): LinearLayout {
         val isLastRound  = roundIndex == rounds.lastIndex
         val isPrevRound  = roundIndex == rounds.lastIndex - 1
         val currentRound = rounds.last()
 
-        // Previous round remains editable until the new round has pegging activity
+        // Previous round editable until the new round gets any pegging
         val prevRoundEditable = isPrevRound && !gameOver && !currentRound.hasPeggingActivity()
 
         val row = makeFixedRow()
 
-        // Round label — tinted with dealer's colour
-        val dealerPlayer = players.first { it.playerId == round.dealerId }
-        val roundLabel   = makeRoundLabelCell(round.roundNumber.toString())
-        roundLabel.background = solidDrawable(dealerPlayer.playerColor)
+        // Round label — tinted with the FIRST PLAYER's colour
+        val firstPlayer = players.first { it.playerId == round.firstPlayerId }
+        val roundLabel  = makeRoundLabelCell(round.roundNumber.toString())
+        roundLabel.background = solidDrawable(firstPlayer.playerColor)
         roundLabel.setTextColor(Color.WHITE)
         row.addView(roundLabel)
 
-        val p0     = players[0]
-        val p1     = players[1]
-        val peg0   = round.peggingScores[p0.playerId] ?: 0
-        val peg1   = round.peggingScores[p1.playerId] ?: 0
-        val hand0  = round.handScores[p0.playerId]
-        val hand1  = round.handScores[p1.playerId]
+        val p0    = players[0]
+        val p1    = players[1]
+        val peg0  = round.peggingScores[p0.playerId] ?: 0
+        val peg1  = round.peggingScores[p1.playerId] ?: 0
+        val hand0 = round.handScores[p0.playerId]
+        val hand1 = round.handScores[p1.playerId]
 
-        // ── For each player, determine cell states ─────────────────────────────
+        // Build cells for each player in fixed order
         listOf(p0, p1).forEach { player ->
-            val isDealer  = player.playerId == round.dealerId
-            val myPeg     = round.peggingScores[player.playerId] ?: 0
-            val oppPeg    = if (player == p0) peg1 else peg0
-            val myHand    = round.handScores[player.playerId]
-            val oppHand   = if (player == p0) hand1 else hand0
+            val isFirstPlayer = player.playerId == round.firstPlayerId
+            val isDealer      = player.playerId == round.dealerId
+            val myPeg         = round.peggingScores[player.playerId] ?: 0
+            val oppPeg        = if (player == p0) peg1 else peg0
+            val myHand        = round.handScores[player.playerId]
+            val oppHand       = if (player == p0) hand1 else hand0
 
-            // ── In play (Pegging) ───────────────────────────────────────────────
-            //
-            // Editable on: last round while pegging is open, OR prev round while no new-round pegging yet.
-            // On prev round: only +/− if prevRoundEditable AND round's own pegging is still open.
+            // ── In play (Pegging) ──────────────────────────────────────────────
+            // Editable while round is in pegging phase AND this is the active or
+            // still-unlocked previous round.
             val peggingCanEdit = !gameOver && round.isPeggingEditable() &&
-                    (isLastRound || (prevRoundEditable && !round.isDealerHandEntered()))
+                    (isLastRound || (prevRoundEditable && !round.isFirstPlayerHandEntered()))
 
             val pegColor = when {
                 myPeg > oppPeg -> CribbageCellColor.GREEN
@@ -230,12 +232,11 @@ class CribbageGameActivity : AppCompatActivity() {
                 else           -> CribbageCellColor.DEFAULT
             }
 
-            // Pegging state for visual: if the round is locked (dealer hand entered), show LOCKED_PREV
             val peggingState = when {
-                peggingCanEdit                   -> CellState.EDITABLE
-                !round.isPeggingEditable()       -> CellState.LOCKED_PREV   // pegging locked by hand entry
-                isLastRound && !gameOver         -> CellState.LOCKED_SOON   // round open but not last
-                else                             -> CellState.LOCKED_PREV
+                peggingCanEdit             -> CellState.EDITABLE
+                !round.isPeggingEditable() -> CellState.LOCKED_PREV  // locked once first player enters hand
+                isLastRound && !gameOver   -> CellState.LOCKED_SOON  // round open, waiting for something
+                else                       -> CellState.LOCKED_PREV
             }
 
             row.addView(makePeggingCell(
@@ -246,41 +247,37 @@ class CribbageGameActivity : AppCompatActivity() {
                     val cur = round.peggingScores[player.playerId] ?: 0
                     if (cur > 0) {
                         round.peggingScores[player.playerId] = cur - 1
-                        buildTable(); checkGameOver()
+                        buildTable()
+                        checkGameOver()
                     }
                 },
                 onIncrement = {
                     val cur = round.peggingScores[player.playerId] ?: 0
                     round.peggingScores[player.playerId] = cur + 1
-                    buildTable(); checkGameOver()
+                    buildTable()
+                    checkGameOver()
                 }
             ))
 
-            // ── End of round (Hand) ───────────────────────────────────────────
-            //
-            // Entry order: dealer first, then pone (after dealer entered).
-            //
-            // Editable conditions:
-            //   Last round, no gameOver, AND:
-            //     - Dealer: always editable until crib is entered (even during pegging phase)
-            //     - Pone:   only after dealer hand entered, until crib entered
-            //   Prev round: editable as long as prevRoundEditable
+            // ── End of round (Hand) ────────────────────────────────────────────
+            // First player enters first (always editable until crib done).
+            // Dealer enters second (only after first player has entered).
+            // Prev round stays editable until next round has pegging.
             val handEditable = !gameOver && when {
-                isLastRound && isDealer  -> myHand == null || round.cribScore == null
-                isLastRound && !isDealer -> round.isDealerHandEntered() && (myHand == null || round.cribScore == null)
-                prevRoundEditable        -> true   // previous round still open
-                else                     -> false
+                isLastRound && isFirstPlayer -> myHand == null || round.cribScore == null
+                isLastRound && isDealer      -> round.isFirstPlayerHandEntered() &&
+                        (myHand == null || round.cribScore == null)
+                prevRoundEditable            -> true
+                else                         -> false
             }
 
-            // Visual state for hand cell
             val handState = when {
-                handEditable                               -> CellState.EDITABLE
-                isLastRound && !isDealer
-                        && !round.isDealerHandEntered()
-                        && !gameOver                       -> CellState.LOCKED_SOON  // waiting for dealer
-                isLastRound && round.cribScore != null     -> CellState.LOCKED_PREV  // round locked
-                isLastRound && !gameOver                   -> CellState.LOCKED_SOON
-                else                                       -> CellState.LOCKED_PREV
+                handEditable                                             -> CellState.EDITABLE
+                isLastRound && isDealer && !round.isFirstPlayerHandEntered()
+                        && !gameOver                                    -> CellState.LOCKED_SOON
+                isLastRound && round.cribScore != null                  -> CellState.LOCKED_PREV
+                isLastRound && !gameOver                                -> CellState.LOCKED_SOON
+                else                                                    -> CellState.LOCKED_PREV
             }
 
             val handColor = when {
@@ -290,25 +287,26 @@ class CribbageGameActivity : AppCompatActivity() {
             }
 
             row.addView(makeHandCell(
-                score    = myHand,
-                color    = handColor,
-                state    = handState,
-                onClick  = { showHandScoreInput(round, player.playerId) }
+                score   = myHand,
+                color   = handColor,
+                state   = handState,
+                onClick = { showHandScoreInput(round, player.playerId) }
             ))
 
-            // ── Crib ───────────────────────────────────────────────────────────
-            if (! isDealer) {
+            // ── Crib ──────────────────────────────────────────────────────────
+            // Only the DEALER has a crib. The first player's crib column is LOCKED_NEVER.
+            if (isDealer) {
                 val cribEditable = !gameOver &&
-                        (isLastRound && round.isPoneHandEntered() && round.cribScore == null
+                        (isLastRound && round.isDealerHandEntered() && round.cribScore == null
                                 || prevRoundEditable)
 
                 val cribState = when {
-                    cribEditable                                     -> CellState.EDITABLE
-                    isLastRound && !round.isPoneHandEntered()
-                            && !gameOver                            -> CellState.LOCKED_SOON
-                    isLastRound && round.cribScore != null          -> CellState.LOCKED_PREV
-                    isLastRound && !gameOver                        -> CellState.LOCKED_SOON
-                    else                                            -> CellState.LOCKED_PREV
+                    cribEditable                                        -> CellState.EDITABLE
+                    isLastRound && !round.isDealerHandEntered()
+                            && !gameOver                               -> CellState.LOCKED_SOON
+                    isLastRound && round.cribScore != null             -> CellState.LOCKED_PREV
+                    isLastRound && !gameOver                           -> CellState.LOCKED_SOON
+                    else                                               -> CellState.LOCKED_PREV
                 }
 
                 row.addView(makeCribCell(
@@ -317,7 +315,7 @@ class CribbageGameActivity : AppCompatActivity() {
                     onClick = { showCribScoreInput(round) }
                 ))
             } else {
-                // Non-dealer: permanent placeholder — no crib ever
+                // First player never has a crib — permanent placeholder
                 row.addView(makeNeverCribCell())
             }
         }
@@ -325,7 +323,7 @@ class CribbageGameActivity : AppCompatActivity() {
         return row
     }
 
-    /** Total row — each player spans 3 sub-columns (weight=3). */
+    /** Total row — each player's total spans all 3 sub-columns (weight=3). */
     private fun buildTotalRow(): LinearLayout {
         val row    = makeFixedRow()
         row.addView(makeRoundLabelCell(getString(R.string.cribbage_total)))
@@ -367,14 +365,14 @@ class CribbageGameActivity : AppCompatActivity() {
     // ─── Score input dialogs ───────────────────────────────────────────────────
 
     /**
-     * Hand score input.
-     * - Dealer can enter at any time (even during pegging phase).
-     * - Pone can only enter after dealer has entered.
+     * End-of-round score input dialog.
+     * - First player can enter at any time (even during pegging phase).
+     * - Dealer can only enter after first player has entered.
      */
     private fun showHandScoreInput(round: CribbageRound, playerId: Long) {
-        val isDealer = playerId == round.dealerId
-        // Guard: pone cannot enter before dealer
-        if (!isDealer && !round.isDealerHandEntered()) return
+        val isFirstPlayer = playerId == round.firstPlayerId
+        // Guard: dealer cannot enter before first player
+        if (!isFirstPlayer && !round.isFirstPlayerHandEntered()) return
 
         val playerName = players.first { it.playerId == playerId }.playerName
         val current    = round.handScores[playerId]
@@ -477,7 +475,7 @@ class CribbageGameActivity : AppCompatActivity() {
         var currentRank = 1
         val entries = sorted.mapIndexed { index, (player, score) ->
             val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
-            else { currentRank = index + 1; currentRank }
+                       else { currentRank = index + 1; currentRank }
             GameResultsDialog.PlayerResult(player.playerName, player.playerColor, score, rank)
         }
         GameResultsDialog.show(this, entries, isDraw, " pts") { finish() }
@@ -485,11 +483,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
     // ─── Cell builders ─────────────────────────────────────────────────────────
 
-    /**
-     * Creates a horizontal row with a FIXED height (ROW_HEIGHT_DP).
-     * This ensures all cells in the row — including the pegging LinearLayout —
-     * share exactly the same height.
-     */
+    /** A horizontal row with a fixed height so all cells align uniformly. */
     private fun makeFixedRow(): LinearLayout = LinearLayout(this).apply {
         orientation  = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(
@@ -503,7 +497,6 @@ class CribbageGameActivity : AppCompatActivity() {
         gravity      = Gravity.CENTER
         textSize     = 12f
         setTypeface(null, Typeface.BOLD)
-        // Fixed width, MATCH_PARENT height so it fills the row
         layoutParams = LinearLayout.LayoutParams(dpToPx(32), LinearLayout.LayoutParams.MATCH_PARENT)
         background   = cellDrawable(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_text))
@@ -517,9 +510,8 @@ class CribbageGameActivity : AppCompatActivity() {
             setTypeface(null, Typeface.BOLD)
             maxLines     = 1
             ellipsize    = TextUtils.TruncateAt.END
-            // weight-based width, MATCH_PARENT height
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-            background   = playerCellDrawable(color)
+            background   = cellDrawable(color)
             setTextColor(Color.WHITE)
         }
 
@@ -534,7 +526,7 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     /**
-     * Pegging cell: [−] [score] [+] all inside a horizontal LinearLayout.
+     * Pegging cell: [−] [score] [+]
      * Uses MATCH_PARENT height to fill the fixed-height row completely.
      */
     private fun makePeggingCell(
@@ -546,18 +538,11 @@ class CribbageGameActivity : AppCompatActivity() {
     ): LinearLayout {
         val resolvedScoreColor = resolveScoreColor(scoreColor)
         val neutralColor       = ContextCompat.getColor(this, R.color.score_cell_text)
-
-        val bgColor = when (state) {
-            CellState.EDITABLE    -> ContextCompat.getColor(this, R.color.score_cell_background)
-            CellState.LOCKED_SOON -> ContextCompat.getColor(this, R.color.cribbage_locked_soon_bg)
-            CellState.LOCKED_PREV,
-            CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cribbage_locked_prev_bg)
-        }
+        val bgColor            = resolveBgColor(state, score = null)  // pegging always shows score
 
         val container = LinearLayout(this).apply {
             orientation  = LinearLayout.HORIZONTAL
             gravity      = Gravity.CENTER_VERTICAL
-            // weight=1, MATCH_PARENT height — fills the row
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
             background   = cellDrawable(bgColor)
         }
@@ -582,7 +567,11 @@ class CribbageGameActivity : AppCompatActivity() {
             setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.2f)
             setTextColor(if (canEdit) resolvedScoreColor else neutralColor)
-            alpha        = if (canEdit) 1f else if (state == CellState.LOCKED_SOON) 0.4f else 0.3f
+            alpha        = when (state) {
+                CellState.EDITABLE     -> 1f
+                CellState.LOCKED_SOON  -> 0.5f
+                else                   -> 0.4f
+            }
         }
 
         val btnPlus = TextView(this).apply {
@@ -602,7 +591,7 @@ class CribbageGameActivity : AppCompatActivity() {
         return container
     }
 
-    /** Hand / End of round cell — tappable, MATCH_PARENT height. */
+    /** End-of-round (hand) cell — tappable, MATCH_PARENT height. */
     private fun makeHandCell(
         score: Int?,
         color: CribbageCellColor,
@@ -614,28 +603,11 @@ class CribbageGameActivity : AppCompatActivity() {
         textSize     = 14f
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
 
-        val textColor = resolveScoreColor(color)
-        setTextColor(textColor)
+        setTextColor(resolveScoreColor(color))
         if (color != CribbageCellColor.DEFAULT && score != null) setTypeface(null, Typeface.BOLD)
 
-        val bgColor = when (state) {
-            CellState.EDITABLE    ->
-                if (score == null)
-                    ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_editable_hint)
-                else
-                    ContextCompat.getColor(this@CribbageGameActivity, R.color.score_cell_background)
-            CellState.LOCKED_SOON  -> ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_locked_soon_bg)
-            CellState.LOCKED_PREV,
-            CellState.LOCKED_NEVER -> ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_locked_prev_bg)
-        }
-        background = cellDrawable(bgColor)
-
-        alpha = when (state) {
-            CellState.EDITABLE    -> 1f
-            CellState.LOCKED_SOON -> 0.5f
-            CellState.LOCKED_PREV -> if (score != null) 0.7f else 0.35f
-            CellState.LOCKED_NEVER -> 0.2f
-        }
+        background = cellDrawable(resolveBgColor(state, score))
+        alpha      = resolveAlpha(state, score)
 
         if (state == CellState.EDITABLE) setOnClickListener { onClick() }
     }
@@ -652,52 +624,47 @@ class CribbageGameActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
         setTextColor(ContextCompat.getColor(this@CribbageGameActivity, R.color.score_cell_text))
 
-        val bgColor = when (state) {
-            CellState.EDITABLE    ->
-                if (score == null)
-                    ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_editable_hint)
-                else
-                    ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_crib_background)
-            CellState.LOCKED_SOON  -> ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_locked_soon_bg)
-            CellState.LOCKED_PREV,
-            CellState.LOCKED_NEVER -> ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_locked_prev_bg)
-        }
-        background = cellDrawable(bgColor)
+        // When filled and editable, use the crib-specific background colour
+        val bgColor = if (state == CellState.EDITABLE && score != null)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_crib_background)
+        else
+            resolveBgColor(state, score)
 
-        alpha = when (state) {
-            CellState.EDITABLE    -> 1f
-            CellState.LOCKED_SOON -> 0.5f
-            CellState.LOCKED_PREV -> if (score != null) 0.7f else 0.35f
-            CellState.LOCKED_NEVER -> 0.2f
-        }
+        background = cellDrawable(bgColor)
+        alpha      = resolveAlpha(state, score)
 
         if (state == CellState.EDITABLE) setOnClickListener { onClick() }
     }
 
     /**
-     * Permanent empty crib placeholder for the non-dealer player.
-     * Very strongly dimmed — this player never has a crib this round.
+     * Permanent crib placeholder for the first player (never has a crib).
+     * Uses the darkest background and strong dimming.
      */
     private fun makeNeverCribCell(): TextView = TextView(this).apply {
         text         = ""
         gravity      = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-        background   = cellDrawable(ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_never_crib_bg))
-        alpha        = 0.35f
+        background   = cellDrawable(
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_never_crib_bg)
+        )
     }
 
-    /** Total cell with configurable weight, MATCH_PARENT height. */
+    /** Total cell spanning [weight] sub-columns, MATCH_PARENT height. */
     private fun makeTotalCell(text: String, weight: Float = 1f): TextView = TextView(this).apply {
         this.text    = text
         gravity      = Gravity.CENTER
         textSize     = 15f
         setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background   = cellDrawable(ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_background))
-        setTextColor(ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_text))
+        background   = cellDrawable(
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_background)
+        )
+        setTextColor(
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_text)
+        )
     }
 
-    // ─── Drawing helpers ───────────────────────────────────────────────────────
+    // ─── Visual helpers ────────────────────────────────────────────────────────
 
     private fun resolveScoreColor(color: CribbageCellColor): Int = when (color) {
         CribbageCellColor.GREEN   -> ContextCompat.getColor(this, R.color.cribbage_score_green)
@@ -705,19 +672,40 @@ class CribbageGameActivity : AppCompatActivity() {
         CribbageCellColor.DEFAULT -> ContextCompat.getColor(this, R.color.score_cell_text)
     }
 
-    /** Cell background drawable with a thin border. */
+    /**
+     * Background colour based on cell state.
+     * [score] is used to differentiate editable-filled vs editable-empty.
+     */
+    private fun resolveBgColor(state: CellState, score: Int?): Int = when (state) {
+        CellState.EDITABLE     ->
+            if (score == null)
+                ContextCompat.getColor(this, R.color.cribbage_editable_hint)
+            else
+                ContextCompat.getColor(this, R.color.score_cell_background)
+        CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cribbage_locked_soon_bg)
+        CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cribbage_locked_prev_bg)
+        CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cribbage_never_crib_bg)
+    }
+
+    /**
+     * Alpha based on cell state — creates clear visual hierarchy:
+     *  EDITABLE     → fully visible
+     *  LOCKED_SOON  → half-transparent (waiting)
+     *  LOCKED_PREV  → slightly dimmed if has value, strongly dimmed if empty
+     *  LOCKED_NEVER → invisible (no information to show)
+     */
+    private fun resolveAlpha(state: CellState, score: Int?): Float = when (state) {
+        CellState.EDITABLE     -> 1f
+        CellState.LOCKED_SOON  -> 0.55f
+        CellState.LOCKED_PREV  -> if (score != null) 0.75f else 0.4f
+        CellState.LOCKED_NEVER -> 1f  // background colour already signals unavailability
+    }
+
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
         setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
     }
 
-    /** Player name header cell — border only, no stroke needed at the bottom edge. */
-    private fun playerCellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
-        setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
-    }
-
-    /** Solid background without a border stroke (for the round label when tinted with player colour). */
     private fun solidDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
         setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))

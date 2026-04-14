@@ -11,15 +11,15 @@
     <color name="cactus_score_red">#F44336</color>
     <color name="cactus_cell_border">#555555</color>
 
-    <!-- Cribbage UI colors -->
+        <!-- Cribbage UI colors -->
     <color name="cribbage_score_green">#4CAF50</color>
     <color name="cribbage_score_red">#F44336</color>
     <color name="cribbage_cell_border">#555555</color>
-    <color name="cribbage_crib_background">#3E3521</color>
     <color name="cribbage_editable_hint">#454545</color>
-    <color name="cribbage_locked_soon_bg">#383838</color>
-    <color name="cribbage_locked_prev_bg">#2C2C2C</color>
-    <color name="cribbage_never_crib_bg">#1E1E1E</color>
+    <color name="cribbage_crib_background">#454545</color>
+    <color name="cribbage_locked_soon_bg">#252525</color> 
+    <color name="cribbage_locked_prev_bg">#1A1A1A</color>
+    <color name="cribbage_never_crib_bg">#000000</color>
 
     <!-- Escoba UI colors -->
     <color name="escoba_score_green">#4CAF50</color>

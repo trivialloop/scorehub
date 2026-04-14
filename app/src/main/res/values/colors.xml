@@ -24,8 +24,8 @@
     <color name="cribbage_score_green">#4CAF50</color>
     <color name="cribbage_score_red">#F44336</color>
     <color name="cribbage_cell_border">#CCCCCC</color>
+    <color name="cribbage_editable_hint">#FFF8E1</color>
     <color name="cribbage_crib_background">#FFF8E1</color>
-    <color name="cribbage_editable_hint">#FFFFFF</color>
     <color name="cribbage_locked_soon_bg">#F0F0F0</color>
     <color name="cribbage_locked_prev_bg">#E0E0E0</color>
     <color name="cribbage_never_crib_bg">#BDBDBD</color>
