@@ -12,6 +12,9 @@ Features:
 Perfect for board game enthusiasts who want to keep detailed records of their gaming sessions!
 
 Currently supported games:
-- Yahtzee
+- Cactus
+- Cribbage
+- Escoba
 - Skyjo
 - Wingspan
+- Yahtzee
