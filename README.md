@@ -24,14 +24,12 @@ alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.githu
 
 ## 🎮 Supported Games
 
-### Yahtzee (Yams)
-- Full scorecard implementation
-- Support for 1-4+ players
-- Solo game mode (non-competitive)
-
+### Cactus (Cactus)
+### Cribbage (Cribbage)
+### Escoba (Escoba)
 ### Skyjo (Skyjo)
-- Full scorecard implementation
-- Support for 2-8 players
+### Wingspan (Wingspan)
+### Yahtzee (Yams)
 
 ## 📸 Screenshots
 
