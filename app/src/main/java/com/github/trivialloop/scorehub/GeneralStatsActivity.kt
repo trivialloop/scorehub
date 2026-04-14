@@ -53,6 +53,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false   // highest score wins in Cactus
                 )
 
+                // ── Cribbage ──────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "cribbage",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerCribbage,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorCribbage,
+                    bestPlayerSection = binding.bestPlayerSectionCribbage,
+                    bestScoreView     = binding.textBestScoreCribbage,
+                    bestScoreColor    = binding.bestScoreColorIndicatorCribbage,
+                    bestScoreSection  = binding.bestScoreSectionCribbage,
+                    noDataView        = binding.textNoDataCribbage,
+                    bestScoreIsLowest = false   // highest score wins in Cribbage
+                )
+
                 // ── Escoba ────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "escoba",
