@@ -101,8 +101,11 @@ class CribbageGameActivity : AppCompatActivity() {
     /**
      * Fixed column layout (7 columns total — label + 3×player0 + 3×player1):
      *
-     *  [#] │ players[0]: In play │ End of round │ Crib │ players[1]: In play │ End of round │ Crib
+     *  [#] │ players[0]: In play (w=1.5) │ End of round (w=1) │ Crib (w=1) │
+     *       players[1]: In play (w=1.5)   │ End of round (w=1) │ Crib (w=1)
      *
+     * The In play column is wider (weight 1.5) to give the − and + buttons
+     * more tap area and reduce accidental taps on the adjacent End of round cell.
      * The Crib column for the first player (non-dealer) is always LOCKED_NEVER.
      * All cells in a row share the same fixed height (ROW_HEIGHT_DP).
      */
@@ -150,19 +153,20 @@ class CribbageGameActivity : AppCompatActivity() {
             )
         }
 
-        // Row 1 — player names, each spanning their 3 sub-columns
+        // Row 1 — player names, each spanning their 3 sub-columns (1.5 + 1 + 1 = 3.5)
         val nameRow = makeFixedRow()
         nameRow.addView(makeRoundLabelCell(""))
         for (player in players) {
-            nameRow.addView(makePlayerNameHeaderCell(player.playerName, player.playerColor, weight = 3f))
+            nameRow.addView(makePlayerNameHeaderCell(player.playerName, player.playerColor, weight = 3.5f))
         }
         container.addView(nameRow)
 
         // Row 2 — column sub-labels
+        // Note: the in-play sub-label uses weight 1.5f to match the wider in-play cell
         val subRow = makeFixedRow()
         subRow.addView(makeRoundLabelCell("#"))
         repeat(players.size) {
-            subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_pegging)))
+            subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_pegging), weight = 1.5f))
             subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_hand)))
             subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_crib)))
         }
@@ -220,29 +224,29 @@ class CribbageGameActivity : AppCompatActivity() {
             val myHand        = round.handScores[player.playerId]
             val oppHand       = if (player == p0) hand1 else hand0
 
-            // ── In play (Pegging) ──────────────────────────────────────────────
-            // Editable while round is in pegging phase AND this is the active or
-            // still-unlocked previous round.
-            val peggingCanEdit = !gameOver && round.isPeggingEditable() &&
+            // ── En jeu (In play) ──────────────────────────────────────────────
+            // Editable while the round is still in the in-play phase AND this is
+            // the active round or the still-unlocked previous round.
+            val inPlayCanEdit = !gameOver && round.isPeggingEditable() &&
                     (isLastRound || (prevRoundEditable && !round.isFirstPlayerHandEntered()))
 
-            val pegColor = when {
+            val inPlayColor = when {
                 myPeg > oppPeg -> CribbageCellColor.GREEN
                 myPeg < oppPeg -> CribbageCellColor.RED
                 else           -> CribbageCellColor.DEFAULT
             }
 
-            val peggingState = when {
-                peggingCanEdit             -> CellState.EDITABLE
+            val inPlayState = when {
+                inPlayCanEdit              -> CellState.EDITABLE
                 !round.isPeggingEditable() -> CellState.LOCKED_PREV  // locked once first player enters hand
                 isLastRound && !gameOver   -> CellState.LOCKED_SOON  // round open, waiting for something
                 else                       -> CellState.LOCKED_PREV
             }
 
-            row.addView(makePeggingCell(
+            row.addView(makeInPlayCell(
                 score       = myPeg,
-                scoreColor  = pegColor,
-                state       = peggingState,
+                scoreColor  = inPlayColor,
+                state       = inPlayState,
                 onDecrement = {
                     val cur = round.peggingScores[player.playerId] ?: 0
                     if (cur > 0) {
@@ -323,7 +327,7 @@ class CribbageGameActivity : AppCompatActivity() {
         return row
     }
 
-    /** Total row — each player's total spans all 3 sub-columns (weight=3). */
+    /** Total row — each player spans all 3 sub-columns (weight 3.5 = 1.5+1+1). */
     private fun buildTotalRow(): LinearLayout {
         val row    = makeFixedRow()
         row.addView(makeRoundLabelCell(getString(R.string.cribbage_total)))
@@ -333,7 +337,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
         for (player in players) {
             val total = totals[player.playerId] ?: 0
-            val cell  = makeTotalCell(total.toString(), weight = 3f)
+            val cell  = makeTotalCell(total.toString(), weight = 3.5f)
             if (gameOver && total == maxTotal) {
                 cell.setTextColor(ContextCompat.getColor(this, R.color.cribbage_score_green))
             }
@@ -475,7 +479,7 @@ class CribbageGameActivity : AppCompatActivity() {
         var currentRank = 1
         val entries = sorted.mapIndexed { index, (player, score) ->
             val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
-                       else { currentRank = index + 1; currentRank }
+            else { currentRank = index + 1; currentRank }
             GameResultsDialog.PlayerResult(player.playerName, player.playerColor, score, rank)
         }
         GameResultsDialog.show(this, entries, isDraw, " pts") { finish() }
@@ -515,47 +519,63 @@ class CribbageGameActivity : AppCompatActivity() {
             setTextColor(Color.WHITE)
         }
 
-    private fun makeSubHeaderCell(label: String): TextView = TextView(this).apply {
+    private fun makeSubHeaderCell(label: String, weight: Float = 1f): TextView = TextView(this).apply {
         text         = label
         gravity      = Gravity.CENTER
         textSize     = 9f
         setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         background   = cellDrawable(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_text))
     }
 
     /**
-     * Pegging cell: [−] [score] [+]
+     * In-play cell: [−] [score] [+]
      * Uses MATCH_PARENT height to fill the fixed-height row completely.
+     *
+     * Layout notes:
+     *  - The container has weight=1.5f (vs 1f for hand/crib) to give more tap area to − and +.
+     *  - The − and + buttons each have weight=1.5f internally so they are clearly larger than
+     *    the score label, reducing accidental taps on the adjacent hand cell.
+     *  - Score color (green/red/neutral) is ALWAYS applied regardless of lock state, so the
+     *    comparison is still visible after the round is locked.
      */
-    private fun makePeggingCell(
+    private fun makeInPlayCell(
         score: Int,
         scoreColor: CribbageCellColor,
         state: CellState,
         onDecrement: () -> Unit,
         onIncrement: () -> Unit
     ): LinearLayout {
+        // Score color always applied — preserved even when locked
         val resolvedScoreColor = resolveScoreColor(scoreColor)
-        val neutralColor       = ContextCompat.getColor(this, R.color.score_cell_text)
-        val bgColor            = resolveBgColor(state, score = null)  // pegging always shows score
+        val bgColor            = resolveBgColor(state, score = null)
 
+        // Wider container (weight 1.5) than hand/crib (weight 1) to give + and − more room
         val container = LinearLayout(this).apply {
             orientation  = LinearLayout.HORIZONTAL
             gravity      = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
             background   = cellDrawable(bgColor)
         }
 
         val canEdit = state == CellState.EDITABLE
 
+        // Alpha for locked state — score text slightly dimmed but colour still visible
+        val lockedAlpha = when (state) {
+            CellState.LOCKED_SOON  -> 0.55f
+            CellState.LOCKED_PREV  -> 0.65f
+            else                   -> 0.35f
+        }
+
         val btnMinus = TextView(this).apply {
             text         = "−"
             gravity      = Gravity.CENTER
-            textSize     = 16f
+            textSize     = 18f
             setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            setTextColor(if (canEdit) resolvedScoreColor else neutralColor)
+            // Larger weight (1.5) → bigger tap target
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
+            setTextColor(resolvedScoreColor)
             alpha        = if (canEdit) 1f else 0.25f
             if (canEdit) setOnClickListener { onDecrement() }
         }
@@ -565,22 +585,20 @@ class CribbageGameActivity : AppCompatActivity() {
             gravity      = Gravity.CENTER
             textSize     = 14f
             setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.2f)
-            setTextColor(if (canEdit) resolvedScoreColor else neutralColor)
-            alpha        = when (state) {
-                CellState.EDITABLE     -> 1f
-                CellState.LOCKED_SOON  -> 0.5f
-                else                   -> 0.4f
-            }
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            // Always use the score color so green/red comparison stays visible when locked
+            setTextColor(resolvedScoreColor)
+            alpha        = if (canEdit) 1f else lockedAlpha
         }
 
         val btnPlus = TextView(this).apply {
             text         = "+"
             gravity      = Gravity.CENTER
-            textSize     = 16f
+            textSize     = 18f
             setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            setTextColor(if (canEdit) resolvedScoreColor else neutralColor)
+            // Larger weight (1.5) → bigger tap target
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
+            setTextColor(resolvedScoreColor)
             alpha        = if (canEdit) 1f else 0.25f
             if (canEdit) setOnClickListener { onIncrement() }
         }
