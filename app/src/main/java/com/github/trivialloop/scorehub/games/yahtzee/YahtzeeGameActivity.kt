@@ -29,6 +29,9 @@ class YahtzeeGameActivity : AppCompatActivity() {
     private val playerScores = mutableListOf<YahtzeePlayerScore>()
     private var currentPlayerIndex = 0
 
+    // Tracks the last category filled by each player (by player index)
+    private val lastFilledCategory = mutableMapOf<Int, YahtzeeCategory?>()
+
     companion object {
         const val GAME_TYPE = "yahtzee"
     }
@@ -65,6 +68,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
                     playerColor = playerColors[i]
                 )
             )
+            lastFilledCategory[i] = null
         }
     }
 
@@ -74,13 +78,13 @@ class YahtzeeGameActivity : AppCompatActivity() {
         val visiblePlayers = getVisiblePlayers()
 
         // Create category column
-        val categoryColumn = createCategoryColumn()
+        val categoryColumn = createCategoryColumn(visiblePlayers)
         binding.scoreTableContainer.addView(categoryColumn)
 
         // Create player columns
         for (visiblePlayer in visiblePlayers) {
             val isActive = visiblePlayer.first == currentPlayerIndex
-            val playerColumn = createPlayerColumn(visiblePlayer.second, isActive)
+            val playerColumn = createPlayerColumn(visiblePlayer.second, visiblePlayer.first, isActive)
             binding.scoreTableContainer.addView(playerColumn)
         }
     }
@@ -100,7 +104,12 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun createCategoryColumn(): LinearLayout {
+    /**
+     * Creates the category label column.
+     * For each scoring category, if the current player has already filled that category,
+     * the label text fades toward the background color to match the dimmed cell appearance.
+     */
+    private fun createCategoryColumn(visiblePlayers: List<Pair<Int, YahtzeePlayerScore>>): LinearLayout {
         val column = LinearLayout(this)
         column.orientation = LinearLayout.VERTICAL
         column.layoutParams = LinearLayout.LayoutParams(
@@ -108,37 +117,69 @@ class YahtzeeGameActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT
         )
 
-        val categories = listOf(
-            "", // Empty line for the players names
-            getString(R.string.yahtzee_ones),
-            getString(R.string.yahtzee_twos),
-            getString(R.string.yahtzee_threes),
-            getString(R.string.yahtzee_fours),
-            getString(R.string.yahtzee_fives),
-            getString(R.string.yahtzee_sixes),
-            getString(R.string.yahtzee_upper_total),
-            getString(R.string.yahtzee_bonus),
-            getString(R.string.yahtzee_chance),
-            getString(R.string.yahtzee_three_kind),
-            getString(R.string.yahtzee_four_kind),
-            getString(R.string.yahtzee_full_house),
-            getString(R.string.yahtzee_small_straight),
-            getString(R.string.yahtzee_large_straight),
-            getString(R.string.yahtzee_yahtzee),
-            getString(R.string.yahtzee_lower_total),
-            getString(R.string.yahtzee_total)
+        // Find the active player score among visible players
+        val activePlayerScore = visiblePlayers.firstOrNull { it.first == currentPlayerIndex }?.second
+
+        val categoryRows = listOf(
+            null to "",                                          // player name row — no category
+            YahtzeeCategory.ONES to getString(R.string.yahtzee_ones),
+            YahtzeeCategory.TWOS to getString(R.string.yahtzee_twos),
+            YahtzeeCategory.THREES to getString(R.string.yahtzee_threes),
+            YahtzeeCategory.FOURS to getString(R.string.yahtzee_fours),
+            YahtzeeCategory.FIVES to getString(R.string.yahtzee_fives),
+            YahtzeeCategory.SIXES to getString(R.string.yahtzee_sixes),
+            null to getString(R.string.yahtzee_upper_total),    // calculated — no dimming
+            null to getString(R.string.yahtzee_bonus),          // calculated — no dimming
+            YahtzeeCategory.CHANCE to getString(R.string.yahtzee_chance),
+            YahtzeeCategory.THREE_OF_KIND to getString(R.string.yahtzee_three_kind),
+            YahtzeeCategory.FOUR_OF_KIND to getString(R.string.yahtzee_four_kind),
+            YahtzeeCategory.FULL_HOUSE to getString(R.string.yahtzee_full_house),
+            YahtzeeCategory.SMALL_STRAIGHT to getString(R.string.yahtzee_small_straight),
+            YahtzeeCategory.LARGE_STRAIGHT to getString(R.string.yahtzee_large_straight),
+            YahtzeeCategory.YAHTZEE to getString(R.string.yahtzee_yahtzee),
+            null to getString(R.string.yahtzee_lower_total),    // calculated — no dimming
+            null to getString(R.string.yahtzee_total)           // calculated — no dimming
         )
 
-        for (category in categories) {
-            val textView = createCellTextView(category, true)
+        for ((category, label) in categoryRows) {
+            val textView = createCellTextView(label, isHeader = true)
             textView.setTypeface(null, Typeface.BOLD)
+
+            // Dim the category label when the active player has already filled this category
+            if (category != null && activePlayerScore != null && activePlayerScore.scores[category] != null) {
+                // Blend header text color toward background to match the dimmed score cell
+                val dimmedColor = blendWithBackground(
+                    ContextCompat.getColor(this, R.color.header_cell_text),
+                    alpha = 0.35f
+                )
+                textView.setTextColor(dimmedColor)
+            }
+
             column.addView(textView)
         }
 
         return column
     }
 
-    private fun createPlayerColumn(playerScore: YahtzeePlayerScore, isActive: Boolean): LinearLayout {
+    /**
+     * Blends a color toward the background at the given opacity (0 = fully transparent, 1 = fully opaque).
+     * Used to dim category labels when the corresponding score is already filled.
+     */
+    private fun blendWithBackground(color: Int, alpha: Float): Int {
+        val bg = ContextCompat.getColor(this, android.R.color.transparent)
+        // Use the header background as the base to blend into
+        val headerBg = ContextCompat.getColor(this, R.color.header_cell_background)
+        val r = (Color.red(color) * alpha + Color.red(headerBg) * (1f - alpha)).toInt()
+        val g = (Color.green(color) * alpha + Color.green(headerBg) * (1f - alpha)).toInt()
+        val b = (Color.blue(color) * alpha + Color.blue(headerBg) * (1f - alpha)).toInt()
+        return Color.rgb(r, g, b)
+    }
+
+    private fun createPlayerColumn(
+        playerScore: YahtzeePlayerScore,
+        playerIndex: Int,
+        isActive: Boolean
+    ): LinearLayout {
         val column = LinearLayout(this)
         column.orientation = LinearLayout.VERTICAL
 
@@ -174,7 +215,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         column.addView(nameCell)
 
         // Score cells
-        val categories = listOf(
+        val upperCategories = listOf(
             YahtzeeCategory.ONES,
             YahtzeeCategory.TWOS,
             YahtzeeCategory.THREES,
@@ -183,8 +224,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             YahtzeeCategory.SIXES
         )
 
-        for (category in categories) {
-            val cell = createScoreCell(playerScore, category, isActive)
+        for (category in upperCategories) {
+            val cell = createScoreCell(playerScore, playerIndex, category, isActive)
             column.addView(cell)
         }
 
@@ -216,7 +257,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         )
 
         for (category in lowerCategories) {
-            val cell = createScoreCell(playerScore, category, isActive)
+            val cell = createScoreCell(playerScore, playerIndex, category, isActive)
             column.addView(cell)
         }
 
@@ -265,7 +306,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         )
         textView.background = cellBorderDrawable(
             ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_background),
-            strong = isGrandTotal   // extra-thick border on the grand total row
+            strong = isGrandTotal
         )
         textView.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text))
         return textView
@@ -273,6 +314,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
 
     private fun createScoreCell(
         playerScore: YahtzeePlayerScore,
+        playerIndex: Int,
         category: YahtzeeCategory,
         isActive: Boolean
     ): TextView {
@@ -286,32 +328,43 @@ class YahtzeeGameActivity : AppCompatActivity() {
         )
 
         val alreadyFilled = score != null
+        val isLastFilled = isActive && lastFilledCategory[playerIndex] == category
 
-        // Background
         textView.background = cellBorderDrawable(
             ContextCompat.getColor(this, R.color.score_cell_background),
             strong = false
         )
 
         when {
-            alreadyFilled -> {
-                // Score already entered: muted text to indicate it's done
-                textView.setTextColor(
-                    ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
+            alreadyFilled && isLastFilled && isActive -> {
+                // Last filled cell for the active player — re-editable, highlighted
+                textView.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_score_filled_text))
+                textView.setTypeface(null, Typeface.ITALIC)
+                textView.alpha = 0.6f
+                // Subtle underline hint via a slightly different border
+                textView.background = cellBorderDrawable(
+                    ContextCompat.getColor(this, R.color.score_cell_background),
+                    strong = true
                 )
-                textView.setTypeface(null, android.graphics.Typeface.ITALIC)
-                // Slightly dimmed background
+                textView.setOnClickListener {
+                    showScoreSelectionDialog(playerScore, playerIndex, category, isEdit = true)
+                }
+            }
+            alreadyFilled -> {
+                // Score already entered — dimmed, not editable
+                textView.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_score_filled_text))
+                textView.setTypeface(null, Typeface.ITALIC)
                 textView.alpha = 0.6f
             }
             isActive -> {
-                // Empty cell for active player: normal style, clickable
+                // Empty cell for active player — normal style, clickable
                 textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
                 textView.setOnClickListener {
-                    showScoreSelectionDialog(playerScore, category)
+                    showScoreSelectionDialog(playerScore, playerIndex, category, isEdit = false)
                 }
             }
             else -> {
-                // Other player's cell: neutral style
+                // Other player's cell — neutral style
                 textView.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
             }
         }
@@ -319,21 +372,50 @@ class YahtzeeGameActivity : AppCompatActivity() {
         return textView
     }
 
-    private fun showScoreSelectionDialog(playerScore: YahtzeePlayerScore, category: YahtzeeCategory) {
+    private fun showScoreSelectionDialog(
+        playerScore: YahtzeePlayerScore,
+        playerIndex: Int,
+        category: YahtzeeCategory,
+        isEdit: Boolean
+    ) {
         val possibleValues = category.getPossibleValues()
+
+        // When re-editing, offer an extra "keep current" option is implicit — we show the picker again
         val items = mutableListOf("")
         items.addAll(possibleValues.map { it.toString() })
 
+        val title = if (isEdit) {
+            "✏️ ${getCategoryName(category)}"
+        } else {
+            getCategoryName(category)
+        }
+
         AlertDialog.Builder(this)
-            .setTitle(getCategoryName(category))
+            .setTitle(title)
             .setItems(items.toTypedArray()) { _, which ->
+                val previousCategory = lastFilledCategory[playerIndex]
+
                 if (which == 0) {
-                    // Clear score (option vide)
-                    playerScore.scores[category] = null
+                    // Clear / cancel the score
+                    if (isEdit) {
+                        // Remove the score and clear the last filled marker
+                        playerScore.scores[category] = null
+                        lastFilledCategory[playerIndex] = null
+                    } else {
+                        playerScore.scores[category] = null
+                    }
                 } else {
                     playerScore.scores[category] = possibleValues[which - 1]
+                    if (!isEdit) {
+                        // Only advance turn and track last filled when it is a new entry
+                        lastFilledCategory[playerIndex] = category
+                        nextPlayer()
+                    } else {
+                        // Re-edit: update value but keep last filled marker on same category
+                        lastFilledCategory[playerIndex] = category
+                    }
                 }
-                nextPlayer()
+
                 buildScoreTable()
                 checkGameCompletion()
             }
@@ -398,7 +480,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
             val results = mutableListOf<GameResult>()
 
             for (playerScore in playerScores) {
-                // For the solo games, no winner or draw
                 val isWinner = if (isSoloGame) false else (playerScore.playerName in winners && !isDraw)
                 val isDrawResult = if (isSoloGame) false else (isDraw && playerScore.playerName in winners)
 
@@ -425,7 +506,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
         isDraw: Boolean,
         isSoloGame: Boolean
     ) {
-        // Build ranked entries (Yahtzee: highest score = rank 1)
         val sorted = totals.entries.sortedByDescending { it.value }
         var currentRank = 1
         val entries = sorted.mapIndexed { index, (name, score) ->
