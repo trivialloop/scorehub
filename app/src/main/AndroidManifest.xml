@@ -84,6 +84,22 @@
             android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.tarot.TarotPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.tarot.TarotGameActivity"
+            android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.tarot.TarotStatsActivity"
+            android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.tarot.TarotTop20Activity"
+            android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.wingspan.WingspanPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
