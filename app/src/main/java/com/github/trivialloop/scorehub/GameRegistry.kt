@@ -4,8 +4,9 @@ import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
-import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 
 /**
  * Types of physical equipment required to play a game.
@@ -106,6 +107,17 @@ object GameRegistry {
             activityClass  = SkyjoPlayerSelectionActivity::class.java,
             minPlayers     = 2,
             maxPlayers     = 8,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "tarot",
+            nameEnFallback = "Tarot",
+            nameResId      = R.string.tarot_game,
+            iconResId      = R.drawable.ic_tarot_game,
+            activityClass  = TarotPlayerSelectionActivity::class.java,
+            minPlayers     = 3,
+            maxPlayers     = 5,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
         ),

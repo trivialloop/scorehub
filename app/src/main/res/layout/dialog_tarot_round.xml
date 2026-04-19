@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ── Declarer ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_who_declared"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerDeclarer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ── Partner (5-player only) ── -->
+        <LinearLayout
+            android:id="@+id/rowPartner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_called_player"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinnerPartner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+
+        <!-- ── Contract ──
+             RadioButton MUST be direct children of RadioGroup for mutual exclusion.
+             Vertical layout: each on its own line, text is short enough (≤ 20 chars).
+        -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_choose_contract"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgContract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbPrise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_contract_prise"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbGarde"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_contract_garde"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/rbGardeSans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_contract_garde_sans"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/rbGardeContre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_contract_garde_contre"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <!-- ── Bouts ──
+             Also vertical RadioGroup with direct RadioButton children.
+             Text is short: "0 ○" "1 ☘" "2 ☘☘" "3 ☘☘☘" — all fit on one line.
+        -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_bouts_count"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgBouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbBouts0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_bouts_0"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/rbBouts1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_bouts_1"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/rbBouts2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_bouts_2"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbBouts3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_bouts_3"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <!-- ── Has options checkbox ── -->
+        <CheckBox
+            android:id="@+id/cbHasOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_has_options"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+</ScrollView>

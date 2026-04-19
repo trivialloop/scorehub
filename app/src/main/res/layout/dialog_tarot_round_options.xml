@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- ════════════════════════════════════════════
+             TABLE HEADER: Preneur | Défense
+             ════════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp">
+
+            <!-- spacer = label column -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1.8" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:text="@string/tarot_declarer_col"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:text="@string/tarot_defense_col"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="?attr/colorPrimary" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorPrimary"
+            android:layout_marginBottom="8dp" />
+
+        <!-- ════════════════════════════════════════════
+             ROW: Poignée 🤝
+             RadioButton must be direct children of RadioGroup.
+             Each column is its own RadioGroup (side-by-side).
+             ════════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="top"
+            android:layout_marginBottom="4dp">
+
+            <!-- Label -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:text="@string/tarot_poignee"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="6dp" />
+
+            <!-- Poignée Declarer -->
+            <RadioGroup
+                android:id="@+id/rgPoigneeDeclarer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbPDNone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_none"
+                    android:textSize="12sp"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbPDSimple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_simple_sym"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rbPDDouble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_double_sym"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rbPDTriple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_triple_sym"
+                    android:textSize="12sp" />
+            </RadioGroup>
+
+            <!-- Poignée Defense -->
+            <RadioGroup
+                android:id="@+id/rgPoigneeDefense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbPFNone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_none"
+                    android:textSize="12sp"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbPFSimple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_simple_sym"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rbPFDouble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_double_sym"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rbPFTriple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tarot_poignee_triple_sym"
+                    android:textSize="12sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- ════════════════════════════════════════════
+             ROW: Petit au Bout
+             Label on its own line above the 3-option row
+             to avoid truncation.
+             ════════════════════════════════════════════ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_petit_au_bout"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgPetitAuBout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <RadioButton
+                android:id="@+id/rbPetitNone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tarot_none"
+                android:textSize="12sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbPetitDeclarer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tarot_declarer_col"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rbPetitDefense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tarot_defense_col"
+                android:textSize="12sp" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- ════════════════════════════════════════════
+             ROW: Chelem 🏆
+             Label on its own line, options below.
+             ════════════════════════════════════════════ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tarot_chelem_label"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgChelem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbChelemNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_none"
+                android:textSize="12sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbChelemAnnouncedSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_chelem_announced_success"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rbChelemUnannouncedSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_chelem_unannounced_success"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rbChelemAnnouncedFailure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_chelem_announced_failure"
+                android:textSize="12sp" />
+        </RadioGroup>
+
+    </LinearLayout>
+</ScrollView>

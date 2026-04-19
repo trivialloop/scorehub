@@ -95,6 +95,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = true
                 )
 
+                // ── Tarot ─────────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "tarot",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerTarot,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorTarot,
+                    bestPlayerSection = binding.bestPlayerSectionTarot,
+                    bestScoreView     = binding.textBestScoreTarot,
+                    bestScoreColor    = binding.bestScoreColorIndicatorTarot,
+                    bestScoreSection  = binding.bestScoreSectionTarot,
+                    noDataView        = binding.textNoDataTarot,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Wingspan ──────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "wingspan",

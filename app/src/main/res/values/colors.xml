@@ -41,6 +41,11 @@
     <color name="skyjo_score_red">#F44336</color>
     <color name="skyjo_cell_border">#CCCCCC</color>
 
+    <!-- Tarot UI colors -->
+    <color name="tarot_score_win">#4CAF50</color>
+    <color name="tarot_score_loss">#F44336</color>
+    <color name="tarot_cell_border">#CCCCCC</color>
+
     <!-- Wingspan UI colors -->
     <color name="wingspan_score_green">#4CAF50</color>
     <color name="wingspan_score_red">#F44336</color>
