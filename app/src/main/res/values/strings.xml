@@ -3,9 +3,12 @@
     <!-- App -->
     <string name="app_name">ScoreHub</string>
 
-    <!-- Main Screen -->
-    <string name="select_game">Select a Game</string>
+    <!-- Main screen — search -->
     <string name="search_game">Search a game…</string>
+    <string name="no_games_played">No games played yet</string>
+    <string name="last_played_date">Last played: %1$s</string>
+
+    <!-- Main screen — sort -->
     <string name="sort_games">Sort games</string>
     <string name="sort_alphabetical">Alphabetical order</string>
     <string name="sort_recently_played">Recently played</string>
@@ -13,7 +16,22 @@
     <string name="sort_label_alphabetical">Sorted: A → Z</string>
     <string name="sort_label_recently_played">Sorted: recently played</string>
     <string name="sort_label_most_played">Sorted: most played</string>
-    <string name="last_played_date">Last played: %1$s</string>
+
+    <!-- Main screen — filter dialog -->
+    <string name="filter_title">Filters</string>
+    <string name="filter_players_label">Number of players</string>
+    <string name="filter_players_any">Any</string>
+    <string name="filter_mode_label">Game mode</string>
+    <string name="filter_mode_solo">Each for themselves</string>
+    <string name="filter_mode_team">Teams</string>
+    <string name="filter_equipment_label">Required equipment</string>
+    <string name="filter_equipment_cards">Cards</string>
+    <string name="filter_equipment_dice">Dice</string>
+    <string name="filter_equipment_board">Board game box</string>
+    <string name="filter_reset">Reset</string>
+    <string name="filter_apply">Apply</string>
+    <string name="filter_active_players">%1$d players</string>
+    <string name="filter_active_summary">Filters: %1$s</string>
 
     <!-- Player Selection -->
     <string name="player_selection_title">Select Players</string>
@@ -158,7 +176,6 @@
     <string name="best_score_label">Best Score</string>
     <string name="best_player_label">Best Player</string>
     <string name="best_ratio_player">Best win ratio: %1$s</string>
-    <string name="no_games_played">No games played yet</string>
     <string name="games_played">Games played</string>
     <string name="games_info">Total: %1$d | Counted: %2$d</string>
     <string name="win_percentage">Win percentage</string>
@@ -193,5 +210,10 @@
     <plurals name="games_count">
         <item quantity="one">%d game</item>
         <item quantity="other">%d games</item>
+    </plurals>
+
+    <plurals name="filter_players_hint">
+        <item quantity="one">%d compatible game</item>
+        <item quantity="other">%d compatible games</item>
     </plurals>
 </resources>
