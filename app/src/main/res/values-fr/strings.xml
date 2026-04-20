@@ -95,10 +95,13 @@
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
     <string name="escoba_total">Total</string>
+    <string name="escoba_pegging">En jeu</string>
+    <string name="escoba_hand">Fin de manche</string>
+    <string name="escoba_hand_score">Score de fin de manche</string>
     <string name="escoba_enter_score">Entrer le score</string>
     <string name="escoba_score_hint">0–20</string>
-    <string name="escoba_minimum_players">Minimum 2 joueurs requis</string>
-    <string name="escoba_maximum_players">Maximum 6 joueurs autorisés</string>
+    <string name="escoba_minimum_players">Exactement 2 joueurs requis</string>
+    <string name="escoba_maximum_players">Exactement 2 joueurs requis</string>
     <string name="escoba_game_over_title">Fin de partie ?</string>
     <string name="escoba_game_over_confirm">Un joueur a atteint 21 points. Terminer la partie ?</string>
     <string name="escoba_quit_game">Quitter la partie</string>
@@ -128,18 +131,15 @@
     <string name="tarot_round_title">Manche %1$d</string>
     <string name="tarot_who_declared">Qui a pris ?</string>
     <string name="tarot_choose_contract">Contrat</string>
-    <!-- Contract labels -->
     <string name="tarot_contract_prise">Prise  ∧</string>
     <string name="tarot_contract_garde">Garde  ∧∧</string>
     <string name="tarot_contract_garde_sans">Garde Sans  ∧∧∧</string>
     <string name="tarot_contract_garde_contre">Garde Contre  ∧∧∧∧</string>
-    <!-- Bouts -->
     <string name="tarot_bouts_count">Nombre de Bouts (Oudlers)</string>
     <string name="tarot_bouts_0">0 Bout  ○</string>
     <string name="tarot_bouts_1">1 Bout  ☘</string>
     <string name="tarot_bouts_2">2 Bouts  ☘☘</string>
     <string name="tarot_bouts_3">3 Bouts  ☘☘☘</string>
-    <!-- Options -->
     <string name="tarot_has_options">Options (Poignée / Petit au Bout / Chelem)</string>
     <string name="tarot_next">Suivant →</string>
     <string name="tarot_back">← Retour</string>
@@ -149,23 +149,18 @@
     <string name="tarot_declarer_col">Preneur</string>
     <string name="tarot_defense_col">Défense</string>
     <string name="tarot_none">—  Aucun</string>
-    <!-- Poignée -->
     <string name="tarot_poignee">Poignée  🤝</string>
     <string name="tarot_poignee_simple_sym">Simple  🤝</string>
     <string name="tarot_poignee_double_sym">Double  🤝🤝</string>
     <string name="tarot_poignee_triple_sym">Triple  🤝🤝🤝</string>
-    <!-- Petit au Bout -->
     <string name="tarot_petit_au_bout">Petit au Bout  1️⃣</string>
-    <!-- Chelem -->
     <string name="tarot_chelem_label">Chelem  🏆</string>
     <string name="tarot_chelem_announced_success">🌿 Annoncé et réalisé</string>
     <string name="tarot_chelem_unannounced_success">🍃 Non annoncé, réalisé</string>
     <string name="tarot_chelem_announced_failure">🍂 Annoncé et échoué</string>
-    <!-- Points -->
     <string name="tarot_points_made">Points réalisés par le preneur</string>
     <string name="tarot_points_hint">0–91 pts (seuil : %1$d)</string>
     <string name="tarot_threshold_info">Il faut ≥ %1$d pts pour gagner</string>
-    <!-- Game flow -->
     <string name="tarot_minimum_players">3 à 5 joueurs requis</string>
     <string name="tarot_maximum_players">Maximum 5 joueurs autorisés</string>
     <string name="tarot_game_over_title">Fin de partie ?</string>

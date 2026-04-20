@@ -95,10 +95,13 @@
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
     <string name="escoba_total">Total</string>
+    <string name="escoba_pegging">In play</string>
+    <string name="escoba_hand">End of round</string>
+    <string name="escoba_hand_score">End of round score</string>
     <string name="escoba_enter_score">Enter score</string>
     <string name="escoba_score_hint">0–20</string>
-    <string name="escoba_minimum_players">Minimum 2 players required</string>
-    <string name="escoba_maximum_players">Maximum 6 players allowed</string>
+    <string name="escoba_minimum_players">Exactly 2 players required</string>
+    <string name="escoba_maximum_players">Exactly 2 players required</string>
     <string name="escoba_game_over_title">Game Over?</string>
     <string name="escoba_game_over_confirm">A player reached 21 points. End the game?</string>
     <string name="escoba_quit_game">Quit Game</string>
@@ -128,46 +131,36 @@
     <string name="tarot_round_title">Round %1$d</string>
     <string name="tarot_who_declared">Who declared?</string>
     <string name="tarot_choose_contract">Contract</string>
-    <!-- Contract labels: name + chevrons on same line, kept short -->
     <string name="tarot_contract_prise">Prise  ∧</string>
     <string name="tarot_contract_garde">Garde  ∧∧</string>
     <string name="tarot_contract_garde_sans">Garde Sans  ∧∧∧</string>
     <string name="tarot_contract_garde_contre">Garde Contre  ∧∧∧∧</string>
-    <!-- Bouts: number + clover symbols -->
     <string name="tarot_bouts_count">Number of Bouts (Oudlers)</string>
     <string name="tarot_bouts_0">0 Bout  ○</string>
     <string name="tarot_bouts_1">1 Bout  ☘</string>
     <string name="tarot_bouts_2">2 Bouts  ☘☘</string>
     <string name="tarot_bouts_3">3 Bouts  ☘☘☘</string>
-    <!-- Options checkbox -->
     <string name="tarot_has_options">Options (Poignée / Petit au Bout / Chelem)</string>
     <string name="tarot_next">Next →</string>
     <string name="tarot_back">← Back</string>
     <string name="tarot_delete_round">Delete round</string>
-    <!-- 5-player partner -->
     <string name="tarot_called_player">Called player  ❤️</string>
-    <!-- Options dialog -->
     <string name="tarot_options_title">Options</string>
     <string name="tarot_declarer_col">Declarer</string>
     <string name="tarot_defense_col">Defense</string>
     <string name="tarot_none">—  None</string>
-    <!-- Poignée: symbol-only, no bonus amount -->
     <string name="tarot_poignee">Poignée  🤝</string>
     <string name="tarot_poignee_simple_sym">Simple  🤝</string>
     <string name="tarot_poignee_double_sym">Double  🤝🤝</string>
     <string name="tarot_poignee_triple_sym">Triple  🤝🤝🤝</string>
-    <!-- Petit au Bout: label shown above the radio group -->
     <string name="tarot_petit_au_bout">Petit au Bout  1️⃣</string>
-    <!-- Chelem: label with trophy icon, shown above the radio group -->
     <string name="tarot_chelem_label">Chelem  🏆</string>
     <string name="tarot_chelem_announced_success">🌿 Announced + achieved</string>
     <string name="tarot_chelem_unannounced_success">🍃 Unannounced, achieved</string>
     <string name="tarot_chelem_announced_failure">🍂 Announced + failed</string>
-    <!-- Points dialog -->
     <string name="tarot_points_made">Points made by the declarer</string>
     <string name="tarot_points_hint">0–91 pts (threshold: %1$d)</string>
     <string name="tarot_threshold_info">Need ≥ %1$d pts to win</string>
-    <!-- Game flow -->
     <string name="tarot_minimum_players">3 to 5 players required</string>
     <string name="tarot_maximum_players">Maximum 5 players allowed</string>
     <string name="tarot_game_over_title">Game Over?</string>

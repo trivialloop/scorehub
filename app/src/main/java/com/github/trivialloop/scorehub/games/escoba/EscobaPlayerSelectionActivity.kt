@@ -35,8 +35,8 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "escoba"
-        private const val MIN_PLAYERS = 2
-        private const val MAX_PLAYERS = 6
+        // Escoba is a 2-player game only
+        private const val REQUIRED_PLAYERS = 2
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -59,9 +59,9 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
         binding.btnAddPlayer.setOnClickListener { showAddPlayerDialog() }
         binding.btnStartGame.setOnClickListener {
             when {
-                selectedPlayers.size < MIN_PLAYERS ->
+                selectedPlayers.size < REQUIRED_PLAYERS ->
                     Toast.makeText(this, R.string.escoba_minimum_players, Toast.LENGTH_SHORT).show()
-                selectedPlayers.size > MAX_PLAYERS ->
+                selectedPlayers.size > REQUIRED_PLAYERS ->
                     Toast.makeText(this, R.string.escoba_maximum_players, Toast.LENGTH_SHORT).show()
                 else -> startGame()
             }
@@ -76,7 +76,8 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
             allPlayers, selectedPlayers,
             onCheckChanged = { player, isChecked ->
                 if (isChecked) {
-                    if (selectedPlayers.size >= MAX_PLAYERS) {
+                    if (selectedPlayers.size >= REQUIRED_PLAYERS) {
+                        // Uncheck immediately and show error — preserve current selection
                         Toast.makeText(this, R.string.escoba_maximum_players, Toast.LENGTH_SHORT).show()
                         adapter.notifyDataSetChanged()
                     } else {
@@ -94,9 +95,7 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        val callback = object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
-        ) {
+        val callback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
             override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, t: RecyclerView.ViewHolder): Boolean {
                 Collections.swap(allPlayers, vh.bindingAdapterPosition, t.bindingAdapterPosition)
                 adapter.notifyItemMoved(vh.bindingAdapterPosition, t.bindingAdapterPosition)
@@ -112,8 +111,7 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
                 val isFirstLoad = allPlayers.isEmpty()
-                allPlayers.clear()
-                allPlayers.addAll(players)
+                allPlayers.clear(); allPlayers.addAll(players)
                 if (isFirstLoad) loadLastPlayerOrder()
                 adapter.notifyDataSetChanged()
             }
@@ -216,12 +214,11 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
     private fun startGame() {
         val playersInOrder = allPlayers.filter { it in selectedPlayers }
         savePlayerOrder(playersInOrder)
-        val intent = Intent(this, EscobaGameActivity::class.java).apply {
+        startActivity(Intent(this, EscobaGameActivity::class.java).apply {
             putExtra("PLAYER_IDS", playersInOrder.map { it.id }.toLongArray())
             putExtra("PLAYER_NAMES", playersInOrder.map { it.name }.toTypedArray())
             putExtra("PLAYER_COLORS", playersInOrder.map { it.color }.toIntArray())
-        }
-        startActivity(intent)
+        })
     }
 
     private fun savePlayerOrder(players: List<Player>) {
@@ -238,8 +235,7 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
             val ordered = mutableListOf<Player>()
             for (id in savedIds) allPlayers.find { it.id == id }?.let { ordered.add(it) }
             for (p in allPlayers) if (!ordered.contains(p)) ordered.add(p)
-            allPlayers.clear()
-            allPlayers.addAll(ordered)
+            allPlayers.clear(); allPlayers.addAll(ordered)
             adapter.notifyDataSetChanged()
         }
     }

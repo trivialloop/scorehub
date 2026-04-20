@@ -190,8 +190,8 @@ class WingspanGameActivity : AppCompatActivity() {
 
         val textColor = if (allFilled && !allSame && score != null) {
             when (score) {
-                maxVal -> ContextCompat.getColor(this, R.color.wingspan_score_green)
-                minVal -> ContextCompat.getColor(this, R.color.wingspan_score_red)
+                maxVal -> ContextCompat.getColor(this, R.color.score_text_best)
+                minVal -> ContextCompat.getColor(this, R.color.score_text_worst)
                 else   -> ContextCompat.getColor(this, R.color.score_cell_text)
             }
         } else {
@@ -220,8 +220,8 @@ class WingspanGameActivity : AppCompatActivity() {
 
         val textColor = if (allComplete && !allSame) {
             when (total) {
-                maxTotal -> ContextCompat.getColor(this, R.color.wingspan_score_green)
-                minTotal -> ContextCompat.getColor(this, R.color.wingspan_score_red)
+                maxTotal -> ContextCompat.getColor(this, R.color.score_text_best)
+                minTotal -> ContextCompat.getColor(this, R.color.score_text_worst)
                 else     -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
             }
         } else {
@@ -241,12 +241,12 @@ class WingspanGameActivity : AppCompatActivity() {
 
     private fun borderDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.wingspan_cell_border))
+        setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
     }
 
     private fun playerCellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.wingspan_cell_border))
+        setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
     }
 
     private fun showScoreInput(ps: WingspanPlayerScore, category: WingspanCategory) {

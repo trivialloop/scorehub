@@ -130,10 +130,10 @@ class TarotGameActivity : AppCompatActivity() {
             val scoreColor = when (role) {
                 TarotCellRole.DECLARER_WIN, TarotCellRole.PARTNER_WIN,
                 TarotCellRole.DEFENDER_WIN ->
-                    ContextCompat.getColor(this, R.color.tarot_score_win)
+                    ContextCompat.getColor(this, R.color.score_text_best)
                 TarotCellRole.DECLARER_LOSS, TarotCellRole.PARTNER_LOSS,
                 TarotCellRole.DEFENDER_LOSS ->
-                    ContextCompat.getColor(this, R.color.tarot_score_loss)
+                    ContextCompat.getColor(this, R.color.score_text_worst)
             }
             row.addView(makeTwoLineCell(
                 line1 = if (score >= 0) "+$score" else "$score",
@@ -207,7 +207,7 @@ class TarotGameActivity : AppCompatActivity() {
             val total = totals[player.playerId] ?: 0
             val cell = makeSingleLineCell(total.toString(), bold = true, height = headerRowHeight)
             if (gameOver && total == maxTotal)
-                cell.setTextColor(ContextCompat.getColor(this, R.color.tarot_score_win))
+                cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
             row.addView(cell)
         }
         return row
@@ -630,7 +630,7 @@ class TarotGameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1))
             setBackgroundColor(ContextCompat.getColor(this@TarotGameActivity,
-                R.color.tarot_cell_border))
+                R.color.cell_border))
         })
 
         addView(TextView(this@TarotGameActivity).apply {
@@ -647,7 +647,7 @@ class TarotGameActivity : AppCompatActivity() {
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@TarotGameActivity, R.color.tarot_cell_border))
+        setStroke(1, ContextCompat.getColor(this@TarotGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()

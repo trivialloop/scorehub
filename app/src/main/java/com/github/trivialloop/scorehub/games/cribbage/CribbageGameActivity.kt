@@ -339,7 +339,7 @@ class CribbageGameActivity : AppCompatActivity() {
             val total = totals[player.playerId] ?: 0
             val cell  = makeTotalCell(total.toString(), weight = 3.5f)
             if (gameOver && total == maxTotal) {
-                cell.setTextColor(ContextCompat.getColor(this, R.color.cribbage_score_green))
+                cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
             }
             row.addView(cell)
         }
@@ -644,7 +644,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
         // When filled and editable, use the crib-specific background colour
         val bgColor = if (state == CellState.EDITABLE && score != null)
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_crib_background)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_editable_bg)
         else
             resolveBgColor(state, score)
 
@@ -663,7 +663,7 @@ class CribbageGameActivity : AppCompatActivity() {
         gravity      = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
         background   = cellDrawable(
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_never_crib_bg)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_never_bg)
         )
     }
 
@@ -685,8 +685,8 @@ class CribbageGameActivity : AppCompatActivity() {
     // ─── Visual helpers ────────────────────────────────────────────────────────
 
     private fun resolveScoreColor(color: CribbageCellColor): Int = when (color) {
-        CribbageCellColor.GREEN   -> ContextCompat.getColor(this, R.color.cribbage_score_green)
-        CribbageCellColor.RED     -> ContextCompat.getColor(this, R.color.cribbage_score_red)
+        CribbageCellColor.GREEN   -> ContextCompat.getColor(this, R.color.score_text_best)
+        CribbageCellColor.RED     -> ContextCompat.getColor(this, R.color.score_text_worst)
         CribbageCellColor.DEFAULT -> ContextCompat.getColor(this, R.color.score_cell_text)
     }
 
@@ -697,12 +697,12 @@ class CribbageGameActivity : AppCompatActivity() {
     private fun resolveBgColor(state: CellState, score: Int?): Int = when (state) {
         CellState.EDITABLE     ->
             if (score == null)
-                ContextCompat.getColor(this, R.color.cribbage_editable_hint)
+                ContextCompat.getColor(this, R.color.cell_editable_bg)
             else
                 ContextCompat.getColor(this, R.color.score_cell_background)
-        CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cribbage_locked_soon_bg)
-        CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cribbage_locked_prev_bg)
-        CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cribbage_never_crib_bg)
+        CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+        CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cell_locked_bg)
+        CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cell_never_bg)
     }
 
     /**
@@ -721,12 +721,12 @@ class CribbageGameActivity : AppCompatActivity() {
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
+        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_border))
     }
 
     private fun solidDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
+        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
