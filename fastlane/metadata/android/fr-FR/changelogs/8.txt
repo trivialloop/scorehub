@@ -1,0 +1,6 @@
+### Ajout
+- Ajout du jeu tarot
+
+### Changement
+- Améliore le filtrage des jeux
+- Uniformise les couleurs utilisé dans les jeux

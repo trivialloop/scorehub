@@ -16,5 +16,6 @@ Jeux actuellement supportés :
 - Cribbage
 - Escoba
 - Skyjo
+- Tarot
 - Wingspan
 - Yams

@@ -16,5 +16,6 @@ Currently supported games:
 - Cribbage
 - Escoba
 - Skyjo
+- Tarot
 - Wingspan
 - Yahtzee
