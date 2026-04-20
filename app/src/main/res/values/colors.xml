@@ -16,7 +16,7 @@
     <color name="score_cell_background">#FFFFFF</color>
     <!-- Empty cell the user can fill right now -->
     <color name="cell_editable_bg">#FFF8E1</color>
-    <!-- Cell already filled but still editable (shows ✏ prefix) -->
+    <!-- Cell already filled but still editable -->
     <color name="cell_editable_filled_bg">#FFFFFF</color>
     <!-- Cell filled and now locked (no longer editable) -->
     <color name="cell_locked_bg">#F0F0F0</color>

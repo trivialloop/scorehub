@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -454,12 +455,17 @@ class TarotGameActivity : AppCompatActivity() {
         fromOptions: Boolean
     ) {
         val threshold = TarotRound.threshold(bouts)
+ 
+        // Pencil in title when editing an existing round
+        val baseTitle = getString(R.string.tarot_points_made)
+        val dialogTitle = if (existingRound != null) "✏️ $baseTitle" else baseTitle
+ 
         val editText = EditText(this).apply {
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            hint = getString(R.string.tarot_points_hint, threshold)
-            gravity = Gravity.CENTER
-            textSize = 20f
-            filters = arrayOf(android.text.InputFilter.LengthFilter(2))
+            hint      = getString(R.string.tarot_points_hint, threshold)
+            gravity   = Gravity.CENTER
+            textSize  = 20f
+            filters   = arrayOf(android.text.InputFilter.LengthFilter(2))
             existingRound?.let { setText(it.pointsMade.toString()) }
         }
         val container = LinearLayout(this).apply {
@@ -470,13 +476,12 @@ class TarotGameActivity : AppCompatActivity() {
                 text = getString(R.string.tarot_threshold_info, threshold)
                 gravity = Gravity.CENTER
                 textSize = 13f
-                setTextColor(ContextCompat.getColor(this@TarotGameActivity,
-                    android.R.color.darker_gray))
+                setTextColor(ContextCompat.getColor(this@TarotGameActivity, android.R.color.darker_gray))
             })
         }
-
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.tarot_points_made))
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(dialogTitle)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val pts = editText.text.toString().trim().toIntOrNull()
@@ -486,14 +491,14 @@ class TarotGameActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
                 val newRound = TarotRound(
-                    roundNumber = existingRound?.roundNumber ?: rounds.size + 1,
-                    declarerId = declarerId,
-                    contract = contract,
-                    boutsCount = bouts,
-                    pointsMade = pts,
-                    poignees = poignees,
-                    petitAuBout = petitAuBout,
-                    chelem = chelem,
+                    roundNumber       = existingRound?.roundNumber ?: rounds.size + 1,
+                    declarerId        = declarerId,
+                    contract          = contract,
+                    boutsCount        = bouts,
+                    pointsMade        = pts,
+                    poignees          = poignees,
+                    petitAuBout       = petitAuBout,
+                    chelem            = chelem,
                     associatedPlayerId = partnerId
                 )
                 if (existingRound != null) {
@@ -506,15 +511,13 @@ class TarotGameActivity : AppCompatActivity() {
                 checkEndOfGame()
             }
             .setNegativeButton(getString(R.string.tarot_back)) { _, _ ->
-                // Go back to page 2 if coming from options, else page 1
-                if (fromOptions) {
-                    showPage2Dialog(declarerId, contract, bouts, partnerId, existingRound,
-                        poignees, petitAuBout, chelem)
-                } else {
-                    showPage1Dialog(existingRound)
-                }
+                if (fromOptions) showPage2Dialog(declarerId, contract, bouts, partnerId, existingRound, poignees, petitAuBout, chelem)
+                else showPage1Dialog(existingRound)
             }
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 

@@ -19,7 +19,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityYahtzeeGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.utils.LocaleHelper
-import com.github.trivialloop.scorehub.utils.scoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
 
 class YahtzeeGameActivity : AppCompatActivity() {
@@ -236,7 +236,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         grandTotalCell.setTypeface(null, Typeface.BOLD)
         val allComplete = playerScores.all { it.isComplete() }
         if (allComplete) {
-            val role = scoreColorRole(grandTotal, grandTotals)
+            val role = ScoreColorRole(grandTotal, grandTotals)
             grandTotalCell.setTextColor(
                 when (role) {
                     com.github.trivialloop.scorehub.utils.ScoreColorRole.BEST ->
@@ -309,28 +309,25 @@ class YahtzeeGameActivity : AppCompatActivity() {
 
         // Compute per-row score coloring (text only, no background change)
         val rowScores = playerScores.mapNotNull { it.scores[category] }
-        val role = scoreColorRole(score, playerScores.map { it.scores[category] })
+        val role = ScoreColorRole(score, playerScores.map { it.scores[category] })
 
         when {
             alreadyFilled && isLastFilled && isActive -> {
-                // Re-editable last-filled cell — pencil prefix
-                textView.text = "✏ $score"
+                textView.text = score.toString()   // ← plain score, no pencil
                 textView.background = cellBorderDrawable(
                     ContextCompat.getColor(this, R.color.cell_editable_filled_bg), strong = true
                 )
-                textView.setTextColor(
-                    when (role) {
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.BEST ->
-                            ContextCompat.getColor(this, R.color.score_text_best)
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.WORST ->
-                            ContextCompat.getColor(this, R.color.score_text_worst)
-                        else -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
-                    }
-                )
+                // text colour: row role as usual
+                val role = ScoreColorRole(score, playerScores.map { it.scores[category] })
+                textView.setTextColor(when (role) {
+                    ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
+                    ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
+                    else                 -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
+                })
                 textView.setOnClickListener {
                     showScoreSelectionDialog(playerScore, playerIndex, category, isEdit = true)
                 }
-            }
+        }
             alreadyFilled -> {
                 // Locked filled cell — dimmed text, coloring still applied
                 textView.text = score.toString()

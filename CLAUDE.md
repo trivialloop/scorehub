@@ -70,7 +70,7 @@ All game grids share a single set of semantic color names. **Never add per-game 
 | Color name | Light | Dark | Usage |
 |---|---|---|---|
 | `cell_editable_bg` | `#FFF8E1` | `#454545` | Empty cell that can be filled right now |
-| `cell_editable_filled_bg` | `#FFFFFF` | `#2C2C2C` | Cell already filled but still editable (shows ✏ prefix) |
+| `cell_editable_filled_bg` | `#FFFFFF` | `#2C2C2C` | Cell already filled but still editable |
 | `cell_locked_bg` | `#F0F0F0` | `#1A1A1A` | Cell filled and locked (no longer editable) |
 | `cell_never_bg` | `#BDBDBD` | `#000000` | Cell that can never be filled (e.g. first-player crib column) |
 | `score_cell_background` | `#FFFFFF` | `#2C2C2C` | Neutral/read-only score cell background |
@@ -97,7 +97,7 @@ Use `ScoreColorHelper.scoreColorRole(value, allValues)` from `utils/ScoreColorHe
 
 ### Editable cell visual convention
 
-- **Pencil prefix**: when a cell is already filled but still editable, prefix the displayed value with `"✏ "` (e.g. `"✏ 12"`). This is the same pattern used in Yahtzee for the last-filled category.
+- **Pencil prefix**: when a cell is already filled but still editable, when clicking and the cell, prefix the title with a ✏ emoji.
 - **Background color**: use `cell_editable_bg` for empty editable cells, `cell_editable_filled_bg` for filled+editable.
 - **Keyboard auto-open**: all score input dialogs must call `dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)` and `editText.requestFocus()` so the soft keyboard opens immediately on dialog show.
 

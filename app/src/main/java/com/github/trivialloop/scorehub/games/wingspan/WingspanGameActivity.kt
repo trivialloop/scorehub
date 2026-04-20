@@ -9,6 +9,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -249,22 +250,29 @@ class WingspanGameActivity : AppCompatActivity() {
         setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
     }
 
-    private fun showScoreInput(ps: WingspanPlayerScore, category: WingspanCategory) {
+        private fun showScoreInput(ps: WingspanPlayerScore, category: WingspanCategory) {
+        val current = ps.scores[category]
+ 
+        // Pencil in title when re-editing a cell that already has a value
+        val title = if (current != null) "✏️ ${ps.playerName} — ${categoryLabel(category)}"
+                    else "${ps.playerName} — ${categoryLabel(category)}"
+ 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint      = "0–99"
             gravity   = Gravity.CENTER
             textSize  = 20f
             filters   = arrayOf(InputFilter.LengthFilter(2))
-            ps.scores[category]?.let { setText(it.toString()) }
+            current?.let { setText(it.toString()) }
         }
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
             addView(editText)
         }
-        AlertDialog.Builder(this)
-            .setTitle("${ps.playerName} — ${categoryLabel(category)}")
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val value = editText.text.toString().trim().toIntOrNull()
@@ -274,7 +282,10 @@ class WingspanGameActivity : AppCompatActivity() {
                 checkCompletion()
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 

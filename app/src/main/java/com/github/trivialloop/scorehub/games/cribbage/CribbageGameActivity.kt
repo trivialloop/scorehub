@@ -10,6 +10,7 @@ import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -373,14 +374,17 @@ class CribbageGameActivity : AppCompatActivity() {
      * - First player can enter at any time (even during pegging phase).
      * - Dealer can only enter after first player has entered.
      */
-    private fun showHandScoreInput(round: CribbageRound, playerId: Long) {
+        private fun showHandScoreInput(round: CribbageRound, playerId: Long) {
         val isFirstPlayer = playerId == round.firstPlayerId
-        // Guard: dealer cannot enter before first player
         if (!isFirstPlayer && !round.isFirstPlayerHandEntered()) return
-
+ 
         val playerName = players.first { it.playerId == playerId }.playerName
         val current    = round.handScores[playerId]
-
+ 
+        // Pencil in title when re-editing
+        val title = if (current != null) "✏️ $playerName — ${getString(R.string.cribbage_hand_score)}"
+                    else "$playerName — ${getString(R.string.cribbage_hand_score)}"
+ 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint      = "0–$MAX_HAND_SCORE"
@@ -394,9 +398,9 @@ class CribbageGameActivity : AppCompatActivity() {
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
             addView(editText)
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("$playerName — ${getString(R.string.cribbage_hand_score)}")
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val value = editText.text.toString().trim().toIntOrNull()
@@ -410,29 +414,37 @@ class CribbageGameActivity : AppCompatActivity() {
                 if (round.isComplete()) onRoundComplete(round)
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
     private fun showCribScoreInput(round: CribbageRound) {
         val dealerName = players.first { it.playerId == round.dealerId }.playerName
-
+        val current    = round.cribScore
+ 
+        // Pencil in title when re-editing
+        val title = if (current != null) "✏️ $dealerName — ${getString(R.string.cribbage_crib_score)}"
+                    else "$dealerName — ${getString(R.string.cribbage_crib_score)}"
+ 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint      = "0–$MAX_CRIB_SCORE"
             gravity   = Gravity.CENTER
             textSize  = 20f
             filters   = arrayOf(InputFilter.LengthFilter(2))
-            round.cribScore?.let { setText(it.toString()) }
+            current?.let { setText(it.toString()) }
         }
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
             addView(editText)
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("$dealerName — ${getString(R.string.cribbage_crib_score)}")
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val value = editText.text.toString().trim().toIntOrNull()
@@ -446,7 +458,10 @@ class CribbageGameActivity : AppCompatActivity() {
                 if (round.isComplete()) onRoundComplete(round)
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
