@@ -10,6 +10,7 @@ import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -339,7 +340,7 @@ class CribbageGameActivity : AppCompatActivity() {
             val total = totals[player.playerId] ?: 0
             val cell  = makeTotalCell(total.toString(), weight = 3.5f)
             if (gameOver && total == maxTotal) {
-                cell.setTextColor(ContextCompat.getColor(this, R.color.cribbage_score_green))
+                cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
             }
             row.addView(cell)
         }
@@ -373,14 +374,17 @@ class CribbageGameActivity : AppCompatActivity() {
      * - First player can enter at any time (even during pegging phase).
      * - Dealer can only enter after first player has entered.
      */
-    private fun showHandScoreInput(round: CribbageRound, playerId: Long) {
+        private fun showHandScoreInput(round: CribbageRound, playerId: Long) {
         val isFirstPlayer = playerId == round.firstPlayerId
-        // Guard: dealer cannot enter before first player
         if (!isFirstPlayer && !round.isFirstPlayerHandEntered()) return
-
+ 
         val playerName = players.first { it.playerId == playerId }.playerName
         val current    = round.handScores[playerId]
-
+ 
+        // Pencil in title when re-editing
+        val title = if (current != null) "✏️ $playerName — ${getString(R.string.cribbage_hand_score)}"
+                    else "$playerName — ${getString(R.string.cribbage_hand_score)}"
+ 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint      = "0–$MAX_HAND_SCORE"
@@ -394,9 +398,9 @@ class CribbageGameActivity : AppCompatActivity() {
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
             addView(editText)
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("$playerName — ${getString(R.string.cribbage_hand_score)}")
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val value = editText.text.toString().trim().toIntOrNull()
@@ -410,29 +414,37 @@ class CribbageGameActivity : AppCompatActivity() {
                 if (round.isComplete()) onRoundComplete(round)
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
     private fun showCribScoreInput(round: CribbageRound) {
         val dealerName = players.first { it.playerId == round.dealerId }.playerName
-
+        val current    = round.cribScore
+ 
+        // Pencil in title when re-editing
+        val title = if (current != null) "✏️ $dealerName — ${getString(R.string.cribbage_crib_score)}"
+                    else "$dealerName — ${getString(R.string.cribbage_crib_score)}"
+ 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint      = "0–$MAX_CRIB_SCORE"
             gravity   = Gravity.CENTER
             textSize  = 20f
             filters   = arrayOf(InputFilter.LengthFilter(2))
-            round.cribScore?.let { setText(it.toString()) }
+            current?.let { setText(it.toString()) }
         }
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
             addView(editText)
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("$dealerName — ${getString(R.string.cribbage_crib_score)}")
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val value = editText.text.toString().trim().toIntOrNull()
@@ -446,7 +458,10 @@ class CribbageGameActivity : AppCompatActivity() {
                 if (round.isComplete()) onRoundComplete(round)
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
@@ -644,7 +659,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
         // When filled and editable, use the crib-specific background colour
         val bgColor = if (state == CellState.EDITABLE && score != null)
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_crib_background)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_editable_bg)
         else
             resolveBgColor(state, score)
 
@@ -663,7 +678,7 @@ class CribbageGameActivity : AppCompatActivity() {
         gravity      = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
         background   = cellDrawable(
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_never_crib_bg)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_never_bg)
         )
     }
 
@@ -685,8 +700,8 @@ class CribbageGameActivity : AppCompatActivity() {
     // ─── Visual helpers ────────────────────────────────────────────────────────
 
     private fun resolveScoreColor(color: CribbageCellColor): Int = when (color) {
-        CribbageCellColor.GREEN   -> ContextCompat.getColor(this, R.color.cribbage_score_green)
-        CribbageCellColor.RED     -> ContextCompat.getColor(this, R.color.cribbage_score_red)
+        CribbageCellColor.GREEN   -> ContextCompat.getColor(this, R.color.score_text_best)
+        CribbageCellColor.RED     -> ContextCompat.getColor(this, R.color.score_text_worst)
         CribbageCellColor.DEFAULT -> ContextCompat.getColor(this, R.color.score_cell_text)
     }
 
@@ -697,12 +712,12 @@ class CribbageGameActivity : AppCompatActivity() {
     private fun resolveBgColor(state: CellState, score: Int?): Int = when (state) {
         CellState.EDITABLE     ->
             if (score == null)
-                ContextCompat.getColor(this, R.color.cribbage_editable_hint)
+                ContextCompat.getColor(this, R.color.cell_editable_bg)
             else
                 ContextCompat.getColor(this, R.color.score_cell_background)
-        CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cribbage_locked_soon_bg)
-        CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cribbage_locked_prev_bg)
-        CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cribbage_never_crib_bg)
+        CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+        CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cell_locked_bg)
+        CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cell_never_bg)
     }
 
     /**
@@ -721,12 +736,12 @@ class CribbageGameActivity : AppCompatActivity() {
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
+        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_border))
     }
 
     private fun solidDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cribbage_cell_border))
+        setStroke(1, ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()

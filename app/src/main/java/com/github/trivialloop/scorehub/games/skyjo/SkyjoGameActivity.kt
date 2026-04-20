@@ -10,6 +10,7 @@ import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -23,6 +24,7 @@ import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivitySkyjoGameBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
 
 class SkyjoGameActivity : AppCompatActivity() {
@@ -42,8 +44,6 @@ class SkyjoGameActivity : AppCompatActivity() {
         const val GAME_TYPE = "skyjo"
         private const val SCORE_LIMIT = 100
     }
-
-    // ─── Lifecycle ─────────────────────────────────────────────────────────────
 
     override fun attachBaseContext(newBase: Context) {
         val language = LocaleHelper.getPersistedLocale(newBase)
@@ -73,10 +73,6 @@ class SkyjoGameActivity : AppCompatActivity() {
     }
 
     // ─── Adaptive sizing ───────────────────────────────────────────────────────
-    //
-    //  2–3 players : 14sp, 14dp vertical padding
-    //  4–5 players : 13sp, 10dp vertical padding
-    //  6–8 players : 11sp,  7dp vertical padding
 
     private val cellTextSize: Float
         get() = when {
@@ -95,7 +91,6 @@ class SkyjoGameActivity : AppCompatActivity() {
     // ─── Table construction ────────────────────────────────────────────────────
 
     private fun buildTable() {
-        // Build all rows first so we can measure their natural height
         val headerRow = buildHeaderRow()
         val roundRows = rounds.mapIndexed { index, round ->
             buildRoundRow(
@@ -106,34 +101,23 @@ class SkyjoGameActivity : AppCompatActivity() {
         }
         val totalRow = buildTotalRow()
 
-        // Measure the total natural height of all rows combined
         val screenHeight = resources.displayMetrics.heightPixels
-        val appBarHeight = binding.toolbar.layoutParams?.height
-            ?.takeIf { it > 0 } ?: dpToPx(56)
-
-        // Estimate row height from padding (actual measure would require a layout pass)
+        val appBarHeight = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
         val rowHeight = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
-        val totalNaturalHeight = rowHeight * (roundRows.size + 3) // +2 for header + total
-        val availableHeight = screenHeight - appBarHeight
+        val totalNaturalHeight = rowHeight * (roundRows.size + 3)
 
-        if (totalNaturalHeight > availableHeight) {
-            // Scroll mode: header and total pinned, only rounds scroll
+        if (totalNaturalHeight > screenHeight - appBarHeight) {
             binding.headerContainer.removeAllViews()
             binding.headerContainer.addView(headerRow)
-
             binding.tableContainer.removeAllViews()
             roundRows.forEach { binding.tableContainer.addView(it) }
-
             binding.totalContainer.removeAllViews()
             binding.totalContainer.addView(totalRow)
-
             binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         } else {
-            // Compact mode: everything in tableContainer, total sits right below last round
             binding.headerContainer.removeAllViews()
             binding.tableContainer.removeAllViews()
             binding.totalContainer.removeAllViews()
-
             binding.tableContainer.addView(headerRow)
             roundRows.forEach { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)
@@ -159,7 +143,7 @@ class SkyjoGameActivity : AppCompatActivity() {
         val playerIdList = players.map { it.playerId }
         val roundComplete = round.isComplete(playerIdList)
 
-        // ── Round number / finisher cell ──────────────────────────────────
+        // ── Round label — tinted with the finisher's colour ────────────────────
         val labelCell = makeLabelCell(round.roundNumber.toString())
         val finisher = players.find { it.playerId == round.finisherId }
         if (finisher != null) {
@@ -172,67 +156,52 @@ class SkyjoGameActivity : AppCompatActivity() {
         }
         row.addView(labelCell)
 
-        // ── Score cells ───────────────────────────────────────────────────
+        val currentRound = rounds.last()
+
+        // Pre-compute colour roles once the round is complete
+        val colorRoles: Map<Long, SkyjoRoundColor> =
+            if (roundComplete) computeColorRoles(round, playerIdList) else emptyMap()
+
         for (player in players) {
-            val rawScore  = round.scores[player.playerId]
+            val rawScore   = round.scores[player.playerId]
             val finalScore = round.finalScores[player.playerId]
 
-            // Display raw score immediately once entered; switch to final when round complete
+            // ── Display text ───────────────────────────────────────────────────
+            // Show raw score as soon as entered; switch to final once round complete.
             val displayText = when {
-                roundComplete  -> finalScore?.toString() ?: ""
+                roundComplete    -> finalScore?.toString() ?: ""
                 rawScore != null -> rawScore.toString()
-                else           -> ""
+                else             -> ""
+            }
+
+            val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
+            val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
+
+            val bgColor = when {
+                canEnter    && rawScore == null -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+                canEnter    && rawScore != null -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
+                canEditPrev && rawScore == null -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+                canEditPrev && rawScore != null -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
+                else                            -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
 
             val cell = makePlayerCell(displayText)
+            cell.background = cellDrawable(bgColor)
 
-            // ── Color logic ───────────────────────────────────────────────
-            // Finisher cell  : background green if strictly lowest, background red otherwise.
-            //                  Text stays neutral (white on colored bg).
-            // Other players  : text green if their score equals the global minimum,
-            //                  text red if their score equals the global maximum,
-            //                  neutral otherwise. Background stays neutral.
+            // ── Text colour (complete rounds only) ─────────────────────────────
             if (roundComplete) {
-                val rawScores = playerIdList.mapNotNull { id -> round.scores[id]?.let { id to it } }.toMap()
-                if (rawScores.size == playerIdList.size) {
-                    val minScore = rawScores.values.min()
-                    val maxScore = rawScores.values.max()
-                    val finisherIsStrictlyLowest = round.finisherId != null &&
-                            rawScores[round.finisherId] == minScore &&
-                            rawScores.values.count { it == minScore } == 1
-
-                    if (player.playerId == round.finisherId) {
-                        // Finisher: colored background, white text
-                        val bgColor = if (finisherIsStrictlyLowest)
-                            ContextCompat.getColor(this, R.color.skyjo_score_green)
-                        else
-                            ContextCompat.getColor(this, R.color.skyjo_score_red)
-                        cell.background = cellDrawable(bgColor)
-                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_cell_text))
-                    } else {
-                        // Regular player: colored text, neutral background
-                        val raw = rawScores[player.playerId]
-                        when {
-                            raw == minScore -> {
-                                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_green))
-                                cell.setTypeface(null, Typeface.BOLD)
-                            }
-                            raw == maxScore -> {
-                                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_red))
-                                cell.setTypeface(null, Typeface.BOLD)
-                            }
-                        }
+                when (colorRoles[player.playerId]) {
+                    SkyjoRoundColor.GREEN -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
+                        cell.setTypeface(null, Typeface.BOLD)
                     }
+                    SkyjoRoundColor.RED -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst))
+                        cell.setTypeface(null, Typeface.BOLD)
+                    }
+                    else -> {}
                 }
             }
-
-            // Editable on last round as long as the round isn't complete yet,
-            // whether a score is already entered or not (allows correction before last player submits)
-            val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
-            // Previous round is only editable if the current round has no finisher selected yet
-            // (once a finisher is picked for the new round, the previous one is locked)
-            val currentRound = rounds.last()
-            val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
 
             when {
                 canEnter    -> cell.setOnClickListener { showScoreInput(round, player, isEdit = rawScore != null) }
@@ -241,19 +210,73 @@ class SkyjoGameActivity : AppCompatActivity() {
 
             row.addView(cell)
         }
-
         return row
+    }
+
+    /**
+     * Computes per-player text colour roles for a completed round.
+     *
+     * Case A — finisher IS strictly sole lowest (finisher wins):
+     *   Finisher → GREEN | highest non-finisher(s) → RED | others → NEUTRAL
+     *
+     * Case B — finisher is NOT strictly lowest (loses / ties):
+     *   Finisher → RED | lowest non-finisher(s) → GREEN | others → NEUTRAL
+     */
+    private fun computeColorRoles(round: SkyjoRound, playerIdList: List<Long>): Map<Long, SkyjoRoundColor> {
+        val raw = playerIdList.mapNotNull { id -> round.scores[id]?.let { id to it } }.toMap()
+        if (raw.size != playerIdList.size) return emptyMap()
+        val finisherId  = round.finisherId ?: return emptyMap()
+        val finisherRaw = raw[finisherId]  ?: return emptyMap()
+        val globalMin   = raw.values.min()
+
+        val finisherIsStrictlyLowest = finisherRaw == globalMin &&
+                raw.values.count { it == globalMin } == 1
+
+        val result = mutableMapOf<Long, SkyjoRoundColor>()
+
+        if (finisherIsStrictlyLowest) {
+            result[finisherId] = SkyjoRoundColor.GREEN
+            val globalMax = raw.values.max()
+            for (id in playerIdList) {
+                if (id == finisherId) continue
+                result[id] = if (raw[id] == globalMax) SkyjoRoundColor.RED else SkyjoRoundColor.NEUTRAL
+            }
+        } else {
+            result[finisherId] = SkyjoRoundColor.RED
+            val minNonFinisher = playerIdList
+                .filter { it != finisherId }
+                .mapNotNull { raw[it] }
+                .minOrNull()
+            for (id in playerIdList) {
+                if (id == finisherId) continue
+                result[id] = if (raw[id] == minNonFinisher) SkyjoRoundColor.GREEN else SkyjoRoundColor.NEUTRAL
+            }
+        }
+        return result
     }
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow()
         row.addView(makeLabelCell(getString(R.string.skyjo_total)))
-        val minTotal = if (gameOver) players.minOf { it.getTotal(rounds) } else Int.MAX_VALUE
+        val totalValues = players.map { it.getTotal(rounds) }
+        val minTotal = totalValues.minOrNull() ?: 0
+        val maxTotal = totalValues.maxOrNull() ?: 0
+        val allSame  = minTotal == maxTotal
+
         for (player in players) {
             val total = player.getTotal(rounds)
-            val cell = makePlayerCell(total.toString(), bold = true)
-            if (gameOver && total == minTotal) {
-                cell.setTextColor(ContextCompat.getColor(this, R.color.skyjo_score_green))
+            val cell  = makePlayerCell(total.toString(), bold = true)
+            if (gameOver && !allSame) {
+                when (total) {
+                    minTotal -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
+                        cell.setTypeface(null, Typeface.BOLD)
+                    }
+                    maxTotal -> {
+                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst))
+                        cell.setTypeface(null, Typeface.BOLD)
+                    }
+                }
             }
             row.addView(cell)
         }
@@ -273,22 +296,15 @@ class SkyjoGameActivity : AppCompatActivity() {
             .show()
     }
 
-    /**
-     * Shows a keyboard input dialog for the player to type their score.
-     * Accepts integers from -2 to 99 (Skyjo range), validated before confirming.
-     * isEdit=true is used when correcting the previous round's score.
-     */
     private fun showScoreInput(round: SkyjoRound, player: SkyjoPlayerState, isEdit: Boolean = false) {
         val playerIdList = players.map { it.playerId }
 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-            hint = getString(R.string.skyjo_score_hint)
-            gravity = Gravity.CENTER
-            textSize = 20f
-            // Max 3 chars: optional minus + up to 2 digits (Skyjo max is 12, min is -2)
-            filters = arrayOf(InputFilter.LengthFilter(3))
-            // Pre-fill current value when editing
+            hint      = getString(R.string.skyjo_score_hint)
+            gravity   = Gravity.CENTER
+            textSize  = 20f
+            filters   = arrayOf(InputFilter.LengthFilter(3))
             if (isEdit) round.scores[player.playerId]?.let { setText(it.toString()) }
         }
 
@@ -298,19 +314,17 @@ class SkyjoGameActivity : AppCompatActivity() {
             addView(editText)
         }
 
-        AlertDialog.Builder(this)
-            .setTitle("${player.playerName} — ${getString(R.string.skyjo_enter_score)}")
+        // Pencil emoji in title when re-editing
+        val title = if (isEdit) "✏️ ${player.playerName} — ${getString(R.string.skyjo_enter_score)}"
+                    else "${player.playerName} — ${getString(R.string.skyjo_enter_score)}"
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val input = editText.text.toString().trim()
-                val value = input.toIntOrNull()
-                if (value == null) {
-                    // Invalid input — reopen dialog
-                    showScoreInput(round, player, isEdit)
-                    return@setPositiveButton
-                }
+                val value = editText.text.toString().trim().toIntOrNull()
+                if (value == null) { showScoreInput(round, player, isEdit); return@setPositiveButton }
                 round.scores[player.playerId] = value
-
                 if (round.allScoresEntered(playerIdList)) {
                     round.computeFinalScores(playerIdList)
                     buildTable()
@@ -320,9 +334,10 @@ class SkyjoGameActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
 
-        // Auto-focus keyboard
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
@@ -335,100 +350,64 @@ class SkyjoGameActivity : AppCompatActivity() {
                 .setTitle(getString(R.string.skyjo_game_over_title))
                 .setMessage(getString(R.string.skyjo_game_over_confirm))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    gameOver = true
-                    buildTable()
-                    saveResultsAndShowSummary()
+                    gameOver = true; buildTable(); saveResultsAndShowSummary()
                 }
                 .setNegativeButton(getString(R.string.no)) { _, _ ->
-                    rounds.add(SkyjoRound(rounds.size + 1))
-                    buildTable()
+                    rounds.add(SkyjoRound(rounds.size + 1)); buildTable()
                 }
                 .show()
         } else {
-            rounds.add(SkyjoRound(rounds.size + 1))
-            buildTable()
+            rounds.add(SkyjoRound(rounds.size + 1)); buildTable()
         }
     }
 
     private fun saveResultsAndShowSummary() {
-        val totals = players.associate { it to it.getTotal(rounds) }
+        val totals   = players.associate { it to it.getTotal(rounds) }
         val minScore = totals.values.minOrNull() ?: 0
-        val winners = totals.filter { it.value == minScore }.keys
-        val isDraw = winners.size > 1
-
+        val winners  = totals.filter { it.value == minScore }.keys
+        val isDraw   = winners.size > 1
         lifecycleScope.launch {
-            val results = players.map { player ->
+            database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(
-                    gameType = GAME_TYPE,
-                    playerId = player.playerId,
-                    playerName = player.playerName,
-                    score = player.getTotal(rounds),
-                    isWinner = !isDraw && player in winners,
-                    isDraw = isDraw && player in winners
+                    gameType   = GAME_TYPE, playerId = player.playerId,
+                    playerName = player.playerName, score = player.getTotal(rounds),
+                    isWinner   = !isDraw && player in winners,
+                    isDraw     = isDraw && player in winners
                 )
+            })
+            val sorted = totals.entries.sortedBy { it.value }
+            var rank = 1
+            val entries = sorted.mapIndexed { i, (p, s) ->
+                val r = if (i > 0 && s == sorted[i - 1].value) rank else { rank = i + 1; rank }
+                com.github.trivialloop.scorehub.ui.GameResultsDialog.PlayerResult(p.playerName, p.playerColor, s, r)
             }
-            database.gameResultDao().insertGameResults(results)
-            showSummaryDialog(totals, winners, isDraw)
+            com.github.trivialloop.scorehub.ui.GameResultsDialog.show(
+                this@SkyjoGameActivity, entries, isDraw, " pts"
+            ) { finish() }
         }
-    }
-
-    private fun showSummaryDialog(
-        totals: Map<SkyjoPlayerState, Int>,
-        winners: Set<SkyjoPlayerState>,
-        isDraw: Boolean
-    ) {
-        // Build ranked entries — Skyjo: lowest score = rank 1
-        val sorted = totals.entries.sortedBy { it.value }
-        var currentRank = 1
-        val entries = sorted.mapIndexed { index, (player, score) ->
-            val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
-                       else { currentRank = index + 1; currentRank }
-            com.github.trivialloop.scorehub.ui.GameResultsDialog.PlayerResult(
-                playerName  = player.playerName,
-                playerColor = player.playerColor,
-                score       = score,
-                rank        = rank
-            )
-        }
-
-        com.github.trivialloop.scorehub.ui.GameResultsDialog.show(
-            context    = this,
-            entries    = entries,
-            isDraw     = isDraw,
-            scoreLabel = " pts",
-            onDismiss  = { finish() }
-        )
     }
 
     // ─── Cell helpers ──────────────────────────────────────────────────────────
 
     private fun makeRow(): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
-        this.text = text
-        gravity = Gravity.CENTER
+        this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(4), cellPaddingV, dpToPx(4), cellPaddingV)
-        textSize = cellTextSize - 1f
-        setTypeface(null, Typeface.BOLD)
+        textSize = cellTextSize - 1f; setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(dpToPx(42), LinearLayout.LayoutParams.WRAP_CONTENT)
         background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_text))
     }
 
     private fun makePlayerCell(text: String, bold: Boolean = false): TextView = TextView(this).apply {
-        this.text = text
-        gravity = Gravity.CENTER
+        this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(2), cellPaddingV, dpToPx(2), cellPaddingV)
-        textSize = cellTextSize
-        if (bold) setTypeface(null, Typeface.BOLD)
-        maxLines = 1
-        ellipsize = TextUtils.TruncateAt.END
+        textSize = cellTextSize; if (bold) setTypeface(null, Typeface.BOLD)
+        maxLines = 1; ellipsize = TextUtils.TruncateAt.END
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_background))
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_text))
@@ -436,12 +415,10 @@ class SkyjoGameActivity : AppCompatActivity() {
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@SkyjoGameActivity, R.color.skyjo_cell_border))
+        setStroke(1, ContextCompat.getColor(this@SkyjoGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
-
-    // ─── Navigation ────────────────────────────────────────────────────────────
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -458,3 +435,6 @@ class SkyjoGameActivity : AppCompatActivity() {
         }
     }
 }
+
+/** Internal text colour role for a Skyjo round cell. */
+private enum class SkyjoRoundColor { GREEN, RED, NEUTRAL }
