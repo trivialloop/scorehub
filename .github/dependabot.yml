@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # Updates for Github Actions used in the repo
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+  # Updates for Gradle dependencies used in the app
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    labels:
+      - "dependencies"
