@@ -28,6 +28,7 @@ alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.githu
 ### Cribbage (Cribbage)
 ### Escoba (Escoba)
 ### Skyjo (Skyjo)
+### Tarot (Tarot)
 ### Wingspan (Wingspan)
 ### Yahtzee (Yams)
 
