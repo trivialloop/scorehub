@@ -1,0 +1,2 @@
+### Fixed
+- Fix color score in Yahtzee
