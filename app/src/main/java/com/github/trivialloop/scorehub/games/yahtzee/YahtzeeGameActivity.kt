@@ -151,6 +151,10 @@ class YahtzeeGameActivity : AppCompatActivity() {
         return column
     }
 
+    /**
+     * Blends [color] toward the header cell background at the given [alpha].
+     * Used to dim category labels when the active player has already filled that category.
+     */
     private fun blendWithBackground(color: Int, alpha: Float): Int {
         val bg = ContextCompat.getColor(this, R.color.header_cell_background)
         val r = (Color.red(color) * alpha + Color.red(bg) * (1f - alpha)).toInt()
@@ -229,7 +233,9 @@ class YahtzeeGameActivity : AppCompatActivity() {
         // Lower total
         column.addView(createCalculatedCell(playerScore.getLowerTotal().toString()))
 
-        // Grand total — colored: best (green), worst (red)
+        // Grand total — highest score wins in Yahtzee, so highest = green, lowest = red.
+        // ScoreColorRole(lowerIsBetter=false) maps min→BEST and max→WORST, which is the
+        // opposite of what we want. We therefore swap the color assignment here.
         val grandTotals = playerScores.map { it.getGrandTotal() }
         val grandTotal = playerScore.getGrandTotal()
         val grandTotalCell = createCalculatedCell(grandTotal.toString(), isGrandTotal = true)
@@ -239,10 +245,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             val role = ScoreColorRole(grandTotal, grandTotals)
             grandTotalCell.setTextColor(
                 when (role) {
-                    com.github.trivialloop.scorehub.utils.ScoreColorRole.BEST ->
-                        ContextCompat.getColor(this, R.color.score_text_best)
-                    com.github.trivialloop.scorehub.utils.ScoreColorRole.WORST ->
-                        ContextCompat.getColor(this, R.color.score_text_worst)
+                    ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst)
+                    ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)
                     else -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
                 }
             )
@@ -307,46 +311,38 @@ class YahtzeeGameActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
 
-        // Compute per-row score coloring (text only, no background change)
-        val rowScores = playerScores.mapNotNull { it.scores[category] }
+        // Per-row color: highest score in the row → green, lowest → red.
+        // ScoreColorRole maps min→BEST and max→WORST (lowerIsBetter=false).
+        // Yahtzee: higher is better, so we swap: WORST (=max) → green, BEST (=min) → red.
         val role = ScoreColorRole(score, playerScores.map { it.scores[category] })
+        val rowTextColor = when (role) {
+            ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst) // min → red
+            ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)  // max → green
+            else                 -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
+        }
 
         when {
             alreadyFilled && isLastFilled && isActive -> {
-                textView.text = score.toString()   // ← plain score, no pencil
+                textView.text = score.toString()
                 textView.background = cellBorderDrawable(
-                    ContextCompat.getColor(this, R.color.cell_editable_filled_bg), strong = true
+                    ContextCompat.getColor(this, R.color.score_cell_background), strong = true
                 )
-                // text colour: row role as usual
-                val role = ScoreColorRole(score, playerScores.map { it.scores[category] })
-                textView.setTextColor(when (role) {
-                    ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
-                    ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
-                    else                 -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
-                })
+                textView.setTextColor(rowTextColor)
+                textView.setTypeface(null, Typeface.BOLD)
                 textView.setOnClickListener {
                     showScoreSelectionDialog(playerScore, playerIndex, category, isEdit = true)
                 }
-        }
+            }
             alreadyFilled -> {
-                // Locked filled cell — dimmed text, coloring still applied
                 textView.text = score.toString()
                 textView.background = cellBorderDrawable(
-                    ContextCompat.getColor(this, R.color.cell_locked_bg)
+                    ContextCompat.getColor(this, R.color.score_cell_background)
                 )
-                textView.setTextColor(
-                    when (role) {
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.BEST ->
-                            ContextCompat.getColor(this, R.color.score_text_best)
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.WORST ->
-                            ContextCompat.getColor(this, R.color.score_text_worst)
-                        else -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
-                    }
-                )
+                textView.setTextColor(rowTextColor)
+                textView.setTypeface(null, Typeface.ITALIC)
                 textView.alpha = 0.6f
             }
             isActive -> {
-                // Empty cell for current player
                 textView.text = ""
                 textView.background = cellBorderDrawable(
                     ContextCompat.getColor(this, R.color.score_cell_background)
@@ -357,20 +353,15 @@ class YahtzeeGameActivity : AppCompatActivity() {
                 }
             }
             else -> {
-                // Other player's cell
                 textView.text = score?.toString() ?: ""
                 textView.background = cellBorderDrawable(
                     ContextCompat.getColor(this, R.color.score_cell_background)
                 )
-                textView.setTextColor(
-                    when (role) {
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.BEST ->
-                            ContextCompat.getColor(this, R.color.score_text_best)
-                        com.github.trivialloop.scorehub.utils.ScoreColorRole.WORST ->
-                            ContextCompat.getColor(this, R.color.score_text_worst)
-                        else -> ContextCompat.getColor(this, R.color.score_cell_text)
-                    }
-                )
+                textView.setTextColor(rowTextColor)
+                if (alreadyFilled) {
+                    textView.setTypeface(null, Typeface.ITALIC)
+                    textView.alpha = 0.6f
+                }
             }
         }
 
@@ -421,7 +412,10 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun cellBorderDrawable(bgColor: Int, strong: Boolean = false): android.graphics.drawable.GradientDrawable {
+    private fun cellBorderDrawable(
+        bgColor: Int,
+        strong: Boolean = false
+    ): android.graphics.drawable.GradientDrawable {
         return android.graphics.drawable.GradientDrawable().apply {
             setColor(bgColor)
             setStroke(
@@ -495,7 +489,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         var currentRank = 1
         val entries = sorted.mapIndexed { index, (name, score) ->
             val rank = if (index > 0 && score == sorted[index - 1].value) currentRank
-                       else { currentRank = index + 1; currentRank }
+            else { currentRank = index + 1; currentRank }
             val player = playerScores.find { it.playerName == name }
             GameResultsDialog.PlayerResult(
                 playerName = name,
