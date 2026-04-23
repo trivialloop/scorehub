@@ -34,9 +34,9 @@ alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.githu
 
 ## 📸 Screenshots
 
-| Player selection                                                            | Statistics                                                                | Yahtzee                                                                     | Skyjo                                                                     |
-|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/02-players.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/04-stats.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/03-yahztee.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/06-skyjo.png) |
+| Home                                                                     | Players selection                                                           | Statistics                                                                | Top 20                                                                    | Yahztee                                                                     | Skyjo                                                                     | Cribbage                                                                     |
+|--------------------------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/01-home.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/02-players.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/03-stats.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/04-top20.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/05-yahztee.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/06-skyjo.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/07-cribbage.png) |
 
 ## 📋 Requirements
 
@@ -44,6 +44,8 @@ alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.githu
 - ~10 MB storage space
 
 ## 📞 Support
+
+<a href="https://buymeacoffee.com/trivialloop" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="50" width="200"></a>
 
 If you encounter any issues or have suggestions, please [open an issue](https://github.com/trivialloop/scorehub/issues).
 
