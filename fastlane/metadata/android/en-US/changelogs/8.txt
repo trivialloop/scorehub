@@ -1,0 +1,6 @@
+### Added
+- Add tarot game
+
+### Changed
+- Improve game filter
+- Uniformize colors games

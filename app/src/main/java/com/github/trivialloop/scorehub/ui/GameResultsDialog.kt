@@ -102,8 +102,8 @@ object GameResultsDialog {
                 if (entry.rank == 1) setTypeface(null, Typeface.BOLD)
                 setTextColor(
                     when (entry.rank) {
-                        1 -> ContextCompat.getColor(context, R.color.skyjo_score_green)
-                        entries.maxOf { it.rank } -> ContextCompat.getColor(context, R.color.skyjo_score_red)
+                        1 -> ContextCompat.getColor(context, R.color.score_text_best)
+                        entries.maxOf { it.rank } -> ContextCompat.getColor(context, R.color.score_text_worst)
                         else -> ContextCompat.getColor(context, android.R.color.tab_indicator_text)
                     }
                 )

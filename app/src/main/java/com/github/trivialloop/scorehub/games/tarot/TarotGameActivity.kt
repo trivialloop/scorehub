@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -130,10 +131,10 @@ class TarotGameActivity : AppCompatActivity() {
             val scoreColor = when (role) {
                 TarotCellRole.DECLARER_WIN, TarotCellRole.PARTNER_WIN,
                 TarotCellRole.DEFENDER_WIN ->
-                    ContextCompat.getColor(this, R.color.tarot_score_win)
+                    ContextCompat.getColor(this, R.color.score_text_best)
                 TarotCellRole.DECLARER_LOSS, TarotCellRole.PARTNER_LOSS,
                 TarotCellRole.DEFENDER_LOSS ->
-                    ContextCompat.getColor(this, R.color.tarot_score_loss)
+                    ContextCompat.getColor(this, R.color.score_text_worst)
             }
             row.addView(makeTwoLineCell(
                 line1 = if (score >= 0) "+$score" else "$score",
@@ -207,7 +208,7 @@ class TarotGameActivity : AppCompatActivity() {
             val total = totals[player.playerId] ?: 0
             val cell = makeSingleLineCell(total.toString(), bold = true, height = headerRowHeight)
             if (gameOver && total == maxTotal)
-                cell.setTextColor(ContextCompat.getColor(this, R.color.tarot_score_win))
+                cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
             row.addView(cell)
         }
         return row
@@ -454,12 +455,17 @@ class TarotGameActivity : AppCompatActivity() {
         fromOptions: Boolean
     ) {
         val threshold = TarotRound.threshold(bouts)
+ 
+        // Pencil in title when editing an existing round
+        val baseTitle = getString(R.string.tarot_points_made)
+        val dialogTitle = if (existingRound != null) "✏️ $baseTitle" else baseTitle
+ 
         val editText = EditText(this).apply {
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            hint = getString(R.string.tarot_points_hint, threshold)
-            gravity = Gravity.CENTER
-            textSize = 20f
-            filters = arrayOf(android.text.InputFilter.LengthFilter(2))
+            hint      = getString(R.string.tarot_points_hint, threshold)
+            gravity   = Gravity.CENTER
+            textSize  = 20f
+            filters   = arrayOf(android.text.InputFilter.LengthFilter(2))
             existingRound?.let { setText(it.pointsMade.toString()) }
         }
         val container = LinearLayout(this).apply {
@@ -470,13 +476,12 @@ class TarotGameActivity : AppCompatActivity() {
                 text = getString(R.string.tarot_threshold_info, threshold)
                 gravity = Gravity.CENTER
                 textSize = 13f
-                setTextColor(ContextCompat.getColor(this@TarotGameActivity,
-                    android.R.color.darker_gray))
+                setTextColor(ContextCompat.getColor(this@TarotGameActivity, android.R.color.darker_gray))
             })
         }
-
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.tarot_points_made))
+ 
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(dialogTitle)
             .setView(container)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val pts = editText.text.toString().trim().toIntOrNull()
@@ -486,14 +491,14 @@ class TarotGameActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
                 val newRound = TarotRound(
-                    roundNumber = existingRound?.roundNumber ?: rounds.size + 1,
-                    declarerId = declarerId,
-                    contract = contract,
-                    boutsCount = bouts,
-                    pointsMade = pts,
-                    poignees = poignees,
-                    petitAuBout = petitAuBout,
-                    chelem = chelem,
+                    roundNumber       = existingRound?.roundNumber ?: rounds.size + 1,
+                    declarerId        = declarerId,
+                    contract          = contract,
+                    boutsCount        = bouts,
+                    pointsMade        = pts,
+                    poignees          = poignees,
+                    petitAuBout       = petitAuBout,
+                    chelem            = chelem,
                     associatedPlayerId = partnerId
                 )
                 if (existingRound != null) {
@@ -506,15 +511,13 @@ class TarotGameActivity : AppCompatActivity() {
                 checkEndOfGame()
             }
             .setNegativeButton(getString(R.string.tarot_back)) { _, _ ->
-                // Go back to page 2 if coming from options, else page 1
-                if (fromOptions) {
-                    showPage2Dialog(declarerId, contract, bouts, partnerId, existingRound,
-                        poignees, petitAuBout, chelem)
-                } else {
-                    showPage1Dialog(existingRound)
-                }
+                if (fromOptions) showPage2Dialog(declarerId, contract, bouts, partnerId, existingRound, poignees, petitAuBout, chelem)
+                else showPage1Dialog(existingRound)
             }
-            .show()
+            .create()
+ 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
         editText.requestFocus()
     }
 
@@ -630,7 +633,7 @@ class TarotGameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1))
             setBackgroundColor(ContextCompat.getColor(this@TarotGameActivity,
-                R.color.tarot_cell_border))
+                R.color.cell_border))
         })
 
         addView(TextView(this@TarotGameActivity).apply {
@@ -647,7 +650,7 @@ class TarotGameActivity : AppCompatActivity() {
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
-        setStroke(1, ContextCompat.getColor(this@TarotGameActivity, R.color.tarot_cell_border))
+        setStroke(1, ContextCompat.getColor(this@TarotGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
