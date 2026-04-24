@@ -109,7 +109,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.4.0")
 
     // Room Database
-    val roomVersion = "2.7.2"
+    val roomVersion = "2.8.4"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
