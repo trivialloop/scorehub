@@ -360,6 +360,12 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     private fun onRoundComplete(round: CribbageRound) {
+        // Guard: if this round is not the last one, it is a re-edit of a previous round
+        // that was already completed. A new round already exists — do not add another.
+        if (round !== rounds.last()) {
+            buildTable()
+            return
+        }
         checkGameOver()
         if (!gameOver) {
             addNewRound()

@@ -109,7 +109,6 @@ class EscobaGameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
-        // Row 1 — player names spanning 2 sub-columns each (weight 2f)
         val nameRow = makeFixedRow()
         nameRow.addView(makeRoundLabelCell(""))
         for (player in players) {
@@ -117,7 +116,6 @@ class EscobaGameActivity : AppCompatActivity() {
         }
         container.addView(nameRow)
 
-        // Row 2 — sub-column labels (equal weight 1f each)
         val subRow = makeFixedRow()
         subRow.addView(makeRoundLabelCell("#"))
         repeat(players.size) {
@@ -144,11 +142,10 @@ class EscobaGameActivity : AppCompatActivity() {
             val myPeg  = round.peggingScores[player.playerId] ?: 0
             val myHand = round.handScores[player.playerId]
 
-            // ── En jeu (In play) ─────────────────────────────────────────────
+            // ── En jeu (pegging) ─────────────────────────────────────────────
             val peggingCanEdit = !gameOver && round.isPeggingEditable() &&
                     (isLastRound || (prevEditable && !round.handScores.values.any { it != null }))
 
-            // Text colour for pegging: compare across players
             val allPegs  = players.map { round.peggingScores[it.playerId] }
             val pegRole  = ScoreColorRole(myPeg, allPegs)
             val pegColor = when (pegRole) {
@@ -171,7 +168,7 @@ class EscobaGameActivity : AppCompatActivity() {
                 }
             ))
 
-            // ── Fin de manche (Hand) ──────────────────────────────────────────
+            // ── Fin de manche (hand) ──────────────────────────────────────────
             val handCanEdit  = !gameOver && (isLastRound && !round.isComplete(playerIdList) || prevEditable)
 
             val bgColor = when {
@@ -180,7 +177,6 @@ class EscobaGameActivity : AppCompatActivity() {
                 else                          -> ContextCompat.getColor(this, R.color.cell_locked_bg)
             }
 
-            // Text colour for hand: compare all entered hand scores
             val allHands  = players.map { round.handScores[it.playerId] }
             val handRole  = ScoreColorRole(myHand, allHands)
             val handColor = when (handRole) {
@@ -189,7 +185,6 @@ class EscobaGameActivity : AppCompatActivity() {
                 else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
             }
 
-            // No pencil in the cell — just the raw value
             val handCell = makeScoreCell(myHand?.toString() ?: "", bgColor, handColor, bold = handRole != ScoreColorRole.NEUTRAL && myHand != null)
             if (!handCanEdit && myHand != null) handCell.alpha = 0.75f
             if (handCanEdit) handCell.setOnClickListener { showHandScoreInput(round, player) }
@@ -225,9 +220,8 @@ class EscobaGameActivity : AppCompatActivity() {
     private fun showHandScoreInput(round: EscobaRound, player: EscobaPlayerState) {
         val current = round.handScores[player.playerId]
 
-        // Pencil in dialog title when re-editing, not in the cell
         val title = if (current != null) "✏️ ${player.playerName} — ${getString(R.string.escoba_hand_score)}"
-                    else "${player.playerName} — ${getString(R.string.escoba_hand_score)}"
+        else "${player.playerName} — ${getString(R.string.escoba_hand_score)}"
 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -254,7 +248,8 @@ class EscobaGameActivity : AppCompatActivity() {
                 }
                 round.handScores[player.playerId] = value
                 buildTable()
-                if (round.isComplete(players.map { it.playerId })) checkEndOfGame()
+                val playerIdList = players.map { it.playerId }
+                if (round.isComplete(playerIdList)) checkEndOfGame(round)
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
@@ -266,7 +261,19 @@ class EscobaGameActivity : AppCompatActivity() {
 
     // ─── Game logic ────────────────────────────────────────────────────────────
 
-    private fun checkEndOfGame() {
+    /**
+     * Called when a round becomes complete.
+     *
+     * Guard: if [round] is not the last round, it is a re-edit of a previously
+     * completed round — a new round already exists, so do NOT add another one.
+     */
+    private fun checkEndOfGame(round: EscobaRound) {
+        // Re-edit guard: only add a new round if this is the current last round
+        if (round !== rounds.last()) {
+            buildTable()
+            return
+        }
+
         val maxTotal = players.maxOf { it.getTotal(rounds) }
         if (maxTotal >= SCORE_LIMIT) {
             AlertDialog.Builder(this)
@@ -342,7 +349,6 @@ class EscobaGameActivity : AppCompatActivity() {
         setTextColor(ContextCompat.getColor(this@EscobaGameActivity, R.color.header_cell_text))
     }
 
-    /** In-play cell: [−] score [+] — equal weight (1f) same as hand cell. */
     private fun makeInPlayCell(
         score: Int, textColor: Int, canEdit: Boolean,
         onDecrement: () -> Unit, onIncrement: () -> Unit
