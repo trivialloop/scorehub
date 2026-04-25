@@ -8,10 +8,10 @@ class CribbageScoreManagerTest {
     // ─── CribbageRound — initial state ────────────────────────────────────────
 
     @Test
-    fun `pegging scores start at 0 for both players`() {
+    fun `in play scores start at 0 for both players`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        assertEquals(0, round.peggingScores[1L])
-        assertEquals(0, round.peggingScores[2L])
+        assertEquals(0, round.inPlayScores[1L])
+        assertEquals(0, round.inPlayScores[2L])
     }
 
     @Test
@@ -72,57 +72,57 @@ class CribbageScoreManagerTest {
         assertTrue(round.isComplete())
     }
 
-    // ─── Pegging lock — locked by first player's hand entry ──────────────────
+    // ─── in play lock — locked by first player's hand entry ──────────────────
 
     @Test
-    fun `isPeggingEditable returns true before first player hand entered`() {
+    fun `isInPlayEditable returns true before first player hand entered`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        assertTrue(round.isPeggingEditable())
+        assertTrue(round.isInPlayEditable())
     }
 
     @Test
-    fun `isPeggingEditable returns false once first player hand entered`() {
+    fun `isInPlayEditable returns false once first player hand entered`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
         round.handScores[1L] = 10  // first player enters hand
-        assertFalse(round.isPeggingEditable())
+        assertFalse(round.isInPlayEditable())
     }
 
     @Test
-    fun `isPeggingEditable is not affected by dealer hand entry alone`() {
+    fun `isInPlayEditable is not affected by dealer hand entry alone`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        // Dealer enters hand — should not lock pegging (first player hasn't entered yet)
+        // Dealer enters hand — should not lock in play (first player hasn't entered yet)
         round.handScores[2L] = 8
-        assertTrue(round.isPeggingEditable())
+        assertTrue(round.isInPlayEditable())
     }
 
-    // ─── Previous round locking — hasPeggingActivity ─────────────────────────
+    // ─── Previous round locking — hasInPlayActivity ─────────────────────────
 
     @Test
-    fun `hasPeggingActivity returns false when all pegging scores are 0`() {
+    fun `hasInPlayActivity returns false when all in play scores are 0`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        assertFalse(round.hasPeggingActivity())
-    }
-
-    @Test
-    fun `hasPeggingActivity returns true when first player has pegging score`() {
-        val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[1L] = 3
-        assertTrue(round.hasPeggingActivity())
+        assertFalse(round.hasInPlayActivity())
     }
 
     @Test
-    fun `hasPeggingActivity returns true when dealer has pegging score`() {
+    fun `hasInPlayActivity returns true when first player has in play score`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[2L] = 1
-        assertTrue(round.hasPeggingActivity())
+        round.inPlayScores[1L] = 3
+        assertTrue(round.hasInPlayActivity())
+    }
+
+    @Test
+    fun `hasInPlayActivity returns true when dealer has in play score`() {
+        val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
+        round.inPlayScores[2L] = 1
+        assertTrue(round.hasInPlayActivity())
     }
 
     // ─── roundTotal ───────────────────────────────────────────────────────────
 
     @Test
-    fun `roundTotal for dealer includes pegging plus hand plus crib`() {
+    fun `roundTotal for dealer includes in play plus hand plus crib`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[2L] = 4
+        round.inPlayScores[2L] = 4
         round.handScores[2L]    = 12
         round.cribScore         = 6
         assertEquals(22, round.roundTotal(2L))
@@ -131,16 +131,16 @@ class CribbageScoreManagerTest {
     @Test
     fun `roundTotal for first player does not include crib`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[1L] = 3
+        round.inPlayScores[1L] = 3
         round.handScores[1L]    = 8
         round.cribScore         = 10   // crib belongs to dealer only
         assertEquals(11, round.roundTotal(1L))
     }
 
     @Test
-    fun `roundTotal returns only pegging when hand and crib are null`() {
+    fun `roundTotal returns only in play when hand and crib are null`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[2L] = 7
+        round.inPlayScores[2L] = 7
         assertEquals(7, round.roundTotal(2L))
     }
 
@@ -152,13 +152,13 @@ class CribbageScoreManagerTest {
     }
 
     @Test
-    fun `roundTotal handles partial entry - only pegging and first player hand set`() {
+    fun `roundTotal handles partial entry - only in play and first player hand set`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        round.peggingScores[2L] = 5
+        round.inPlayScores[2L] = 5
         round.handScores[1L]    = 9   // first player entered, dealer has not
-        // dealer total = pegging only
+        // dealer total = in play only
         assertEquals(5, round.roundTotal(2L))
-        // first player total = pegging + hand
+        // first player total = in play + hand
         assertEquals(9, round.roundTotal(1L))
     }
 
@@ -176,13 +176,13 @@ class CribbageScoreManagerTest {
 
         // Round 1: Alice is first player (plays first), Bob is dealer
         val round1 = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L).apply {
-            peggingScores[1L] = 3
+            inPlayScores[1L] = 3
             handScores[1L]    = 8
             // crib belongs to Bob (dealerId=2L), Alice gets none
         }
         // Round 2: Bob plays first, Alice is dealer (has crib)
         val round2 = CribbageRound(2, firstPlayerId = 2L, dealerId = 1L).apply {
-            peggingScores[1L] = 4
+            inPlayScores[1L] = 4
             handScores[1L]    = 10
             cribScore         = 6   // Alice is dealer in round 2
         }
@@ -199,8 +199,8 @@ class CribbageScoreManagerTest {
 
         // Alice is first player, Bob is dealer (has crib)
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L).apply {
-            peggingScores[1L] = 2
-            peggingScores[2L] = 3
+            inPlayScores[1L] = 2
+            inPlayScores[2L] = 3
             handScores[1L]    = 10
             handScores[2L]    = 8
             cribScore         = 7
@@ -216,7 +216,7 @@ class CribbageScoreManagerTest {
     fun `getTotal with partial round counts only what is entered`() {
         val player = CribbagePlayerState(1L, "Alice", 0xFF0000)
         val round  = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L).apply {
-            peggingScores[1L] = 5
+            inPlayScores[1L] = 5
             // hand and crib not yet entered
         }
         assertEquals(5, player.getTotal(listOf(round)))
@@ -279,7 +279,7 @@ class CribbageScoreManagerTest {
             while (total < 121) {
                 val toAdd = minOf(30, 121 - total)
                 add(CribbageRound(roundNum++, firstPlayerId = 1L, dealerId = 2L).apply {
-                    peggingScores[1L] = toAdd
+                    inPlayScores[1L] = toAdd
                 })
                 total += toAdd
             }
@@ -291,7 +291,7 @@ class CribbageScoreManagerTest {
     fun `player below 121 does not trigger win`() {
         val player = CribbagePlayerState(1L, "Alice", 0xFF0000)
         val round  = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L).apply {
-            peggingScores[1L] = 5
+            inPlayScores[1L] = 5
             handScores[1L]    = 10
             // crib belongs to dealer (2L), not Alice
         }
@@ -307,7 +307,7 @@ class CribbageScoreManagerTest {
         round.handScores[2L] = 8
         round.cribScore      = 0
         assertTrue(round.isComplete())
-        assertEquals(8, round.roundTotal(2L))  // dealer: 0 pegging + 8 hand + 0 crib
+        assertEquals(8, round.roundTotal(2L))  // dealer: 0 in play + 8 hand + 0 crib
     }
 
     @Test
@@ -315,31 +315,31 @@ class CribbageScoreManagerTest {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
         round.handScores[1L] = 0
         assertTrue(round.isFirstPlayerHandEntered())
-        assertFalse(round.isPeggingEditable())  // first player entered → pegging locked
+        assertFalse(round.isInPlayEditable())  // first player entered → in play locked
     }
 
     @Test
-    fun `entering first player hand locks pegging immediately`() {
+    fun `entering first player hand locks in play immediately`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        assertTrue(round.isPeggingEditable())
+        assertTrue(round.isInPlayEditable())
         round.handScores[1L] = 5
-        assertFalse(round.isPeggingEditable())
+        assertFalse(round.isInPlayEditable())
     }
 
     @Test
-    fun `entering dealer hand alone does not lock pegging`() {
+    fun `entering dealer hand alone does not lock in play`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
         round.handScores[2L] = 8  // dealer enters (unusual, but model allows it)
-        assertTrue(round.isPeggingEditable())  // still editable
+        assertTrue(round.isInPlayEditable())  // still editable
     }
 
     @Test
-    fun `pegging can be incremented independently for each player`() {
+    fun `in play can be incremented independently for each player`() {
         val round = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L)
-        repeat(5) { round.peggingScores[1L] = (round.peggingScores[1L] ?: 0) + 1 }
-        repeat(3) { round.peggingScores[2L] = (round.peggingScores[2L] ?: 0) + 1 }
-        assertEquals(5, round.peggingScores[1L])
-        assertEquals(3, round.peggingScores[2L])
+        repeat(5) { round.inPlayScores[1L] = (round.inPlayScores[1L] ?: 0) + 1 }
+        repeat(3) { round.inPlayScores[2L] = (round.inPlayScores[2L] ?: 0) + 1 }
+        assertEquals(5, round.inPlayScores[1L])
+        assertEquals(3, round.inPlayScores[2L])
     }
 
     @Test
@@ -349,7 +349,7 @@ class CribbageScoreManagerTest {
         // Alice is first player every round for simplicity
         val rounds = (1..5).map { i ->
             CribbageRound(i, firstPlayerId = 1L, dealerId = 2L).apply {
-                peggingScores[1L] = 2
+                inPlayScores[1L] = 2
                 handScores[1L]    = 10
                 // Alice is not dealer, so no crib
             }
@@ -364,13 +364,13 @@ class CribbageScoreManagerTest {
 
         // Round 1: Alice first player (1L), Bob dealer (2L) — Bob has crib
         val round1 = CribbageRound(1, firstPlayerId = 1L, dealerId = 2L).apply {
-            peggingScores[2L] = 3
+            inPlayScores[2L] = 3
             handScores[2L]    = 9
             cribScore         = 5   // Bob's crib
         }
         // Round 2: Bob first player (2L), Alice dealer (1L) — Bob has NO crib
         val round2 = CribbageRound(2, firstPlayerId = 2L, dealerId = 1L).apply {
-            peggingScores[2L] = 4
+            inPlayScores[2L] = 4
             handScores[2L]    = 7
             cribScore         = 8   // Alice's crib, not Bob's
         }
@@ -387,7 +387,7 @@ class CribbageScoreManagerTest {
         // 3 rounds where Alice is always first player (never dealer)
         val rounds = (1..3).map { i ->
             CribbageRound(i, firstPlayerId = 1L, dealerId = 2L).apply {
-                peggingScores[1L] = 3
+                inPlayScores[1L] = 3
                 handScores[1L]    = 9
                 cribScore         = 20   // large crib — must NOT appear in Alice's total
             }

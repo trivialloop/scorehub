@@ -132,9 +132,9 @@ All `PlayerSelectionActivity` classes must follow this behaviour (same as Cribba
 
 For multi-column grids (Cribbage, Escoba) all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header, round rows, and total row.
 
-### In-play (pegging) cells
+### In-play cells
 
-Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with weight 1.5f (wider than the hand cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
+Games with a in-play phase (Cribbage, Escoba) use a `[−] score [+]` cell with weight 1.5f (wider than the hand cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
 
 ---
 
@@ -153,10 +153,10 @@ Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
 
 ### Escoba
 - 2-column layout per player per round: **In play** (in-play, weight 1.5) + **End of round** (hand, weight 1).
-- Pegging via +/− buttons; locked once any player enters their end-of-round score.
+- In-play via +/− buttons; locked once any player enters their end-of-round score.
 - End-of-round score: dialog with auto-focus keyboard; pencil prefix when re-editing.
 - Score limit: **21 pts**. Highest score wins.
-- Previous round editable until the new round gets any pegging activity.
+- Previous round editable until the new round gets any in-play activity.
 
 ### Cribbage
 - 3-column layout per player: **In play** (in-play) + **End of round** + **Crib**.
@@ -189,8 +189,8 @@ Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
 - Existing test files:
   - `YahtzeeScoreManagerTest.kt` — Yahtzee scoring logic
   - `SkyjoScoreManagerTest.kt` — Skyjo rounds, penalties, colors
-  - `EscobaScoreManagerTest.kt` — Escoba rounds, pegging, totals
-  - `CribbageScoreManagerTest.kt` — Cribbage rounds, pegging, crib
+  - `EscobaScoreManagerTest.kt` — Escoba rounds, in-play, totals
+  - `CribbageScoreManagerTest.kt` — Cribbage rounds, in-play, crib
   - `TarotScoreManagerTest.kt` — Tarot zero-sum, scoring
   - `WingspanScoreManagerTest.kt` — Wingspan category totals
   - `CactusScoreManagerTest.kt` — Cactus points, cell colors

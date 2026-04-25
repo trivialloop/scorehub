@@ -80,7 +80,7 @@
     <string name="cribbage_game">Cribbage</string>
     <string name="cribbage_round_label">#</string>
     <string name="cribbage_total">Total</string>
-    <string name="cribbage_pegging">In play</string>
+    <string name="cribbage_in_play">In play</string>
     <string name="cribbage_hand">End of round</string>
     <string name="cribbage_crib">Crib</string>
     <string name="cribbage_hand_score">End of round score</string>
@@ -95,7 +95,7 @@
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
     <string name="escoba_total">Total</string>
-    <string name="escoba_pegging">In play</string>
+    <string name="escoba_in_play">In play</string>
     <string name="escoba_hand">End of round</string>
     <string name="escoba_hand_score">End of round score</string>
     <string name="escoba_enter_score">Enter score</string>
