@@ -167,7 +167,7 @@ class CribbageGameActivity : AppCompatActivity() {
         val subRow = makeFixedRow()
         subRow.addView(makeRoundLabelCell("#"))
         repeat(players.size) {
-            subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_pegging), weight = 1.5f))
+            subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_in_play), weight = 1.5f))
             subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_hand)))
             subRow.addView(makeSubHeaderCell(getString(R.string.cribbage_crib)))
         }
@@ -181,7 +181,7 @@ class CribbageGameActivity : AppCompatActivity() {
      *
      * Entry order per round:
      *  1. In-play: both players simultaneously via +/−.
-     *  2. First player enters end-of-round score (locks pegging for both).
+     *  2. First player enters end-of-round score (locks in play for both).
      *  3. Dealer enters end-of-round score.
      *  4. Dealer enters crib score → round complete.
      *
@@ -190,15 +190,15 @@ class CribbageGameActivity : AppCompatActivity() {
      *
      * Previous round locking:
      *  A completed round's end-of-round + crib cells stay editable until the next
-     *  round has any pegging activity.
+     *  round has any in play activity.
      */
     private fun buildRoundRow(round: CribbageRound, roundIndex: Int): LinearLayout {
         val isLastRound  = roundIndex == rounds.lastIndex
         val isPrevRound  = roundIndex == rounds.lastIndex - 1
         val currentRound = rounds.last()
 
-        // Previous round editable until the new round gets any pegging
-        val prevRoundEditable = isPrevRound && !gameOver && !currentRound.hasPeggingActivity()
+        // Previous round editable until the new round gets any in play
+        val prevRoundEditable = isPrevRound && !gameOver && !currentRound.hasInPlayActivity()
 
         val row = makeFixedRow()
 
@@ -211,8 +211,8 @@ class CribbageGameActivity : AppCompatActivity() {
 
         val p0    = players[0]
         val p1    = players[1]
-        val peg0  = round.peggingScores[p0.playerId] ?: 0
-        val peg1  = round.peggingScores[p1.playerId] ?: 0
+        val inPlay0  = round.inPlayScores[p0.playerId] ?: 0
+        val inPlay1  = round.inPlayScores[p1.playerId] ?: 0
         val hand0 = round.handScores[p0.playerId]
         val hand1 = round.handScores[p1.playerId]
 
@@ -220,45 +220,45 @@ class CribbageGameActivity : AppCompatActivity() {
         listOf(p0, p1).forEach { player ->
             val isFirstPlayer = player.playerId == round.firstPlayerId
             val isDealer      = player.playerId == round.dealerId
-            val myPeg         = round.peggingScores[player.playerId] ?: 0
-            val oppPeg        = if (player == p0) peg1 else peg0
+            val myInPlay         = round.inPlayScores[player.playerId] ?: 0
+            val oppInPlay        = if (player == p0) inPlay1 else inPlay0
             val myHand        = round.handScores[player.playerId]
             val oppHand       = if (player == p0) hand1 else hand0
 
             // ── En jeu (In play) ──────────────────────────────────────────────
             // Editable while the round is still in the in-play phase AND this is
             // the active round or the still-unlocked previous round.
-            val inPlayCanEdit = !gameOver && round.isPeggingEditable() &&
+            val inPlayCanEdit = !gameOver && round.isInPlayEditable() &&
                     (isLastRound || (prevRoundEditable && !round.isFirstPlayerHandEntered()))
 
             val inPlayColor = when {
-                myPeg > oppPeg -> CribbageCellColor.GREEN
-                myPeg < oppPeg -> CribbageCellColor.RED
+                myInPlay > oppInPlay -> CribbageCellColor.GREEN
+                myInPlay < oppInPlay -> CribbageCellColor.RED
                 else           -> CribbageCellColor.DEFAULT
             }
 
             val inPlayState = when {
                 inPlayCanEdit              -> CellState.EDITABLE
-                !round.isPeggingEditable() -> CellState.LOCKED_PREV  // locked once first player enters hand
+                !round.isInPlayEditable() -> CellState.LOCKED_PREV  // locked once first player enters hand
                 isLastRound && !gameOver   -> CellState.LOCKED_SOON  // round open, waiting for something
                 else                       -> CellState.LOCKED_PREV
             }
 
             row.addView(makeInPlayCell(
-                score       = myPeg,
+                score       = myInPlay,
                 scoreColor  = inPlayColor,
                 state       = inPlayState,
                 onDecrement = {
-                    val cur = round.peggingScores[player.playerId] ?: 0
+                    val cur = round.inPlayScores[player.playerId] ?: 0
                     if (cur > 0) {
-                        round.peggingScores[player.playerId] = cur - 1
+                        round.inPlayScores[player.playerId] = cur - 1
                         buildTable()
                         checkGameOver()
                     }
                 },
                 onIncrement = {
-                    val cur = round.peggingScores[player.playerId] ?: 0
-                    round.peggingScores[player.playerId] = cur + 1
+                    val cur = round.inPlayScores[player.playerId] ?: 0
+                    round.inPlayScores[player.playerId] = cur + 1
                     buildTable()
                     checkGameOver()
                 }
@@ -267,7 +267,7 @@ class CribbageGameActivity : AppCompatActivity() {
             // ── End of round (Hand) ────────────────────────────────────────────
             // First player enters first (always editable until crib done).
             // Dealer enters second (only after first player has entered).
-            // Prev round stays editable until next round has pegging.
+            // Prev round stays editable until next round has in play.
             val handEditable = !gameOver && when {
                 isLastRound && isFirstPlayer -> myHand == null || round.cribScore == null
                 isLastRound && isDealer      -> round.isFirstPlayerHandEntered() &&
@@ -377,7 +377,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
     /**
      * End-of-round score input dialog.
-     * - First player can enter at any time (even during pegging phase).
+     * - First player can enter at any time (even during in play phase).
      * - Dealer can only enter after first player has entered.
      */
         private fun showHandScoreInput(round: CribbageRound, playerId: Long) {

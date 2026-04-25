@@ -67,7 +67,7 @@ class EscobaGameActivity : AppCompatActivity() {
             EscobaPlayerState(playerIds[i], playerNames[i], playerColors[i])
         }
 
-        val firstRound = EscobaRound(1).also { r -> players.forEach { r.peggingScores[it.playerId] = 0 } }
+        val firstRound = EscobaRound(1).also { r -> players.forEach { r.inPlayScores[it.playerId] = 0 } }
         rounds.add(firstRound)
 
         setSupportActionBar(binding.toolbar)
@@ -119,7 +119,7 @@ class EscobaGameActivity : AppCompatActivity() {
         val subRow = makeFixedRow()
         subRow.addView(makeRoundLabelCell("#"))
         repeat(players.size) {
-            subRow.addView(makeSubHeaderCell(getString(R.string.escoba_pegging)))
+            subRow.addView(makeSubHeaderCell(getString(R.string.escoba_in_play)))
             subRow.addView(makeSubHeaderCell(getString(R.string.escoba_hand)))
         }
         container.addView(subRow)
@@ -131,7 +131,7 @@ class EscobaGameActivity : AppCompatActivity() {
         val isLastRound = roundIndex == rounds.lastIndex
         val isPrevRound = roundIndex == rounds.lastIndex - 1
         val currentRound = rounds.last()
-        val prevEditable = isPrevRound && !gameOver && !currentRound.hasPeggingActivity()
+        val prevEditable = isPrevRound && !gameOver && !currentRound.hasInPlayActivity()
 
         val row = makeFixedRow()
         row.addView(makeRoundLabelCell(round.roundNumber.toString()))
@@ -139,32 +139,31 @@ class EscobaGameActivity : AppCompatActivity() {
         val playerIdList = players.map { it.playerId }
 
         for (player in players) {
-            val myPeg  = round.peggingScores[player.playerId] ?: 0
+            val myInPlay  = round.inPlayScores[player.playerId] ?: 0
             val myHand = round.handScores[player.playerId]
 
-            // ── En jeu (pegging) ─────────────────────────────────────────────
-            val peggingCanEdit = !gameOver && round.isPeggingEditable() &&
+            val inPlayCanEdit = !gameOver && round.isInPlayEditable() &&
                     (isLastRound || (prevEditable && !round.handScores.values.any { it != null }))
 
-            val allPegs  = players.map { round.peggingScores[it.playerId] }
-            val pegRole  = ScoreColorRole(myPeg, allPegs)
-            val pegColor = when (pegRole) {
+            val allInPlays  = players.map { round.inPlayScores[it.playerId] }
+            val inPlayRole  = ScoreColorRole(myInPlay, allInPlays)
+            val inPlayColor = when (inPlayRole) {
                 ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
                 ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
                 else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
             }
 
             row.addView(makeInPlayCell(
-                score    = myPeg,
-                textColor = pegColor,
-                canEdit  = peggingCanEdit,
+                score    = myInPlay,
+                textColor = inPlayColor,
+                canEdit  = inPlayCanEdit,
                 onDecrement = {
-                    val cur = round.peggingScores[player.playerId] ?: 0
-                    if (cur > 0) { round.peggingScores[player.playerId] = cur - 1; buildTable() }
+                    val cur = round.inPlayScores[player.playerId] ?: 0
+                    if (cur > 0) { round.inPlayScores[player.playerId] = cur - 1; buildTable() }
                 },
                 onIncrement = {
-                    val cur = round.peggingScores[player.playerId] ?: 0
-                    round.peggingScores[player.playerId] = cur + 1; buildTable()
+                    val cur = round.inPlayScores[player.playerId] ?: 0
+                    round.inPlayScores[player.playerId] = cur + 1; buildTable()
                 }
             ))
 
@@ -284,14 +283,14 @@ class EscobaGameActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(getString(R.string.no)) { _, _ ->
                     val newRound = EscobaRound(rounds.size + 1).also { r ->
-                        players.forEach { r.peggingScores[it.playerId] = 0 }
+                        players.forEach { r.inPlayScores[it.playerId] = 0 }
                     }
                     rounds.add(newRound); buildTable()
                 }
                 .show()
         } else {
             val newRound = EscobaRound(rounds.size + 1).also { r ->
-                players.forEach { r.peggingScores[it.playerId] = 0 }
+                players.forEach { r.inPlayScores[it.playerId] = 0 }
             }
             rounds.add(newRound); buildTable()
         }
