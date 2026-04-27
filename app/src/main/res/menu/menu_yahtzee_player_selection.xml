@@ -13,4 +13,10 @@
         android:title="@string/top_20"
         android:icon="@drawable/ic_trophy"
         app:showAsAction="ifRoom" />
+        
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/help_game_title"
+        android:icon="@drawable/ic_help"
+        app:showAsAction="always" />
 </menu>

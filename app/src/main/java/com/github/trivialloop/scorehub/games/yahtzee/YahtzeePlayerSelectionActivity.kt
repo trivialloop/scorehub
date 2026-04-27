@@ -20,6 +20,7 @@ import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
 import com.github.trivialloop.scorehub.ui.ColorPickerView
+import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ class YahtzeePlayerSelectionActivity : BaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.player_selection_title)
+        supportActionBar?.title = getString(R.string.yahtzee_game)
 
         setupRecyclerView()
 
@@ -319,6 +320,7 @@ class YahtzeePlayerSelectionActivity : BaseActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.action_help -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

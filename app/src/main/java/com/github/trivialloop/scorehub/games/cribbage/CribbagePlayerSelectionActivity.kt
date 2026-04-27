@@ -19,6 +19,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
+import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ class CribbagePlayerSelectionActivity : BaseActivity() {
         database = AppDatabase.getDatabase(this)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.player_selection_title)
+        supportActionBar?.title = getString(R.string.cribbage_game)
 
         setupRecyclerView()
 
@@ -253,6 +254,7 @@ class CribbagePlayerSelectionActivity : BaseActivity() {
             android.R.id.home -> { finish(); true }
             R.id.action_cribbage_game_stats -> { startActivity(Intent(this, CribbageStatsActivity::class.java)); true }
             R.id.action_cribbage_top20      -> { startActivity(Intent(this, CribbageTop20Activity::class.java)); true }
+            R.id.action_help                -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
