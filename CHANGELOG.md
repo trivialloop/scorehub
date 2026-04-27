@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.7.1]
+
+### Fixed
+- Fix edge to edge display
+
 ## [1.7.0]
 
 ### Changed
@@ -89,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.7.1...HEAD
+[1.7.1]:https://github.com/trivialloop/scorehub/compare/v1.7.0...v1.7.1
 [1.7.0]:https://github.com/trivialloop/scorehub/compare/v1.6.1...v1.7.0
 [1.6.1]:https://github.com/trivialloop/scorehub/compare/v1.6.0...v1.6.1
 [1.6.0]:https://github.com/trivialloop/scorehub/compare/v1.5.0...v1.6.0
