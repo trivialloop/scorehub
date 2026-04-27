@@ -1,0 +1,2 @@
+### Correction
+- Corrige l'affichage edge to edge
