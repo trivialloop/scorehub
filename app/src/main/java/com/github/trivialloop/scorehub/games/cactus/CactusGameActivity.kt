@@ -9,6 +9,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.EditText
@@ -16,7 +17,6 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.BaseActivity
@@ -25,6 +25,7 @@ import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityCactusGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
+import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -393,6 +394,11 @@ class CactusGameActivity : BaseActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_cactus_game, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -402,6 +408,10 @@ class CactusGameActivity : BaseActivity() {
                     .setPositiveButton(R.string.yes) { _, _ -> finish() }
                     .setNegativeButton(R.string.no, null)
                     .show()
+                true
+            }
+            R.id.action_help -> {
+                HelpDialogs.showAppHelp(this, GAME_TYPE)
                 true
             }
             else -> super.onOptionsItemSelected(item)

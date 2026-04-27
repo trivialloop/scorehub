@@ -241,8 +241,23 @@ The main screen reads its game list from a **central registry** — no change to
    - `<Game>Top20Activity.kt` — reuse `item_top20.xml`
 3. **Add layouts** `activity_<game>_game.xml`, `activity_<game>_stats.xml`, `activity_<game>_top20.xml`.
 4. **Declare the activities** in `AndroidManifest.xml`.
-5. **Add a menu** `menu_<game>_player_selection.xml`.
+5. **Add menus**:
+   - `menu_<game>_player_selection.xml` — must include game statistics, top 20, and the help item.
+   - `menu_<game>_game.xml` — contains only the help item .
 6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`.
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. **Add a section** in `activity_general_stats.xml` and `GeneralStatsActivity.kt`.
 9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. Mandatory — cover scoring logic, state helpers, and edge cases.
+10. **Add help content** in `ui/HelpDialogs.kt`:
+    - In `getGameHelp()`: add a `GameHelp` entry for the game type with:
+      - `players` — number of players supported
+      - `objective` — one-sentence summary of the game goal
+      - `scoring` — how points are counted
+      - `endCondition` — what triggers the end of the game
+      - `wikipediaUrlEn` — English Wikipedia URL for the game
+      - `wikipediaUrlFr` — French Wikipedia URL for the game
+    - In `getAppHelp()`: add an `AppHelp` entry with 3–4 concise steps explaining how to use the ScoreHub interface for that game (e.g. how to pick the finisher, how to enter scores, when the game ends in the app).
+    - Add the corresponding strings in both `values/strings.xml` and `values-fr/strings.xml` following the naming convention:
+      - Game rules: `help_<game>_players`, `help_<game>_objective`, `help_<game>_scoring`, `help_<game>_end`
+      - App usage: `app_help_<game>_1` through `app_help_<game>_N`
+    

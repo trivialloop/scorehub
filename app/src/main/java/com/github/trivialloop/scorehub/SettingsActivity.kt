@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
 import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ThemeHelper

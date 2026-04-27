@@ -7,11 +7,11 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.BaseActivity
@@ -20,6 +20,7 @@ import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityTarotGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
+import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
@@ -656,6 +657,11 @@ class TarotGameActivity : BaseActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_tarot_game, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -665,6 +671,10 @@ class TarotGameActivity : BaseActivity() {
                     .setPositiveButton(R.string.yes) { _, _ -> finish() }
                     .setNegativeButton(R.string.no, null)
                     .show()
+                true
+            }
+            R.id.action_help -> {
+                HelpDialogs.showAppHelp(this, GAME_TYPE)
                 true
             }
             else -> super.onOptionsItemSelected(item)
