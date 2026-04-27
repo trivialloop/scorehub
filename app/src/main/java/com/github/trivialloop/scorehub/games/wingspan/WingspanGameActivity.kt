@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
@@ -26,7 +27,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
-class WingspanGameActivity : AppCompatActivity() {
+class WingspanGameActivity : BaseActivity() {
 
     private lateinit var binding: ActivityWingspanGameBinding
     private lateinit var database: AppDatabase

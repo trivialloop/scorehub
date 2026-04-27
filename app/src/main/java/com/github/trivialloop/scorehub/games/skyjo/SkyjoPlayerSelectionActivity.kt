@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
@@ -25,7 +26,7 @@ import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
 import java.util.Collections
 
-class SkyjoPlayerSelectionActivity : AppCompatActivity() {
+class SkyjoPlayerSelectionActivity : BaseActivity() {
 
     private lateinit var binding: ActivityPlayerSelectionBinding
     private lateinit var adapter: SkyjoPlayerSelectionAdapter

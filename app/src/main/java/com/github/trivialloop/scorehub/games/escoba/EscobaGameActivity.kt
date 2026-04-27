@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
@@ -28,7 +29,7 @@ import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
 
-class EscobaGameActivity : AppCompatActivity() {
+class EscobaGameActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEscobaGameBinding
     private lateinit var database: AppDatabase

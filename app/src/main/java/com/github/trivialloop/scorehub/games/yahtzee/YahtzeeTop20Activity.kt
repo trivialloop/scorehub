@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class YahtzeeTop20Activity : AppCompatActivity() {
+class YahtzeeTop20Activity : BaseActivity() {
     private lateinit var binding: ActivityYahtzeeTop20Binding
     private lateinit var database: AppDatabase
 

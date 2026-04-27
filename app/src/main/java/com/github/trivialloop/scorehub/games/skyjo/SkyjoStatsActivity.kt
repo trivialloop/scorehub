@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
@@ -17,7 +18,7 @@ import com.github.trivialloop.scorehub.databinding.ActivitySkyjoStatsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
-class SkyjoStatsActivity : AppCompatActivity() {
+class SkyjoStatsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySkyjoStatsBinding
     private lateinit var database: AppDatabase

@@ -13,7 +13,7 @@ import com.github.trivialloop.scorehub.databinding.ActivityGeneralStatsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
-class GeneralStatsActivity : AppCompatActivity() {
+class GeneralStatsActivity : BaseActivity() {
     private lateinit var binding: ActivityGeneralStatsBinding
     private lateinit var database: AppDatabase
 
