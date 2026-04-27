@@ -27,7 +27,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
-class EscobaGameActivity : AppCompatActivity() {
+class EscobaGameActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEscobaGameBinding
     private lateinit var database: AppDatabase

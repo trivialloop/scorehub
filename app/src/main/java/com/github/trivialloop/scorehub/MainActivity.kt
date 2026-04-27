@@ -63,7 +63,7 @@ data class GameEntry(
 
 // ─── MainActivity ─────────────────────────────────────────────────────────────
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var database: AppDatabase

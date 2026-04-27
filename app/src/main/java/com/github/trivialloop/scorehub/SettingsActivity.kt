@@ -10,7 +10,7 @@ import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ThemeHelper
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     private lateinit var binding: ActivitySettingsBinding
     
     override fun attachBaseContext(newBase: Context) {
