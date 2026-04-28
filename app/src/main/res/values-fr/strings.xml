@@ -272,6 +272,7 @@
     <string name="help_cactus_objective">Mémorisez vos cartes sans les montrer, puis annoncez « Cactus ! » quand vous pensez avoir le total le plus bas.</string>
     <string name="help_cactus_scoring">Le joueur qui a crié « Cactus ! » marque 1 point si sa main est strictement la plus basse (5 ou moins). Sinon, le non-appelant avec le score le plus bas marque 1 point. Le premier à 10 points gagne.</string>
     <string name="help_cactus_end">La partie se termine quand un joueur atteint 10 points. Le joueur avec le plus de points gagne.</string>
+    <string name="help_cactus_wikipedia_url">https://fr.wikipedia.org/wiki/Cactus_(jeu)</string>
 
     <string name="app_help_cactus_1">Appuyez sur le numéro de manche (#) pour indiquer qui a crié « Cactus ! ».</string>
     <string name="app_help_cactus_2">Appuyez ensuite sur chaque case joueur pour saisir leur score de main brut (0–40).</string>
@@ -285,6 +286,7 @@
     <string name="help_cribbage_objective">Être le premier à atteindre 121 points en marquant des combinaisons en main, dans le crib et pendant le jeu.</string>
     <string name="help_cribbage_scoring">Les points sont marqués pendant le jeu (paires, suites, totaux de 15) et en comptant la main et le crib en fin de manche. Le donneur tient le crib à chaque manche.</string>
     <string name="help_cribbage_end">Le premier joueur à atteindre 121 points gagne immédiatement, même en milieu de manche.</string>
+    <string name="help_cribbage_wikipedia_url">https://fr.wikipedia.org/wiki/Cribbage</string>
 
     <string name="app_help_cribbage_1">Utilisez les boutons − / + pour enregistrer les points marqués en jeu (« En jeu ») pour chaque joueur.</string>
     <string name="app_help_cribbage_2">Le joueur qui joue en premier saisit son score de fin de manche en premier — cela verrouille la phase « en jeu ».</string>
@@ -298,6 +300,7 @@
     <string name="help_escoba_objective">Marquer des points en capturant des cartes de la table dont la somme est exactement 11, en faisant une « escoba » (table nette) si possible.</string>
     <string name="help_escoba_scoring">Des points sont attribués pour : le plus de cartes, le plus d\'ors, le 7 d\'or, et chaque escoba. Le premier à 21 points gagne.</string>
     <string name="help_escoba_end">La partie se termine quand un joueur atteint 21 points après une manche complète.</string>
+    <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
 
     <string name="app_help_escoba_1">Utilisez − / + pour enregistrer les points marqués en jeu par chaque joueur.</string>
     <string name="app_help_escoba_2">En fin de manche, appuyez sur la case d\'un joueur pour saisir son score de fin de manche (0–20). Dès que le premier joueur saisit son score, la phase « en jeu » se verrouille.</string>
@@ -310,6 +313,7 @@
     <string name="help_skyjo_objective">Terminer chaque manche avec le total le plus bas possible. Évitez d\'accumuler des points — moins c\'est mieux.</string>
     <string name="help_skyjo_scoring">Chaque carte vaut sa valeur faciale. Le joueur qui termine la manche voit son score doublé s\'il n\'est pas strictement le plus bas. La partie se termine quand quelqu\'un atteint 100 points.</string>
     <string name="help_skyjo_end">Quand un joueur atteint 100 points la partie se termine, et le joueur avec le total le plus bas gagne.</string>
+    <string name="help_skyjo_wikipedia_url">https://fr.wikipedia.org/wiki/Skyjo</string>
 
     <string name="app_help_skyjo_1">Appuyez sur le numéro de manche (#) pour indiquer qui a terminé cette manche.</string>
     <string name="app_help_skyjo_2">Appuyez ensuite sur chaque case joueur pour saisir son score brut de la manche.</string>
@@ -323,6 +327,7 @@
     <string name="help_tarot_objective">Le preneur annonce un contrat et tente d\'atteindre le nombre de points requis à l\'aide des bouts. Les autres joueurs coopèrent pour le faire échouer.</string>
     <string name="help_tarot_scoring">Le score dépend du multiplicateur du contrat, du nombre de bouts et de la réussite ou non du preneur. Les options Poignée, Petit au Bout et Chelem ajoutent des bonus ou pénalités. Les scores sont à somme nulle entre tous les joueurs.</string>
     <string name="help_tarot_end">La partie se termine quand un joueur atteint 1000 points. Le score le plus élevé gagne.</string>
+    <string name="help_tarot_wikipedia_url">https://fr.wikipedia.org/wiki/Tarot_fran%C3%A7ais</string>
 
     <string name="app_help_tarot_1">Appuyez sur la prochaine ligne de manche pour enregistrer une nouvelle manche (3 étapes : preneur + contrat, options éventuelles, points réalisés).</string>
     <string name="app_help_tarot_2">Appuyez sur le numéro d\'une manche existante pour la modifier ou la supprimer.</string>
@@ -336,6 +341,7 @@
     <string name="help_wingspan_objective">Attirez des oiseaux dans votre réserve naturelle en jouant des cartes, en récoltant de la nourriture et en pondant des œufs. Marquez le plus de points dans six catégories.</string>
     <string name="help_wingspan_scoring">Les points proviennent de : Oiseaux joués, Cartes bonus, Objectifs de fin de manche, Œufs sur les oiseaux, Nourriture sur les cartes et Cartes glissées. Le total le plus élevé gagne.</string>
     <string name="help_wingspan_end">Après 4 manches, les joueurs comptent les six catégories de score. La partie se joue en une seule session.</string>
+    <string name="help_wingspan_wikipedia_url">https://fr.wikipedia.org/wiki/Wingspan_(jeu)</string>
 
     <string name="app_help_wingspan_1">Appuyez sur chaque case d\'une colonne joueur pour saisir son score dans chaque catégorie.</string>
     <string name="app_help_wingspan_2">Quand toutes les cases sont remplies, la partie est terminée.</string>
@@ -348,6 +354,7 @@
     <string name="help_yahtzee_objective">Lancez 5 dés jusqu\'à 3 fois par tour et marquez des combinaisons dans 13 catégories. Le total le plus élevé gagne.</string>
     <string name="help_yahtzee_scoring">Section supérieure : somme des dés correspondants (1 à 6). Bonus de 35 pts si le total supérieur ≥ 63. Section inférieure : Brelan, Carré, Full, Petite et Grande suite, Yams (50 pts) et Chance.</string>
     <string name="help_yahtzee_end">La partie se termine quand tous les joueurs ont rempli toutes les catégories (13 tours chacun).</string>
+    <string name="help_yahtzee_wikipedia_url">https://fr.wikipedia.org/wiki/Yahtzee</string>
 
     <string name="app_help_yahtzee_1">Le joueur actif est mis en évidence — appuyez sur sa colonne pour naviguer entre joueurs (à partir de 4 joueurs).</string>
     <string name="app_help_yahtzee_2">Appuyez sur une case vide pour saisir un score pour le joueur actuel. L\'application passe automatiquement au joueur suivant.</string>

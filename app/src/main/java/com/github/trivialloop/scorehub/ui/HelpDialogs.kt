@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.github.trivialloop.scorehub.R
-import com.github.trivialloop.scorehub.utils.LocaleHelper
 
 /**
  * Centralised help content for all games.
@@ -21,6 +20,11 @@ import com.github.trivialloop.scorehub.utils.LocaleHelper
  * Every game provides:
  *  - [GameHelp] for the Player Selection screen (rules summary + Wikipedia link)
  *  - [AppHelp] for the Game screen (how to use the app for that game)
+ *
+ * Wikipedia URLs are stored in string resources so that each locale can define
+ * a different URL. If a localized Wikipedia article does not exist, simply use
+ * the same URL in both `values/strings.xml` and `values-fr/strings.xml`.
+ * Naming convention: `help_<game>_wikipedia_url`
  */
 object HelpDialogs {
 
@@ -31,8 +35,7 @@ object HelpDialogs {
         val objective: String,
         val scoring: String,
         val endCondition: String,
-        val wikipediaUrlEn: String,
-        val wikipediaUrlFr: String
+        val wikipediaUrl: String
     )
 
     data class AppHelp(
@@ -48,8 +51,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_cactus_objective),
             scoring      = context.getString(R.string.help_cactus_scoring),
             endCondition = context.getString(R.string.help_cactus_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Cactus_(card_game)",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Cactus_(jeu)"
+            wikipediaUrl = context.getString(R.string.help_cactus_wikipedia_url)
         )
 
         "cribbage" -> GameHelp(
@@ -57,8 +59,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_cribbage_objective),
             scoring      = context.getString(R.string.help_cribbage_scoring),
             endCondition = context.getString(R.string.help_cribbage_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Cribbage",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Cribbage"
+            wikipediaUrl = context.getString(R.string.help_cribbage_wikipedia_url)
         )
 
         "escoba" -> GameHelp(
@@ -66,8 +67,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_escoba_objective),
             scoring      = context.getString(R.string.help_escoba_scoring),
             endCondition = context.getString(R.string.help_escoba_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Escoba",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Escoba"
+            wikipediaUrl = context.getString(R.string.help_escoba_wikipedia_url)
         )
 
         "skyjo" -> GameHelp(
@@ -75,8 +75,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_skyjo_objective),
             scoring      = context.getString(R.string.help_skyjo_scoring),
             endCondition = context.getString(R.string.help_skyjo_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Skyjo",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Skyjo"
+            wikipediaUrl = context.getString(R.string.help_skyjo_wikipedia_url)
         )
 
         "tarot" -> GameHelp(
@@ -84,8 +83,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_tarot_objective),
             scoring      = context.getString(R.string.help_tarot_scoring),
             endCondition = context.getString(R.string.help_tarot_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/French_tarot",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Tarot_(jeu_de_cartes)"
+            wikipediaUrl = context.getString(R.string.help_tarot_wikipedia_url)
         )
 
         "wingspan" -> GameHelp(
@@ -93,8 +91,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_wingspan_objective),
             scoring      = context.getString(R.string.help_wingspan_scoring),
             endCondition = context.getString(R.string.help_wingspan_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Wingspan_(board_game)",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Wingspan_(jeu)"
+            wikipediaUrl = context.getString(R.string.help_wingspan_wikipedia_url)
         )
 
         "yahtzee" -> GameHelp(
@@ -102,8 +99,7 @@ object HelpDialogs {
             objective    = context.getString(R.string.help_yahtzee_objective),
             scoring      = context.getString(R.string.help_yahtzee_scoring),
             endCondition = context.getString(R.string.help_yahtzee_end),
-            wikipediaUrlEn = "https://en.wikipedia.org/wiki/Yahtzee",
-            wikipediaUrlFr = "https://fr.wikipedia.org/wiki/Yahtzee"
+            wikipediaUrl = context.getString(R.string.help_yahtzee_wikipedia_url)
         )
 
         else -> null
@@ -165,12 +161,10 @@ object HelpDialogs {
 
     /**
      * Shows the game rules dialog (player selection screen).
+     * The Wikipedia URL is resolved automatically from the current locale's string resources.
      */
     fun showGameHelp(context: Context, gameType: String) {
         val help = getGameHelp(gameType, context) ?: return
-
-        val isFrench = LocaleHelper.getPersistedLocale(context) == "fr"
-        val wikiUrl = if (isFrench) help.wikipediaUrlFr else help.wikipediaUrlEn
 
         val container = buildContainer(context)
 
@@ -178,7 +172,7 @@ object HelpDialogs {
         addSection(context, container, context.getString(R.string.help_label_objective), help.objective)
         addSection(context, container, context.getString(R.string.help_label_scoring), help.scoring)
         addSection(context, container, context.getString(R.string.help_label_end), help.endCondition)
-        addWikiLink(context, container, wikiUrl)
+        addWikiLink(context, container, help.wikipediaUrl)
 
         AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.help_game_title))
