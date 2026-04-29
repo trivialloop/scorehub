@@ -1,0 +1,6 @@
+### Changement
+- Améliore la lisibilité du jeu Skyjo
+
+### Correction
+- Corrige l'affichage edge to edge pour Android 15+
+- Ajout d'aide pour l'utilisation de l'application
