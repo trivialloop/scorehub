@@ -170,10 +170,17 @@ class SkyjoGameActivity : BaseActivity() {
 
             // ── Display text ───────────────────────────────────────────────────
             // Show raw score as soon as entered; switch to final once round complete.
+            val isFinisherPenalized = roundComplete &&
+                player.playerId == round.finisherId &&
+                rawScore != null &&
+                finalScore != null &&
+                finalScore != rawScore   // penalty applied only when doubled
+ 
             val displayText = when {
-                roundComplete    -> finalScore?.toString() ?: ""
-                rawScore != null -> rawScore.toString()
-                else             -> ""
+                isFinisherPenalized -> "$rawScore ×2"
+                roundComplete       -> finalScore?.toString() ?: ""
+                rawScore != null    -> rawScore.toString()
+                else                -> ""
             }
 
             val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
