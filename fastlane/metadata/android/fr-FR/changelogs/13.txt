@@ -1,0 +1,8 @@
+### Ajout
+- Ajout du jeu farkle
+
+### Changement
+- Modifie la logique de sélection de filtre
+
+### Correction
+- Corrige l'affichage edge to edge

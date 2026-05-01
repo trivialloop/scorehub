@@ -1,0 +1,8 @@
+### Added
+- Add farkle game
+
+### Changed
+- Change sort selection logic
+
+### Fixed
+- Fix workarround edge to edge display
