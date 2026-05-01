@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.8.0]
+
+### Added
+- Add farkle game
+
+### Changed
+- Change sort selection logic
+
+### Fixed
+- Fix workarround edge to edge display
+
 ## [1.7.2]
 
 ### Changed
@@ -103,7 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.7.2...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.8.0...HEAD
+[1.8.0]:https://github.com/trivialloop/scorehub/compare/v1.7.2...v1.8.0
 [1.7.2]:https://github.com/trivialloop/scorehub/compare/v1.7.1...v1.7.2
 [1.7.1]:https://github.com/trivialloop/scorehub/compare/v1.7.0...v1.7.1
 [1.7.0]:https://github.com/trivialloop/scorehub/compare/v1.6.1...v1.7.0
