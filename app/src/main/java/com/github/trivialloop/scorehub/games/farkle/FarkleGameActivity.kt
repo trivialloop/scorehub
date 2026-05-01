@@ -286,11 +286,7 @@ class FarkleGameActivity : AppCompatActivity() {
             val total = allTotals[colIdx]
             // Higher total = better → WORST (=min) → red, BEST (=max) → green
             val role = ScoreColorRole(total, allTotals)
-            val textColor = when (role) {
-                ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)
-                ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst)
-                else                 -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
-            }
+            val textColor = ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
             row.addView(makeTotalCell(total, textColor, isActive, columnWeight(isActive)))
         }
         return row
@@ -601,25 +597,33 @@ class FarkleGameActivity : AppCompatActivity() {
     // ─── Save results ─────────────────────────────────────────────────────────
 
     private fun saveResultsAndShowSummary() {
-        val totals   = players.associate { it to it.getTotal(rounds) }
+        // Use playerId as key (not FarklePlayerState) to avoid data-class equality issues.
+        val totals   = players.associate { it.playerId to it.getTotal(rounds) }
         val maxScore = totals.values.maxOrNull() ?: 0
-        val winners  = totals.filter { it.value == maxScore }.keys
-        val isDraw   = winners.size > 1
+        val winnerIds = totals.filter { it.value == maxScore }.keys
+        val isDraw   = winnerIds.size > 1
+        // Single timestamp so all GameResults share the same playedAt — required for
+        // getCountedGamesPlayedByPlayer to recognise them as one multiplayer session.
+        val playedAt = System.currentTimeMillis()
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
+                val score = totals[player.playerId] ?: 0
                 GameResult(
                     gameType   = GAME_TYPE,
                     playerId   = player.playerId,
                     playerName = player.playerName,
-                    score      = player.getTotal(rounds),
-                    isWinner   = !isDraw && player in winners,
-                    isDraw     = isDraw && player in winners
+                    score      = score,
+                    isWinner   = !isDraw && player.playerId in winnerIds,
+                    isDraw     = isDraw && player.playerId in winnerIds,
+                    playedAt   = playedAt
                 )
             })
-            val sorted = totals.entries.sortedByDescending { it.value }
+            val sortedPlayers = players.sortedByDescending { totals[it.playerId] ?: 0 }
             var rank = 1
-            val entries = sorted.mapIndexed { i, (p, s) ->
-                val r = if (i > 0 && s == sorted[i - 1].value) rank else { rank = i + 1; rank }
+            val entries = sortedPlayers.mapIndexed { i, p ->
+                val s = totals[p.playerId] ?: 0
+                val prevScore = if (i > 0) totals[sortedPlayers[i - 1].playerId] ?: 0 else s
+                val r = if (i > 0 && s == prevScore) rank else { rank = i + 1; rank }
                 GameResultsDialog.PlayerResult(p.playerName, p.playerColor, s, r)
             }
             GameResultsDialog.show(this@FarkleGameActivity, entries, isDraw, " pts") { finish() }
