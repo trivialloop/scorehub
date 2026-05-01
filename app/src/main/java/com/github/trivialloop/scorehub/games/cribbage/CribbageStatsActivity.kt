@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.trivialloop.scorehub.BaseActivity
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
@@ -17,7 +20,7 @@ import com.github.trivialloop.scorehub.databinding.ActivityCribbageStatsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
 
-class CribbageStatsActivity : BaseActivity() {
+class CribbageStatsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCribbageStatsBinding
     private lateinit var database: AppDatabase
@@ -35,6 +38,21 @@ class CribbageStatsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCribbageStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
 
         database = AppDatabase.getDatabase(this)
         setSupportActionBar(binding.toolbar)
