@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +34,6 @@
             app:iconifiedByDefault="false"
             app:queryHint="@string/search_game" />
 
-        <!-- Filter button with active-filter badge -->
         <FrameLayout
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -48,7 +48,6 @@
                 android:contentDescription="@string/filter_title"
                 android:padding="8dp" />
 
-            <!-- Orange dot: visible when at least one filter is active -->
             <View
                 android:id="@+id/filterActiveBadge"
                 android:layout_width="10dp"
@@ -70,7 +69,6 @@
             android:padding="8dp" />
     </LinearLayout>
 
-    <!-- Active sort / filter summary -->
     <TextView
         android:id="@+id/textSortLabel"
         android:layout_width="match_parent"
