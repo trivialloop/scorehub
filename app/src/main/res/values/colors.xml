@@ -25,8 +25,8 @@
 
     <!-- Score text colours -->
     <color name="score_cell_text">#000000</color>
-    <color name="score_text_best">#4CAF50</color>   <!-- lowest score in row → green -->
-    <color name="score_text_worst">#F44336</color>  <!-- highest score in row → red  -->
+    <color name="score_text_best">#4CAF50</color>
+    <color name="score_text_worst">#F44336</color>
 
     <!-- Header / label cells -->
     <color name="header_cell_background">#D3D3D3</color>

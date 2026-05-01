@@ -99,6 +99,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Farkle ────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "farkle",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerFarkle,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorFarkle,
+                    bestPlayerSection = binding.bestPlayerSectionFarkle,
+                    bestScoreView     = binding.textBestScoreFarkle,
+                    bestScoreColor    = binding.bestScoreColorIndicatorFarkle,
+                    bestScoreSection  = binding.bestScoreSectionFarkle,
+                    noDataView        = binding.textNoDataFarkle,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "skyjo",

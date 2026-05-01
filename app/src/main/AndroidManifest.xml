@@ -68,6 +68,22 @@
             android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.farkle.FarklePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.farkle.FarkleGameActivity"
+            android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.farkle.FarkleStatsActivity"
+            android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.farkle.FarkleTop20Activity"
+            android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity" />
+
+        <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
