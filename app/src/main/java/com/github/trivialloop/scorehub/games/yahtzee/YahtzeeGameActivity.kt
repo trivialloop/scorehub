@@ -67,10 +67,10 @@ class YahtzeeGameActivity : AppCompatActivity() {
             insets
         }
 
-        database = AppDatabase.getDatabase(this)
-        playerIds = intent.getLongArrayExtra("PLAYER_IDS") ?: longArrayOf()
-        playerNames = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
-        playerColors = intent.getIntArrayExtra("PLAYER_COLORS") ?: intArrayOf()
+        database     = AppDatabase.getDatabase(this)
+        playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
+        playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
+        playerColors = intent.getIntArrayExtra("PLAYER_COLORS")   ?: intArrayOf()
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

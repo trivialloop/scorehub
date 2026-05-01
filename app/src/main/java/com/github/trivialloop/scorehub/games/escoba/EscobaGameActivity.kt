@@ -60,6 +60,21 @@ class EscobaGameActivity : AppCompatActivity() {
         binding = ActivityEscobaGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
+
         database     = AppDatabase.getDatabase(this)
         playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
         playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
