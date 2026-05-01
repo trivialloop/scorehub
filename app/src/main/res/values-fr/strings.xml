@@ -108,6 +108,35 @@
     <string name="escoba_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="escoba_best_score_label">Meilleur Score</string>
 
+    <!-- Farkle Game -->
+    <string name="farkle_game">Farkle</string>
+    <string name="farkle_total">Total</string>
+    <string name="farkle_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="farkle_maximum_players">Maximum 8 joueurs autorisés</string>
+    <string name="farkle_game_over_title">Fin de partie ?</string>
+    <string name="farkle_game_over_confirm">Un joueur a atteint 10 000 points. Terminer la partie ?</string>
+    <string name="farkle_quit_game">Quitter la partie</string>
+    <string name="farkle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="farkle_best_score_label">Meilleur Score</string>
+    <string name="farkle_btn_add">Ajout</string>
+    <string name="farkle_btn_bank">Banque</string>
+    <string name="farkle_btn_farkle">Farkle !</string>
+    <string name="farkle_score_hint">Score (ex: 300)</string>
+    <string name="farkle_farkle_label">Farkle</string>
+
+    <!-- Help — Farkle règles du jeu -->
+    <string name="help_farkle_players">2 à 8 joueurs.</string>
+    <string name="help_farkle_objective">Lancez 6 dés et mettez de côté les combinaisons qui rapportent des points. Soyez le premier à atteindre 10 000 points.</string>
+    <string name="help_farkle_scoring">Combinaisons courantes : un 1 seul = 100 pts, un 5 seul = 50 pts, brelan = valeur × 100 (trois 1 = 1 000), suite 1–6 = 1 500, trois paires = 1 500. Un « Farkle » (aucun dé marquant) met fin au tour avec 0 point pour cette manche.</string>
+    <string name="help_farkle_end">Le premier joueur à atteindre ou dépasser 10 000 points déclenche le dernier tour. Tous les autres joueurs ont encore un tour, puis le total le plus élevé gagne.</string>
+    <string name="help_farkle_wikipedia_url">https://fr.wikipedia.org/wiki/Farkle</string>
+
+    <!-- Help — Farkle utilisation de l'appli -->
+    <string name="app_help_farkle_1">À votre tour, appuyez sur Ajouter pour saisir le score de chaque groupe de dés mis de côté. Vous pouvez faire plusieurs ajouts par tour.</string>
+    <string name="app_help_farkle_2">La dernière entrée est ré-éditable — appuyez dessus pour corriger une erreur avant de banquer.</string>
+    <string name="app_help_farkle_3">Appuyez sur Banquer pour valider votre score de tour et passer au joueur suivant. Appuyez sur Farkle ! si aucun dé ne rapporte de points — votre score du tour passe à 0.</string>
+    <string name="app_help_farkle_4">Quand un joueur atteint 10 000 points, la partie se termine et le total le plus élevé gagne.</string>
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>

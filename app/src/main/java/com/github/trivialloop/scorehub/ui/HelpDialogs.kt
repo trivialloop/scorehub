@@ -70,6 +70,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_escoba_wikipedia_url)
         )
 
+        "farkle" -> GameHelp(
+            players      = context.getString(R.string.help_farkle_players),
+            objective    = context.getString(R.string.help_farkle_objective),
+            scoring      = context.getString(R.string.help_farkle_scoring),
+            endCondition = context.getString(R.string.help_farkle_end),
+            wikipediaUrl = context.getString(R.string.help_farkle_wikipedia_url)
+        )
+
         "skyjo" -> GameHelp(
             players      = context.getString(R.string.help_skyjo_players),
             objective    = context.getString(R.string.help_skyjo_objective),
@@ -125,6 +133,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_escoba_1),
             context.getString(R.string.app_help_escoba_2),
             context.getString(R.string.app_help_escoba_3)
+        ))
+
+        "farkle" -> AppHelp(listOf(
+            context.getString(R.string.app_help_farkle_1),
+            context.getString(R.string.app_help_farkle_2),
+            context.getString(R.string.app_help_farkle_3),
+            context.getString(R.string.app_help_farkle_4)
         ))
 
         "skyjo" -> AppHelp(listOf(

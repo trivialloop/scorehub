@@ -108,6 +108,35 @@
     <string name="escoba_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
     <string name="escoba_best_score_label">Best Score</string>
 
+    <!-- Farkle Game -->
+    <string name="farkle_game">Farkle</string>
+    <string name="farkle_total">Total</string>
+    <string name="farkle_minimum_players">Minimum 2 players required</string>
+    <string name="farkle_maximum_players">Maximum 8 players allowed</string>
+    <string name="farkle_game_over_title">Game Over?</string>
+    <string name="farkle_game_over_confirm">A player reached 10,000 points. End the game?</string>
+    <string name="farkle_quit_game">Quit Game</string>
+    <string name="farkle_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="farkle_best_score_label">Best Score</string>
+    <string name="farkle_btn_add">Add</string>
+    <string name="farkle_btn_bank">Bank</string>
+    <string name="farkle_btn_farkle">Farkle!</string>
+    <string name="farkle_score_hint">Score (e.g. 300)</string>
+    <string name="farkle_farkle_label">Farkle</string>
+
+    <!-- Help — Farkle game rules -->
+    <string name="help_farkle_players">2 to 8 players.</string>
+    <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
+    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), straight 1–6 = 1,500, three pairs = 1,500. A "Farkle" (no scoring dice) ends your turn with 0 points for that round.</string>
+    <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+
+    <!-- Help — Farkle app usage -->
+    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
+    <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
+    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
+    <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
+    
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>

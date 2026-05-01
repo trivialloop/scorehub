@@ -3,6 +3,7 @@ package com.github.trivialloop.scorehub
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -98,6 +99,17 @@ object GameRegistry {
             maxPlayers     = 2,
             teamMode       = false,
             equipment      = setOf(Equipment.CARDS)
+        ),
+        GameDefinition(
+            gameType       = "farkle",
+            nameEnFallback = "Farkle",
+            nameResId      = R.string.farkle_game,
+            iconResId      = R.drawable.ic_farkle_game,
+            activityClass  = FarklePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 8,
+            teamMode       = false,
+            equipment      = setOf(Equipment.DICE)
         ),
         GameDefinition(
             gameType       = "skyjo",
