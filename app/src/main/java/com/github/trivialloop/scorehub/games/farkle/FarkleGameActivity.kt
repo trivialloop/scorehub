@@ -257,8 +257,8 @@ class FarkleGameActivity : AppCompatActivity() {
                     // Color: highest score in slot → green, lowest → red
                     val role = ScoreColorRole(slotScores[colIdx], slotScores)
                     val textColor = when (role) {
-                        ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
-                        ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
+                        ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)
+                        ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst)
                         else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
                     }
                     row.addView(makeCompletedRoundCell(round, textColor, isActive, w))
@@ -287,8 +287,8 @@ class FarkleGameActivity : AppCompatActivity() {
             // Higher total = better → WORST (=min) → red, BEST (=max) → green
             val role = ScoreColorRole(total, allTotals)
             val textColor = when (role) {
-                ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
-                ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
+                ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)
+                ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst)
                 else                 -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
             }
             row.addView(makeTotalCell(total, textColor, isActive, columnWeight(isActive)))
