@@ -14,11 +14,11 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace = "com.github.trivialloop.scorehub"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 13
         versionName = "1.8.0"
 
