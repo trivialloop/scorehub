@@ -349,7 +349,6 @@ class FarkleGameActivity : AppCompatActivity() {
             layoutParams = fixedColLp(weight, HEADER_ROW_DP)
             background = cellDrawable(player.playerColor)
             setTextColor(Color.WHITE)
-            alpha = if (isActive) 1f else 0.55f
         }
 
     /**
