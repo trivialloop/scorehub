@@ -184,8 +184,8 @@ class WingspanGameActivity : AppCompatActivity() {
         textSize     = 13f
         setTypeface(null, Typeface.BOLD)
         layoutParams = cellLayoutParams()
-        background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.yahtzee_calculated_cell_background))
-        setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.yahtzee_calculated_cell_text))
+        background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
+        setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
     }
 
     private fun makePlayerNameCell(ps: WingspanPlayerScore): TextView = TextView(this).apply {
@@ -243,10 +243,10 @@ class WingspanGameActivity : AppCompatActivity() {
             when (total) {
                 maxTotal -> ContextCompat.getColor(this, R.color.score_text_best)
                 minTotal -> ContextCompat.getColor(this, R.color.score_text_worst)
-                else     -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
+                else     -> ContextCompat.getColor(this, R.color.score_calculated_cell_text)
             }
         } else {
-            ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
+            ContextCompat.getColor(this, R.color.score_calculated_cell_text)
         }
 
         return TextView(this).apply {
@@ -256,7 +256,7 @@ class WingspanGameActivity : AppCompatActivity() {
             setTypeface(null, Typeface.BOLD)
             setTextColor(textColor)
             layoutParams = cellLayoutParams()
-            background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.yahtzee_calculated_cell_background))
+            background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
         }
     }
 

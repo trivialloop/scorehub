@@ -716,10 +716,10 @@ class CribbageGameActivity : AppCompatActivity() {
         setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         background   = cellDrawable(
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_background)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.cell_calculated_bg)
         )
         setTextColor(
-            ContextCompat.getColor(this@CribbageGameActivity, R.color.yahtzee_calculated_cell_text)
+            ContextCompat.getColor(this@CribbageGameActivity, R.color.score_calculated_cell_text)
         )
     }
 
