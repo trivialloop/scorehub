@@ -241,7 +241,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
         val bonusCell = createCalculatedCell(bonusText)
         if (playerScore.getBonusProgress() > 0) {
-            bonusCell.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_bonus_progress_text))
+            bonusCell.setTextColor(ContextCompat.getColor(this, R.color.score_progress_cell_text))
         }
         column.addView(bonusCell)
 
@@ -266,7 +266,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
                 when (role) {
                     ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst)
                     ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)
-                    else -> ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
+                    else -> ContextCompat.getColor(this, R.color.score_calculated_cell_text)
                 }
             )
         }
@@ -306,10 +306,10 @@ class YahtzeeGameActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         )
         textView.background = cellBorderDrawable(
-            ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_background),
+            ContextCompat.getColor(this, R.color.cell_calculated_bg),
             strong = isGrandTotal
         )
-        textView.setTextColor(ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text))
+        textView.setTextColor(ContextCompat.getColor(this, R.color.score_calculated_cell_text))
         return textView
     }
 
@@ -337,7 +337,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         val rowTextColor = when (role) {
             ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_worst) // min → red
             ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_best)  // max → green
-            else                 -> ContextCompat.getColor(this, R.color.yahtzee_score_filled_text)
+            else                 -> ContextCompat.getColor(this, R.color.score_filled_category_text)
         }
 
         when {

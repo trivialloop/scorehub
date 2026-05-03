@@ -14,31 +14,23 @@
 
     <!-- Cell backgrounds -->
     <color name="score_cell_background">#FFFFFF</color>
-    <!-- Empty cell the user can fill right now -->
+    <color name="cell_calculated_bg">#F0F0F0</color>
     <color name="cell_editable_bg">#FFF8E1</color>
-    <!-- Cell already filled but still editable -->
     <color name="cell_editable_filled_bg">#FFFFFF</color>
-    <!-- Cell filled and now locked (no longer editable) -->
     <color name="cell_locked_bg">#F0F0F0</color>
-    <!-- Cell that can NEVER be filled (e.g. first-player crib column in Cribbage) -->
     <color name="cell_never_bg">#BDBDBD</color>
 
     <!-- Score text colours -->
     <color name="score_cell_text">#000000</color>
+    <color name="score_calculated_cell_text">#000000</color>
+    <color name="score_filled_category_text">#AAAAAA</color>
+    <color name="score_progress_cell_text">#000000</color>
     <color name="score_text_best">#4CAF50</color>
     <color name="score_text_worst">#F44336</color>
 
     <!-- Header / label cells -->
     <color name="header_cell_background">#D3D3D3</color>
     <color name="header_cell_text">#000000</color>
-
-    <!-- Calculated / total cells (Yahtzee bonus row, total row, etc.) -->
-    <color name="yahtzee_calculated_cell_background">#F0F0F0</color>
-    <color name="yahtzee_calculated_cell_text">#000000</color>
-    <color name="yahtzee_bonus_progress_text">#808080</color>
-
-    <!-- Filled-but-dimmed text (Yahtzee locked category) -->
-    <color name="yahtzee_score_filled_text">#AAAAAA</color>
 
     <!-- Shared cell border — used by every game grid -->
     <color name="cell_border">#CCCCCC</color>

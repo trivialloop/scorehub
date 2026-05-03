@@ -286,7 +286,7 @@ class FarkleGameActivity : AppCompatActivity() {
             val total = allTotals[colIdx]
             // Higher total = better → WORST (=min) → red, BEST (=max) → green
             val role = ScoreColorRole(total, allTotals)
-            val textColor = ContextCompat.getColor(this, R.color.yahtzee_calculated_cell_text)
+            val textColor = ContextCompat.getColor(this, R.color.score_calculated_cell_text)
             row.addView(makeTotalCell(total, textColor, isActive, columnWeight(isActive)))
         }
         return row
@@ -316,8 +316,8 @@ class FarkleGameActivity : AppCompatActivity() {
             textSize = 11f
             setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
-            val bg = if (isTotal) R.color.yahtzee_calculated_cell_background else R.color.header_cell_background
-            val fg = if (isTotal) R.color.yahtzee_calculated_cell_text else R.color.header_cell_text
+            val bg = if (isTotal) R.color.cell_calculated_bg else R.color.header_cell_background
+            val fg = if (isTotal) R.color.score_calculated_cell_text else R.color.header_cell_text
             background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, bg))
             setTextColor(ContextCompat.getColor(this@FarkleGameActivity, fg))
         }
@@ -332,8 +332,8 @@ class FarkleGameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT
             )
-            val bg = if (isTotal) R.color.yahtzee_calculated_cell_background else R.color.header_cell_background
-            val fg = if (isTotal) R.color.yahtzee_calculated_cell_text else R.color.header_cell_text
+            val bg = if (isTotal) R.color.cell_calculated_bg else R.color.header_cell_background
+            val fg = if (isTotal) R.color.score_calculated_cell_text else R.color.header_cell_text
             background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, bg))
             setTextColor(ContextCompat.getColor(this@FarkleGameActivity, fg))
         }
@@ -482,7 +482,7 @@ class FarkleGameActivity : AppCompatActivity() {
             textSize = 16f
             setTypeface(null, Typeface.BOLD)
             layoutParams = fixedColLp(weight, TOTAL_ROW_DP)
-            background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.yahtzee_calculated_cell_background))
+            background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_calculated_bg))
             setTextColor(textColor)
             alpha = if (isActive) 1f else 0.75f
         }
