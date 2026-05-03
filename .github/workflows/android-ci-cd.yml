@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lint-reports
-          path: app/build/reports/lint-results-debug.html
+          path: app/build/reports/lint-results-fossDebug.html
 
   build:
     name: "Build APK"
