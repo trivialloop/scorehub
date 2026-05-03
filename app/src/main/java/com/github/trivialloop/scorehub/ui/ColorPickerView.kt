@@ -117,8 +117,8 @@ class ColorPickerView @JvmOverloads constructor(
             val sat = (dist / radius).coerceIn(0f, 1f)
 
             currentColor = Color.HSVToColor(floatArrayOf(hue, sat, 1f))
-            indicatorX = cx + (cos(atan2(dy, dx)) * sat * radius).toFloat()
-            indicatorY = cy + (sin(atan2(dy, dx)) * sat * radius).toFloat()
+            indicatorX = cx + (cos(atan2(dy, dx)) * sat * radius)
+            indicatorY = cy + (sin(atan2(dy, dx)) * sat * radius)
 
             indicatorFillPaint.color = currentColor
             invalidate()
