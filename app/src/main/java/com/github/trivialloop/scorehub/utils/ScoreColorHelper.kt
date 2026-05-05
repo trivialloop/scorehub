@@ -1,31 +1,57 @@
 package com.github.trivialloop.scorehub.utils
 
+import android.content.Context
+import androidx.core.content.ContextCompat
+import com.github.trivialloop.scorehub.R
+
 /**
- * Unified score colour role.
+ * Semantic colour role for a score cell within a row.
  *
- * Usage (single import, no separate function needed):
- *   val role = ScoreColorRole(value, allValues)
- *   val role = ScoreColorRole(value, allValues, lowerIsBetter = true)
+ * BEST    → the best score in the row (displayed green)
+ * WORST   → the worst score in the row (displayed red)
+ * NEUTRAL → neither best nor worst (displayed in the default text colour)
  *
- * Rules (per row):
+ * What "best" means depends on the game:
+ *  - Higher is better (Yahtzee, Cactus, Escoba, Cribbage, Wingspan, Tarot): highest score = BEST
+ *  - Lower is better  (Skyjo): lowest score = BEST
+ *
+ * This is controlled by [higherIsBetter] in the companion [invoke] factory.
+ *
+ * Usage:
+ *   val role = ScoreColorRole(value, allRowValues)                        // higher = best (default)
+ *   val role = ScoreColorRole(value, allRowValues, higherIsBetter = false) // lower  = best
+ *
+ *   // Resolve to an Android color resource directly:
+ *   cell.setTextColor(role.toColor(context))
+ *
+ * Rules:
  *  - All values identical → NEUTRAL for everyone.
- *  - Value == row minimum → BEST  (displayed green)
- *  - Value == row maximum → WORST (displayed red)
- *  - Otherwise            → NEUTRAL
- *
- * Pass [lowerIsBetter] = true for games where lower is better (e.g. Skyjo totals):
- * minimum → WORST, maximum → BEST.
- *
- * Only TEXT colour is affected — never change cell backgrounds via this helper.
+ *  - null value           → NEUTRAL.
+ *  - Less than 2 non-null values → NEUTRAL.
  */
 enum class ScoreColorRole {
     BEST, WORST, NEUTRAL;
 
+    /** Resolves this role to the matching Android color resource. */
+    fun toColor(context: Context): Int = when (this) {
+        BEST    -> ContextCompat.getColor(context, R.color.score_text_best)
+        WORST   -> ContextCompat.getColor(context, R.color.score_text_worst)
+        NEUTRAL -> ContextCompat.getColor(context, R.color.score_cell_text)
+    }
+
     companion object {
+        /**
+         * Computes the [ScoreColorRole] for [value] within [allValues].
+         *
+         * @param value          The score to classify.
+         * @param allValues      All scores in the row (nulls ignored).
+         * @param higherIsBetter True (default) when a higher score is better (Yahtzee, Cactus…).
+         *                       False when a lower score is better (Skyjo).
+         */
         operator fun invoke(
             value: Int?,
             allValues: List<Int?>,
-            lowerIsBetter: Boolean = false
+            higherIsBetter: Boolean = true
         ): ScoreColorRole {
             if (value == null) return NEUTRAL
             val nonNull = allValues.filterNotNull()
@@ -34,8 +60,8 @@ enum class ScoreColorRole {
             val max = nonNull.max()
             if (min == max) return NEUTRAL
             return when (value) {
-                min -> if (lowerIsBetter) WORST else BEST
-                max -> if (lowerIsBetter) BEST  else WORST
+                max -> if (higherIsBetter) BEST  else WORST
+                min -> if (higherIsBetter) WORST else BEST
                 else -> NEUTRAL
             }
         }
