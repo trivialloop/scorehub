@@ -105,7 +105,7 @@
                                     android:visibility="gone" />
 
                                 <TextView
-                                    android:id="@+id/textBestPlayerCactus"
+                                    android:id="@+id/textBestPlayerAkropolis"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="18sp"
