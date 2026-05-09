@@ -1,5 +1,6 @@
 package com.github.trivialloop.scorehub
 
+import com.github.trivialloop.scorehub.games.akropolis.AkropolisPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
@@ -67,6 +68,17 @@ object GameRegistry {
      * ════════════════════════════════════════════════════
      */
     val ALL_GAMES: List<GameDefinition> = listOf(
+        GameDefinition(
+            gameType       = "akropolis",
+            nameEnFallback = "Akropolis",
+            nameResId      = R.string.akropolis_game,
+            iconResId      = R.drawable.ic_akropolis_game,
+            activityClass  = AkropolisPlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
         GameDefinition(
             gameType       = "cactus",
             nameEnFallback = "Cactus",

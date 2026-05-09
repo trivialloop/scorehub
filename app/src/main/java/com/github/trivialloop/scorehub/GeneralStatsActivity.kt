@@ -57,6 +57,20 @@ class GeneralStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
 
+                // ── Akropolis ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "akropolis",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerAkropolis,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorAkropolis,
+                    bestPlayerSection = binding.bestPlayerSectionAkropolis,
+                    bestScoreView     = binding.textBestScoreAkropolis,
+                    bestScoreColor    = binding.bestScoreColorIndicatorAkropolis,
+                    bestScoreSection  = binding.bestScoreSectionAkropolis,
+                    noDataView        = binding.textNoDataAkropolis,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Cactus ────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "cactus",

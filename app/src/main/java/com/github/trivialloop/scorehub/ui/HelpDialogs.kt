@@ -46,6 +46,14 @@ object HelpDialogs {
 
     private fun getGameHelp(gameType: String, context: Context): GameHelp? = when (gameType) {
 
+        "akropolis" -> GameHelp(
+            players      = context.getString(R.string.help_akropolis_players),
+            objective    = context.getString(R.string.help_akropolis_objective),
+            scoring      = context.getString(R.string.help_akropolis_scoring),
+            endCondition = context.getString(R.string.help_akropolis_end),
+            wikipediaUrl = context.getString(R.string.help_akropolis_wikipedia_url)
+        )
+
         "cactus" -> GameHelp(
             players      = context.getString(R.string.help_cactus_players),
             objective    = context.getString(R.string.help_cactus_objective),
@@ -114,6 +122,13 @@ object HelpDialogs {
     }
 
     private fun getAppHelp(gameType: String, context: Context): AppHelp? = when (gameType) {
+
+        "akropolis" -> AppHelp(listOf(
+            context.getString(R.string.app_help_akropolis_1),
+            context.getString(R.string.app_help_akropolis_2),
+            context.getString(R.string.app_help_akropolis_3),
+            context.getString(R.string.app_help_akropolis_4)
+        ))
 
         "cactus" -> AppHelp(listOf(
             context.getString(R.string.app_help_cactus_1),

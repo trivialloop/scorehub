@@ -59,6 +59,27 @@
     <string name="delete_player_message">Are you sure you want to delete %1$s? This will remove all their statistics.</string>
     <string name="reorder">Reorder</string>
 
+    <!-- Akropolis Game -->
+    <string name="akropolis_game">Akropolis</string>
+    <string name="akropolis_total">Total</string>
+    <string name="akropolis_stones">Pierres</string>
+    <string name="akropolis_stars">Étoiles</string>
+    <string name="akropolis_districts">Quartiers</string>
+    <string name="akropolis_stars_hint">★</string>
+    <string name="akropolis_districts_hint">⬡</string>
+    <string name="akropolis_color_blue">Bleu</string>
+    <string name="akropolis_color_yellow">Jaune</string>
+    <string name="akropolis_color_red">Rouge</string>
+    <string name="akropolis_color_purple">Violet</string>
+    <string name="akropolis_color_green">Vert</string>
+    <string name="akropolis_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="akropolis_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="akropolis_game_complete">Partie terminée ?</string>
+    <string name="akropolis_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="akropolis_quit_game">Quitter la partie</string>
+    <string name="akropolis_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="akropolis_best_score_label">Meilleur Score</string>
+
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
     <string name="cactus_round_label">#</string>
@@ -124,19 +145,6 @@
     <string name="farkle_score_hint">Score (e.g. 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
-    <!-- Help — Farkle game rules -->
-    <string name="help_farkle_players">2 to 8 players.</string>
-    <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
-    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), straight 1–6 = 1,500, three pairs = 1,500. A "Farkle" (no scoring dice) ends your turn with 0 points for that round.</string>
-    <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
-    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
-
-    <!-- Help — Farkle app usage -->
-    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
-    <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
-    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
-    <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
-    
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -309,6 +317,20 @@
     <string name="app_help_cactus_4">Once a player reaches 10 points, the game is over.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Akropolis                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_akropolis_players">2 to 5 players.</string>
+    <string name="help_akropolis_objective">Build the most prestigious city by placing tiles to create districts of 5 colors. Score points by multiplying your stars by the number of districts of each color.</string>
+    <string name="help_akropolis_scoring">For each color, multiply the number of star symbols by the number of districts of that color in your city. Add 1 point per leftover stone. Highest total wins.</string>
+    <string name="help_akropolis_end">The game ends when all tile stacks are exhausted. Then players tally their scores.</string>
+    <string name="help_akropolis_wikipedia_url">https://en.wikipedia.org/wiki/Akropolis_(board_game)</string>
+
+    <string name="app_help_akropolis_1">For each color row, tap the top cell to enter the number of stars of that color in your city.</string>
+    <string name="app_help_akropolis_2">Tap the middle cell of the same color to enter the number of districts. The subtotal (stars × districts) is calculated automatically below.</string>
+    <string name="app_help_akropolis_3">Tap the Stones row to enter the number of leftover stones (worth 1 point each).</string>
+    <string name="app_help_akropolis_4">When all cells are filled, the game ends and shows the final results. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Cribbage                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_cribbage_players">2 players.</string>
@@ -335,6 +357,20 @@
     <string name="app_help_escoba_2">At the end of each round, tap a player cell to enter their end-of-round score (0–20). Once the first player enters their score, the in-play phase locks.</string>
     <string name="app_help_escoba_3">When a player reaches 21, the game is over.</string>
 
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Farkle                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_farkle_players">2 to 8 players.</string>
+    <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
+    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), straight 1–6 = 1,500, three pairs = 1,500. A "Farkle" (no scoring dice) ends your turn with 0 points for that round.</string>
+    <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+
+    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
+    <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
+    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
+    <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
+    
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
