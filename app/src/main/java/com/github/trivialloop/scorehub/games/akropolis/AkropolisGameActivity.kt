@@ -42,8 +42,7 @@ class AkropolisGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE    = "akropolis"
-        private const val DOT_COL_DP  = 36   // colored dot column
-        private const val ICON_COL_DP = 28   // row-type icon column
+        private const val ICON_COL_DP = 65   // row-type icon column
     }
 
     // ─── Possible picker values ───────────────────────────────────────────────
@@ -107,40 +106,27 @@ class AkropolisGameActivity : AppCompatActivity() {
 
     private fun buildScoreTable() {
         binding.scoreTableContainer.removeAllViews()
-        binding.scoreTableContainer.addView(buildDotColumn())
         binding.scoreTableContainer.addView(buildIconColumn())
         for (ps in playerScores) binding.scoreTableContainer.addView(buildPlayerColumn(ps))
     }
 
-    // ─── Column 1: colored dot ────────────────────────────────────────────────
-
-    private fun buildDotColumn(): LinearLayout {
-        val col = makeFixedColumn(DOT_COL_DP)
-        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // header spacer
-        for (color in AkropolisColor.entries) {
-            col.addView(makeColorDotCell(color))                    // weight 3f
-        }
-        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // stones spacer
-        col.addView(makeBlankCell(rows = 1f, isCalc = true))       // total spacer
-        return col
-    }
-
-    // ─── Column 2: row-type icons ─────────────────────────────────────────────
+    // ─── Category Column ────────────────────────────────────────────────
 
     private fun buildIconColumn(): LinearLayout {
         val col = makeFixedColumn(ICON_COL_DP)
-        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // header spacer
+        col.addView(makeBlankCell(rows = 1f, isCalc = false)) // header spacer
 
         for (color in AkropolisColor.entries) {
             // Group of 3 icon sub-rows, total weight 3f
+            val bgColor = colorToArgb(color)
+
             val group = LinearLayout(this).apply {
-                orientation  = LinearLayout.VERTICAL
+                orientation = LinearLayout.VERTICAL
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
-                background = borderDrawable(
-                    ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+                background = borderDrawable(bgColor)
             }
-                        
+
             group.addView(TextView(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
@@ -148,8 +134,10 @@ class AkropolisGameActivity : AppCompatActivity() {
                 text = "⭐"
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+                setBackgroundColor(Color.TRANSPARENT)
             })
             group.addView(makeThinDivider())
+
             group.addView(TextView(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
@@ -157,8 +145,10 @@ class AkropolisGameActivity : AppCompatActivity() {
                 text = "🏘️"
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+                setBackgroundColor(Color.TRANSPARENT)
             })
             group.addView(makeThinDivider())
+
             group.addView(TextView(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
@@ -166,7 +156,9 @@ class AkropolisGameActivity : AppCompatActivity() {
                 text = "🟰"
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+                setBackgroundColor(Color.TRANSPARENT)
             })
+
             col.addView(group)
         }
 
@@ -178,12 +170,25 @@ class AkropolisGameActivity : AppCompatActivity() {
             text = "🪨"
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
             setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
-            background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+            background = borderDrawable(
+                ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
         })
-        // Total blank
-        col.addView(makeBlankCell(rows = 1f, isCalc = true))
+
+        // Total
+        col.addView(TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            gravity = Gravity.CENTER
+            text = getString(R.string.akropolis_total)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+            setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+            background = borderDrawable(
+                ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+        })
+
         return col
     }
+
 
     // ─── Player column ────────────────────────────────────────────────────────
 
