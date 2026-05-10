@@ -1,0 +1,6 @@
+### Added
+- Add akropolis game
+
+### Changed
+- Update librairies
+- Rework color helper
