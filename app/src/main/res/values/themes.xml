@@ -7,6 +7,6 @@
         <item name="colorSecondary">@color/purple_700</item>
         <item name="colorSecondaryVariant">@color/purple_500</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

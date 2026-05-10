@@ -1,0 +1,6 @@
+### Changed
+- Improve readibility for skyjo game
+
+### Fixed
+- Fix edge to edge display for Android 15+
+- Add helpers to use the application

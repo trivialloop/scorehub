@@ -132,9 +132,9 @@ All `PlayerSelectionActivity` classes must follow this behaviour (same as Cribba
 
 For multi-column grids (Cribbage, Escoba) all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header, round rows, and total row.
 
-### In-play (pegging) cells
+### In-play cells
 
-Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with weight 1.5f (wider than the hand cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
+Games with a in-play phase (Cribbage, Escoba) use a `[−] score [+]` cell with weight 1.5f (wider than the hand cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
 
 ---
 
@@ -153,10 +153,10 @@ Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
 
 ### Escoba
 - 2-column layout per player per round: **In play** (in-play, weight 1.5) + **End of round** (hand, weight 1).
-- Pegging via +/− buttons; locked once any player enters their end-of-round score.
+- In-play via +/− buttons; locked once any player enters their end-of-round score.
 - End-of-round score: dialog with auto-focus keyboard; pencil prefix when re-editing.
 - Score limit: **21 pts**. Highest score wins.
-- Previous round editable until the new round gets any pegging activity.
+- Previous round editable until the new round gets any in-play activity.
 
 ### Cribbage
 - 3-column layout per player: **In play** (in-play) + **End of round** + **Crib**.
@@ -189,8 +189,8 @@ Games with a pegging phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
 - Existing test files:
   - `YahtzeeScoreManagerTest.kt` — Yahtzee scoring logic
   - `SkyjoScoreManagerTest.kt` — Skyjo rounds, penalties, colors
-  - `EscobaScoreManagerTest.kt` — Escoba rounds, pegging, totals
-  - `CribbageScoreManagerTest.kt` — Cribbage rounds, pegging, crib
+  - `EscobaScoreManagerTest.kt` — Escoba rounds, in-play, totals
+  - `CribbageScoreManagerTest.kt` — Cribbage rounds, in-play, crib
   - `TarotScoreManagerTest.kt` — Tarot zero-sum, scoring
   - `WingspanScoreManagerTest.kt` — Wingspan category totals
   - `CactusScoreManagerTest.kt` — Cactus points, cell colors
@@ -241,8 +241,23 @@ The main screen reads its game list from a **central registry** — no change to
    - `<Game>Top20Activity.kt` — reuse `item_top20.xml`
 3. **Add layouts** `activity_<game>_game.xml`, `activity_<game>_stats.xml`, `activity_<game>_top20.xml`.
 4. **Declare the activities** in `AndroidManifest.xml`.
-5. **Add a menu** `menu_<game>_player_selection.xml`.
+5. **Add menus**:
+   - `menu_<game>_player_selection.xml` — must include game statistics, top 20, and the help item.
+   - `menu_<game>_game.xml` — contains only the help item .
 6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`.
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. **Add a section** in `activity_general_stats.xml` and `GeneralStatsActivity.kt`.
 9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. Mandatory — cover scoring logic, state helpers, and edge cases.
+10. **Add help content** in `ui/HelpDialogs.kt`:
+    - In `getGameHelp()`: add a `GameHelp` entry for the game type with:
+      - `players` — number of players supported
+      - `objective` — one-sentence summary of the game goal
+      - `scoring` — how points are counted
+      - `endCondition` — what triggers the end of the game
+      - `wikipediaUrlEn` — English Wikipedia URL for the game
+      - `wikipediaUrlFr` — French Wikipedia URL for the game
+    - In `getAppHelp()`: add an `AppHelp` entry with 3–4 concise steps explaining how to use the ScoreHub interface for that game (e.g. how to pick the finisher, how to enter scores, when the game ends in the app).
+    - Add the corresponding strings in both `values/strings.xml` and `values-fr/strings.xml` following the naming convention:
+      - Game rules: `help_<game>_players`, `help_<game>_objective`, `help_<game>_scoring`, `help_<game>_end`
+      - App usage: `app_help_<game>_1` through `app_help_<game>_N`
+    

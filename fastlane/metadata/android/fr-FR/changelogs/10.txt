@@ -1,0 +1,6 @@
+### Changement
+- Mise a jour du gradle et des librairies
+
+### Correction
+- Corrige nouvelle manche lors de l'edition de la manche précédente dans Cribbage
+- Corrige nouvelle manche lors de l'edition de la manche précédente dans Escoba

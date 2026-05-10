@@ -1,0 +1,6 @@
+### Changed
+- Update gradle and librairies
+
+### Fixed
+- Fix new round when editing last round in Cribbage
+- Fix new round when editing last round in Escoba

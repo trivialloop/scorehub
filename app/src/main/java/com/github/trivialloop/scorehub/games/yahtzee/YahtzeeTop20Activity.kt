@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.GameResult
-import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityYahtzeeTop20Binding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import kotlinx.coroutines.launch
@@ -36,6 +38,21 @@ class YahtzeeTop20Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityYahtzeeTop20Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
 
         database = AppDatabase.getDatabase(this)
 

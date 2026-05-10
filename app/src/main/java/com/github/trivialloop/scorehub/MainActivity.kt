@@ -12,6 +12,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +44,9 @@ enum class GameSortOrder {
  *
  * @param playerCount  Exact number of players to match (null = any).
  * @param soloOnly     true = solo only, false = team only, null = both.
- * @param equipment    Required equipment types; empty = no equipment filter.
+ * @param equipment    Selected equipment types; empty = no equipment filter.
+ *                     Logic is OR: a game matches if it uses AT LEAST ONE of
+ *                     the selected equipment types.
  */
 data class GameFilter(
     val playerCount: Int? = null,
@@ -94,6 +99,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
 
         database = AppDatabase.getDatabase(this)
 
@@ -223,26 +243,30 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        // ── Counts games matching the full pending filter (all criteria) ───────
+        // ── Counts games matching ALL pending criteria (OR logic for equipment) ─
         fun countMatching(): Int = allGames.count { game ->
             val f = pendingFilter()
             val playerOk = f.playerCount?.let { game.definition.supportsPlayerCount(it) } ?: true
             val modeOk   = f.soloOnly?.let { game.definition.teamMode == !it } ?: true
-            val equipOk  = f.equipment.isEmpty() || f.equipment.all { it in game.definition.equipment }
+            // OR: game matches if it uses at least one of the selected equipment types
+            val equipOk  = f.equipment.isEmpty() || f.equipment.any { it in game.definition.equipment }
             playerOk && modeOk && equipOk
         }
 
-        // ── Refresh the player count line and hint ─────────────────────────────
-        fun updatePlayerDisplay() {
+        // ── Refresh the player count value and compatible-games hint ───────────
+        fun updateDisplay() {
             textPlayersValue.text = pendingPlayerCount?.toString()
                 ?: getString(R.string.filter_players_any)
 
-            val matching = countMatching()
-            textPlayersHint.text = if (pendingFilter().isEmpty) ""
-            else resources.getQuantityString(R.plurals.filter_players_hint, matching, matching)
+            val f = pendingFilter()
+            textPlayersHint.text = if (f.isEmpty) ""
+            else {
+                val matching = countMatching()
+                resources.getQuantityString(R.plurals.filter_players_hint, matching, matching)
+            }
         }
 
-        updatePlayerDisplay()
+        updateDisplay()
 
         // ── Player count buttons ───────────────────────────────────────────────
         view.findViewById<View>(R.id.btnPlayersDecrement).setOnClickListener {
@@ -251,7 +275,7 @@ class MainActivity : AppCompatActivity() {
                 pendingPlayerCount!! <= 1  -> null  // back to "any"
                 else                       -> pendingPlayerCount!! - 1
             }
-            updatePlayerDisplay()
+            updateDisplay()
         }
 
         view.findViewById<View>(R.id.btnPlayersIncrement).setOnClickListener {
@@ -259,23 +283,23 @@ class MainActivity : AppCompatActivity() {
                 null -> 1
                 else -> (pendingPlayerCount!! + 1).coerceAtMost(8)
             }
-            updatePlayerDisplay()
+            updateDisplay()
         }
 
         // ── Mode chips — mutually exclusive, both de-selectable ───────────────
         chipSolo.setOnCheckedChangeListener { _, checked ->
             if (checked) chipTeam.isChecked = false
-            updatePlayerDisplay()
+            updateDisplay()
         }
         chipTeam.setOnCheckedChangeListener { _, checked ->
             if (checked) chipSolo.isChecked = false
-            updatePlayerDisplay()
+            updateDisplay()
         }
 
-        // ── Equipment chips — multi-select ────────────────────────────────────
-        chipCards.setOnCheckedChangeListener { _, _ -> updatePlayerDisplay() }
-        chipDice.setOnCheckedChangeListener  { _, _ -> updatePlayerDisplay() }
-        chipBoard.setOnCheckedChangeListener { _, _ -> updatePlayerDisplay() }
+        // ── Equipment chips — multi-select, OR logic ──────────────────────────
+        chipCards.setOnCheckedChangeListener { _, _ -> updateDisplay() }
+        chipDice.setOnCheckedChangeListener  { _, _ -> updateDisplay() }
+        chipBoard.setOnCheckedChangeListener { _, _ -> updateDisplay() }
 
         // ── Reset ──────────────────────────────────────────────────────────────
         view.findViewById<View>(R.id.btnFilterReset).setOnClickListener {
@@ -285,7 +309,7 @@ class MainActivity : AppCompatActivity() {
             chipCards.isChecked = false
             chipDice.isChecked  = false
             chipBoard.isChecked = false
-            updatePlayerDisplay()
+            updateDisplay()
         }
 
         // ── Apply ──────────────────────────────────────────────────────────────
@@ -307,10 +331,6 @@ class MainActivity : AppCompatActivity() {
 
     // ─── Core filter + sort ───────────────────────────────────────────────────
 
-    /**
-     * Applies [currentQuery], [currentFilter] and [currentSort] to [allGames]
-     * and refreshes [filteredGames].
-     */
     private fun applyFilterAndSort() {
         val query = currentQuery.lowercase(Locale.getDefault())
 
@@ -334,10 +354,10 @@ class MainActivity : AppCompatActivity() {
             result = result.filter { it.definition.teamMode == !soloOnly }
         }
 
-        // 4. Equipment (game must require ALL selected types)
+        // 4. Equipment — OR logic: game must use AT LEAST ONE selected type
         if (currentFilter.equipment.isNotEmpty()) {
             result = result.filter { game ->
-                currentFilter.equipment.all { eq -> eq in game.definition.equipment }
+                currentFilter.equipment.any { eq -> eq in game.definition.equipment }
             }
         }
 
@@ -476,6 +496,6 @@ class GameListAdapter(
         }
 
         return if (parts.isEmpty()) ctx.getString(R.string.no_games_played)
-        else parts.joinToString("  •  ")
+               else parts.joinToString("  •  ")
     }
 }

@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
@@ -27,6 +30,21 @@ class GeneralStatsActivity : AppCompatActivity() {
         binding = ActivityGeneralStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
+
         database = AppDatabase.getDatabase(this)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -38,6 +56,20 @@ class GeneralStatsActivity : AppCompatActivity() {
     private fun loadGeneralStats() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
+
+                // ── Akropolis ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "akropolis",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerAkropolis,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorAkropolis,
+                    bestPlayerSection = binding.bestPlayerSectionAkropolis,
+                    bestScoreView     = binding.textBestScoreAkropolis,
+                    bestScoreColor    = binding.bestScoreColorIndicatorAkropolis,
+                    bestScoreSection  = binding.bestScoreSectionAkropolis,
+                    noDataView        = binding.textNoDataAkropolis,
+                    bestScoreIsLowest = false
+                )
 
                 // ── Cactus ────────────────────────────────────────────────
                 loadGameStats(
@@ -78,6 +110,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreColor    = binding.bestScoreColorIndicatorEscoba,
                     bestScoreSection  = binding.bestScoreSectionEscoba,
                     noDataView        = binding.textNoDataEscoba,
+                    bestScoreIsLowest = false
+                )
+
+                // ── Farkle ────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "farkle",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerFarkle,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorFarkle,
+                    bestPlayerSection = binding.bestPlayerSectionFarkle,
+                    bestScoreView     = binding.textBestScoreFarkle,
+                    bestScoreColor    = binding.bestScoreColorIndicatorFarkle,
+                    bestScoreSection  = binding.bestScoreSectionFarkle,
+                    noDataView        = binding.textNoDataFarkle,
                     bestScoreIsLowest = false
                 )
 

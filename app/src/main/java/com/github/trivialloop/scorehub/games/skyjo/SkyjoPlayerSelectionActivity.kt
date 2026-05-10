@@ -11,6 +11,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +22,7 @@ import com.github.trivialloop.scorehub.R
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
-import com.github.trivialloop.scorehub.ui.ColorPickerView
+import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.PlayerColors
 import kotlinx.coroutines.launch
@@ -50,11 +53,26 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
         binding = ActivityPlayerSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                0
+            )
+
+            insets
+        }
+
         database = AppDatabase.getDatabase(this)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.player_selection_title)
+        supportActionBar?.title = getString(R.string.skyjo_game)
 
         setupRecyclerView()
 
@@ -259,6 +277,7 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
             android.R.id.home -> { finish(); true }
             R.id.action_skyjo_game_stats -> { startActivity(Intent(this, SkyjoStatsActivity::class.java)); true }
             R.id.action_skyjo_top20 -> { startActivity(Intent(this, SkyjoTop20Activity::class.java)); true }
+            R.id.action_help -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

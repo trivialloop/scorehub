@@ -4,22 +4,21 @@
          ═══════════════════════════════════════════════════════ -->
 
     <color name="score_cell_background">#2C2C2C</color>
+    <color name="cell_calculated_bg">#1E1E1E</color>
     <color name="cell_editable_bg">#454545</color>
     <color name="cell_editable_filled_bg">#2C2C2C</color>
     <color name="cell_locked_bg">#1A1A1A</color>
     <color name="cell_never_bg">#000000</color>
 
     <color name="score_cell_text">#FFFFFF</color>
+    <color name="score_calculated_cell_text">#E0E0E0</color>
+    <color name="score_filled_category_text">#666666</color>
+    <color name="score_progress_cell_text">#AAAAAA</color>
     <color name="score_text_best">#4CAF50</color>
     <color name="score_text_worst">#F44336</color>
 
     <color name="header_cell_background">#3A3A3A</color>
     <color name="header_cell_text">#FFFFFF</color>
-
-    <color name="yahtzee_calculated_cell_background">#1E1E1E</color>
-    <color name="yahtzee_calculated_cell_text">#E0E0E0</color>
-    <color name="yahtzee_bonus_progress_text">#AAAAAA</color>
-    <color name="yahtzee_score_filled_text">#666666</color>
 
     <color name="cell_border">#555555</color>
 </resources>
