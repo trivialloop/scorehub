@@ -72,8 +72,8 @@
     <string name="akropolis_color_red">Rouge</string>
     <string name="akropolis_color_purple">Violet</string>
     <string name="akropolis_color_green">Vert</string>
-    <string name="akropolis_minimum_players">Minimum 2 joueurs requis</string>
-    <string name="akropolis_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="akropolis_minimum_players">Minimum 2 players required</string>
+    <string name="akropolis_maximum_players">Maximum 4 players allowed</string>
     <string name="akropolis_game_complete">Partie terminée ?</string>
     <string name="akropolis_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="akropolis_quit_game">Quitter la partie</string>
@@ -319,7 +319,7 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Akropolis                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <string name="help_akropolis_players">2 to 5 players.</string>
+    <string name="help_akropolis_players">2 to 4 players.</string>
     <string name="help_akropolis_objective">Build the most prestigious city by placing tiles to create districts of 5 colors. Score points by multiplying your stars by the number of districts of each color.</string>
     <string name="help_akropolis_scoring">For each color, multiply the number of star symbols by the number of districts of that color in your city. Add 1 point per leftover stone. Highest total wins.</string>
     <string name="help_akropolis_end">The game ends when all tile stacks are exhausted. Then players tally their scores.</string>

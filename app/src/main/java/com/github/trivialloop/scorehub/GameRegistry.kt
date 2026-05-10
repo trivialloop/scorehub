@@ -75,7 +75,7 @@ object GameRegistry {
             iconResId      = R.drawable.ic_akropolis_game,
             activityClass  = AkropolisPlayerSelectionActivity::class.java,
             minPlayers     = 2,
-            maxPlayers     = 5,
+            maxPlayers     = 4,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
         ),

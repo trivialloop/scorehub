@@ -39,9 +39,9 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
     private val selectedPlayers = mutableSetOf<Player>()
 
     companion object {
-        const val GAME_TYPE = "akropolis"
+        const val GAME_TYPE   = "akropolis"
         private const val MIN_PLAYERS = 2
-        private const val MAX_PLAYERS = 5
+        private const val MAX_PLAYERS = 4
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -98,9 +98,9 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
                     selectedPlayers.remove(player)
                 }
             },
-            onEditClick = { showEditPlayerDialog(it) },
+            onEditClick   = { showEditPlayerDialog(it) },
             onDeleteClick = { deletePlayer(it) },
-            onStartDrag = { itemTouchHelper.startDrag(it) }
+            onStartDrag   = { itemTouchHelper.startDrag(it) }
         )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -133,9 +133,9 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
     }
 
     private fun showAddPlayerDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorPicker = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
+        val dialogView   = layoutInflater.inflate(R.layout.dialog_add_player, null)
+        val editName     = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker  = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
         val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
 
         var selectedColor = PlayerColors.getNextColor()
@@ -159,9 +159,9 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
     }
 
     private fun showEditPlayerDialog(player: Player) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_player, null)
-        val editName = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
-        val colorPicker = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
+        val dialogView   = layoutInflater.inflate(R.layout.dialog_add_player, null)
+        val editName     = dialogView.findViewById<android.widget.EditText>(R.id.editPlayerName)
+        val colorPicker  = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
         val colorPreview = dialogView.findViewById<android.view.View>(R.id.colorPreview)
 
         editName.setText(player.name)
@@ -228,12 +228,11 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
     private fun startGame() {
         val playersInOrder = allPlayers.filter { it in selectedPlayers }
         savePlayerOrder(playersInOrder)
-        val intent = Intent(this, AkropolisGameActivity::class.java).apply {
-            putExtra("PLAYER_IDS", playersInOrder.map { it.id }.toLongArray())
-            putExtra("PLAYER_NAMES", playersInOrder.map { it.name }.toTypedArray())
+        startActivity(Intent(this, AkropolisGameActivity::class.java).apply {
+            putExtra("PLAYER_IDS",    playersInOrder.map { it.id }.toLongArray())
+            putExtra("PLAYER_NAMES",  playersInOrder.map { it.name }.toTypedArray())
             putExtra("PLAYER_COLORS", playersInOrder.map { it.color }.toIntArray())
-        }
-        startActivity(intent)
+        })
     }
 
     private fun savePlayerOrder(players: List<Player>) {
@@ -247,11 +246,10 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
                 .getString("last_player_order", null) ?: return@launch
             if (allPlayers.isEmpty()) return@launch
             val savedIds = saved.split(",").mapNotNull { it.toLongOrNull() }
-            val ordered = mutableListOf<Player>()
+            val ordered  = mutableListOf<Player>()
             for (id in savedIds) allPlayers.find { it.id == id }?.let { ordered.add(it) }
             for (p in allPlayers) if (!ordered.contains(p)) ordered.add(p)
-            allPlayers.clear()
-            allPlayers.addAll(ordered)
+            allPlayers.clear(); allPlayers.addAll(ordered)
             adapter.notifyDataSetChanged()
         }
     }
@@ -265,8 +263,8 @@ class AkropolisPlayerSelectionActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> { finish(); true }
             R.id.action_akropolis_game_stats -> { startActivity(Intent(this, AkropolisStatsActivity::class.java)); true }
-            R.id.action_akropolis_top20 -> { startActivity(Intent(this, AkropolisTop20Activity::class.java)); true }
-            R.id.action_help -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }
+            R.id.action_akropolis_top20      -> { startActivity(Intent(this, AkropolisTop20Activity::class.java)); true }
+            R.id.action_help                 -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -282,12 +280,12 @@ class AkropolisPlayerSelectionAdapter(
 ) : RecyclerView.Adapter<AkropolisPlayerSelectionAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val checkbox: android.widget.CheckBox = view.findViewById(R.id.checkboxPlayer)
-        val colorIndicator: View = view.findViewById(R.id.colorIndicator)
-        val textName: android.widget.TextView = view.findViewById(R.id.textPlayerName)
-        val btnEdit: android.widget.ImageButton = view.findViewById(R.id.btnEdit)
-        val btnDrag: android.widget.ImageButton = view.findViewById(R.id.btnDrag)
-        val btnDelete: android.widget.ImageButton = view.findViewById(R.id.btnDelete)
+        val checkbox:       android.widget.CheckBox    = view.findViewById(R.id.checkboxPlayer)
+        val colorIndicator: View                       = view.findViewById(R.id.colorIndicator)
+        val textName:       android.widget.TextView    = view.findViewById(R.id.textPlayerName)
+        val btnEdit:        android.widget.ImageButton = view.findViewById(R.id.btnEdit)
+        val btnDrag:        android.widget.ImageButton = view.findViewById(R.id.btnDrag)
+        val btnDelete:      android.widget.ImageButton = view.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
@@ -298,13 +296,13 @@ class AkropolisPlayerSelectionAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val player = players[position]
-        holder.textName.text = player.name
+        holder.textName.text  = player.name
         holder.checkbox.isChecked = player in selectedPlayers
         (holder.colorIndicator.background as? GradientDrawable)?.setColor(player.color)
         holder.checkbox.setOnCheckedChangeListener { _, isChecked -> onCheckChanged(player, isChecked) }
-        holder.btnEdit.setOnClickListener { onEditClick(player) }
+        holder.btnEdit.setOnClickListener   { onEditClick(player) }
         holder.btnDelete.setOnClickListener { onDeleteClick(player) }
-        holder.btnDrag.setOnTouchListener { _, event ->
+        holder.btnDrag.setOnTouchListener   { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) onStartDrag(holder)
             false
         }

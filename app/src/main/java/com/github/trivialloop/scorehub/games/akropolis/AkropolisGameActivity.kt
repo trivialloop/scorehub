@@ -5,14 +5,12 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -43,10 +41,34 @@ class AkropolisGameActivity : AppCompatActivity() {
     private var gameOver = false
 
     companion object {
-        const val GAME_TYPE = "akropolis"
-        private const val LABEL_COL_DP = 56
-        private const val MAX_INPUT = 99
+        const val GAME_TYPE    = "akropolis"
+        private const val DOT_COL_DP  = 36   // colored dot column
+        private const val ICON_COL_DP = 28   // row-type icon column
     }
+
+    // ─── Possible picker values ───────────────────────────────────────────────
+
+    /** Star (multiplier) values vary by color */
+    private fun starsValues(color: AkropolisColor): List<Int> = when (color) {
+        AkropolisColor.BLUE     -> (0..8).toList()
+        AkropolisColor.YELLOW   -> (0..6).map { it * 2 }
+        AkropolisColor.RED      -> (0..6).map { it * 2 }
+        AkropolisColor.PURPLE   -> (0..6).map { it * 2 }
+        AkropolisColor.GREEN    -> (0..5).map { it * 3 }
+    }
+
+    /** Districts values vary by color */
+    private fun districtsValues(color: AkropolisColor): List<Int> = when (color) {
+        AkropolisColor.BLUE     -> (0..50).toList()
+        AkropolisColor.YELLOW   -> (0..35).toList()
+        AkropolisColor.RED      -> (0..30).toList()
+        AkropolisColor.PURPLE   -> (0..25).toList()
+        AkropolisColor.GREEN    -> (0..20).toList()
+    }
+
+    private val stonesValues: List<Int>    = (0..30).toList()
+
+    // ─── Lifecycle ────────────────────────────────────────────────────────────
 
     override fun attachBaseContext(newBase: Context) {
         val language = LocaleHelper.getPersistedLocale(newBase)
@@ -60,8 +82,8 @@ class AkropolisGameActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+            val sb = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            binding.appBarLayout.setPadding(0, sb.top, 0, 0)
             insets
         }
 
@@ -85,179 +107,243 @@ class AkropolisGameActivity : AppCompatActivity() {
 
     private fun buildScoreTable() {
         binding.scoreTableContainer.removeAllViews()
-        binding.scoreTableContainer.addView(buildLabelColumn())
-        for (ps in playerScores) {
-            binding.scoreTableContainer.addView(buildPlayerColumn(ps))
-        }
+        binding.scoreTableContainer.addView(buildDotColumn())
+        binding.scoreTableContainer.addView(buildIconColumn())
+        for (ps in playerScores) binding.scoreTableContainer.addView(buildPlayerColumn(ps))
     }
 
-    private fun buildLabelColumn(): LinearLayout {
-        val col = makeColumn(weight = 0f, widthDp = LABEL_COL_DP)
-        // Header spacer
-        col.addView(makeHeaderSpacerCell())
-        // Color rows
+    // ─── Column 1: colored dot ────────────────────────────────────────────────
+
+    private fun buildDotColumn(): LinearLayout {
+        val col = makeFixedColumn(DOT_COL_DP)
+        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // header spacer
         for (color in AkropolisColor.entries) {
-            col.addView(makeColorLabelCell(color))
+            col.addView(makeColorDotCell(color))                    // weight 3f
         }
-        // Stones row
-        col.addView(makeStonesLabelCell())
-        // Total row
-        col.addView(makeTotalLabelCell())
+        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // stones spacer
+        col.addView(makeBlankCell(rows = 1f, isCalc = true))       // total spacer
         return col
     }
 
-    private fun buildPlayerColumn(ps: AkropolisPlayerScore): LinearLayout {
-        val col = makeColumn(weight = 1f, widthDp = 0)
-        // Player name
-        col.addView(makePlayerNameCell(ps))
-        // Color rows
+    // ─── Column 2: row-type icons ─────────────────────────────────────────────
+
+    private fun buildIconColumn(): LinearLayout {
+        val col = makeFixedColumn(ICON_COL_DP)
+        col.addView(makeBlankCell(rows = 1f, isCalc = false))      // header spacer
+
         for (color in AkropolisColor.entries) {
-            col.addView(makeColorScoreCell(ps, color))
+            // Group of 3 icon sub-rows, total weight 3f
+            val group = LinearLayout(this).apply {
+                orientation  = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+                background = borderDrawable(
+                    ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+            }
+                        
+            group.addView(TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                gravity = Gravity.CENTER
+                text = "⭐"
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+            })
+            group.addView(makeThinDivider())
+            group.addView(TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                gravity = Gravity.CENTER
+                text = "🏘️"
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+            })
+            group.addView(makeThinDivider())
+            group.addView(TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                gravity = Gravity.CENTER
+                text = "🟰"
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+            })
+            col.addView(group)
         }
-        // Stones
+
+        // Stones icon (single row)
+        col.addView(TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            gravity = Gravity.CENTER
+            text = "🪨"
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+            setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+            background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+        })
+        // Total blank
+        col.addView(makeBlankCell(rows = 1f, isCalc = true))
+        return col
+    }
+
+    // ─── Player column ────────────────────────────────────────────────────────
+
+    private fun buildPlayerColumn(ps: AkropolisPlayerScore): LinearLayout {
+        val col = makeWeightColumn()
+        col.addView(makePlayerNameCell(ps))
+        for (color in AkropolisColor.entries) col.addView(makeColorScoreCell(ps, color))
         col.addView(makeStonesCell(ps))
-        // Total
         col.addView(makeTotalCell(ps))
         return col
     }
 
-    // ─── Label column cells ───────────────────────────────────────────────────
+    // ─── Dot-column cell helpers ──────────────────────────────────────────────
 
-    private fun makeHeaderSpacerCell(): LinearLayout {
-        // Must match the height of the player name cell (2 sub-rows)
+    private fun makeColorDotCell(color: AkropolisColor): LinearLayout {
         return LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
-            )
-            background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
-        }
-    }
-
-    private fun makeColorLabelCell(color: AkropolisColor): LinearLayout {
-        // Outer container — same proportional height as a color score cell (3 sub-rows)
-        val outer = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             gravity      = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f
-            )
-            background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
-        }
-        // Colored dot
-        val dot = TextView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(26), dpToPx(26)).also {
-                it.gravity = Gravity.CENTER
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+            background = borderDrawable(
+                ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+            val dot = android.view.View(this@AkropolisGameActivity).apply {
+                val s = dpToPx(20)
+                layoutParams = LinearLayout.LayoutParams(s, s).apply { gravity = Gravity.CENTER }
+                background = dotDrawable(colorToArgb(color))
             }
-            background = dotDrawable(colorToArgb(color))
+            addView(dot)
         }
-        outer.addView(dot)
-        return outer
     }
 
-    private fun makeStonesLabelCell(): TextView = TextView(this).apply {
-        text = getString(R.string.akropolis_stones)
-        gravity = Gravity.CENTER; textSize = 10f; setTypeface(null, Typeface.BOLD)
+    private fun makeBlankCell(rows: Float, isCalc: Boolean): LinearLayout = LinearLayout(this).apply {
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, rows)
+        val bgRes = if (isCalc) R.color.cell_calculated_bg else R.color.header_cell_background
+        background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, bgRes))
+    }
+
+    // ─── Icon-column cell helpers ─────────────────────────────────────────────
+
+    private fun makeIconSubCell(iconRes: Int): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        gravity      = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-        background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
-        setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_text))
+        addView(iconView(iconRes))
     }
 
-    private fun makeTotalLabelCell(): TextView = TextView(this).apply {
-        text = getString(R.string.akropolis_total)
-        gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+    private fun makeIconSubCellStandalone(iconRes: Int): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        gravity      = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-        background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.cell_calculated_bg))
-        setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, R.color.score_calculated_cell_text))
+        background = borderDrawable(
+            ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_background))
+        addView(iconView(iconRes))
     }
 
-    // ─── Player column cells ──────────────────────────────────────────────────
+    private fun iconView(iconRes: Int): ImageView = ImageView(this).apply {
+        val size = dpToPx(15)
+        layoutParams = LinearLayout.LayoutParams(size, size)
+        setImageResource(iconRes)
+        imageTintList = android.content.res.ColorStateList.valueOf(
+            ContextCompat.getColor(this@AkropolisGameActivity, R.color.header_cell_text))
+        scaleType = ImageView.ScaleType.FIT_CENTER
+    }
+
+    // ─── Player-column cell helpers ───────────────────────────────────────────
 
     private fun makePlayerNameCell(ps: AkropolisPlayerScore): TextView = TextView(this).apply {
-        text = ps.playerName; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
+        text = ps.playerName; gravity = Gravity.CENTER; textSize = 12f
+        setTypeface(null, Typeface.BOLD)
         maxLines = 1; ellipsize = TextUtils.TruncateAt.END
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-        background = playerCellDrawable(ps.playerColor); setTextColor(Color.WHITE)
+        background = playerCellDrawable(ps.playerColor)
+        setTextColor(Color.WHITE)
     }
 
     /**
-     * A color score cell is split vertically into 3 sub-rows:
-     *   top (weight 1): stars
-     *   middle (weight 1): districts
-     *   bottom (weight 1): total = stars * districts  (calculated, grayed)
-     * The whole cell has weight 3f in the parent column so it's 3× taller than a 1-weight cell.
+     * Color score cell — 3 sub-rows (weight 3f):
+     *   [0] stars picker   — no color role
+     *   [1] districts picker — no color role
+     *   [2] subtotal (calculated) — color role applied here only
      */
     private fun makeColorScoreCell(ps: AkropolisPlayerScore, color: AkropolisColor): LinearLayout {
         val container = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
-            background   = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.score_cell_background))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+            background = borderDrawable(
+                ContextCompat.getColor(this@AkropolisGameActivity, R.color.score_cell_background))
         }
 
         val stars     = ps.stars[color]
         val districts = ps.districts[color]
         val subtotal  = ps.getDistrictTotal(color)
 
-        val allStars     = playerScores.map { it.stars[color] }
-        val allDistricts = playerScores.map { it.districts[color] }
-        val allSubtotals = playerScores.map { it.getDistrictTotal(color) }
-
-        // Stars sub-row
-        val starsRole  = ScoreColorRole(stars, allStars, higherIsBetter = true)
-        val starsBg    = if (!gameOver && stars == null) R.color.cell_editable_bg else R.color.score_cell_background
-        val starsCell  = makeSubCell(
-            text      = stars?.toString() ?: "",
-            bgColor   = ContextCompat.getColor(this, starsBg),
-            textColor = if (starsRole != ScoreColorRole.NEUTRAL && stars != null) starsRole.toColor(this)
-                        else ContextCompat.getColor(this, R.color.score_cell_text),
-            bold      = starsRole != ScoreColorRole.NEUTRAL && stars != null,
-            hint      = getString(R.string.akropolis_stars_hint)
-        )
-        if (!gameOver) starsCell.setOnClickListener {
-            showSubScoreInput(ps, color, isStars = true)
+        // Subtotal role — compared across all players for this color
+        val allSubtotals = playerScores.map {
+            if (it.stars[color] != null && it.districts[color] != null)
+                it.getDistrictTotal(color) else null
         }
-        container.addView(starsCell)
-
-        // Divider
-        container.addView(makeDivider())
-
-        // Districts sub-row
-        val distRole  = ScoreColorRole(districts, allDistricts, higherIsBetter = true)
-        val distBg    = if (!gameOver && districts == null) R.color.cell_editable_bg else R.color.score_cell_background
-        val distCell  = makeSubCell(
-            text      = districts?.toString() ?: "",
-            bgColor   = ContextCompat.getColor(this, distBg),
-            textColor = if (distRole != ScoreColorRole.NEUTRAL && districts != null) distRole.toColor(this)
-                        else ContextCompat.getColor(this, R.color.score_cell_text),
-            bold      = distRole != ScoreColorRole.NEUTRAL && districts != null,
-            hint      = getString(R.string.akropolis_districts_hint)
-        )
-        if (!gameOver) distCell.setOnClickListener {
-            showSubScoreInput(ps, color, isStars = false)
-        }
-        container.addView(distCell)
-
-        // Divider
-        container.addView(makeDivider())
-
-        // Subtotal sub-row (calculated)
-        val subtotalRole  = ScoreColorRole(
+        val subtotalRole = ScoreColorRole(
             if (stars != null && districts != null) subtotal else null,
-            allSubtotals.map { if (playerScores.all { p -> p.stars[color] != null && p.districts[color] != null }) it else null },
+            allSubtotals,
             higherIsBetter = true
         )
-        val subtotalColor = if (subtotalRole != ScoreColorRole.NEUTRAL && stars != null && districts != null)
-            subtotalRole.toColor(this)
-        else ContextCompat.getColor(this, R.color.score_calculated_cell_text)
 
-        val subtotalCell = makeSubCell(
-            text      = if (stars != null && districts != null) subtotal.toString() else "",
+        // Stars
+        val starsBg = if (!gameOver && stars == null) R.color.cell_editable_bg
+                      else R.color.score_cell_background
+        val starsCell = makeSubCell(
+            text      = stars?.toString() ?: "",
+            bgColor   = ContextCompat.getColor(this, starsBg),
+            textColor = ContextCompat.getColor(this, R.color.score_cell_text),
+            bold      = false
+        )
+        if (!gameOver) starsCell.setOnClickListener {
+            showPicker(
+                title   = "${ps.playerName} — ${colorLabel(color)} (${getString(R.string.akropolis_stars)})",
+                values  = starsValues(color),
+                current = stars,
+                isEdit  = stars != null
+            ) { v -> ps.stars[color] = v; buildScoreTable(); checkCompletion() }
+        }
+        container.addView(starsCell)
+        container.addView(makeThinDivider())
+
+        // Districts
+        val distBg = if (!gameOver && districts == null) R.color.cell_editable_bg
+                     else R.color.score_cell_background
+        val distCell = makeSubCell(
+            text      = districts?.toString() ?: "",
+            bgColor   = ContextCompat.getColor(this, distBg),
+            textColor = ContextCompat.getColor(this, R.color.score_cell_text),
+            bold      = false
+        )
+        if (!gameOver) distCell.setOnClickListener {
+            showPicker(
+                title   = "${ps.playerName} — ${colorLabel(color)} (${getString(R.string.akropolis_districts)})",
+                values  = districtsValues(color),
+                current = districts,
+                isEdit  = districts != null
+            ) { v -> ps.districts[color] = v; buildScoreTable(); checkCompletion() }
+        }
+        container.addView(distCell)
+        container.addView(makeThinDivider())
+
+        // Subtotal (color-coded)
+        val subtotalText  = if (stars != null && districts != null) subtotal.toString() else ""
+        val subtotalColor = when {
+            subtotalRole == ScoreColorRole.BEST  && subtotalText.isNotEmpty() ->
+                ContextCompat.getColor(this, R.color.score_text_best)
+            subtotalRole == ScoreColorRole.WORST && subtotalText.isNotEmpty() ->
+                ContextCompat.getColor(this, R.color.score_text_worst)
+            else -> ContextCompat.getColor(this, R.color.score_calculated_cell_text)
+        }
+        container.addView(makeSubCell(
+            text      = subtotalText,
             bgColor   = ContextCompat.getColor(this, R.color.cell_calculated_bg),
             textColor = subtotalColor,
-            bold      = true,
-            hint      = ""
-        )
-        container.addView(subtotalCell)
+            bold      = subtotalRole != ScoreColorRole.NEUTRAL && subtotalText.isNotEmpty()
+        ))
 
         return container
     }
@@ -265,121 +351,73 @@ class AkropolisGameActivity : AppCompatActivity() {
     private fun makeStonesCell(ps: AkropolisPlayerScore): TextView {
         val allStones = playerScores.map { it.stones }
         val role      = ScoreColorRole(ps.stones, allStones, higherIsBetter = true)
-        val bgRes     = if (!gameOver && ps.stones == null) R.color.cell_editable_bg else R.color.score_cell_background
+        val bgRes     = if (!gameOver && ps.stones == null) R.color.cell_editable_bg
+                        else R.color.score_cell_background
+        val textColor = when {
+            role == ScoreColorRole.BEST  && ps.stones != null ->
+                ContextCompat.getColor(this, R.color.score_text_best)
+            role == ScoreColorRole.WORST && ps.stones != null ->
+                ContextCompat.getColor(this, R.color.score_text_worst)
+            else -> ContextCompat.getColor(this, R.color.score_cell_text)
+        }
         return TextView(this).apply {
             text = ps.stones?.toString() ?: ""
-            gravity = Gravity.CENTER; textSize = 14f
+            gravity = Gravity.CENTER; textSize = 13f
             if (role != ScoreColorRole.NEUTRAL && ps.stones != null) setTypeface(null, Typeface.BOLD)
-            setTextColor(
-                if (role != ScoreColorRole.NEUTRAL && ps.stones != null) role.toColor(this@AkropolisGameActivity)
-                else ContextCompat.getColor(this@AkropolisGameActivity, R.color.score_cell_text)
-            )
+            setTextColor(textColor)
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
             background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, bgRes))
-            if (!gameOver) setOnClickListener { showStonesInput(ps) }
+            if (!gameOver) setOnClickListener {
+                showPicker(
+                    title   = "${ps.playerName} — ${getString(R.string.akropolis_stones)}",
+                    values  = stonesValues,
+                    current = ps.stones,
+                    isEdit  = ps.stones != null
+                ) { v -> ps.stones = v; buildScoreTable(); checkCompletion() }
+            }
         }
     }
 
     private fun makeTotalCell(ps: AkropolisPlayerScore): TextView {
         val allComplete = playerScores.all { it.isComplete() }
         val total       = ps.getTotal()
-        val role        = if (allComplete) ScoreColorRole(total, playerScores.map { it.getTotal() }, higherIsBetter = true)
+        val role        = if (allComplete) ScoreColorRole(
+            total, playerScores.map { it.getTotal() }, higherIsBetter = true)
                           else ScoreColorRole.NEUTRAL
-        val textColor   = if (role != ScoreColorRole.NEUTRAL) role.toColor(this)
-                          else ContextCompat.getColor(this, R.color.score_calculated_cell_text)
+        val textColor = when (role) {
+            ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
+            ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
+            else -> ContextCompat.getColor(this, R.color.score_calculated_cell_text)
+        }
         return TextView(this).apply {
-            text = total.toString(); gravity = Gravity.CENTER; textSize = 16f
+            text = total.toString(); gravity = Gravity.CENTER; textSize = 15f
             setTypeface(null, Typeface.BOLD); setTextColor(textColor)
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-            background = borderDrawable(ContextCompat.getColor(this@AkropolisGameActivity, R.color.cell_calculated_bg))
+            background = borderDrawable(ContextCompat.getColor(
+                this@AkropolisGameActivity, R.color.cell_calculated_bg))
         }
     }
 
-    // ─── Sub-cell helpers ─────────────────────────────────────────────────────
+    // ─── Picker ───────────────────────────────────────────────────────────────
 
-    private fun makeSubCell(text: String, bgColor: Int, textColor: Int, bold: Boolean, hint: String): TextView =
-        TextView(this).apply {
-            this.text = text; gravity = Gravity.CENTER; textSize = 13f
-            if (bold) setTypeface(null, Typeface.BOLD)
-            setTextColor(textColor)
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-            background = GradientDrawable().apply { setColor(bgColor) }
-            if (text.isEmpty() && hint.isNotEmpty()) {
-                this.hint = hint
-            }
+    private fun showPicker(
+        title: String,
+        values: List<Int>,
+        current: Int?,
+        isEdit: Boolean,
+        onPicked: (Int) -> Unit
+    ) {
+        val dialogTitle = if (isEdit) "✏️ $title" else title
+        val items = values.map { it.toString() }.toTypedArray()
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(dialogTitle)
+            .setItems(items) { _, which -> onPicked(values[which]) }
+            .create()
+        dialog.show()
+        if (isEdit && current != null) {
+            val idx = values.indexOf(current)
+            if (idx >= 0) dialog.listView?.setSelection(idx)
         }
-
-    private fun makeDivider(): android.view.View = android.view.View(this).apply {
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-        setBackgroundColor(ContextCompat.getColor(this@AkropolisGameActivity, R.color.cell_border))
-    }
-
-    // ─── Dialogs ──────────────────────────────────────────────────────────────
-
-    private fun showSubScoreInput(ps: AkropolisPlayerScore, color: AkropolisColor, isStars: Boolean) {
-        val current = if (isStars) ps.stars[color] else ps.districts[color]
-        val labelType = if (isStars) getString(R.string.akropolis_stars) else getString(R.string.akropolis_districts)
-        val colorLabel = colorLabel(color)
-        val title = if (current != null) "✏️ ${ps.playerName} — $colorLabel ($labelType)"
-                    else "${ps.playerName} — $colorLabel ($labelType)"
-
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint = "0–$MAX_INPUT"; gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(2))
-            current?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
-            addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value < 0 || value > MAX_INPUT) {
-                    showSubScoreInput(ps, color, isStars); return@setPositiveButton
-                }
-                if (isStars) ps.stars[color] = value else ps.districts[color] = value
-                buildScoreTable()
-                checkCompletion()
-            }
-            .setNegativeButton(getString(R.string.cancel), null).create()
-
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
-    }
-
-    private fun showStonesInput(ps: AkropolisPlayerScore) {
-        val current = ps.stones
-        val title = if (current != null) "✏️ ${ps.playerName} — ${getString(R.string.akropolis_stones)}"
-                    else "${ps.playerName} — ${getString(R.string.akropolis_stones)}"
-
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint = "0–$MAX_INPUT"; gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(2))
-            current?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
-            addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value < 0 || value > MAX_INPUT) {
-                    showStonesInput(ps); return@setPositiveButton
-                }
-                ps.stones = value
-                buildScoreTable()
-                checkCompletion()
-            }
-            .setNegativeButton(getString(R.string.cancel), null).create()
-
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
     }
 
     // ─── Game logic ───────────────────────────────────────────────────────────
@@ -413,7 +451,8 @@ class AkropolisGameActivity : AppCompatActivity() {
             val sorted = totals.entries.sortedByDescending { it.value }
             var rank = 1
             val entries = sorted.mapIndexed { i, (ps, s) ->
-                val r = if (i > 0 && s == sorted[i - 1].value) rank else { rank = i + 1; rank }
+                val r = if (i > 0 && s == sorted[i - 1].value) rank
+                        else { rank = i + 1; rank }
                 GameResultsDialog.PlayerResult(ps.playerName, ps.playerColor, s, r)
             }
             GameResultsDialog.show(this@AkropolisGameActivity, entries, isDraw, " pts") { finish() }
@@ -438,12 +477,28 @@ class AkropolisGameActivity : AppCompatActivity() {
         AkropolisColor.GREEN  -> 0xFF2E7D32.toInt()
     }
 
-    private fun makeColumn(weight: Float, widthDp: Int): LinearLayout {
-        val widthPx = if (widthDp == 0) 0 else dpToPx(widthDp)
-        return LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+    private fun makeSubCell(text: String, bgColor: Int, textColor: Int, bold: Boolean): TextView =
+        TextView(this).apply {
+            this.text = text; gravity = Gravity.CENTER; textSize = 13f
+            if (bold) setTypeface(null, Typeface.BOLD)
+            setTextColor(textColor)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            background = GradientDrawable().apply { setColor(bgColor) }
         }
+
+    private fun makeThinDivider(): android.view.View = android.view.View(this).apply {
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
+        setBackgroundColor(ContextCompat.getColor(this@AkropolisGameActivity, R.color.cell_border))
+    }
+
+    private fun makeFixedColumn(widthDp: Int): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(dpToPx(widthDp), LinearLayout.LayoutParams.MATCH_PARENT)
+    }
+
+    private fun makeWeightColumn(): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
     }
 
     private fun borderDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
@@ -452,8 +507,7 @@ class AkropolisGameActivity : AppCompatActivity() {
     }
 
     private fun dotDrawable(color: Int): GradientDrawable = GradientDrawable().apply {
-        shape = GradientDrawable.OVAL
-        setColor(color)
+        shape = GradientDrawable.OVAL; setColor(color)
     }
 
     private fun playerCellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
@@ -464,8 +518,7 @@ class AkropolisGameActivity : AppCompatActivity() {
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_akropolis_game, menu)
-        return true
+        menuInflater.inflate(R.menu.menu_akropolis_game, menu); return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
