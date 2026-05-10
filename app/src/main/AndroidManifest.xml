@@ -20,6 +20,22 @@
         </activity>
 
         <activity
+            android:name=".games.akropolis.AkropolisPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.akropolis.AkropolisGameActivity"
+            android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.akropolis.AkropolisStatsActivity"
+            android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.akropolis.AkropolisTop20Activity"
+            android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.cactus.CactusPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
