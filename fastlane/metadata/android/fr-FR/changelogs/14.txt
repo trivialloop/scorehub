@@ -1,0 +1,6 @@
+### Ajout
+- Ajout du jeu akropolis
+
+### Changement
+- Mise a jour des librairies
+- Retravaille helper des couleurs
