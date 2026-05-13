@@ -5,14 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -278,38 +274,26 @@ class CactusGameActivity : AppCompatActivity() {
         val title = if (isEdit) "✏️ ${player.playerName} — ${getString(R.string.cactus_enter_score)}"
         else "${player.playerName} — ${getString(R.string.cactus_enter_score)}"
 
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint      = getString(R.string.cactus_score_hint)
-            gravity   = Gravity.CENTER
-            textSize  = 20f
-            filters   = arrayOf(InputFilter.LengthFilter(2))
-            if (isEdit) round.rawScores[player.playerId]?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
-            addView(editText)
-        }
+        val values = (0..40).toList()
+        val items = values.map { it.toString() }.toTypedArray()
+        val current = round.rawScores[player.playerId]
+
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)
-            .setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value < 0 || value > RAW_SCORE_MAX) {
-                    showScoreInput(round, player, isEdit); return@setPositiveButton
-                }
+            .setItems(items) { _, which ->
+                val value = values[which]
                 round.rawScores[player.playerId] = value
                 round.computePoints(playerIdList)
                 buildTable()
                 if (!isEdit && round.isComplete(playerIdList)) checkEndOfRound()
             }
-            .setNegativeButton(getString(R.string.cancel), null)
             .create()
 
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
-        editText.requestFocus()
+
+        if (isEdit && current != null) {
+            dialog.listView?.setSelection(current)
+        }
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
