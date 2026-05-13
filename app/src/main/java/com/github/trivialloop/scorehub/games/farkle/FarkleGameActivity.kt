@@ -5,13 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -45,9 +42,16 @@ class FarkleGameActivity : AppCompatActivity() {
     private var currentPlayerIndex = 0
     private var gameOver = false
 
+    /**
+     * True once at least one player has reached SCORE_LIMIT.
+     * When true, the game ends after the LAST player in the list (index totalPlayers-1)
+     * finishes their turn, so that every player has played the same number of rounds.
+     */
+    private var finalRoundStarted = false
+
     companion object {
         const val GAME_TYPE = "farkle"
-        private const val SCORE_LIMIT  = 10_000
+        private const val SCORE_LIMIT   = 10_000
         private const val HEADER_ROW_DP = 52
         private const val ROUND_ROW_DP  = 48
         private const val ENTRY_ROW_DP  = 36
@@ -55,6 +59,14 @@ class FarkleGameActivity : AppCompatActivity() {
         private const val BTN_ROW_DP    = 44
         private const val TOTAL_ROW_DP  = 52
         private const val LABEL_COL_DP  = 48
+
+        /** Predefined score values shown in the Add picker. */
+        val ADD_SCORE_VALUES = listOf(
+            50, 100, 150, 200, 250, 300, 350, 400, 450, 500,
+            550, 600, 650, 700, 750, 800, 850, 900, 1000,
+            1050, 1100, 1150, 1200, 1300, 1400, 1500, 
+            1600, 2000, 2050, 2100, 2500, 3000
+        )
     }
 
     private val totalPlayers get() = players.size
@@ -179,9 +191,8 @@ class FarkleGameActivity : AppCompatActivity() {
                     row.addView(makeActiveTurnCell(activeTurn, w))
 
                 completedByPlayer[player.playerId]?.getOrNull(slotIdx) != null -> {
-                    val round = completedByPlayer[player.playerId]!!.getOrNull(slotIdx)!!
-                    // Farkle: higher completed score = better (but 0 for farkle is just 0)
-                    val role = ScoreColorRole(slotScores[colIdx], slotScores, higherIsBetter = true)
+                    val round     = completedByPlayer[player.playerId]!!.getOrNull(slotIdx)!!
+                    val role      = ScoreColorRole(slotScores[colIdx], slotScores, higherIsBetter = true)
                     val textColor = when (role) {
                         ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
                         ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
@@ -216,7 +227,7 @@ class FarkleGameActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
     }
 
-    private fun colLp(weight: Float)           = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+    private fun colLp(weight: Float) = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
     private fun fixedColLp(weight: Float, h: Int) = LinearLayout.LayoutParams(0, dpToPx(h), weight)
 
     private fun makeLabelCell(text: String, heightDp: Int, isTotal: Boolean): TextView = TextView(this).apply {
@@ -240,7 +251,7 @@ class FarkleGameActivity : AppCompatActivity() {
     private fun makePlayerNameCell(player: FarklePlayerState, isActive: Boolean, weight: Float): TextView =
         TextView(this).apply {
             text = player.playerName; gravity = Gravity.CENTER; textSize = 13f; setTypeface(null, Typeface.BOLD)
-            maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END
+            maxLines = 1; ellipsize = TextUtils.TruncateAt.END
             layoutParams = fixedColLp(weight, HEADER_ROW_DP)
             background = cellDrawable(player.playerColor); setTextColor(Color.WHITE)
         }
@@ -328,74 +339,87 @@ class FarkleGameActivity : AppCompatActivity() {
 
     // ─── Dialogs ──────────────────────────────────────────────────────────────
 
+    /**
+     * Shows a picker dialog with predefined score values.
+     */
     private fun showAddScoreDialog(turn: FarkleRound) {
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint = getString(R.string.farkle_score_hint); gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(6))
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8)); addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(getString(R.string.farkle_btn_add)).setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value <= 0) { showAddScoreDialog(turn); return@setPositiveButton }
-                turn.rollEntries.add(value); buildTable()
+        val items = ADD_SCORE_VALUES.map { it.toString() }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.farkle_btn_add))
+            .setItems(items) { _, which ->
+                turn.rollEntries.add(ADD_SCORE_VALUES[which])
+                buildTable()
             }
-            .setNegativeButton(getString(R.string.cancel), null).create()
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
+    /**
+     * Shows a picker to re-edit the last roll entry (✏ prefix in title).
+     */
     private fun showEditEntryDialog(turn: FarkleRound, entryIndex: Int) {
-        val current  = turn.rollEntries[entryIndex]
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint = getString(R.string.farkle_score_hint); gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(6)); setText(current.toString())
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8)); addView(editText)
-        }
-        // Pencil in dialog title when re-editing last entry
-        val dialog = AlertDialog.Builder(this).setTitle("✏️ ${getString(R.string.farkle_btn_add)}").setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value <= 0) { showEditEntryDialog(turn, entryIndex); return@setPositiveButton }
-                turn.rollEntries[entryIndex] = value; buildTable()
+        val current     = turn.rollEntries[entryIndex]
+        val items       = ADD_SCORE_VALUES.map { it.toString() }.toTypedArray()
+        val selectedIdx = ADD_SCORE_VALUES.indexOf(current).takeIf { it >= 0 } ?: 0
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("✏️ ${getString(R.string.farkle_btn_add)}")
+            .setSingleChoiceItems(items, selectedIdx) { dlg, which ->
+                turn.rollEntries[entryIndex] = ADD_SCORE_VALUES[which]
+                buildTable()
+                dlg.dismiss()
             }
-            .setNegativeButton(getString(R.string.cancel), null).create()
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
+
+        dialog.listView?.post { dialog.listView?.setSelection(selectedIdx) }
     }
 
     // ─── Game actions ─────────────────────────────────────────────────────────
 
-    private fun performBank(turn: FarkleRound) { turn.banked = true; checkEndOfGameAndAdvance() }
+    private fun performBank(turn: FarkleRound) {
+        turn.banked = true
+        checkEndOfGameAndAdvance()
+    }
 
-    private fun performFarkle(turn: FarkleRound) { turn.farkled = true; turn.rollEntries.clear(); checkEndOfGameAndAdvance() }
+    private fun performFarkle(turn: FarkleRound) {
+        turn.farkled = true
+        turn.rollEntries.clear()
+        checkEndOfGameAndAdvance()
+    }
 
+    /**
+     * Called after each turn (bank or farkle).
+     *
+     * End-of-game rule:
+     *   1. After any turn, if at least one player has reached SCORE_LIMIT, [finalRoundStarted]
+     *      becomes true.
+     *   2. The game ends only when the LAST player in the list (index = totalPlayers - 1)
+     *      finishes their turn while [finalRoundStarted] is true.
+     *      This guarantees every player has played exactly the same number of rounds,
+     *      regardless of which player triggered the limit first.
+     */
     private fun checkEndOfGameAndAdvance() {
-        val player = players[currentPlayerIndex]
-        val total  = player.getTotal(rounds)
-        if (total >= SCORE_LIMIT && !gameOver) {
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.farkle_game_over_title))
-                .setMessage(getString(R.string.farkle_game_over_confirm))
-                .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    gameOver = true; buildTable(); saveResultsAndShowSummary()
-                }
-                .setNegativeButton(getString(R.string.no)) { _, _ -> advanceToNextPlayer() }
-                .show()
-        } else { advanceToNextPlayer() }
+        // Check whether any player has now reached the limit
+        if (!finalRoundStarted && players.any { it.getTotal(rounds) >= SCORE_LIMIT }) {
+            finalRoundStarted = true
+        }
+
+        // End the game only once the last player in the order has played
+        if (finalRoundStarted && currentPlayerIndex == totalPlayers - 1) {
+            gameOver = true
+            buildTable()
+            saveResultsAndShowSummary()
+            return
+        }
+
+        advanceToNextPlayer()
     }
 
     private fun advanceToNextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size
-        startTurnFor(currentPlayerIndex); buildTable()
+        currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers
+        startTurnFor(currentPlayerIndex)
+        buildTable()
     }
 
     // ─── Save results ─────────────────────────────────────────────────────────
@@ -408,18 +432,20 @@ class FarkleGameActivity : AppCompatActivity() {
         val playedAt  = System.currentTimeMillis()
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
-                GameResult(gameType = GAME_TYPE, playerId = player.playerId, playerName = player.playerName,
-                    score = totals[player.playerId] ?: 0,
+                GameResult(
+                    gameType = GAME_TYPE, playerId = player.playerId, playerName = player.playerName,
+                    score    = totals[player.playerId] ?: 0,
                     isWinner = !isDraw && player.playerId in winnerIds,
                     isDraw   = isDraw && player.playerId in winnerIds,
-                    playedAt = playedAt)
+                    playedAt = playedAt
+                )
             })
             val sortedPlayers = players.sortedByDescending { totals[it.playerId] ?: 0 }
             var rank = 1
             val entries = sortedPlayers.mapIndexed { i, p ->
-                val s = totals[p.playerId] ?: 0
+                val s    = totals[p.playerId] ?: 0
                 val prev = if (i > 0) totals[sortedPlayers[i - 1].playerId] ?: 0 else s
-                val r = if (i > 0 && s == prev) rank else { rank = i + 1; rank }
+                val r    = if (i > 0 && s == prev) rank else { rank = i + 1; rank }
                 GameResultsDialog.PlayerResult(p.playerName, p.playerColor, s, r)
             }
             GameResultsDialog.show(this@FarkleGameActivity, entries, isDraw, " pts") { finish() }
@@ -435,8 +461,13 @@ class FarkleGameActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                AlertDialog.Builder(this).setTitle(R.string.farkle_quit_game).setMessage(R.string.farkle_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ -> finish() }.setNegativeButton(R.string.no, null).show(); true
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.farkle_quit_game)
+                    .setMessage(R.string.farkle_quit_game_message)
+                    .setPositiveButton(R.string.yes) { _, _ -> finish() }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
+                true
             }
             R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
