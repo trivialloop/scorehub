@@ -5,14 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -48,7 +44,14 @@ class SkyjoGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "skyjo"
         private const val SCORE_LIMIT = 100
+        private const val SCORE_MIN = -17
+        private const val SCORE_MAX = 129
+        private const val SCORE_ZERO_INDEX = 0 - SCORE_MIN // index of 0 in the values list = 17
     }
+
+    // All possible score values, ordered from SCORE_MIN to SCORE_MAX
+    private val scoreValues: List<Int> = (SCORE_MIN..SCORE_MAX).toList()
+    private val scoreLabels: Array<String> = scoreValues.map { it.toString() }.toTypedArray()
 
     override fun attachBaseContext(newBase: Context) {
         val language = LocaleHelper.getPersistedLocale(newBase)
@@ -190,8 +193,8 @@ class SkyjoGameActivity : AppCompatActivity() {
             }
 
             when {
-                canEnter    -> cell.setOnClickListener { showScoreInput(round, player, isEdit = rawScore != null) }
-                canEditPrev -> cell.setOnClickListener { showScoreInput(round, player, isEdit = true) }
+                canEnter    -> cell.setOnClickListener { showScorePicker(round, player, isEdit = rawScore != null) }
+                canEditPrev -> cell.setOnClickListener { showScorePicker(round, player, isEdit = true) }
             }
             row.addView(cell)
         }
@@ -261,36 +264,44 @@ class SkyjoGameActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showScoreInput(round: SkyjoRound, player: SkyjoPlayerState, isEdit: Boolean = false) {
+    /**
+     * Shows a dropdown list of scores from SCORE_MIN to SCORE_MAX.
+     * The list scrolls to show 0 at the top on open (negative values scroll into view above).
+     */
+    private fun showScorePicker(round: SkyjoRound, player: SkyjoPlayerState, isEdit: Boolean) {
         val playerIdList = players.map { it.playerId }
+        val current = round.scores[player.playerId]
+
         val title = if (isEdit) "✏️ ${player.playerName} — ${getString(R.string.skyjo_enter_score)}"
         else "${player.playerName} — ${getString(R.string.skyjo_enter_score)}"
 
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-            hint = getString(R.string.skyjo_score_hint); gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(3))
-            if (isEdit) round.scores[player.playerId]?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8)); addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null) { showScoreInput(round, player, isEdit); return@setPositiveButton }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setItems(scoreLabels) { _, which ->
+                val value = scoreValues[which]
                 round.scores[player.playerId] = value
                 if (round.allScoresEntered(playerIdList)) {
                     round.computeFinalScores(playerIdList)
                     buildTable()
                     if (!isEdit) updateTotalsAndCheckEnd()
-                } else { buildTable() }
+                } else {
+                    buildTable()
+                }
             }
-            .setNegativeButton(getString(R.string.cancel), null).create()
+            .create()
 
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
+        dialog.show()
+
+        // Scroll so that 0 appears at the top: set selection to the index of 0
+        // The list will show 0 first, negative values reachable by scrolling up,
+        // positive values by scrolling down.
+        val scrollToIndex = when {
+            isEdit && current != null -> current - SCORE_MIN  // reopen at current value
+            else                      -> SCORE_ZERO_INDEX     // open at 0
+        }
+        dialog.listView?.post {
+            dialog.listView?.setSelection(scrollToIndex)
+        }
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
