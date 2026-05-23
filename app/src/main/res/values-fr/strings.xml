@@ -51,6 +51,8 @@
     <string name="player_added">Joueur %1$s ajouté</string>
     <string name="player_updated">Joueur %1$s modifié</string>
     <string name="player_deleted">Joueur %1$s supprimé</string>
+    <string name="player_count_min_error">Minimum %1$d joueurs requis (max. %2$d)</string>
+    <string name="player_count_max_error">Maximum %2$d joueurs autorisés (min. %1$d)</string>
     <string name="delete">Supprimer</string>
     <string name="edit">Modifier</string>
     <string name="edit_player">Modifier le joueur</string>

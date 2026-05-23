@@ -38,6 +38,8 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "yahtzee"
+        private const val MIN_PLAYERS = 1
+        private const val MAX_PLAYERS = 8
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -78,8 +80,10 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
         }
 
         binding.btnStartGame.setOnClickListener {
-            if (selectedPlayers.size < 1) {
-                Toast.makeText(this, R.string.minimum_one_player, Toast.LENGTH_SHORT).show()
+            if (selectedPlayers.size < MIN_PLAYERS) {
+                Toast.makeText(this,
+                    getString(R.string.player_count_min_error, MIN_PLAYERS, MAX_PLAYERS),
+                    Toast.LENGTH_SHORT).show()
             } else {
                 startGame()
             }
@@ -95,7 +99,14 @@ class YahtzeePlayerSelectionActivity : AppCompatActivity() {
             selectedPlayers,
             onCheckChanged = { player, isChecked ->
                 if (isChecked) {
-                    selectedPlayers.add(player)
+                    if (selectedPlayers.size >= MAX_PLAYERS) {
+                        Toast.makeText(this,
+                            getString(R.string.player_count_max_error, MIN_PLAYERS, MAX_PLAYERS),
+                            Toast.LENGTH_SHORT).show()
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        selectedPlayers.add(player)
+                    }
                 } else {
                     selectedPlayers.remove(player)
                 }
@@ -370,6 +381,7 @@ class PlayerSelectionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val player = players[position]
         holder.textName.text = player.name
+        holder.checkbox.setOnCheckedChangeListener(null)
         holder.checkbox.isChecked = player in selectedPlayers
 
         // Set player color
