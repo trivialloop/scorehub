@@ -362,7 +362,7 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_farkle_players">2 to 8 players.</string>
     <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
-    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), four of a kind = 1000, five of a kind = 2000, six of a kind = 3000, straight 1–6 = 2,500, three pairs = 1,500. A "Farkle" (no scoring dice) ends your turn with 0 points for that round.</string>
+    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), four of a kind = three of a kind * 2, five of a kind = three of a kind * 3, six of a kind = three of a kind * 4, straight 1–6 = 1,500, three pairs = 750. A "Farkle" (no scoring dice) ends your turn with 0 points for that round. 3 "Farkle" in a row make you lose all the points</string>
     <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
     <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
 
