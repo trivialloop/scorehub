@@ -10,10 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.10.0]
 
+### Added
+- Add about
+
 ### Changed
 - Improve user experience for cactus game
 - Improve user experience for farkle game
 - Improve user experience for skyjo game
+
+### Fixed
+- Fix crash at player selection
 
 ## [1.9.0]
 
