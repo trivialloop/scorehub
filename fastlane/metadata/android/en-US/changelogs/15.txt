@@ -1,0 +1,10 @@
+### Added
+- Add about menu
+
+### Changed
+- Improve user experience for cactus game
+- Improve user experience for farkle game
+- Improve user experience for skyjo game
+
+### Fixed
+- Fix crash at player selection

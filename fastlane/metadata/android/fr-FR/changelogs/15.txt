@@ -1,0 +1,10 @@
+### Ajout
+- Ajout menu a propos
+
+### Changement
+- Améliore l'expérience' du jeu cactus
+- Améliore l'expérience' du jeu farkle
+- Améliore l'expérience' du jeu Skyjo
+
+### Correction
+- Corrige crash a la sélection de joueurs
