@@ -20,13 +20,19 @@ data class RollEntry(
  * If the player performs 3 consecutive farkles,
  * all accumulated points are lost.
  */
+
+data class RollEntry(
+    val score: Int,
+    val usedDice: Int,
+    val label: String
+)
+
 data class FarkleRound(
     val roundNumber: Int,
     val playerId: Long,
 
     /** Individual scores entered via "Add" during this turn. */
     val rollEntries: MutableList<RollEntry> = mutableListOf(),
-
     var banked: Boolean = false,
     var farkled: Boolean = false,
 
