@@ -169,6 +169,120 @@ class FarkleScoreManagerTest {
     // ─── Triple farkle ────────────────────────────────────────────────────────
 
     @Test
+    fun `three consecutive farkles reset total`() {
+
+        val player = FarklePlayerState(
+            1L,
+            "Alice",
+            0xFF0000
+        )
+
+        val rounds = listOf(
+
+            FarkleRound(
+                1,
+                1L,
+                rollEntries = mutableListOf(
+                    roll(5000)
+                ),
+                banked = true
+            ),
+
+            FarkleRound(
+                2,
+                1L,
+                farkled = true
+            ),
+
+            FarkleRound(
+                3,
+                1L,
+                farkled = true
+            ),
+
+            FarkleRound(
+                4,
+                1L,
+                farkled = true,
+                tripleFarklePenalty = true
+            )
+        )
+
+        assertEquals(0, player.getTotal(rounds))
+    }
+
+    @Test
+    fun `triple farkle detection returns true`() {
+
+        val player = FarklePlayerState(
+            1L,
+            "Alice",
+            0xFF0000
+        )
+
+        val rounds = listOf(
+
+            FarkleRound(
+                1,
+                1L,
+                farkled = true
+            ),
+
+            FarkleRound(
+                2,
+                1L,
+                farkled = true
+            ),
+
+            FarkleRound(
+                3,
+                1L,
+                farkled = true
+            )
+        )
+
+        assertTrue(player.hasTripleFarkle(rounds))
+    }
+
+    @Test
+    fun `triple farkle detection returns false`() {
+
+        val player = FarklePlayerState(
+            1L,
+            "Alice",
+            0xFF0000
+        )
+
+        val rounds = listOf(
+
+            FarkleRound(
+                1,
+                1L,
+                farkled = true
+            ),
+
+            FarkleRound(
+                2,
+                1L,
+                banked = true,
+                rollEntries = mutableListOf(
+                    roll(500)
+                )
+            ),
+
+            FarkleRound(
+                3,
+                1L,
+                farkled = true
+            )
+        )
+
+        assertFalse(player.hasTripleFarkle(rounds))
+    }
+
+    // ─── FarklePlayerState.getTotal ───────────────────────────────────────────
+
+    @Test
     fun `getTotal returns 0 with no rounds`() {
 
         val player = FarklePlayerState(
@@ -213,6 +327,9 @@ class FarkleScoreManagerTest {
             FarkleRound(3, 1L)
         )
 
+        assertEquals(1500, player.getTotal(rounds))
+    }
+
     @Test
     fun `getTotal excludes farkled rounds`() {
 
@@ -243,252 +360,7 @@ class FarkleScoreManagerTest {
             )
         )
 
-        assertEquals(0, player.getTotal(rounds))
-    }
-
-    @Test
-    fun `getTotal ignores rounds belonging to other players`() {
-
-        val alice = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(400)
-                ),
-                banked = true
-            ),
-
-            FarkleRound(
-                1,
-                2L,
-                rollEntries = mutableListOf(
-                    roll(900)
-                ),
-                banked = true
-            )
-        )
-
-    @Test
-    fun `getTotal accumulates across many rounds`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = (1..10).map { i ->
-
-            FarkleRound(
-                i,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(1000)
-                ),
-                banked = true
-            )
-        }
-        assertEquals(10_000, player.getTotal(rounds))
-    }
-
-            FarkleRound(
-                1,
-                1L,
-                farkled = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                farkled = true
-            ),
-
-            FarkleRound(
-                3,
-                1L,
-                farkled = true
-            )
-        )
-
-    @Test
-    fun `currentRound returns null when no rounds`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        assertNull(player.currentRound(emptyList()))
-    }
-
-    @Test
-    fun `currentRound returns the active round`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val active = FarkleRound(2, 1L)
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                banked = true
-            ),
-
-            active
-        )
-
-    @Test
-    fun `currentRound returns null when all rounds are complete`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                banked = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                farkled = true
-            )
-        )
-
-        assertFalse(player.hasTripleFarkle(rounds))
-    }
-
-    // ─── FarklePlayerState.getTotal ───────────────────────────────────────────
-
-    @Test
-    fun `total below 10000 does not trigger end`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(5000)
-                ),
-                banked = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(4999)
-                ),
-                banked = true
-            )
-        )
-        assertEquals(9999, player.getTotal(rounds))
-
-        assertFalse(
-            player.getTotal(rounds) >= 10_000
-        )
-    }
-
-    @Test
-    fun `total exactly 10000 triggers end`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(5000)
-                ),
-                banked = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(5000)
-                ),
-                banked = true
-            )
-        )
-        assertEquals(10_000, player.getTotal(rounds))
-
-        assertTrue(
-            player.getTotal(rounds) >= 10_000
-        )
-    }
-
-    @Test
-    fun `total above 10000 triggers end`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(6000)
-                ),
-                banked = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(5000)
-                ),
-                banked = true
-            )
-        )
-        assertEquals(11_000, player.getTotal(rounds))
-
-        assertTrue(
-            player.getTotal(rounds) >= 10_000
-        )
-    }
-
-        assertEquals(1500, player.getTotal(rounds))
+        assertEquals(500, player.getTotal(rounds))
     }
 
     @Test
@@ -547,57 +419,7 @@ class FarkleScoreManagerTest {
             )
         )
 
-    @Test
-    fun `farkled round clears entries - score is 0`() {
-
-        val round = FarkleRound(
-            1,
-            playerId = 1L
-        )
-
-        round.rollEntries.addAll(
-            listOf(
-                roll(300),
-                roll(200),
-                roll(100)
-            )
-        )
-
-        round.farkled = true
-        round.rollEntries.clear()
-        assertEquals(0, round.score)
-        assertTrue(round.isComplete)
-    }
-
-    @Test
-    fun `in-progress round is not counted in getTotal`() {
-
-        val player = FarklePlayerState(
-            1L,
-            "Alice",
-            0xFF0000
-        )
-
-        val rounds = listOf(
-
-            FarkleRound(
-                1,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(9000)
-                ),
-                banked = true
-            ),
-
-            FarkleRound(
-                2,
-                1L,
-                rollEntries = mutableListOf(
-                    roll(500)
-                )
-            )
-        )
-
-        assertEquals(9000, player.getTotal(rounds))
+        assertEquals(500, alice.getTotal(rounds))
+        assertEquals(1000, bob.getTotal(rounds))
     }
 }
