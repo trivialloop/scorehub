@@ -40,6 +40,8 @@ class CribbagePlayerSelectionActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "cribbage"
         private const val REQUIRED_PLAYERS = 2
+        private const val MIN_PLAYERS = 2
+        private const val MAX_PLAYERS = 2
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -76,12 +78,12 @@ class CribbagePlayerSelectionActivity : AppCompatActivity() {
 
         binding.btnAddPlayer.setOnClickListener { showAddPlayerDialog() }
         binding.btnStartGame.setOnClickListener {
-            when {
-                selectedPlayers.size < REQUIRED_PLAYERS ->
-                    Toast.makeText(this, R.string.cribbage_minimum_players, Toast.LENGTH_SHORT).show()
-                selectedPlayers.size > REQUIRED_PLAYERS ->
-                    Toast.makeText(this, R.string.cribbage_maximum_players, Toast.LENGTH_SHORT).show()
-                else -> startGame()
+            if (selectedPlayers.size < MIN_PLAYERS) {
+                Toast.makeText(this,
+                    getString(R.string.player_count_min_error, MIN_PLAYERS, MAX_PLAYERS),
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                startGame()
             }
         }
 
@@ -94,8 +96,10 @@ class CribbagePlayerSelectionActivity : AppCompatActivity() {
             allPlayers, selectedPlayers,
             onCheckChanged = { player, isChecked ->
                 if (isChecked) {
-                    if (selectedPlayers.size >= REQUIRED_PLAYERS) {
-                        Toast.makeText(this, R.string.cribbage_maximum_players, Toast.LENGTH_SHORT).show()
+                    if (selectedPlayers.size >= MAX_PLAYERS) {
+                        Toast.makeText(this,
+                            getString(R.string.player_count_max_error, MIN_PLAYERS, MAX_PLAYERS),
+                            Toast.LENGTH_SHORT).show()
                         adapter.notifyDataSetChanged()
                     } else {
                         selectedPlayers.add(player)

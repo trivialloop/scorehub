@@ -78,12 +78,12 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
 
         binding.btnAddPlayer.setOnClickListener { showAddPlayerDialog() }
         binding.btnStartGame.setOnClickListener {
-            when {
-                selectedPlayers.size < MIN_PLAYERS ->
-                    Toast.makeText(this, R.string.skyjo_minimum_players, Toast.LENGTH_SHORT).show()
-                selectedPlayers.size > MAX_PLAYERS ->
-                    Toast.makeText(this, R.string.skyjo_maximum_players, Toast.LENGTH_SHORT).show()
-                else -> startGame()
+            if (selectedPlayers.size < MIN_PLAYERS) {
+                Toast.makeText(this,
+                    getString(R.string.player_count_min_error, MIN_PLAYERS, MAX_PLAYERS),
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                startGame()
             }
         }
 
@@ -97,7 +97,9 @@ class SkyjoPlayerSelectionActivity : AppCompatActivity() {
             onCheckChanged = { player, isChecked ->
                 if (isChecked) {
                     if (selectedPlayers.size >= MAX_PLAYERS) {
-                        Toast.makeText(this, R.string.skyjo_maximum_players, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,
+                            getString(R.string.player_count_max_error, MIN_PLAYERS, MAX_PLAYERS),
+                            Toast.LENGTH_SHORT).show()
                         adapter.notifyDataSetChanged()
                     } else {
                         selectedPlayers.add(player)
