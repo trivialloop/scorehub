@@ -11,11 +11,18 @@ package com.github.trivialloop.scorehub.games.farkle
  * While the turn is in progress (neither banked nor farkled) the cell shows
  * the individual roll entries plus the three action buttons (Add / Bank / Farkle).
  */
+
+data class RollEntry(
+    val score: Int,
+    val usedDice: Int,
+    val label: String
+)
+
 data class FarkleRound(
     val roundNumber: Int,
     val playerId: Long,
     /** Individual scores entered via "Add" during this turn. */
-    val rollEntries: MutableList<Int> = mutableListOf(),
+    val rollEntries: MutableList<RollEntry> = mutableListOf(),
     var banked: Boolean = false,
     var farkled: Boolean = false
 ) {
@@ -23,7 +30,8 @@ data class FarkleRound(
     val isComplete: Boolean get() = banked || farkled
 
     /** Running sum of the entries entered so far this turn. */
-    val entrySum: Int get() = rollEntries.sum()
+    val entrySum: Int
+        get() = rollEntries.sumOf { it.score }
 
     /**
      * Final score for this round:
