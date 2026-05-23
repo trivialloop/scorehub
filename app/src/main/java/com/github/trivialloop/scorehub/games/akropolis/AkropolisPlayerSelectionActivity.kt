@@ -299,6 +299,7 @@ class AkropolisPlayerSelectionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val player = players[position]
         holder.textName.text  = player.name
+        holder.checkbox.setOnCheckedChangeListener(null)
         holder.checkbox.isChecked = player in selectedPlayers
         (holder.colorIndicator.background as? GradientDrawable)?.setColor(player.color)
         holder.checkbox.setOnCheckedChangeListener { _, isChecked -> onCheckChanged(player, isChecked) }
