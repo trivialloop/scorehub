@@ -362,7 +362,7 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_farkle_players">2 à 8 joueurs.</string>
     <string name="help_farkle_objective">Lancez 6 dés et mettez de côté les combinaisons qui rapportent des points. Soyez le premier à atteindre 10 000 points.</string>
-    <string name="help_farkle_scoring">Combinaisons courantes : un 1 seul = 100 pts, un 5 seul = 50 pts, brelan = valeur × 100 (trois 1 = 1 000), carre = 1000, quintuple = 2000, sextuple = 3000, suite 1–6 = 2 500, trois paires = 1 500. Un « Farkle » (aucun dé marquant) met fin au tour avec 0 point pour cette manche.</string>
+    <string name="help_farkle_scoring">Combinaisons courantes : un 1 seul = 100 pts, un 5 seul = 50 pts, brelan = valeur × 100 (trois 1 = 1 000), carre = brelan * 2, quintuple = brelan * 3, sextuple = brelan * 4, suite 1–6 = 1 500, trois paires = 750. Un « Farkle » (aucun dé marquant) met fin au tour avec 0 point pour cette manche. 3 « Farkle » consécutifs font perdre tous les points.</string>
     <string name="help_farkle_end">Le premier joueur à atteindre ou dépasser 10 000 points déclenche le dernier tour. Tous les autres joueurs ont encore un tour, puis le total le plus élevé gagne.</string>
     <string name="help_farkle_wikipedia_url">https://fr.wikipedia.org/wiki/Farkle</string>
 

@@ -1032,19 +1032,41 @@ class FarkleGameActivity : AppCompatActivity() {
     }
 
     private fun performBank(turn: FarkleRound) {
-
         turn.banked = true
-
         checkEndOfGameAndAdvance()
     }
 
     private fun performFarkle(turn: FarkleRound) {
-
         turn.farkled = true
-
         turn.rollEntries.clear()
-
+        applyTripleFarklePenaltyIfNeeded(turn)
         checkEndOfGameAndAdvance()
+    }
+
+    private fun applyTripleFarklePenaltyIfNeeded(
+        currentTurn: FarkleRound
+    ) {
+
+        val player =
+            players.first {
+                it.playerId == currentTurn.playerId
+            }
+
+        val playerRounds =
+            rounds.filter {
+                it.playerId == currentTurn.playerId
+            }
+
+        if (player.hasTripleFarkle(playerRounds)) {
+
+            val totalBeforePenalty =
+                player.getTotal(playerRounds.dropLast(1))
+
+            currentTurn.tripleFarklePenalty = true
+
+            currentTurn.penaltyPointsLost =
+                totalBeforePenalty
+        }
     }
 
     private fun checkEndOfGameAndAdvance() {
