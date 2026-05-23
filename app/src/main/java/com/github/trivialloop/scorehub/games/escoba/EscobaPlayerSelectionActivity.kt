@@ -41,6 +41,8 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
         const val GAME_TYPE = "escoba"
         // Escoba is a 2-player game only
         private const val REQUIRED_PLAYERS = 2
+        private const val MIN_PLAYERS = 2
+        private const val MAX_PLAYERS = 2
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -77,12 +79,12 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
 
         binding.btnAddPlayer.setOnClickListener { showAddPlayerDialog() }
         binding.btnStartGame.setOnClickListener {
-            when {
-                selectedPlayers.size < REQUIRED_PLAYERS ->
-                    Toast.makeText(this, R.string.escoba_minimum_players, Toast.LENGTH_SHORT).show()
-                selectedPlayers.size > REQUIRED_PLAYERS ->
-                    Toast.makeText(this, R.string.escoba_maximum_players, Toast.LENGTH_SHORT).show()
-                else -> startGame()
+            if (selectedPlayers.size < MIN_PLAYERS) {
+                Toast.makeText(this,
+                    getString(R.string.player_count_min_error, MIN_PLAYERS, MAX_PLAYERS),
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                startGame()
             }
         }
 
@@ -95,9 +97,10 @@ class EscobaPlayerSelectionActivity : AppCompatActivity() {
             allPlayers, selectedPlayers,
             onCheckChanged = { player, isChecked ->
                 if (isChecked) {
-                    if (selectedPlayers.size >= REQUIRED_PLAYERS) {
-                        // Uncheck immediately and show error — preserve current selection
-                        Toast.makeText(this, R.string.escoba_maximum_players, Toast.LENGTH_SHORT).show()
+                    if (selectedPlayers.size >= MAX_PLAYERS) {
+                        Toast.makeText(this,
+                            getString(R.string.player_count_max_error, MIN_PLAYERS, MAX_PLAYERS),
+                            Toast.LENGTH_SHORT).show()
                         adapter.notifyDataSetChanged()
                     } else {
                         selectedPlayers.add(player)
@@ -302,6 +305,7 @@ class EscobaPlayerSelectionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val player = players[position]
         holder.textName.text = player.name
+        holder.checkbox.setOnCheckedChangeListener(null)
         holder.checkbox.isChecked = player in selectedPlayers
         (holder.colorIndicator.background as? GradientDrawable)?.setColor(player.color)
         holder.checkbox.setOnCheckedChangeListener { _, isChecked -> onCheckChanged(player, isChecked) }

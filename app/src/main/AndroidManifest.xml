@@ -20,6 +20,18 @@
         </activity>
 
         <activity
+            android:name=".GeneralStatsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
             android:name=".games.akropolis.AkropolisPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
@@ -162,14 +174,6 @@
         <activity
             android:name=".games.yahtzee.YahtzeeTop20Activity"
             android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
-
-        <activity
-            android:name=".GeneralStatsActivity"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

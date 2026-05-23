@@ -51,6 +51,8 @@
     <string name="player_added">Player %1$s added</string>
     <string name="player_updated">Player %1$s updated</string>
     <string name="player_deleted">Player %1$s deleted</string>
+    <string name="player_count_min_error">Minimum %1$d players required (max. %2$d)</string>
+    <string name="player_count_max_error">Maximum %2$d players allowed (min. %1$d)</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="edit_player">Edit Player</string>
@@ -292,6 +294,14 @@
     <string name="add">Add</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  ABOUT — add these entries inside the <resources> block        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_github_button">View on GitHub</string>
+    <string name="about_description">ScoreHub is a simple and intuitive application for tracking board game scores across multiple players.\n\nFeatures:\n• Multi-game support\n• Player management with custom colors\n• Comprehensive statistics and rankings\n• Top 20 high scores leaderboard\n• Win / loss / draw tracking\n• Multi-language support (English and French)\n• Fully offline\n\nPerfect for board game enthusiasts who want to keep detailed records of their sessions!</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP DIALOGS — generic labels                                 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_game_title">ℹ️ Game Rules</string>
@@ -362,7 +372,7 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_farkle_players">2 to 8 players.</string>
     <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
-    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), four of a kind = 1000, five of a kind = 2000, six of a kind = 3000, straight 1–6 = 2,500, three pairs = 1,500. A "Farkle" (no scoring dice) ends your turn with 0 points for that round.</string>
+    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), four of a kind = three of a kind * 2, five of a kind = three of a kind * 3, six of a kind = three of a kind * 4, straight 1–6 = 1,500, three pairs = 750. A "Farkle" (no scoring dice) ends your turn with 0 points for that round. 3 "Farkle" in a row make you lose all the points</string>
     <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
     <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
 
