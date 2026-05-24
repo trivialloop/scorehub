@@ -5,14 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -45,6 +41,11 @@ class WingspanGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE    = "wingspan"
         private const val LABEL_COL_DP = 100
+
+        // Habitat accent colours (background of the sub-row label cell)
+        private val COLOR_FOREST    = 0xFF2E7D32.toInt()  // dark green
+        private val COLOR_GRASSLAND = 0xFFF9A825.toInt()  // amber/yellow
+        private val COLOR_WETLAND   = 0xFF1565C0.toInt()  // dark blue
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -59,8 +60,8 @@ class WingspanGameActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+            val sb = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            binding.appBarLayout.setPadding(0, sb.top, 0, 0)
             insets
         }
 
@@ -80,41 +81,77 @@ class WingspanGameActivity : AppCompatActivity() {
         buildScoreTable()
     }
 
+    // ─── Table ────────────────────────────────────────────────────────────────
+
     private fun buildScoreTable() {
         binding.scoreTableContainer.removeAllViews()
         binding.scoreTableContainer.addView(buildLabelColumn())
         for (ps in playerScores) binding.scoreTableContainer.addView(buildPlayerColumn(ps))
     }
 
+    // ─── Label column ─────────────────────────────────────────────────────────
+
     private fun buildLabelColumn(): LinearLayout {
         val col = makeColumn(weight = 0f, widthDp = LABEL_COL_DP)
-        col.addView(makeLabelHeaderCell())
-        for (category in WingspanCategory.entries) col.addView(makeCategoryCell(category))
+        col.addView(makeLabelHeaderCell())     // player name header spacer
+
+        // Birds group: 3 habitat sub-rows + total sub-row
+        col.addView(makeBirdsGroupLabel())
+
+        // Remaining categories (no birds)
+        for (category in nonBirdCategories()) {
+            col.addView(makeCategoryCell(category))
+        }
         col.addView(makeLabelTotalCell())
         return col
     }
 
-    private fun buildPlayerColumn(ps: WingspanPlayerScore): LinearLayout {
-        val col = makeColumn(weight = 1f, widthDp = 0)
-        col.addView(makePlayerNameCell(ps))
-        for (category in WingspanCategory.entries) col.addView(makeScoreCell(ps, category))
-        col.addView(makeTotalCell(ps))
-        return col
-    }
-
-    private fun makeColumn(weight: Float, widthDp: Int): LinearLayout {
-        val widthPx = if (widthDp == 0) 0 else dpToPx(widthDp)
-        return LinearLayout(this).apply {
+    /** The birds label column: a 4-row block (forest / grassland / wetland / birds total). */
+    private fun makeBirdsGroupLabel(): LinearLayout {
+        val group = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 4f)
         }
+        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_forest),    COLOR_FOREST))
+        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_grassland), COLOR_GRASSLAND))
+        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_wetland),   COLOR_WETLAND))
+        group.addView(makeBirdsTotalLabelCell())
+        return group
     }
 
-    private fun cellLayoutParams() = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+    private fun makeHabitatLabelCell(label: String, habitatColor: Int): LinearLayout {
+        val container = LinearLayout(this).apply {
+            orientation  = LinearLayout.HORIZONTAL
+            gravity      = Gravity.CENTER_VERTICAL
+            setPadding(dpToPx(4), dpToPx(2), dpToPx(4), dpToPx(2))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            background = borderDrawable(habitatColor)
+        }
+        val tv = TextView(this).apply {
+            text      = label
+            textSize  = 10f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(Color.WHITE)
+            maxLines  = 2
+            gravity   = Gravity.CENTER_VERTICAL
+        }
+        container.addView(tv)
+        return container
+    }
+
+    private fun makeBirdsTotalLabelCell(): TextView = TextView(this).apply {
+        text = getString(R.string.wingspan_birds_total)
+        gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+        background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
+        setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
+    }
 
     private fun makeLabelHeaderCell(): TextView = TextView(this).apply {
         layoutParams = cellLayoutParams()
-        background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_background))
+        background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_background))
     }
 
     private fun makeCategoryCell(category: WingspanCategory): LinearLayout {
@@ -125,19 +162,15 @@ class WingspanGameActivity : AppCompatActivity() {
             layoutParams = cellLayoutParams()
             background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_background))
         }
-        val icon = ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(22), dpToPx(22)).also { it.marginEnd = dpToPx(4) }
-            setImageResource(categoryIcon(category))
-            imageTintList = android.content.res.ColorStateList.valueOf(
-                ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_text))
-            scaleType = ImageView.ScaleType.FIT_CENTER
-        }
         val label = TextView(this).apply {
-            text     = categoryLabel(category); textSize = 12f; setTypeface(null, Typeface.BOLD)
+            text      = categoryLabel(category)
+            textSize  = 11f
+            setTypeface(null, Typeface.BOLD)
             setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_text))
-            maxLines = 2; gravity = Gravity.CENTER_VERTICAL
+            maxLines  = 2
+            gravity   = Gravity.CENTER_VERTICAL
         }
-        container.addView(icon); container.addView(label)
+        container.addView(label)
         return container
     }
 
@@ -148,41 +181,100 @@ class WingspanGameActivity : AppCompatActivity() {
         setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
     }
 
-    private fun makePlayerNameCell(ps: WingspanPlayerScore): TextView = TextView(this).apply {
-        text = ps.playerName; gravity = Gravity.CENTER; setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4))
-        textSize = 13f; setTypeface(null, Typeface.BOLD); maxLines = 1
-        ellipsize = android.text.TextUtils.TruncateAt.END; layoutParams = cellLayoutParams()
-        background = playerCellDrawable(ps.playerColor); setTextColor(Color.WHITE)
+    // ─── Player column ─────────────────────────────────────────────────────────
+
+    private fun buildPlayerColumn(ps: WingspanPlayerScore): LinearLayout {
+        val col = makeColumn(weight = 1f, widthDp = 0)
+        col.addView(makePlayerNameCell(ps))
+        col.addView(makeBirdsScoreGroup(ps))
+        for (category in nonBirdCategories()) col.addView(makeScoreCell(ps, category))
+        col.addView(makeTotalCell(ps))
+        return col
+    }
+
+    /** Player birds group: forest / grassland / wetland score cells + birds total. */
+    private fun makeBirdsScoreGroup(ps: WingspanPlayerScore): LinearLayout {
+        val group = LinearLayout(this).apply {
+            orientation  = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 4f)
+        }
+        val birdCats = listOf(
+            WingspanCategory.BIRDS_FOREST,
+            WingspanCategory.BIRDS_GRASSLAND,
+            WingspanCategory.BIRDS_WETLAND
+        )
+        for (cat in birdCats) group.addView(makeHabitatScoreCell(ps, cat))
+
+        // Birds subtotal row
+        val birdTotal = birdCats.sumOf { ps.scores[it] ?: 0 }
+        val allBirdTotals = playerScores.map { p -> birdCats.sumOf { p.scores[it] ?: 0 } }
+        val allEntered = birdCats.all { cat -> playerScores.all { p -> p.scores[cat] != null } }
+        val role = if (allEntered) ScoreColorRole(birdTotal, allBirdTotals, higherIsBetter = true)
+                   else ScoreColorRole.NEUTRAL
+        group.addView(TextView(this).apply {
+            text = birdTotal.toString(); gravity = Gravity.CENTER; textSize = 13f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(if (role != ScoreColorRole.NEUTRAL) role.toColor(this@WingspanGameActivity)
+                         else ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
+        })
+        return group
+    }
+
+    private fun makeHabitatScoreCell(ps: WingspanPlayerScore, category: WingspanCategory): TextView {
+        val score     = ps.scores[category]
+        val filled    = playerScores.mapNotNull { it.scores[category] }
+        val allFilled = filled.size == playerScores.size
+        val role      = if (allFilled) ScoreColorRole(score, playerScores.map { it.scores[category] }, higherIsBetter = true)
+                        else ScoreColorRole.NEUTRAL
+        val textColor = if (role != ScoreColorRole.NEUTRAL) role.toColor(this)
+                        else ContextCompat.getColor(this, R.color.score_cell_text)
+        val bgRes     = if (!gameOver && score == null) R.color.cell_editable_bg else R.color.score_cell_background
+
+        return TextView(this).apply {
+            text = score?.toString() ?: ""; gravity = Gravity.CENTER; textSize = 14f
+            setTextColor(textColor)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, bgRes))
+            if (!gameOver) setOnClickListener { showDropdownPicker(ps, category) }
+        }
     }
 
     private fun makeScoreCell(ps: WingspanPlayerScore, category: WingspanCategory): TextView {
+        val score     = ps.scores[category]
         val filled    = playerScores.mapNotNull { it.scores[category] }
         val allFilled = filled.size == playerScores.size
-        val score     = ps.scores[category]
-
-        // Wingspan: higher = better → higherIsBetter = true (default)
         val role      = if (allFilled) ScoreColorRole(score, playerScores.map { it.scores[category] }, higherIsBetter = true)
-        else ScoreColorRole.NEUTRAL
+                        else ScoreColorRole.NEUTRAL
         val textColor = if (role != ScoreColorRole.NEUTRAL) role.toColor(this)
-        else ContextCompat.getColor(this, R.color.score_cell_text)
+                        else ContextCompat.getColor(this, R.color.score_cell_text)
+        val bgRes     = if (!gameOver && score == null) R.color.cell_editable_bg else R.color.score_cell_background
 
         return TextView(this).apply {
             text = score?.toString() ?: ""; gravity = Gravity.CENTER; textSize = 16f
             setTextColor(textColor); layoutParams = cellLayoutParams()
-            background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_cell_background))
-            if (!gameOver) setOnClickListener { showScoreInput(ps, category) }
+            background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, bgRes))
+            if (!gameOver) setOnClickListener { showDropdownPicker(ps, category) }
         }
+    }
+
+    private fun makePlayerNameCell(ps: WingspanPlayerScore): TextView = TextView(this).apply {
+        text = ps.playerName; gravity = Gravity.CENTER
+        setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4))
+        textSize = 13f; setTypeface(null, Typeface.BOLD); maxLines = 1
+        ellipsize = TextUtils.TruncateAt.END; layoutParams = cellLayoutParams()
+        background = playerCellDrawable(ps.playerColor); setTextColor(Color.WHITE)
     }
 
     private fun makeTotalCell(ps: WingspanPlayerScore): TextView {
         val total       = ps.getTotal()
         val allComplete = playerScores.all { it.isComplete() }
-        // Wingspan: higher = better
         val role        = if (allComplete) ScoreColorRole(total, playerScores.map { it.getTotal() }, higherIsBetter = true)
-        else ScoreColorRole.NEUTRAL
+                          else ScoreColorRole.NEUTRAL
         val textColor   = if (role != ScoreColorRole.NEUTRAL) role.toColor(this)
-        else ContextCompat.getColor(this, R.color.score_calculated_cell_text)
-
+                          else ContextCompat.getColor(this, R.color.score_calculated_cell_text)
         return TextView(this).apply {
             text = total.toString(); gravity = Gravity.CENTER; textSize = 17f
             setTypeface(null, Typeface.BOLD); setTextColor(textColor); layoutParams = cellLayoutParams()
@@ -190,39 +282,32 @@ class WingspanGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun borderDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
-        setColor(bgColor); setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
-    }
+    // ─── Dropdown picker ──────────────────────────────────────────────────────
 
-    private fun playerCellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
-        setColor(bgColor); setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
-    }
-
-    private fun showScoreInput(ps: WingspanPlayerScore, category: WingspanCategory) {
+    private fun showDropdownPicker(ps: WingspanPlayerScore, category: WingspanCategory) {
         val current = ps.scores[category]
         val title   = if (current != null) "✏️ ${ps.playerName} — ${categoryLabel(category)}"
-        else "${ps.playerName} — ${categoryLabel(category)}"
+                      else "${ps.playerName} — ${categoryLabel(category)}"
+        val values  = category.getPossibleValues()
+        val items   = values.map { it.toString() }.toTypedArray()
 
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint = "0–99"; gravity = Gravity.CENTER; textSize = 20f
-            filters = arrayOf(InputFilter.LengthFilter(2))
-            current?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8)); addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value < 0) { showScoreInput(ps, category); return@setPositiveButton }
-                ps.scores[category] = value; buildScoreTable(); checkCompletion()
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setItems(items) { _, which ->
+                ps.scores[category] = values[which]
+                buildScoreTable()
+                checkCompletion()
             }
-            .setNegativeButton(getString(R.string.cancel), null).create()
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show(); editText.requestFocus()
+            .create()
+
+        dialog.show()
+
+        // Scroll to current value (or 0) so the user sees their context immediately
+        val scrollTo = if (current != null) values.indexOf(current) else 0
+        if (scrollTo >= 0) dialog.listView?.post { dialog.listView?.setSelection(scrollTo) }
     }
+
+    // ─── Completion check ─────────────────────────────────────────────────────
 
     private fun checkCompletion() {
         if (playerScores.all { it.isComplete() } && !gameOver) {
@@ -256,22 +341,45 @@ class WingspanGameActivity : AppCompatActivity() {
         }
     }
 
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /** Returns non-bird categories in display order. */
+    private fun nonBirdCategories() = listOf(
+        WingspanCategory.BONUS_CARDS,
+        WingspanCategory.END_OF_ROUND,
+        WingspanCategory.EGGS,
+        WingspanCategory.FOOD_ON_CARDS,
+        WingspanCategory.TUCKED_CARDS
+    )
+
     private fun categoryLabel(category: WingspanCategory): String = when (category) {
-        WingspanCategory.BIRDS         -> getString(R.string.wingspan_birds)
-        WingspanCategory.BONUS_CARDS   -> getString(R.string.wingspan_bonus_cards)
-        WingspanCategory.END_OF_ROUND  -> getString(R.string.wingspan_end_of_round)
-        WingspanCategory.EGGS          -> getString(R.string.wingspan_eggs)
-        WingspanCategory.FOOD_ON_CARDS -> getString(R.string.wingspan_food_on_cards)
-        WingspanCategory.TUCKED_CARDS  -> getString(R.string.wingspan_tucked_cards)
+        WingspanCategory.BIRDS_FOREST    -> getString(R.string.wingspan_birds_forest)
+        WingspanCategory.BIRDS_GRASSLAND -> getString(R.string.wingspan_birds_grassland)
+        WingspanCategory.BIRDS_WETLAND   -> getString(R.string.wingspan_birds_wetland)
+        WingspanCategory.BONUS_CARDS     -> getString(R.string.wingspan_bonus_cards)
+        WingspanCategory.END_OF_ROUND    -> getString(R.string.wingspan_end_of_round)
+        WingspanCategory.EGGS            -> getString(R.string.wingspan_eggs)
+        WingspanCategory.FOOD_ON_CARDS   -> getString(R.string.wingspan_food_on_cards)
+        WingspanCategory.TUCKED_CARDS    -> getString(R.string.wingspan_tucked_cards)
     }
 
-    private fun categoryIcon(category: WingspanCategory): Int = when (category) {
-        WingspanCategory.BIRDS         -> R.drawable.ic_ws_birds
-        WingspanCategory.BONUS_CARDS   -> R.drawable.ic_ws_bonus
-        WingspanCategory.END_OF_ROUND  -> R.drawable.ic_ws_end_of_round
-        WingspanCategory.EGGS          -> R.drawable.ic_ws_eggs
-        WingspanCategory.FOOD_ON_CARDS -> R.drawable.ic_ws_food
-        WingspanCategory.TUCKED_CARDS  -> R.drawable.ic_ws_tucked
+    private fun cellLayoutParams() =
+        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+
+    private fun makeColumn(weight: Float, widthDp: Int): LinearLayout {
+        val widthPx = if (widthDp == 0) 0 else dpToPx(widthDp)
+        return LinearLayout(this).apply {
+            orientation  = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+        }
+    }
+
+    private fun borderDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
+        setColor(bgColor); setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
+    }
+
+    private fun playerCellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
+        setColor(bgColor); setStroke(1, ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()

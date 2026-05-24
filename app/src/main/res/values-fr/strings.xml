@@ -212,6 +212,10 @@
     <string name="wingspan_game">Wingspan</string>
     <string name="wingspan_category_label">Catégorie</string>
     <string name="wingspan_birds">Oiseaux</string>
+    <string name="wingspan_birds_forest">Forêt 🌲</string>
+    <string name="wingspan_birds_grassland">Prairie 🌾</string>
+    <string name="wingspan_birds_wetland">Marais 💧</string>
+    <string name="wingspan_birds_total">Total oiseaux</string>
     <string name="wingspan_bonus_cards">Cartes bonus</string>
     <string name="wingspan_end_of_round">Fin de manche</string>
     <string name="wingspan_eggs">Œufs</string>
