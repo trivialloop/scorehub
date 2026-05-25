@@ -90,11 +90,19 @@ class YahtzeeGameActivity : AppCompatActivity() {
     private fun getVisiblePlayers(): List<Pair<Int, YahtzeePlayerScore>> {
         val total = playerScores.size
         return when {
-            total <= 3 -> playerScores.indices.map { it to playerScores[it] }
+            total <= 5 -> playerScores.indices.map { it to playerScores[it] }
             else -> {
-                val prev = if (currentPlayerIndex == 0) total - 1 else currentPlayerIndex - 1
-                val next = if (currentPlayerIndex == total - 1) 0 else currentPlayerIndex + 1
-                listOf(prev to playerScores[prev], currentPlayerIndex to playerScores[currentPlayerIndex], next to playerScores[next])
+                val prev2 = (currentPlayerIndex - 2 + total) % total
+                val prev1 = (currentPlayerIndex - 1 + total) % total
+                val next1 = (currentPlayerIndex + 1) % total
+                val next2 = (currentPlayerIndex + 2) % total
+                listOf(
+                    prev2 to playerScores[prev2],
+                    prev1 to playerScores[prev1],
+                    currentPlayerIndex to playerScores[currentPlayerIndex],
+                    next1 to playerScores[next1],
+                    next2 to playerScores[next2]
+                )
             }
         }
     }
@@ -150,7 +158,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
             val weight = when {
                 playerScores.size == 1 -> 1f
                 playerScores.size == 2 -> if (isActive) 0.8f else 0.2f
-                else -> if (isActive) 0.6f else 0.2f
+                playerScores.size <= 5 -> if (isActive) 0.6f else 0.2f
+                else -> if (isActive) 0.4f else 0.15f
             }
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         }
