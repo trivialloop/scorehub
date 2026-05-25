@@ -91,12 +91,44 @@ class TarotGameActivity : AppCompatActivity() {
     // ─── Table ────────────────────────────────────────────────────────────────
 
     private fun buildTable() {
-        binding.tableContainer.removeAllViews()
-        binding.tableContainer.addView(buildHeaderRow())
-        rounds.forEach { binding.tableContainer.addView(buildRoundRow(it)) }
-        if (!gameOver) binding.tableContainer.addView(buildAddRoundRow())
-        binding.tableContainer.addView(buildTotalRow())
-        binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        val headerRow  = buildHeaderRow()
+        val roundRows  = rounds.map { buildRoundRow(it) }
+        val addRow     = if (!gameOver) buildAddRoundRow() else null
+        val totalRow   = buildTotalRow()
+
+        val screenHeight = resources.displayMetrics.heightPixels
+        val appBarHeight = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
+
+        // Estimate natural height
+        val totalNaturalHeight = headerRowHeight +
+                roundRows.size * scoreRowHeight +
+                (if (addRow != null) scoreRowHeight else 0) +
+                headerRowHeight  // total row = header height
+
+        if (totalNaturalHeight > screenHeight - appBarHeight) {
+            // Split: fixed header, scrollable rounds + add row, fixed total
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+            addRow?.let { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
+            binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        } else {
+            // Compact: everything in tableContainer, total just below last row
+            binding.headerContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
+            binding.tableContainer.addView(headerRow)
+            roundRows.forEach { binding.tableContainer.addView(it) }
+            addRow?.let { binding.tableContainer.addView(it) }
+            binding.tableContainer.addView(totalRow)
+        }
     }
 
     private fun buildHeaderRow(): LinearLayout {
@@ -194,7 +226,6 @@ class TarotGameActivity : AppCompatActivity() {
             val total = totals[player.playerId] ?: 0
             val cell  = makeSingleLineCell(total.toString(), bold = true, height = headerRowHeight)
             if (gameOver) {
-                // Tarot: higher total = better
                 val role = ScoreColorRole(total, allTotals, higherIsBetter = true)
                 if (role != ScoreColorRole.NEUTRAL) cell.setTextColor(role.toColor(this))
             }
@@ -203,7 +234,7 @@ class TarotGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ─── Dialog Page 1: declarer / contract / bouts ────────────────────────────
+    // ─── Dialog Page 1: declarer / contract / bouts ───────────────────────────
 
     private fun showPage1Dialog(existingRound: TarotRound?) {
         val view = layoutInflater.inflate(R.layout.dialog_tarot_round, null)
@@ -226,7 +257,7 @@ class TarotGameActivity : AppCompatActivity() {
         val boutsRadioIds = listOf(R.id.rbBouts0, R.id.rbBouts1, R.id.rbBouts2, R.id.rbBouts3)
         rgBouts.check(boutsRadioIds[existingRound?.boutsCount ?: 2])
 
-        val rowPartner    = view.findViewById<LinearLayout>(R.id.rowPartner)
+        val rowPartner     = view.findViewById<LinearLayout>(R.id.rowPartner)
         val spinnerPartner = view.findViewById<Spinner>(R.id.spinnerPartner)
         if (players.size == 5) {
             rowPartner.visibility = android.view.View.VISIBLE
@@ -279,7 +310,7 @@ class TarotGameActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Dialog Page 2: options ────────────────────────────────────────────────
+    // ─── Dialog Page 2: options ───────────────────────────────────────────────
 
     private fun showPage2Dialog(
         declarerId: Long, contract: TarotContract, bouts: Int, partnerId: Long?,
@@ -360,7 +391,7 @@ class TarotGameActivity : AppCompatActivity() {
             .show()
     }
 
-    // ─── Dialog Page 3: points made ───────────────────────────────────────────
+    // ─── Dialog Page 3: points made ──────────────────────────────────────────
 
     private fun showPointsDialog(
         declarerId: Long, contract: TarotContract, bouts: Int, partnerId: Long?,
@@ -433,7 +464,7 @@ class TarotGameActivity : AppCompatActivity() {
         buildTable()
     }
 
-    // ─── Game logic ────────────────────────────────────────────────────────────
+    // ─── Game logic ───────────────────────────────────────────────────────────
 
     private fun checkEndOfGame() {
         if (gameOver) return
@@ -475,7 +506,7 @@ class TarotGameActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Cell builders ─────────────────────────────────────────────────────────
+    // ─── Cell builders ────────────────────────────────────────────────────────
 
     private fun makeRow(height: Int): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL

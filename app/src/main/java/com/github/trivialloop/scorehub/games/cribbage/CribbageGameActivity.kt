@@ -100,22 +100,32 @@ class CribbageGameActivity : AppCompatActivity() {
 
     private fun buildTable() {
         val headerRow = buildHeaderRow()
-        val roundRows = rounds.mapIndexed { index, round -> buildRoundRow(round, index) }
-        val totalRow  = buildTotalRow()
+        val roundRows = rounds.mapIndexed { index, round ->
+            buildRoundRow(round, index)
+        }
+        val totalRow = buildTotalRow()
 
         val screenHeight       = resources.displayMetrics.heightPixels
         val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val rowHeightPx        = dpToPx(ROW_HEIGHT_DP)
-        val totalNaturalHeight = rowHeightPx * (roundRows.size + 3)
+        val rowHeight          = dpToPx(ROW_HEIGHT_DP)
+        val totalNaturalHeight = rowHeight * (roundRows.size + 2)
 
         if (totalNaturalHeight > screenHeight - appBarHeight) {
-            binding.headerContainer.removeAllViews(); binding.headerContainer.addView(headerRow)
-            binding.tableContainer.removeAllViews(); roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.totalContainer.removeAllViews(); binding.totalContainer.addView(totalRow)
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
             binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         } else {
             binding.headerContainer.removeAllViews()
-            binding.tableContainer.removeAllViews(); binding.totalContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
             binding.tableContainer.addView(headerRow)
             roundRows.forEach { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)

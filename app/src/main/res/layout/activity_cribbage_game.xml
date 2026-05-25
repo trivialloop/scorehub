@@ -18,7 +18,7 @@
             app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Fixed header (player names + column labels) -->
+    <!-- Fixed header row (player names) — always visible -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
@@ -40,10 +40,11 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <!-- Fixed total row -->
+    <!-- Fixed total row — always visible at the bottom -->
     <LinearLayout
         android:id="@+id/totalContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" />
+
 </LinearLayout>

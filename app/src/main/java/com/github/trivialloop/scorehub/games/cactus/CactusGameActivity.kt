@@ -45,7 +45,6 @@ class CactusGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "cactus"
         private const val SCORE_LIMIT = 10
-        private const val RAW_SCORE_MAX = 40
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -99,19 +98,30 @@ class CactusGameActivity : AppCompatActivity() {
         }
         val totalRow = buildTotalRow()
 
-        val screenHeight = resources.displayMetrics.heightPixels
-        val appBarHeight = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val rowHeight = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
-        val totalNaturalHeight = rowHeight * (roundRows.size + 3)
+        val screenHeight       = resources.displayMetrics.heightPixels
+        val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
+        val rowHeight          = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
+        // header + all round rows + total row
+        val totalNaturalHeight = rowHeight * (roundRows.size + 2)
 
         if (totalNaturalHeight > screenHeight - appBarHeight) {
-            binding.headerContainer.removeAllViews(); binding.headerContainer.addView(headerRow)
-            binding.tableContainer.removeAllViews(); roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.totalContainer.removeAllViews(); binding.totalContainer.addView(totalRow)
+            // Split: fixed header, scrollable rounds, fixed total
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
             binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         } else {
+            // Compact: everything in tableContainer, total just below last round
             binding.headerContainer.removeAllViews()
-            binding.tableContainer.removeAllViews(); binding.totalContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
             binding.tableContainer.addView(headerRow)
             roundRows.forEach { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)
@@ -136,7 +146,6 @@ class CactusGameActivity : AppCompatActivity() {
         val playerIdList = players.map { it.playerId }
         val allEntered = round.allScoresEntered(playerIdList)
 
-        // ── Label cell — tinted with the finisher's colour ─────────────────────
         val labelCell = makeLabelCell(round.roundNumber.toString())
         val finisher = players.find { it.playerId == round.finisherId }
         if (finisher != null) {
@@ -150,7 +159,6 @@ class CactusGameActivity : AppCompatActivity() {
         row.addView(labelCell)
 
         val currentRound = rounds.last()
-
         val colorRoles: Map<Long, CactusRoundColor> =
             if (allEntered) computeColorRoles(round, playerIdList) else emptyMap()
 
@@ -201,11 +209,6 @@ class CactusGameActivity : AppCompatActivity() {
         return row
     }
 
-    /**
-     * Colour roles — custom finisher-aware logic (same as Skyjo):
-     * Case A — finisher strictly sole lowest: finisher=GREEN, highest others=RED, rest=NEUTRAL
-     * Case B — finisher NOT strictly lowest:  finisher=RED, lowest others=GREEN, rest=NEUTRAL
-     */
     private fun computeColorRoles(round: CactusRound, playerIdList: List<Long>): Map<Long, CactusRoundColor> {
         val raw = playerIdList.mapNotNull { id -> round.rawScores[id]?.let { id to it } }.toMap()
         if (raw.size != playerIdList.size) return emptyMap()
@@ -244,7 +247,6 @@ class CactusGameActivity : AppCompatActivity() {
             val total = player.getTotal(rounds)
             val cell  = makePlayerCell(total.toString(), bold = true)
             if (gameOver) {
-                // Cactus: higher total = better
                 val role = ScoreColorRole(total, totalValues, higherIsBetter = true)
                 if (role != ScoreColorRole.NEUTRAL) {
                     cell.setTextColor(role.toColor(this))
@@ -270,7 +272,6 @@ class CactusGameActivity : AppCompatActivity() {
 
     private fun showScoreInput(round: CactusRound, player: CactusPlayerState, isEdit: Boolean = false) {
         val playerIdList = players.map { it.playerId }
-
         val title = if (isEdit) "✏️ ${player.playerName} — ${getString(R.string.cactus_enter_score)}"
         else "${player.playerName} — ${getString(R.string.cactus_enter_score)}"
 
@@ -290,10 +291,7 @@ class CactusGameActivity : AppCompatActivity() {
             .create()
 
         dialog.show()
-
-        if (isEdit && current != null) {
-            dialog.listView?.setSelection(current)
-        }
+        if (isEdit && current != null) dialog.listView?.setSelection(current)
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
@@ -390,10 +388,7 @@ class CactusGameActivity : AppCompatActivity() {
                     .show()
                 true
             }
-            R.id.action_help -> {
-                HelpDialogs.showAppHelp(this, GAME_TYPE)
-                true
-            }
+            R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

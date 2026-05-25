@@ -5,14 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -48,9 +44,8 @@ class EscobaGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "escoba"
-        private const val SCORE_LIMIT    = 21
-        private const val MAX_HAND_SCORE = 20
-        private const val ROW_HEIGHT_DP  = 48
+        private const val SCORE_LIMIT = 21
+        private const val ROW_HEIGHT_DP = 48
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -79,38 +74,44 @@ class EscobaGameActivity : AppCompatActivity() {
             EscobaPlayerState(playerIds[i], playerNames[i], playerColors[i])
         }
 
-        val firstRound = EscobaRound(1).also { r ->
-            players.forEach { r.inPlayScores[it.playerId] = 0 }
-        }
-        rounds.add(firstRound)
-
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.escoba_game)
 
+        rounds.add(EscobaRound(1))
         buildTable()
     }
 
-    // ─── Table ────────────────────────────────────────────────────────────────
+    // ─── Table construction ────────────────────────────────────────────────────
 
     private fun buildTable() {
         val headerRow = buildHeaderRow()
-        val roundRows = rounds.mapIndexed { index, round -> buildRoundRow(round, index) }
-        val totalRow  = buildTotalRow()
+        val roundRows = rounds.mapIndexed { index, round ->
+            buildRoundRow(round, isLast = index == rounds.lastIndex)
+        }
+        val totalRow = buildTotalRow()
 
         val screenHeight       = resources.displayMetrics.heightPixels
         val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val rowHeightPx        = dpToPx(ROW_HEIGHT_DP)
-        val totalNaturalHeight = rowHeightPx * (roundRows.size + 3)
+        val rowHeight          = dpToPx(ROW_HEIGHT_DP)
+        val totalNaturalHeight = rowHeight * (roundRows.size + 2)
 
         if (totalNaturalHeight > screenHeight - appBarHeight) {
-            binding.headerContainer.removeAllViews(); binding.headerContainer.addView(headerRow)
-            binding.tableContainer.removeAllViews(); roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.totalContainer.removeAllViews(); binding.totalContainer.addView(totalRow)
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
             binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         } else {
             binding.headerContainer.removeAllViews()
-            binding.tableContainer.removeAllViews(); binding.totalContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
             binding.tableContainer.addView(headerRow)
             roundRows.forEach { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)
@@ -118,108 +119,53 @@ class EscobaGameActivity : AppCompatActivity() {
     }
 
     private fun buildHeaderRow(): LinearLayout {
-        val container = LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
-        // Row 1 — player names spanning both sub-columns
-        val nameRow = makeFixedRow()
-        nameRow.addView(makeRoundLabelCell(""))
+        val row = makeRow()
+        row.addView(makeLabelCell(getString(R.string.escoba_round_label)))
         for (player in players) {
-            nameRow.addView(makePlayerNameHeaderCell(player.playerName, player.playerColor, weight = 2f))
+            val cell = makeHeaderPlayerCell(player.playerName)
+            cell.background = cellDrawable(player.playerColor)
+            row.addView(cell)
         }
-        container.addView(nameRow)
-
-        // Row 2 — sub-column labels
-        val subRow = makeFixedRow()
-        subRow.addView(makeRoundLabelCell("#"))
-        repeat(players.size) {
-            subRow.addView(makeSubHeaderCell(getString(R.string.escoba_in_play)))
-            subRow.addView(makeSubHeaderCell(getString(R.string.escoba_hand)))
-        }
-        container.addView(subRow)
-        return container
+        return row
     }
 
-    private fun buildRoundRow(round: EscobaRound, roundIndex: Int): LinearLayout {
-        val isLastRound  = roundIndex == rounds.lastIndex
-        val isPrevRound  = roundIndex == rounds.lastIndex - 1
-        val currentRound = rounds.last()
-        // Previous round is re-editable until the current round has any in-play activity
-        val prevEditable = isPrevRound && !gameOver && !currentRound.hasInPlayActivity()
-
-        val row          = makeFixedRow()
-        row.addView(makeRoundLabelCell(round.roundNumber.toString()))
-
+    private fun buildRoundRow(round: EscobaRound, isLast: Boolean): LinearLayout {
+        val row = makeRow()
         val playerIdList = players.map { it.playerId }
 
+        row.addView(makeLabelCell(round.roundNumber.toString()))
+
         for (player in players) {
-            val myInPlay = round.inPlayScores[player.playerId] ?: 0
-            val myHand   = round.handScores[player.playerId]
-
-            // ── In play (−/score/+) ───────────────────────────────────────────
-            // In-play is locked once any player has entered a hand score for this round
-            val inPlayCanEdit = !gameOver && round.isInPlayEditable() &&
-                    (isLastRound || (prevEditable && !round.handScores.values.any { it != null }))
-
-            val allInPlays  = players.map { round.inPlayScores[it.playerId] }
-            // Escoba: higher in-play = better
-            val inPlayRole  = ScoreColorRole(myInPlay, allInPlays, higherIsBetter = true)
-
-            row.addView(makeInPlayCell(
-                score       = myInPlay,
-                textColor   = inPlayRole.toColor(this),
-                canEdit     = inPlayCanEdit,
-                onDecrement = {
-                    val cur = round.inPlayScores[player.playerId] ?: 0
-                    if (cur > 0) { round.inPlayScores[player.playerId] = cur - 1; buildTable() }
-                },
-                onIncrement = {
-                    val cur = round.inPlayScores[player.playerId] ?: 0
-                    round.inPlayScores[player.playerId] = cur + 1; buildTable()
-                }
-            ))
-
-            // ── End-of-round hand score ───────────────────────────────────────
-            val handCanEdit = !gameOver &&
-                    (isLastRound && !round.isComplete(playerIdList) || prevEditable)
+            val score   = round.scores[player.playerId]
+            val canEdit = isLast && !gameOver
 
             val bgColor = when {
-                handCanEdit && myHand == null -> ContextCompat.getColor(this, R.color.cell_editable_bg)
-                handCanEdit && myHand != null -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
-                else                          -> ContextCompat.getColor(this, R.color.cell_locked_bg)
+                canEdit && score == null -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+                canEdit && score != null -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
+                else                     -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
 
-            val allHands = players.map { round.handScores[it.playerId] }
-            // Escoba: higher hand = better
-            val handRole = ScoreColorRole(myHand, allHands, higherIsBetter = true)
-
-            val handCell = makeScoreCell(
-                text      = myHand?.toString() ?: "",
-                bgColor   = bgColor,
-                textColor = handRole.toColor(this),
-                bold      = handRole != ScoreColorRole.NEUTRAL && myHand != null
-            )
-            if (!handCanEdit && myHand != null) handCell.alpha = 0.75f
-            if (handCanEdit) handCell.setOnClickListener { showHandScoreInput(round, player) }
-            row.addView(handCell)
+            val cell = makeScoreCell(score?.toString() ?: "")
+            cell.background = cellDrawable(bgColor)
+            if (canEdit) cell.setOnClickListener { showScoreInput(round, player) }
+            row.addView(cell)
         }
         return row
     }
 
     private fun buildTotalRow(): LinearLayout {
-        val row         = makeFixedRow()
-        val totalValues = players.map { it.getTotal(rounds) }
-        row.addView(makeRoundLabelCell(getString(R.string.escoba_total)))
-
-        for (player in players) {
-            val total = player.getTotal(rounds)
-            // Escoba: higher = better
-            val role  = ScoreColorRole(total, totalValues, higherIsBetter = true)
-            val cell  = makeTotalCell(total.toString(), weight = 2f)
-            if (gameOver && role != ScoreColorRole.NEUTRAL) {
-                cell.setTextColor(role.toColor(this))
+        val row = makeRow()
+        row.addView(makeLabelCell(getString(R.string.escoba_total)))
+        val totals = players.map { it.getTotal(rounds) }
+        for ((i, player) in players.withIndex()) {
+            val total = totals[i]
+            val cell  = makeScoreCell(total.toString(), bold = true)
+            if (gameOver) {
+                val role = ScoreColorRole(total, totals, higherIsBetter = true)
+                if (role != ScoreColorRole.NEUTRAL) {
+                    cell.setTextColor(role.toColor(this))
+                    cell.setTypeface(null, Typeface.BOLD)
+                }
             }
             row.addView(cell)
         }
@@ -228,58 +174,23 @@ class EscobaGameActivity : AppCompatActivity() {
 
     // ─── Dialogs ───────────────────────────────────────────────────────────────
 
-    private fun showHandScoreInput(round: EscobaRound, player: EscobaPlayerState) {
-        val current = round.handScores[player.playerId]
-
-        // Pencil in title when re-editing
-        val title = if (current != null)
-            "✏️ ${player.playerName} — ${getString(R.string.escoba_hand_score)}"
-        else
-            "${player.playerName} — ${getString(R.string.escoba_hand_score)}"
-
-        val editText = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
-            hint      = "0–$MAX_HAND_SCORE"
-            gravity   = Gravity.CENTER
-            textSize  = 20f
-            filters   = arrayOf(InputFilter.LengthFilter(2))
-            current?.let { setText(it.toString()) }
-        }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
-            addView(editText)
-        }
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(title)
-            .setView(container)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val value = editText.text.toString().trim().toIntOrNull()
-                if (value == null || value < 0 || value > MAX_HAND_SCORE) {
-                    showHandScoreInput(round, player); return@setPositiveButton
-                }
-                round.handScores[player.playerId] = value
+    private fun showScoreInput(round: EscobaRound, player: EscobaPlayerState) {
+        val values = (0..30).toList()
+        val items  = values.map { it.toString() }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("${player.playerName} — ${getString(R.string.escoba_enter_score)}")
+            .setItems(items) { _, which ->
+                round.scores[player.playerId] = values[which]
                 buildTable()
                 val playerIdList = players.map { it.playerId }
-                if (round.isComplete(playerIdList)) checkEndOfGame(round)
+                if (round.isComplete(playerIdList)) checkEndOfRound()
             }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .create()
-
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
-        editText.requestFocus()
+            .show()
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
 
-    /**
-     * Called when a round becomes complete.
-     * If [round] is not the last round it is a re-edit — do NOT add another round.
-     */
-    private fun checkEndOfGame(round: EscobaRound) {
-        if (round !== rounds.last()) { buildTable(); return }
-
+    private fun checkEndOfRound() {
         val maxTotal = players.maxOf { it.getTotal(rounds) }
         if (maxTotal >= SCORE_LIMIT) {
             AlertDialog.Builder(this)
@@ -289,17 +200,11 @@ class EscobaGameActivity : AppCompatActivity() {
                     gameOver = true; buildTable(); saveResultsAndShowSummary()
                 }
                 .setNegativeButton(getString(R.string.no)) { _, _ ->
-                    val newRound = EscobaRound(rounds.size + 1).also { r ->
-                        players.forEach { r.inPlayScores[it.playerId] = 0 }
-                    }
-                    rounds.add(newRound); buildTable()
+                    rounds.add(EscobaRound(rounds.size + 1)); buildTable()
                 }
                 .show()
         } else {
-            val newRound = EscobaRound(rounds.size + 1).also { r ->
-                players.forEach { r.inPlayScores[it.playerId] = 0 }
-            }
-            rounds.add(newRound); buildTable()
+            rounds.add(EscobaRound(rounds.size + 1)); buildTable()
         }
     }
 
@@ -327,77 +232,39 @@ class EscobaGameActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Cell builders ─────────────────────────────────────────────────────────
+    // ─── Cell helpers ──────────────────────────────────────────────────────────
 
-    private fun makeFixedRow(): LinearLayout = LinearLayout(this).apply {
-        orientation  = LinearLayout.HORIZONTAL
+    private fun makeRow(): LinearLayout = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROW_HEIGHT_DP))
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
-    private fun makeRoundLabelCell(text: String): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(32), LinearLayout.LayoutParams.MATCH_PARENT)
+    private fun makeLabelCell(text: String): TextView = TextView(this).apply {
+        this.text = text; gravity = Gravity.CENTER
+        setPadding(dpToPx(4), dpToPx(8), dpToPx(4), dpToPx(8))
+        textSize = 13f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(42), LinearLayout.LayoutParams.WRAP_CONTENT)
         background = cellDrawable(ContextCompat.getColor(this@EscobaGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@EscobaGameActivity, R.color.header_cell_text))
     }
 
-    private fun makePlayerNameHeaderCell(name: String, color: Int, weight: Float): TextView = TextView(this).apply {
-        text = name; gravity = Gravity.CENTER; textSize = 13f; setTypeface(null, Typeface.BOLD)
+    private fun makeHeaderPlayerCell(text: String): TextView = TextView(this).apply {
+        this.text = text; gravity = Gravity.CENTER
+        setPadding(dpToPx(4), dpToPx(8), dpToPx(4), dpToPx(8))
+        textSize = 13f; setTypeface(null, Typeface.BOLD)
         maxLines = 1; ellipsize = TextUtils.TruncateAt.END
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background = cellDrawable(color); setTextColor(Color.WHITE)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        setTextColor(Color.WHITE)
     }
 
-    private fun makeSubHeaderCell(label: String): TextView = TextView(this).apply {
-        text = label; gravity = Gravity.CENTER; textSize = 9f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-        background = cellDrawable(ContextCompat.getColor(this@EscobaGameActivity, R.color.header_cell_background))
-        setTextColor(ContextCompat.getColor(this@EscobaGameActivity, R.color.header_cell_text))
-    }
-
-    private fun makeInPlayCell(
-        score: Int, textColor: Int, canEdit: Boolean,
-        onDecrement: () -> Unit, onIncrement: () -> Unit
-    ): LinearLayout = LinearLayout(this).apply {
-        orientation  = LinearLayout.HORIZONTAL
-        gravity      = Gravity.CENTER_VERTICAL
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-        background   = cellDrawable(ContextCompat.getColor(this@EscobaGameActivity, R.color.score_cell_background))
-
-        addView(TextView(this@EscobaGameActivity).apply {
-            text = "−"; gravity = Gravity.CENTER; textSize = 18f; setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
-            setTextColor(textColor); alpha = if (canEdit) 1f else 0.25f
-            if (canEdit) setOnClickListener { onDecrement() }
-        })
-        addView(TextView(this@EscobaGameActivity).apply {
-            text = score.toString(); gravity = Gravity.CENTER; textSize = 14f; setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            setTextColor(textColor); alpha = if (canEdit) 1f else 0.65f
-        })
-        addView(TextView(this@EscobaGameActivity).apply {
-            text = "+"; gravity = Gravity.CENTER; textSize = 18f; setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
-            setTextColor(textColor); alpha = if (canEdit) 1f else 0.25f
-            if (canEdit) setOnClickListener { onIncrement() }
-        })
-    }
-
-    private fun makeScoreCell(
-        text: String, bgColor: Int, textColor: Int, bold: Boolean = false
-    ): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 14f
-        if (bold) setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-        background = cellDrawable(bgColor); setTextColor(textColor)
-    }
-
-    private fun makeTotalCell(text: String, weight: Float = 1f): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 15f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background = cellDrawable(ContextCompat.getColor(this@EscobaGameActivity, R.color.cell_calculated_bg))
-        setTextColor(ContextCompat.getColor(this@EscobaGameActivity, R.color.score_calculated_cell_text))
+    private fun makeScoreCell(text: String, bold: Boolean = false): TextView = TextView(this).apply {
+        this.text = text; gravity = Gravity.CENTER
+        setPadding(dpToPx(4), dpToPx(8), dpToPx(4), dpToPx(8))
+        textSize = 14f; if (bold) setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        background = cellDrawable(ContextCompat.getColor(this@EscobaGameActivity, R.color.score_cell_background))
+        setTextColor(ContextCompat.getColor(this@EscobaGameActivity, R.color.score_cell_text))
     }
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
@@ -423,10 +290,7 @@ class EscobaGameActivity : AppCompatActivity() {
                     .show()
                 true
             }
-            R.id.action_help -> {
-                HelpDialogs.showAppHelp(this, GAME_TYPE)
-                true
-            }
+            R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

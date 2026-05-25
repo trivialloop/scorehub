@@ -18,7 +18,14 @@
             app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Scrollable score table -->
+    <!-- Fixed header row (player names) — always visible -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <!-- Scrollable round rows -->
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -32,5 +39,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <!-- Fixed total row — always visible at the bottom -->
+    <LinearLayout
+        android:id="@+id/totalContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
 </LinearLayout>
