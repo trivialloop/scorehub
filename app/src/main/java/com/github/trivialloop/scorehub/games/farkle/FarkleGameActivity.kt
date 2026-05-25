@@ -52,7 +52,8 @@ class FarkleGameActivity : AppCompatActivity() {
         private const val SUM_ROW_DP    = 28
         private const val BTN_ROW_DP    = 44
         private const val TOTAL_ROW_DP  = 52
-        private const val LABEL_COL_DP  = 48
+        private const val LABEL_COL_DP  = 65
+        
 
         val ALL_COMBINATIONS = listOf(
             RollEntry(100,  1, "⚀"),

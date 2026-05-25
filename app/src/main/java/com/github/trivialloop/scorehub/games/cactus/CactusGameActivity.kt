@@ -45,6 +45,7 @@ class CactusGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "cactus"
         private const val SCORE_LIMIT = 10
+        private const val LABEL_COL_DP = 65
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -350,7 +351,7 @@ class CactusGameActivity : AppCompatActivity() {
         this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(4), cellPaddingV, dpToPx(4), cellPaddingV)
         textSize = cellTextSize - 1f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(42), LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.WRAP_CONTENT)
         background = cellDrawable(ContextCompat.getColor(this@CactusGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@CactusGameActivity, R.color.header_cell_text))
     }
