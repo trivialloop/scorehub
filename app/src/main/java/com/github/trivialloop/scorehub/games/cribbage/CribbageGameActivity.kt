@@ -105,17 +105,25 @@ class CribbageGameActivity : AppCompatActivity() {
 
         val screenHeight       = resources.displayMetrics.heightPixels
         val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val rowHeightPx        = dpToPx(ROW_HEIGHT_DP)
-        val totalNaturalHeight = rowHeightPx * (roundRows.size + 3)
+        val rowHeight          = dpToPx(ROW_HEIGHT_DP)
+        val totalNaturalHeight = rowHeight * (roundRows.size + 2)
 
         if (totalNaturalHeight > screenHeight - appBarHeight) {
-            binding.headerContainer.removeAllViews(); binding.headerContainer.addView(headerRow)
-            binding.tableContainer.removeAllViews(); roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.totalContainer.removeAllViews(); binding.totalContainer.addView(totalRow)
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            roundRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
             binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         } else {
             binding.headerContainer.removeAllViews()
-            binding.tableContainer.removeAllViews(); binding.totalContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
             binding.tableContainer.addView(headerRow)
             roundRows.forEach { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)
@@ -127,12 +135,10 @@ class CribbageGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
-        // Row 1 — player names
         val nameRow = makeFixedRow()
         nameRow.addView(makeRoundLabelCell(""))
         for (player in players) nameRow.addView(makePlayerNameHeaderCell(player.playerName, player.playerColor, weight = 3.5f))
         container.addView(nameRow)
-        // Row 2 — column sub-labels
         val subRow = makeFixedRow()
         subRow.addView(makeRoundLabelCell("#"))
         repeat(players.size) {
@@ -145,9 +151,9 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     private fun buildRoundRow(round: CribbageRound, roundIndex: Int): LinearLayout {
-        val isLastRound   = roundIndex == rounds.lastIndex
-        val isPrevRound   = roundIndex == rounds.lastIndex - 1
-        val currentRound  = rounds.last()
+        val isLastRound      = roundIndex == rounds.lastIndex
+        val isPrevRound      = roundIndex == rounds.lastIndex - 1
+        val currentRound     = rounds.last()
         val prevRoundEditable = isPrevRound && !gameOver && !currentRound.hasInPlayActivity()
 
         val row = makeFixedRow()
@@ -168,16 +174,13 @@ class CribbageGameActivity : AppCompatActivity() {
             val isFirstPlayer = player.playerId == round.firstPlayerId
             val isDealer      = player.playerId == round.dealerId
             val myInPlay      = round.inPlayScores[player.playerId] ?: 0
-            val oppInPlay     = if (player == p0) inPlay1 else inPlay0
             val myHand        = round.handScores[player.playerId]
-            val oppHand       = if (player == p0) hand1 else hand0
 
             // ── In play ───────────────────────────────────────────────────────
             val inPlayCanEdit = !gameOver && round.isInPlayEditable() &&
                     (isLastRound || (prevRoundEditable && !round.isFirstPlayerHandEntered()))
 
-            // Cribbage: higher in-play = better
-            val inPlayRole = ScoreColorRole(myInPlay, listOf(inPlay0, inPlay1), higherIsBetter = true)
+            val inPlayRole  = ScoreColorRole(myInPlay, listOf(inPlay0, inPlay1), higherIsBetter = true)
             val inPlayColor = inPlayRole.toColor(this)
 
             val inPlayState = when {
@@ -201,7 +204,7 @@ class CribbageGameActivity : AppCompatActivity() {
                 }
             ))
 
-            // ── Hand ─────────────────────────────────────────────────────────
+            // ── Hand ──────────────────────────────────────────────────────────
             val handEditable = !gameOver && when {
                 isLastRound && isFirstPlayer -> myHand == null || round.cribScore == null
                 isLastRound && isDealer      -> round.isFirstPlayerHandEntered() && (myHand == null || round.cribScore == null)
@@ -209,35 +212,34 @@ class CribbageGameActivity : AppCompatActivity() {
                 else                         -> false
             }
             val handState = when {
-                handEditable                                                      -> CellState.EDITABLE
+                handEditable                                                              -> CellState.EDITABLE
                 isLastRound && isDealer && !round.isFirstPlayerHandEntered() && !gameOver -> CellState.LOCKED_SOON
-                isLastRound && round.cribScore != null                           -> CellState.LOCKED_PREV
-                isLastRound && !gameOver                                         -> CellState.LOCKED_SOON
-                else                                                             -> CellState.LOCKED_PREV
+                isLastRound && round.cribScore != null                                   -> CellState.LOCKED_PREV
+                isLastRound && !gameOver                                                 -> CellState.LOCKED_SOON
+                else                                                                     -> CellState.LOCKED_PREV
             }
-            // Cribbage: higher hand = better
             val handRole  = ScoreColorRole(myHand, listOf(hand0, hand1), higherIsBetter = true)
             val handColor = if (handRole != ScoreColorRole.NEUTRAL && myHand != null) handRole.toColor(this)
-            else ContextCompat.getColor(this, R.color.score_cell_text)
+                            else ContextCompat.getColor(this, R.color.score_cell_text)
 
             row.addView(makeHandCell(
-                score   = myHand,
+                score     = myHand,
                 textColor = handColor,
-                bold    = handRole != ScoreColorRole.NEUTRAL && myHand != null,
-                state   = handState,
-                onClick = { showHandScoreInput(round, player.playerId) }
+                bold      = handRole != ScoreColorRole.NEUTRAL && myHand != null,
+                state     = handState,
+                onClick   = { showHandScoreInput(round, player.playerId) }
             ))
 
-            // ── Crib ─────────────────────────────────────────────────────────
+            // ── Crib ──────────────────────────────────────────────────────────
             if (isDealer) {
                 val cribEditable = !gameOver &&
                         (isLastRound && round.isDealerHandEntered() && round.cribScore == null || prevRoundEditable)
                 val cribState = when {
-                    cribEditable                                        -> CellState.EDITABLE
+                    cribEditable                                             -> CellState.EDITABLE
                     isLastRound && !round.isDealerHandEntered() && !gameOver -> CellState.LOCKED_SOON
-                    isLastRound && round.cribScore != null             -> CellState.LOCKED_PREV
-                    isLastRound && !gameOver                           -> CellState.LOCKED_SOON
-                    else                                               -> CellState.LOCKED_PREV
+                    isLastRound && round.cribScore != null                  -> CellState.LOCKED_PREV
+                    isLastRound && !gameOver                                -> CellState.LOCKED_SOON
+                    else                                                    -> CellState.LOCKED_PREV
                 }
                 row.addView(makeCribCell(score = round.cribScore, state = cribState, onClick = { showCribScoreInput(round) }))
             } else {
@@ -248,9 +250,9 @@ class CribbageGameActivity : AppCompatActivity() {
     }
 
     private fun buildTotalRow(): LinearLayout {
-        val row    = makeFixedRow()
+        val row       = makeFixedRow()
         row.addView(makeRoundLabelCell(getString(R.string.cribbage_total)))
-        val totals   = players.associate { it.playerId to it.getTotal(rounds) }
+        val totals    = players.associate { it.playerId to it.getTotal(rounds) }
         val allTotals = players.map { totals[it.playerId] }
         for (player in players) {
             val total = totals[player.playerId] ?: 0
@@ -288,7 +290,7 @@ class CribbageGameActivity : AppCompatActivity() {
         val playerName = players.first { it.playerId == playerId }.playerName
         val current    = round.handScores[playerId]
         val title = if (current != null) "✏️ $playerName — ${getString(R.string.cribbage_hand_score)}"
-        else "$playerName — ${getString(R.string.cribbage_hand_score)}"
+                    else "$playerName — ${getString(R.string.cribbage_hand_score)}"
 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -317,7 +319,7 @@ class CribbageGameActivity : AppCompatActivity() {
         val dealerName = players.first { it.playerId == round.dealerId }.playerName
         val current    = round.cribScore
         val title = if (current != null) "✏️ $dealerName — ${getString(R.string.cribbage_crib_score)}"
-        else "$dealerName — ${getString(R.string.cribbage_crib_score)}"
+                    else "$dealerName — ${getString(R.string.cribbage_crib_score)}"
 
         val editText = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -401,7 +403,7 @@ class CribbageGameActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.5f)
         background   = cellDrawable(resolveBgColor(state, score = null))
 
-        val canEdit    = state == CellState.EDITABLE
+        val canEdit     = state == CellState.EDITABLE
         val lockedAlpha = when (state) { CellState.LOCKED_SOON -> 0.55f; CellState.LOCKED_PREV -> 0.65f; else -> 0.35f }
 
         addView(TextView(this@CribbageGameActivity).apply {
@@ -462,7 +464,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
     private fun resolveBgColor(state: CellState, score: Int?): Int = when (state) {
         CellState.EDITABLE     -> if (score == null) ContextCompat.getColor(this, R.color.cell_editable_bg)
-        else ContextCompat.getColor(this, R.color.score_cell_background)
+                                  else ContextCompat.getColor(this, R.color.score_cell_background)
         CellState.LOCKED_SOON  -> ContextCompat.getColor(this, R.color.cell_editable_bg)
         CellState.LOCKED_PREV  -> ContextCompat.getColor(this, R.color.cell_locked_bg)
         CellState.LOCKED_NEVER -> ContextCompat.getColor(this, R.color.cell_never_bg)

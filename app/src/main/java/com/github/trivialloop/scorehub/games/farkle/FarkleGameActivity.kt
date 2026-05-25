@@ -39,15 +39,12 @@ class FarkleGameActivity : AppCompatActivity() {
     private lateinit var players: List<FarklePlayerState>
 
     private val rounds = mutableListOf<FarkleRound>()
-
     private var currentPlayerIndex = 0
     private var gameOver = false
     private var finalRoundStarted = false
 
     companion object {
-
-        const val GAME_TYPE = "farkle"
-
+        const val GAME_TYPE     = "farkle"
         private const val SCORE_LIMIT   = 10_000
         private const val HEADER_ROW_DP = 52
         private const val ROUND_ROW_DP  = 48
@@ -58,53 +55,38 @@ class FarkleGameActivity : AppCompatActivity() {
         private const val LABEL_COL_DP  = 48
 
         val ALL_COMBINATIONS = listOf(
-
-            // 1 die
-            RollEntry(100, 1, "⚀"),
-            RollEntry(50, 1, "⚄"),
-
-            // 2 dice
-            RollEntry(200, 2, "⚀ ⚀"),
-            RollEntry(100, 2, "⚄ ⚄"),
-            RollEntry(150, 2, "⚀ ⚄"),
-
-            // 3 dice
+            RollEntry(100,  1, "⚀"),
+            RollEntry(50,   1, "⚄"),
+            RollEntry(200,  2, "⚀ ⚀"),
+            RollEntry(100,  2, "⚄ ⚄"),
+            RollEntry(150,  2, "⚀ ⚄"),
             RollEntry(1000, 3, "⚀ ⚀ ⚀"),
-            RollEntry(200, 3, "⚁ ⚁ ⚁"),
-            RollEntry(300, 3, "⚂ ⚂ ⚂"),
-            RollEntry(400, 3, "⚃ ⚃ ⚃"),
-            RollEntry(500, 3, "⚄ ⚄ ⚄"),
-            RollEntry(600, 3, "⚅ ⚅ ⚅"),
-
-            RollEntry(250, 3, "⚀ ⚀ ⚄"),
-            RollEntry(200, 3, "⚀ ⚄ ⚄"),
-
-            // 4 dice
+            RollEntry(200,  3, "⚁ ⚁ ⚁"),
+            RollEntry(300,  3, "⚂ ⚂ ⚂"),
+            RollEntry(400,  3, "⚃ ⚃ ⚃"),
+            RollEntry(500,  3, "⚄ ⚄ ⚄"),
+            RollEntry(600,  3, "⚅ ⚅ ⚅"),
+            RollEntry(250,  3, "⚀ ⚀ ⚄"),
+            RollEntry(200,  3, "⚀ ⚄ ⚄"),
             RollEntry(2000, 4, "⚀ ⚀ ⚀ ⚀"),
-            RollEntry(400, 4, "⚁ ⚁ ⚁ ⚁"),
-            RollEntry(600, 4, "⚂ ⚂ ⚂ ⚂"),
-            RollEntry(800, 4, "⚃ ⚃ ⚃ ⚃"),
+            RollEntry(400,  4, "⚁ ⚁ ⚁ ⚁"),
+            RollEntry(600,  4, "⚂ ⚂ ⚂ ⚂"),
+            RollEntry(800,  4, "⚃ ⚃ ⚃ ⚃"),
             RollEntry(1000, 4, "⚄ ⚄ ⚄ ⚄"),
             RollEntry(1200, 4, "⚅ ⚅ ⚅ ⚅"),
-
-            // 5 dice
             RollEntry(3000, 5, "⚀ ⚀ ⚀ ⚀ ⚀"),
-            RollEntry(600, 5, "⚁ ⚁ ⚁ ⚁ ⚁"),
-            RollEntry(900, 5, "⚂ ⚂ ⚂ ⚂ ⚂"),
+            RollEntry(600,  5, "⚁ ⚁ ⚁ ⚁ ⚁"),
+            RollEntry(900,  5, "⚂ ⚂ ⚂ ⚂ ⚂"),
             RollEntry(1200, 5, "⚃ ⚃ ⚃ ⚃ ⚃"),
             RollEntry(1500, 5, "⚄ ⚄ ⚄ ⚄ ⚄"),
             RollEntry(1800, 5, "⚅ ⚅ ⚅ ⚅ ⚅"),
-
-            // 6 dice
             RollEntry(4000, 6, "⚀ ⚀ ⚀ ⚀ ⚀ ⚀"),
-            RollEntry(800, 6, "⚁ ⚁ ⚁ ⚁ ⚁ ⚁"),
+            RollEntry(800,  6, "⚁ ⚁ ⚁ ⚁ ⚁ ⚁"),
             RollEntry(1200, 6, "⚂ ⚂ ⚂ ⚂ ⚂ ⚂"),
             RollEntry(1600, 6, "⚃ ⚃ ⚃ ⚃ ⚃ ⚃"),
             RollEntry(2000, 6, "⚄ ⚄ ⚄ ⚄ ⚄ ⚄"),
             RollEntry(2400, 6, "⚅ ⚅ ⚅ ⚅ ⚅ ⚅"),
-
-            // Special
-            RollEntry(750, 6, "⚀ ⚀ ⚁ ⚁ ⚂ ⚂"),
+            RollEntry(750,  6, "⚀ ⚀ ⚁ ⚁ ⚂ ⚂"),
             RollEntry(1500, 6, "⚀ ⚁ ⚂ ⚃ ⚄ ⚅")
         )
     }
@@ -136,892 +118,344 @@ class FarkleGameActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context) {
-
         val language = LocaleHelper.getPersistedLocale(newBase)
-
-        super.attachBaseContext(
-            LocaleHelper.setLocale(newBase, language)
-        )
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, language))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         binding = ActivityFarkleGameBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-
-            val statusBarInsets =
-                insets.getInsets(WindowInsetsCompat.Type.statusBars())
-
-            binding.appBarLayout.setPadding(
-                0,
-                statusBarInsets.top,
-                0,
-                0
-            )
-
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
             insets
         }
 
-        database = AppDatabase.getDatabase(this)
-
-        playerIds =
-            intent.getLongArrayExtra("PLAYER_IDS") ?: longArrayOf()
-
-        playerNames =
-            intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
-
-        playerColors =
-            intent.getIntArrayExtra("PLAYER_COLORS") ?: intArrayOf()
+        database     = AppDatabase.getDatabase(this)
+        playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
+        playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
+        playerColors = intent.getIntArrayExtra("PLAYER_COLORS")   ?: intArrayOf()
 
         players = playerIds.indices.map { i ->
-
-            FarklePlayerState(
-                playerIds[i],
-                playerNames[i],
-                playerColors[i]
-            )
+            FarklePlayerState(playerIds[i], playerNames[i], playerColors[i])
         }
 
         setSupportActionBar(binding.toolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        supportActionBar?.title =
-            getString(R.string.farkle_game)
+        supportActionBar?.title = getString(R.string.farkle_game)
 
         startTurnFor(currentPlayerIndex)
-
         buildTable()
     }
 
+    // ─── Turn management ──────────────────────────────────────────────────────
+
     private fun startTurnFor(playerIndex: Int) {
-
-        val player = players[playerIndex]
-
-        val roundNumber =
-            rounds.count {
-                it.playerId == player.playerId && it.isComplete
-            } + 1
-
-        rounds.add(
-            FarkleRound(
-                roundNumber = roundNumber,
-                playerId = player.playerId
-            )
-        )
+        val player      = players[playerIndex]
+        val roundNumber = rounds.count { it.playerId == player.playerId && it.isComplete } + 1
+        rounds.add(FarkleRound(roundNumber = roundNumber, playerId = player.playerId))
     }
 
-    private fun getRemainingDice(turn: FarkleRound): Int {
-
-        val usedDice =
-            turn.rollEntries.sumOf {
-                it.usedDice
-            }
-
-        val remaining = 6 - usedDice
-
-        return if (remaining <= 0) 6 else remaining
-    }
+    // ─── Table construction ───────────────────────────────────────────────────
 
     private fun buildTable() {
-
-        binding.scoreTableContainer.removeAllViews()
-
         val visible = getVisiblePlayers()
 
-        val completedByPlayer: Map<Long, List<FarkleRound>> =
-            visible.associate { (_, p) ->
-
-                p.playerId to rounds.filter {
-                    it.playerId == p.playerId && it.isComplete
-                }
-            }
-
-        val activeTurn: FarkleRound? =
-            rounds.lastOrNull {
-                it.playerId == players[currentPlayerIndex].playerId &&
-                        !it.isComplete
-            }
-
-        val activeSlot =
-            completedByPlayer[players[currentPlayerIndex].playerId]?.size ?: 0
-
-        val maxCompleted =
-            completedByPlayer.values.maxOfOrNull {
-                it.size
-            } ?: 0
-
-        val totalSlots =
-            maxOf(maxCompleted, activeSlot + 1)
-
-        val allTotals =
-            visible.map { (_, p) ->
-                p.getTotal(rounds)
-            }
-
-        binding.scoreTableContainer.addView(
-            buildHeaderRow(visible)
-        )
-
-        for (slotIdx in 0 until totalSlots) {
-
-            val isActiveSlot = slotIdx == activeSlot
-
-            val slotScores: List<Int?> =
-                visible.map { (_, p) ->
-                    completedByPlayer[p.playerId]
-                        ?.getOrNull(slotIdx)
-                        ?.score
-                }
-
-            binding.scoreTableContainer.addView(
-                buildSlotRow(
-                    visible,
-                    completedByPlayer,
-                    slotIdx,
-                    isActiveSlot,
-                    activeTurn,
-                    slotScores
-                )
-            )
+        val completedByPlayer: Map<Long, List<FarkleRound>> = visible.associate { (_, p) ->
+            p.playerId to rounds.filter { it.playerId == p.playerId && it.isComplete }
         }
+        val activeTurn: FarkleRound? =
+            rounds.lastOrNull { it.playerId == players[currentPlayerIndex].playerId && !it.isComplete }
+        val activeSlot   = completedByPlayer[players[currentPlayerIndex].playerId]?.size ?: 0
+        val maxCompleted = completedByPlayer.values.maxOfOrNull { it.size } ?: 0
+        val totalSlots   = maxOf(maxCompleted, activeSlot + 1)
+        val allTotals    = visible.map { (_, p) -> p.getTotal(rounds) }
 
-        binding.scoreTableContainer.addView(
-            buildTotalRow(
-                visible,
-                allTotals
-            )
-        )
+        val headerRow = buildHeaderRow(visible)
+        val slotRows  = (0 until totalSlots).map { slotIdx ->
+            val isActiveSlot = slotIdx == activeSlot
+            val slotScores: List<Int?> = visible.map { (_, p) ->
+                completedByPlayer[p.playerId]?.getOrNull(slotIdx)?.score
+            }
+            buildSlotRow(visible, completedByPlayer, slotIdx, isActiveSlot, activeTurn, slotScores)
+        }
+        val totalRow = buildTotalRow(visible, allTotals)
 
-        binding.scrollView.post {
-            binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        val screenHeight       = resources.displayMetrics.heightPixels
+        val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
+        val totalNaturalHeight = dpToPx(HEADER_ROW_DP) +
+                slotRows.size * dpToPx(ROUND_ROW_DP) +
+                dpToPx(TOTAL_ROW_DP)
+
+        if (totalNaturalHeight > screenHeight - appBarHeight) {
+            // Split: fixed header, scrollable slots, fixed total
+            binding.headerContainer.removeAllViews()
+            binding.headerContainer.addView(headerRow)
+
+            binding.tableContainer.removeAllViews()
+            slotRows.forEach { binding.tableContainer.addView(it) }
+
+            binding.totalContainer.removeAllViews()
+            binding.totalContainer.addView(totalRow)
+
+            binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        } else {
+            // Compact: everything in tableContainer
+            binding.headerContainer.removeAllViews()
+            binding.totalContainer.removeAllViews()
+
+            binding.tableContainer.removeAllViews()
+            binding.tableContainer.addView(headerRow)
+            slotRows.forEach { binding.tableContainer.addView(it) }
+            binding.tableContainer.addView(totalRow)
         }
     }
 
-    private fun buildHeaderRow(
-        visible: List<Pair<Int, FarklePlayerState>>
-    ): LinearLayout {
-
+    private fun buildHeaderRow(visible: List<Pair<Int, FarklePlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)
-
-        row.addView(
-            makeLabelCell(
-                "",
-                HEADER_ROW_DP,
-                false
-            )
-        )
-
+        row.addView(makeLabelCell("", HEADER_ROW_DP, isTotal = false))
         for ((idx, player) in visible) {
-
-            row.addView(
-                makePlayerNameCell(
-                    player,
-                    idx == currentPlayerIndex,
-                    columnWeight(idx == currentPlayerIndex)
-                )
-            )
+            row.addView(makePlayerNameCell(player, idx == currentPlayerIndex, columnWeight(idx == currentPlayerIndex)))
         }
-
         return row
     }
 
     private fun buildSlotRow(
         visible: List<Pair<Int, FarklePlayerState>>,
         completedByPlayer: Map<Long, List<FarkleRound>>,
-        slotIdx: Int,
-        isActiveSlot: Boolean,
-        activeTurn: FarkleRound?,
-        slotScores: List<Int?>
+        slotIdx: Int, isActiveSlot: Boolean,
+        activeTurn: FarkleRound?, slotScores: List<Int?>
     ): LinearLayout {
-
         val row = LinearLayout(this).apply {
-
-            orientation = LinearLayout.HORIZONTAL
-
-            layoutParams =
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
+            orientation  = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
-
-        row.addView(
-            makeLabelCellMatchParent(
-                (slotIdx + 1).toString(),
-                false
-            )
-        )
+        row.addView(makeLabelCellMatchParent((slotIdx + 1).toString(), isTotal = false))
 
         for ((colIdx, pair) in visible.withIndex()) {
-
             val (idx, player) = pair
-
             val isActive = idx == currentPlayerIndex
-
-            val w = columnWeight(isActive)
+            val w        = columnWeight(isActive)
 
             when {
+                isActiveSlot && isActive && activeTurn != null ->
+                    row.addView(makeActiveTurnCell(activeTurn, w))
 
-                isActiveSlot &&
-                        isActive &&
-                        activeTurn != null -> {
-
-                    row.addView(
-                        makeActiveTurnCell(activeTurn, w)
-                    )
+                completedByPlayer[player.playerId]?.getOrNull(slotIdx) != null -> {
+                    val round     = completedByPlayer[player.playerId]!!.getOrNull(slotIdx)!!
+                    val role      = ScoreColorRole(slotScores[colIdx], slotScores, higherIsBetter = true)
+                    val textColor = when (role) {
+                        ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
+                        ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
+                        else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
+                    }
+                    row.addView(makeCompletedRoundCell(round, textColor, isActive, w))
                 }
 
-                completedByPlayer[player.playerId]
-                    ?.getOrNull(slotIdx) != null -> {
-
-                    val round =
-                        completedByPlayer[player.playerId]
-                            ?.getOrNull(slotIdx)!!
-
-                    val role =
-                        ScoreColorRole(
-                            slotScores[colIdx],
-                            slotScores,
-                            higherIsBetter = true
-                        )
-
-                    val textColor =
-                        when (role) {
-
-                            ScoreColorRole.BEST ->
-                                ContextCompat.getColor(
-                                    this,
-                                    R.color.score_text_best
-                                )
-
-                            ScoreColorRole.WORST ->
-                                ContextCompat.getColor(
-                                    this,
-                                    R.color.score_text_worst
-                                )
-
-                            else ->
-                                ContextCompat.getColor(
-                                    this,
-                                    R.color.score_cell_text
-                                )
-                        }
-
-                    row.addView(
-                        makeCompletedRoundCell(
-                            round,
-                            textColor,
-                            isActive,
-                            w
-                        )
-                    )
-                }
-
-                else -> {
-
-                    row.addView(
-                        makePlaceholderCell(w)
-                    )
-                }
+                else -> row.addView(makePlaceholderCell(w))
             }
         }
-
         return row
     }
 
-    private fun buildTotalRow(
-        visible: List<Pair<Int, FarklePlayerState>>,
-        allTotals: List<Int>
-    ): LinearLayout {
-
+    private fun buildTotalRow(visible: List<Pair<Int, FarklePlayerState>>, allTotals: List<Int>): LinearLayout {
         val row = makeRow(TOTAL_ROW_DP)
-
-        row.addView(
-            makeLabelCell(
-                getString(R.string.farkle_total),
-                TOTAL_ROW_DP,
-                true
-            )
-        )
-
+        row.addView(makeLabelCell(getString(R.string.farkle_total), TOTAL_ROW_DP, isTotal = true))
         for ((colIdx, pair) in visible.withIndex()) {
-
             val (idx, _) = pair
-
             val isActive = idx == currentPlayerIndex
-
-            val total = allTotals[colIdx]
-
-            val textColor =
-                ContextCompat.getColor(
-                    this,
-                    R.color.score_calculated_cell_text
-                )
-
-            row.addView(
-                makeTotalCell(
-                    total,
-                    textColor,
-                    isActive,
-                    columnWeight(isActive)
-                )
-            )
+            val total    = allTotals[colIdx]
+            row.addView(makeTotalCell(total, isActive, columnWeight(isActive)))
         }
-
         return row
     }
 
-    private fun makeRow(heightDp: Int): LinearLayout =
-        LinearLayout(this).apply {
+    // ─── Cell builders ────────────────────────────────────────────────────────
 
-            orientation = LinearLayout.HORIZONTAL
-
-            layoutParams =
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    dpToPx(heightDp)
-                )
-        }
+    private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.HORIZONTAL
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+    }
 
     private fun colLp(weight: Float) =
-        LinearLayout.LayoutParams(
-            0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            weight
-        )
+        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
 
     private fun fixedColLp(weight: Float, h: Int) =
-        LinearLayout.LayoutParams(
-            0,
-            dpToPx(h),
-            weight
-        )
+        LinearLayout.LayoutParams(0, dpToPx(h), weight)
 
-    private fun makeLabelCell(
-        text: String,
-        heightDp: Int,
-        isTotal: Boolean
-    ): TextView = TextView(this).apply {
-
-        this.text = text
-
-        gravity = Gravity.CENTER
-
-        textSize = 11f
-
-        setTypeface(null, Typeface.BOLD)
-
-        layoutParams =
-            LinearLayout.LayoutParams(
-                dpToPx(LABEL_COL_DP),
-                dpToPx(heightDp)
-            )
-
-        val bg =
-            if (isTotal)
-                R.color.cell_calculated_bg
-            else
-                R.color.header_cell_background
-
-        val fg =
-            if (isTotal)
-                R.color.score_calculated_cell_text
-            else
-                R.color.header_cell_text
-
-        background =
-            cellDrawable(
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    bg
-                )
-            )
-
-        setTextColor(
-            ContextCompat.getColor(
-                this@FarkleGameActivity,
-                fg
-            )
-        )
+    private fun makeLabelCell(text: String, heightDp: Int, isTotal: Boolean): TextView = TextView(this).apply {
+        this.text = text; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
+        val bg = if (isTotal) R.color.cell_calculated_bg else R.color.header_cell_background
+        val fg = if (isTotal) R.color.score_calculated_cell_text else R.color.header_cell_text
+        background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, bg))
+        setTextColor(ContextCompat.getColor(this@FarkleGameActivity, fg))
     }
 
-    private fun makeLabelCellMatchParent(
-        text: String,
-        isTotal: Boolean
-    ): TextView = TextView(this).apply {
-
-        this.text = text
-
-        gravity = Gravity.CENTER
-
-        textSize = 11f
-
-        setTypeface(null, Typeface.BOLD)
-
-        layoutParams =
-            LinearLayout.LayoutParams(
-                dpToPx(LABEL_COL_DP),
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-
-        val bg =
-            if (isTotal)
-                R.color.cell_calculated_bg
-            else
-                R.color.header_cell_background
-
-        val fg =
-            if (isTotal)
-                R.color.score_calculated_cell_text
-            else
-                R.color.header_cell_text
-
-        background =
-            cellDrawable(
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    bg
-                )
-            )
-
-        setTextColor(
-            ContextCompat.getColor(
-                this@FarkleGameActivity,
-                fg
-            )
-        )
+    private fun makeLabelCellMatchParent(text: String, isTotal: Boolean): TextView = TextView(this).apply {
+        this.text = text; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
+        val bg = if (isTotal) R.color.cell_calculated_bg else R.color.header_cell_background
+        val fg = if (isTotal) R.color.score_calculated_cell_text else R.color.header_cell_text
+        background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, bg))
+        setTextColor(ContextCompat.getColor(this@FarkleGameActivity, fg))
     }
 
-    private fun makePlayerNameCell(
-        player: FarklePlayerState,
-        isActive: Boolean,
-        weight: Float
-    ): TextView = TextView(this).apply {
-
-        text = player.playerName
-
-        gravity = Gravity.CENTER
-
-        textSize = 13f
-
-        setTypeface(null, Typeface.BOLD)
-
-        maxLines = 1
-
-        ellipsize = TextUtils.TruncateAt.END
-
-        layoutParams = fixedColLp(weight, HEADER_ROW_DP)
-
-        background = cellDrawable(player.playerColor)
-
-        setTextColor(Color.WHITE)
-    }
-
-    private fun makeCompletedRoundCell(
-        round: FarkleRound,
-        textColor: Int,
-        isActive: Boolean,
-        weight: Float
-    ): TextView = TextView(this).apply {
-
-        text = round.score.toString()
-
-        gravity = Gravity.CENTER
-
-        textSize = 14f
-
-        setTypeface(null, Typeface.BOLD)
-
-        layoutParams = colLp(weight)
-
-        background =
-            cellDrawable(
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    R.color.score_cell_background
-                )
-            )
-
-        setTextColor(textColor)
-
-        alpha = if (isActive) 1f else 0.65f
-
-        minimumHeight = dpToPx(ROUND_ROW_DP)
-    }
-
-    private fun makePlaceholderCell(weight: Float): TextView =
+    private fun makePlayerNameCell(player: FarklePlayerState, isActive: Boolean, weight: Float): TextView =
         TextView(this).apply {
+            text = player.playerName; gravity = Gravity.CENTER; textSize = 13f
+            setTypeface(null, Typeface.BOLD)
+            maxLines = 1; ellipsize = TextUtils.TruncateAt.END
+            layoutParams = fixedColLp(weight, HEADER_ROW_DP)
+            background = cellDrawable(player.playerColor); setTextColor(Color.WHITE)
+        }
 
-            text = ""
-
+    private fun makeCompletedRoundCell(round: FarkleRound, textColor: Int, isActive: Boolean, weight: Float): TextView =
+        TextView(this).apply {
+            text = round.score.toString(); gravity = Gravity.CENTER; textSize = 14f
+            setTypeface(null, Typeface.BOLD)
             layoutParams = colLp(weight)
-
-            background =
-                cellDrawable(
-                    ContextCompat.getColor(
-                        this@FarkleGameActivity,
-                        R.color.score_cell_background
-                    )
-                )
-
+            background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_background))
+            setTextColor(textColor); alpha = if (isActive) 1f else 0.65f
             minimumHeight = dpToPx(ROUND_ROW_DP)
         }
 
-    private fun makeActiveTurnCell(
-        turn: FarkleRound,
-        weight: Float
-    ): LinearLayout =
+    private fun makePlaceholderCell(weight: Float): TextView = TextView(this).apply {
+        text = ""; layoutParams = colLp(weight)
+        background = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_background))
+        minimumHeight = dpToPx(ROUND_ROW_DP)
+    }
+
+    private fun makeActiveTurnCell(turn: FarkleRound, weight: Float): LinearLayout =
         LinearLayout(this).apply {
-
-            orientation = LinearLayout.VERTICAL
-
-            layoutParams =
-                LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    weight
-                )
-
-            background =
-                cellDrawable(
-                    ContextCompat.getColor(
-                        this@FarkleGameActivity,
-                        R.color.cell_editable_bg
-                    )
-                )
+            orientation  = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
+            background   = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_bg))
 
             for ((index, entry) in turn.rollEntries.withIndex()) {
-
-                val isLast =
-                    index == turn.rollEntries.lastIndex
-
-                addView(
-                    TextView(this@FarkleGameActivity).apply {
-
-                        text = entry.score.toString()
-
-                        gravity = Gravity.CENTER
-
-                        textSize = 14f
-
-                        layoutParams =
-                            LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                dpToPx(ENTRY_ROW_DP)
-                            )
-
-                        if (isLast) {
-
-                            background =
-                                cellDrawable(
-                                    ContextCompat.getColor(
-                                        this@FarkleGameActivity,
-                                        R.color.cell_editable_filled_bg
-                                    )
-                                )
-
-                            setTypeface(null, Typeface.BOLD)
-
-                            setOnClickListener {
-                                showEditEntryDialog(
-                                    turn,
-                                    index
-                                )
-                            }
-
-                        } else {
-
-                            background =
-                                cellDrawable(
-                                    ContextCompat.getColor(
-                                        this@FarkleGameActivity,
-                                        R.color.score_cell_background
-                                    )
-                                )
-                        }
-
-                        setTextColor(
-                            ContextCompat.getColor(
-                                this@FarkleGameActivity,
-                                R.color.score_cell_text
-                            )
-                        )
+                val isLast = index == turn.rollEntries.lastIndex
+                addView(TextView(this@FarkleGameActivity).apply {
+                    text = entry.score.toString(); gravity = Gravity.CENTER; textSize = 14f
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ENTRY_ROW_DP))
+                    if (isLast) {
+                        background = cellDrawable(
+                            ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_filled_bg))
+                        setTypeface(null, Typeface.BOLD)
+                        setOnClickListener { showEditEntryDialog(turn, index) }
+                    } else {
+                        background = cellDrawable(
+                            ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_background))
                     }
-                )
+                    setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_text))
+                })
             }
 
             if (turn.rollEntries.isNotEmpty()) {
-
-                addView(
-                    TextView(this@FarkleGameActivity).apply {
-
-                        text = "= ${turn.entrySum}"
-
-                        gravity = Gravity.CENTER
-
-                        textSize = 12f
-
-                        setTypeface(null, Typeface.BOLD)
-
-                        layoutParams =
-                            LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                dpToPx(SUM_ROW_DP)
-                            )
-
-                        background =
-                            cellDrawable(
-                                ContextCompat.getColor(
-                                    this@FarkleGameActivity,
-                                    R.color.header_cell_background
-                                )
-                            )
-
-                        setTextColor(
-                            ContextCompat.getColor(
-                                this@FarkleGameActivity,
-                                R.color.header_cell_text
-                            )
-                        )
-                    }
-                )
+                addView(TextView(this@FarkleGameActivity).apply {
+                    text = "= ${turn.entrySum}"; gravity = Gravity.CENTER; textSize = 12f
+                    setTypeface(null, Typeface.BOLD)
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUM_ROW_DP))
+                    background = cellDrawable(
+                        ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_background))
+                    setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_text))
+                })
             }
 
-            addView(
-                LinearLayout(this@FarkleGameActivity).apply {
-
-                    orientation = LinearLayout.HORIZONTAL
-
-                    layoutParams =
-                        LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            dpToPx(BTN_ROW_DP)
-                        )
-
-                    addView(
-                        makeActionButton(
-                            getString(R.string.farkle_btn_add),
-                            false,
-                            true
-                        ) {
-                            showAddScoreDialog(turn)
-                        }
-                    )
-
-                    addView(
-                        makeActionButton(
-                            getString(R.string.farkle_btn_bank),
-                            false,
-                            false
-                        ) {
-                            if (turn.rollEntries.isEmpty())
-                                performFarkle(turn)
-                            else
-                                performBank(turn)
-                        }
-                    )
-
-                    addView(
-                        makeActionButton(
-                            getString(R.string.farkle_btn_farkle),
-                            true,
-                            false
-                        ) {
-                            performFarkle(turn)
-                        }
-                    )
-                }
-            )
+            addView(LinearLayout(this@FarkleGameActivity).apply {
+                orientation  = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+                addView(makeActionButton(getString(R.string.farkle_btn_add),
+                    isFarkle = false, isAdd = true)  { showAddScoreDialog(turn) })
+                addView(makeActionButton(getString(R.string.farkle_btn_bank),
+                    isFarkle = false, isAdd = false) {
+                    if (turn.rollEntries.isEmpty()) performFarkle(turn) else performBank(turn)
+                })
+                addView(makeActionButton(getString(R.string.farkle_btn_farkle),
+                    isFarkle = true,  isAdd = false) { performFarkle(turn) })
+            })
         }
 
-    private fun makeActionButton(
-        label: String,
-        isFarkle: Boolean,
-        isAdd: Boolean,
-        onClick: () -> Unit
-    ): TextView = TextView(this).apply {
-
-        text = label
-
-        gravity = Gravity.CENTER
-
-        textSize = 11f
-
-        setTypeface(null, Typeface.BOLD)
-
-        layoutParams =
-            LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1f
-            )
-
-        val bgColor =
-            when {
-
-                isFarkle ->
-                    ContextCompat.getColor(
-                        this@FarkleGameActivity,
-                        R.color.score_text_worst
-                    )
-
-                isAdd ->
-                    ContextCompat.getColor(
-                        this@FarkleGameActivity,
-                        R.color.cell_editable_bg
-                    )
-
-                else ->
-                    ContextCompat.getColor(
-                        this@FarkleGameActivity,
-                        R.color.score_text_best
-                    )
+    private fun makeActionButton(label: String, isFarkle: Boolean, isAdd: Boolean, onClick: () -> Unit): TextView =
+        TextView(this).apply {
+            text = label; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            val bgColor = when {
+                isFarkle -> ContextCompat.getColor(this@FarkleGameActivity, R.color.score_text_worst)
+                isAdd    -> ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_bg)
+                else     -> ContextCompat.getColor(this@FarkleGameActivity, R.color.score_text_best)
             }
-
-        background = cellDrawable(bgColor)
-
-        setTextColor(
-            if (isAdd)
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    R.color.score_cell_text
-                )
-            else
-                Color.WHITE
-        )
-
-        setOnClickListener {
-            onClick()
+            background = cellDrawable(bgColor)
+            setTextColor(
+                if (isAdd) ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_text)
+                else Color.WHITE)
+            setOnClickListener { onClick() }
         }
+
+    private fun makeTotalCell(total: Int, isActive: Boolean, weight: Float): TextView =
+        TextView(this).apply {
+            text = total.toString(); gravity = Gravity.CENTER; textSize = 16f
+            setTypeface(null, Typeface.BOLD)
+            layoutParams = fixedColLp(weight, TOTAL_ROW_DP)
+            background = cellDrawable(
+                ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_calculated_bg))
+            setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_calculated_cell_text))
+            alpha = if (isActive) 1f else 0.75f
+        }
+
+    private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
+        setColor(bgColor)
+        setStroke(1, ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_border))
     }
 
-    private fun makeTotalCell(
-        total: Int,
-        textColor: Int,
-        isActive: Boolean,
-        weight: Float
-    ): TextView = TextView(this).apply {
-
-        text = total.toString()
-
-        gravity = Gravity.CENTER
-
-        textSize = 16f
-
-        setTypeface(null, Typeface.BOLD)
-
-        layoutParams =
-            fixedColLp(weight, TOTAL_ROW_DP)
-
-        background =
-            cellDrawable(
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    R.color.cell_calculated_bg
-                )
-            )
-
-        setTextColor(textColor)
-
-        alpha = if (isActive) 1f else 0.75f
-    }
-
-    private fun cellDrawable(bgColor: Int): GradientDrawable =
-        GradientDrawable().apply {
-
-            setColor(bgColor)
-
-            setStroke(
-                1,
-                ContextCompat.getColor(
-                    this@FarkleGameActivity,
-                    R.color.cell_border
-                )
-            )
-        }
+    // ─── Dialogs ──────────────────────────────────────────────────────────────
 
     private fun showAddScoreDialog(turn: FarkleRound) {
-
         val remainingDice = getRemainingDice(turn)
-
-        val available =
-            ALL_COMBINATIONS.filter {
-                it.usedDice <= remainingDice
-            }
-
-        val items =
-            available.map {
-                "${it.label}   ${it.score}"
-            }.toTypedArray()
-
+        val available = ALL_COMBINATIONS.filter { it.usedDice <= remainingDice }
+        val items = available.map { "${it.label}   ${it.score}" }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle(
-                "${players[currentPlayerIndex].playerName} - " +
-                "${getString(R.string.farkle_btn_add)} " +
-                "($remainingDice 🎲)")
+            .setTitle("${players[currentPlayerIndex].playerName} — ${getString(R.string.farkle_btn_add)} ($remainingDice 🎲)")
             .setItems(items) { _, which ->
-
-                turn.rollEntries.add(
-                    available[which]
-                )
-
+                turn.rollEntries.add(available[which])
                 buildTable()
             }
-            .setNegativeButton(
-                getString(R.string.cancel),
-                null
-            )
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
-    private fun showEditEntryDialog(
-        turn: FarkleRound,
-        entryIndex: Int
-    ) {
+    private fun showEditEntryDialog(turn: FarkleRound, entryIndex: Int) {
+        val current     = turn.rollEntries[entryIndex]
+        val items       = ALL_COMBINATIONS.map { "${it.label}   ${it.score}" }.toTypedArray()
+        val selectedIdx = ALL_COMBINATIONS.indexOfFirst {
+            it.score == current.score && it.usedDice == current.usedDice && it.label == current.label
+        }.takeIf { it >= 0 } ?: 0
 
-        val items =
-            ALL_COMBINATIONS.map {
-                "${it.label}   ${it.score}"
-            }.toTypedArray()
-
-        val current =
-            turn.rollEntries[entryIndex]
-
-        val selectedIdx =
-            ALL_COMBINATIONS.indexOfFirst {
-
-                it.score == current.score &&
-                        it.usedDice == current.usedDice &&
-                        it.label == current.label
-            }.takeIf { it >= 0 } ?: 0
-
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("✏️ ${getString(R.string.farkle_btn_add)}")
-            .setSingleChoiceItems(
-                items,
-                selectedIdx
-            ) { dialog, which ->
-
-                turn.rollEntries[entryIndex] =
-                    ALL_COMBINATIONS[which]
-
+            .setSingleChoiceItems(items, selectedIdx) { dlg, which ->
+                turn.rollEntries[entryIndex] = ALL_COMBINATIONS[which]
                 buildTable()
-
-                dialog.dismiss()
+                dlg.dismiss()
             }
-            .setNegativeButton(
-                getString(R.string.cancel),
-                null
-            )
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
+
+        dialog.listView?.post { dialog.listView?.setSelection(selectedIdx) }
+    }
+
+    // ─── Game actions ─────────────────────────────────────────────────────────
+
+    private fun getRemainingDice(turn: FarkleRound): Int {
+        val used = turn.rollEntries.sumOf { it.usedDice }
+        val remaining = 6 - used
+        return if (remaining <= 0) 6 else remaining
     }
 
     private fun performBank(turn: FarkleRound) {
@@ -1036,196 +470,84 @@ class FarkleGameActivity : AppCompatActivity() {
         checkEndOfGameAndAdvance()
     }
 
-    private fun applyTripleFarklePenaltyIfNeeded(
-        currentTurn: FarkleRound
-    ) {
-
-        val player =
-            players.first {
-                it.playerId == currentTurn.playerId
-            }
-
-        val playerRounds =
-            rounds.filter {
-                it.playerId == currentTurn.playerId
-            }
-
+    private fun applyTripleFarklePenaltyIfNeeded(currentTurn: FarkleRound) {
+        val player = players.first { it.playerId == currentTurn.playerId }
+        val playerRounds = rounds.filter { it.playerId == currentTurn.playerId }
         if (player.hasTripleFarkle(playerRounds)) {
-
-            val totalBeforePenalty =
-                player.getTotal(playerRounds.dropLast(1))
-
+            val totalBeforePenalty = player.getTotal(playerRounds.dropLast(1))
             currentTurn.tripleFarklePenalty = true
-
-            currentTurn.penaltyPointsLost =
-                totalBeforePenalty
+            currentTurn.penaltyPointsLost   = totalBeforePenalty
         }
     }
 
     private fun checkEndOfGameAndAdvance() {
-
-        if (!finalRoundStarted &&
-            players.any {
-                it.getTotal(rounds) >= SCORE_LIMIT
-            }
-        ) {
-
+        if (!finalRoundStarted && players.any { it.getTotal(rounds) >= SCORE_LIMIT }) {
             finalRoundStarted = true
         }
-
-        if (finalRoundStarted &&
-            currentPlayerIndex == totalPlayers - 1
-        ) {
-
+        if (finalRoundStarted && currentPlayerIndex == totalPlayers - 1) {
             gameOver = true
-
             buildTable()
-
             saveResultsAndShowSummary()
-
             return
         }
-
         advanceToNextPlayer()
     }
 
     private fun advanceToNextPlayer() {
-
-        currentPlayerIndex =
-            (currentPlayerIndex + 1) % totalPlayers
-
+        currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers
         startTurnFor(currentPlayerIndex)
-
         buildTable()
     }
 
+    // ─── Save results ─────────────────────────────────────────────────────────
+
     private fun saveResultsAndShowSummary() {
-
-        val totals =
-            players.associate {
-                it.playerId to it.getTotal(rounds)
-            }
-
-        val maxScore =
-            totals.values.maxOrNull() ?: 0
-
-        val winnerIds =
-            totals.filter {
-                it.value == maxScore
-            }.keys
-
-        val isDraw =
-            winnerIds.size > 1
-
-        val playedAt =
-            System.currentTimeMillis()
-
+        val totals    = players.associate { it.playerId to it.getTotal(rounds) }
+        val maxScore  = totals.values.maxOrNull() ?: 0
+        val winnerIds = totals.filter { it.value == maxScore }.keys
+        val isDraw    = winnerIds.size > 1
+        val playedAt  = System.currentTimeMillis()
         lifecycleScope.launch {
-
-            database.gameResultDao().insertGameResults(
-                players.map { player ->
-
-                    GameResult(
-                        gameType = GAME_TYPE,
-                        playerId = player.playerId,
-                        playerName = player.playerName,
-                        score = totals[player.playerId] ?: 0,
-                        isWinner = !isDraw && player.playerId in winnerIds,
-                        isDraw = isDraw && player.playerId in winnerIds,
-                        playedAt = playedAt
-                    )
-                }
-            )
-
-            val sortedPlayers =
-                players.sortedByDescending {
-                    totals[it.playerId] ?: 0
-                }
-
+            database.gameResultDao().insertGameResults(players.map { player ->
+                GameResult(
+                    gameType = GAME_TYPE, playerId = player.playerId, playerName = player.playerName,
+                    score    = totals[player.playerId] ?: 0,
+                    isWinner = !isDraw && player.playerId in winnerIds,
+                    isDraw   = isDraw  && player.playerId in winnerIds,
+                    playedAt = playedAt
+                )
+            })
+            val sorted = players.sortedByDescending { totals[it.playerId] ?: 0 }
             var rank = 1
-
-            val entries =
-                sortedPlayers.mapIndexed { i, p ->
-
-                    val s =
-                        totals[p.playerId] ?: 0
-
-                    val prev =
-                        if (i > 0)
-                            totals[sortedPlayers[i - 1].playerId] ?: 0
-                        else
-                            s
-
-                    val r =
-                        if (i > 0 && s == prev)
-                            rank
-                        else {
-                            rank = i + 1
-                            rank
-                        }
-
-                    GameResultsDialog.PlayerResult(
-                        p.playerName,
-                        p.playerColor,
-                        s,
-                        r
-                    )
-                }
-
-            GameResultsDialog.show(
-                this@FarkleGameActivity,
-                entries,
-                isDraw,
-                " pts"
-            ) {
-                finish()
+            val entries = sorted.mapIndexed { i, p ->
+                val s    = totals[p.playerId] ?: 0
+                val prev = if (i > 0) totals[sorted[i - 1].playerId] ?: 0 else s
+                val r    = if (i > 0 && s == prev) rank else { rank = i + 1; rank }
+                GameResultsDialog.PlayerResult(p.playerName, p.playerColor, s, r)
             }
+            GameResultsDialog.show(this@FarkleGameActivity, entries, isDraw, " pts") { finish() }
         }
     }
 
-    private fun dpToPx(dp: Int): Int =
-        (dp * resources.displayMetrics.density).toInt()
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
-        menuInflater.inflate(
-            R.menu.menu_farkle_game,
-            menu
-        )
-
-        return true
+        menuInflater.inflate(R.menu.menu_farkle_game, menu); return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         return when (item.itemId) {
-
             android.R.id.home -> {
-
                 AlertDialog.Builder(this)
                     .setTitle(R.string.farkle_quit_game)
                     .setMessage(R.string.farkle_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        finish()
-                    }
+                    .setPositiveButton(R.string.yes) { _, _ -> finish() }
                     .setNegativeButton(R.string.no, null)
                     .show()
-
                 true
             }
-
-            R.id.action_help -> {
-
-                HelpDialogs.showAppHelp(
-                    this,
-                    GAME_TYPE
-                )
-
-                true
-            }
-
-            else ->
-                super.onOptionsItemSelected(item)
+            R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

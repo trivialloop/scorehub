@@ -2,7 +2,7 @@
 
 ## Project overview
 
-**ScoreHub** is an Android board game score tracking application, built in Kotlin using a View-based architecture (not Compose). It currently supports Cactus, Cribbage, Escoba, Skyjo, Tarot, Wingspan, and Yahtzee.
+**ScoreHub** is an Android board game score tracking application, built in Kotlin using a View-based architecture (not Compose). It currently supports Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot, Wingspan, Yahtzee, and Akropolis.
 
 - **Package** : `com.github.trivialloop.scorehub`
 - **Min SDK** : 24 (Android 7.0)
@@ -30,9 +30,11 @@ app/src/main/java/com/github/trivialloop/scorehub/
 │   ├── GameResultDao.kt             # Stats + top20 queries
 │   └── PlayersColors.kt             # Available color palette
 ├── games/
+│   ├── akropolis/
 │   ├── cactus/
 │   ├── cribbage/
 │   ├── escoba/
+│   ├── farkle/
 │   ├── skyjo/
 │   ├── tarot/
 │   ├── wingspan/
@@ -97,7 +99,7 @@ Use `ScoreColorHelper.scoreColorRole(value, allValues)` from `utils/ScoreColorHe
 
 ### Editable cell visual convention
 
-- **Pencil prefix**: when a cell is already filled but still editable, when clicking and the cell, prefix the title with a ✏ emoji.
+- **Pencil prefix**: when a cell is already filled but still editable, prefix the dialog title with a ✏ emoji.
 - **Background color**: use `cell_editable_bg` for empty editable cells, `cell_editable_filled_bg` for filled+editable.
 - **Keyboard auto-open**: all score input dialogs must call `dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)` and `editText.requestFocus()` so the soft keyboard opens immediately on dialog show.
 
@@ -126,15 +128,73 @@ All `PlayerSelectionActivity` classes must follow this behaviour (same as Cribba
 
 - Grids are built **entirely in code** inside each `GameActivity` (no RecyclerView or Adapter).
 - Player names are always truncated with `maxLines = 1` + `ellipsize = TruncateAt.END`.
-- The `ScrollView` with `fillViewport=true` handles overflow when there are many rounds.
 
-### Fixed row height (Cribbage / Escoba pattern)
+### Fixed header + scrollable content (mandatory for all round-based games)
 
-For multi-column grids (Cribbage, Escoba) all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header, round rows, and total row.
+**All games with rounds (Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot) MUST use the following layout pattern unconditionally.**
+
+The behaviour is:
+- The **header row** (player names / column labels) is always **fixed** at the top of the screen.
+- The **round rows AND the total row** are inside the `ScrollView` together — so the total row sits just below the last round row when few rounds exist, and naturally scrolls out of view when many rounds are present (the user scrolls down to see it, and `fullScroll(FOCUS_DOWN)` ensures it is always visible after each update).
+- There is **no separate `totalContainer`** outside the scroll.
+
+**XML layout structure** (required in `activity_<game>_game.xml` for every round-based game):
+```xml
+<!-- Fixed header — always visible -->
+<LinearLayout
+    android:id="@+id/headerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" />
+
+<!-- Scrollable content: round rows + total row -->
+<ScrollView
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/tableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+</ScrollView>
+<!-- NO totalContainer outside the scroll -->
+```
+
+**Kotlin `buildTable()` pattern** (required — **no conditional logic on screen height**, total always inside `tableContainer`):
+```kotlin
+private fun buildTable() {
+    // Fixed header
+    binding.headerContainer.removeAllViews()
+    binding.headerContainer.addView(buildHeaderRow())
+
+    // Scrollable: round rows + (optional add-round row) + total
+    binding.tableContainer.removeAllViews()
+    rounds.forEach { binding.tableContainer.addView(buildRoundRow(it)) }
+    // if applicable: if (!gameOver) binding.tableContainer.addView(buildAddRoundRow())
+    binding.tableContainer.addView(buildTotalRow())  // ← INSIDE the scroll
+
+    // Always scroll to bottom so the latest round + total are visible
+    binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+}
+```
+
+**IMPORTANT — do NOT**:
+- Put `buildTotalRow()` in a separate `totalContainer` outside the `ScrollView`.
+- Use a conditional like `if (totalNaturalHeight > screenHeight)` to switch between layouts. The split header/scroll is always active.
+- Declare a `totalContainer` in XML at all.
+
+Games that are **not** round-based (Wingspan, Yahtzee, Akropolis) keep their own layout approach — this rule does not apply to them.
+
+### Fixed row height (Cribbage / Escoba / Farkle pattern)
+
+For multi-column grids with fixed-height rows (Cribbage, Escoba, Farkle), all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header and round rows.
 
 ### In-play cells
 
-Games with a in-play phase (Cribbage, Escoba) use a `[−] score [+]` cell with weight 1.5f (wider than the hand cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
+Games with an in-play phase (Cribbage, Escoba, Farkle) use a `[−] score [+]` cell with weight 1.5f (wider than the score cell at 1f) to give larger tap targets. The score text color follows the same best/worst/neutral rules compared across all players in that row.
 
 ---
 
@@ -150,32 +210,52 @@ Games with a in-play phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
 - Lower score = best. Score limit: **100 pts**.
 - Finisher penalty: if not strictly lowest alone, score is **doubled**.
 - Coloring: finisher cell uses background color (green/red), others use text color.
+- Uses the fixed header / scrollable content pattern — **reference implementation** for all other round-based games.
 
 ### Escoba
-- 2-column layout per player per round: **In play** (in-play, weight 1.5) + **End of round** (hand, weight 1).
+- 2-column layout per player per round: **In play** (weight 1.5) + **End of round** (weight 1).
 - In-play via +/− buttons; locked once any player enters their end-of-round score.
 - End-of-round score: dialog with auto-focus keyboard; pencil prefix when re-editing.
 - Score limit: **21 pts**. Highest score wins.
 - Previous round editable until the new round gets any in-play activity.
+- Uses the fixed header / scrollable content pattern with `ROW_HEIGHT_DP = 48`.
 
 ### Cribbage
-- 3-column layout per player: **In play** (in-play) + **End of round** + **Crib**.
+- 3-column layout per player: **In play** + **End of round** + **Crib**.
 - Only the dealer has a crib; the other player's crib column uses `cell_never_bg`.
 - Win condition: **121 pts**. Highest score wins.
+- Uses the fixed header / scrollable content pattern with `ROW_HEIGHT_DP = 48`.
 
-### Cactus / Skyjo / Tarot
-- Round label cell tinted with the **first player's** (or declarer's) color.
-- Score coloring: min = green text, max = red text, equal = neutral.
+### Cactus
+- Round label cell tinted with the finisher's color.
+- Score coloring: finisher GREEN if sole lowest, RED otherwise; non-finishers GREEN if lowest among them, RED if highest.
+- Score limit: **10 pts**. Highest total wins.
+- Uses the fixed header / scrollable content pattern (always unconditionally).
+
+### Farkle
+- Turn-based: each player takes turns rolling dice. In-progress turn shows Add / Bank / Farkle buttons.
+- Score limit: **10 000 pts**. After a player reaches the limit, all other players get one last turn.
+- Uses the fixed header / scrollable content pattern; `ROW_HEIGHT_DP = 48` for completed round rows.
+
+### Tarot
+- Round label cell tinted with the declarer's color.
+- 3-step round entry dialog: declarer/contract/bouts → options (optional) → points made.
+- Score limit: **1 000 pts**. Highest total wins. Scores are zero-sum per round.
+- Uses the fixed header / scrollable content pattern (header = player names, scroll = round rows + add-round row + total row).
 
 ### Wingspan
 - One-shot grid (no rounds): all category rows colored per row once all players have entered scores.
+- Highest total = winner.
+
+### Akropolis
+- One-shot grid per player: 5 color groups × (stars + districts + subtotal) + stones + total.
 - Highest total = winner.
 
 ---
 
 ## Statistics
 
-- **Yahtzee, Cactus, Escoba, Cribbage, Wingspan, Tarot**: highest score = best. `getBestScoreByPlayer` = MAX.
+- **Yahtzee, Cactus, Escoba, Cribbage, Wingspan, Tarot, Farkle, Akropolis**: highest score = best. `getBestScoreByPlayer` = MAX.
 - **Skyjo**: lowest score = best. `getBestScoreByPlayer` returns MIN (inverted in `SkyjoStatsActivity`).
 - `getCountedGamesPlayedByPlayer` excludes solo games (sessions where `playedAt` appears for only one player).
 
@@ -194,6 +274,8 @@ Games with a in-play phase (Cribbage, Escoba) use a `[−] score [+]` cell with 
   - `TarotScoreManagerTest.kt` — Tarot zero-sum, scoring
   - `WingspanScoreManagerTest.kt` — Wingspan category totals
   - `CactusScoreManagerTest.kt` — Cactus points, cell colors
+  - `FarkleScoreManagerTest.kt` — Farkle rounds, bank, farkle
+  - `AkropolisScoreManagerTest.kt` — Akropolis district totals
   - `DatabaseTest.kt` — Room DAOs
 
 ---
@@ -240,10 +322,12 @@ The main screen reads its game list from a **central registry** — no change to
    - `<Game>StatsActivity.kt` — reuse `item_player_stats.xml`
    - `<Game>Top20Activity.kt` — reuse `item_top20.xml`
 3. **Add layouts** `activity_<game>_game.xml`, `activity_<game>_stats.xml`, `activity_<game>_top20.xml`.
+   - If the game has **rounds**: use the **fixed header / scrollable content** XML structure described in the "Game grids" section. The layout must declare `headerContainer`, `scrollView`, and `tableContainer`. There is **no `totalContainer`** — the total row is added inside `tableContainer` at the end of `buildTable()`.
+   - If the game has **no rounds** (one-shot scoring like Wingspan/Akropolis): use a single scrollable or horizontal container as appropriate.
 4. **Declare the activities** in `AndroidManifest.xml`.
 5. **Add menus**:
    - `menu_<game>_player_selection.xml` — must include game statistics, top 20, and the help item.
-   - `menu_<game>_game.xml` — contains only the help item .
+   - `menu_<game>_game.xml` — contains only the help item.
 6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`.
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. **Add a section** in `activity_general_stats.xml` and `GeneralStatsActivity.kt`.
@@ -260,4 +344,3 @@ The main screen reads its game list from a **central registry** — no change to
     - Add the corresponding strings in both `values/strings.xml` and `values-fr/strings.xml` following the naming convention:
       - Game rules: `help_<game>_players`, `help_<game>_objective`, `help_<game>_scoring`, `help_<game>_end`
       - App usage: `app_help_<game>_1` through `app_help_<game>_N`
-    
