@@ -129,6 +129,24 @@ All `PlayerSelectionActivity` classes must follow this behaviour (same as Cribba
 - Grids are built **entirely in code** inside each `GameActivity` (no RecyclerView or Adapter).
 - Player names are always truncated with `maxLines = 1` + `ellipsize = TruncateAt.END`.
 
+### Label column width — uniform across all round-based games
+
+**All round-based games (Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot) must use `LABEL_COL_DP = 65` for the first (label/round-number) column.**
+
+This constant is also used by Akropolis (`ICON_COL_DP = 65`) and is the canonical width for all left-side label columns in score grids. Never use a different hardcoded value.
+
+```kotlin
+companion object {
+    // ...
+    private const val LABEL_COL_DP = 65   // uniform with all other round-based games
+}
+```
+
+The label cell layout params must reference this constant:
+```kotlin
+layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
+```
+
 ### Fixed header + scrollable content (mandatory for all round-based games)
 
 **All games with rounds (Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot) MUST use the following layout pattern unconditionally.**

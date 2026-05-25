@@ -51,6 +51,7 @@ class CribbageGameActivity : AppCompatActivity() {
         private const val MAX_HAND_SCORE = 99
         private const val MAX_CRIB_SCORE = 99
         private const val ROW_HEIGHT_DP  = 48
+        private const val LABEL_COL_DP = 65
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -375,7 +376,7 @@ class CribbageGameActivity : AppCompatActivity() {
 
     private fun makeRoundLabelCell(text: String): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(32), LinearLayout.LayoutParams.MATCH_PARENT)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
         background = cellDrawable(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@CribbageGameActivity, R.color.header_cell_text))
     }

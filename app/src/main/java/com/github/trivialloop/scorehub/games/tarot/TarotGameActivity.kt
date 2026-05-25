@@ -45,6 +45,7 @@ class TarotGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE   = "tarot"
         private const val SCORE_LIMIT = 1000
+        private const val LABEL_COL_DP = 65
     }
 
     private val cellTextSize: Float get() = when {
@@ -516,7 +517,7 @@ class TarotGameActivity : AppCompatActivity() {
     private fun makeRoundLabelCell(text: String, height: Int): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER; textSize = cellTextSize - 1f
         setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(36), height)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), height)
         background = cellDrawable(ContextCompat.getColor(this@TarotGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@TarotGameActivity, R.color.header_cell_text))
     }

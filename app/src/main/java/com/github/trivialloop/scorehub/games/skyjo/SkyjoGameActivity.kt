@@ -47,6 +47,7 @@ class SkyjoGameActivity : AppCompatActivity() {
         private const val SCORE_MIN = -17
         private const val SCORE_MAX = 129
         private const val SCORE_ZERO_INDEX = 0 - SCORE_MIN // index of 0 in the values list = 17
+        private const val LABEL_COL_DP = 65
     }
 
     // All possible score values, ordered from SCORE_MIN to SCORE_MAX
@@ -352,7 +353,7 @@ class SkyjoGameActivity : AppCompatActivity() {
         this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(4), cellPaddingV, dpToPx(4), cellPaddingV)
         textSize = cellTextSize - 1f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(42), LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.WRAP_CONTENT)
         background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_text))
     }
