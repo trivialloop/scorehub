@@ -112,26 +112,18 @@ class FarkleGameActivity : AppCompatActivity() {
     private val totalPlayers get() = players.size
 
     private fun getVisiblePlayers(): List<Pair<Int, FarklePlayerState>> = when {
-        totalPlayers <= 3 -> players.indices.map { it to players[it] }
-
+        totalPlayers <= 5 -> players.indices.map { it to players[it] }
         else -> {
-
-            val prev =
-                if (currentPlayerIndex == 0)
-                    totalPlayers - 1
-                else
-                    currentPlayerIndex - 1
-
-            val next =
-                if (currentPlayerIndex == totalPlayers - 1)
-                    0
-                else
-                    currentPlayerIndex + 1
-
+            val prev2 = (currentPlayerIndex - 2 + totalPlayers) % totalPlayers
+            val prev1 = (currentPlayerIndex - 1 + totalPlayers) % totalPlayers
+            val next1 = (currentPlayerIndex + 1) % totalPlayers
+            val next2 = (currentPlayerIndex + 2) % totalPlayers
             listOf(
-                prev to players[prev],
+                prev2 to players[prev2],
+                prev1 to players[prev1],
                 currentPlayerIndex to players[currentPlayerIndex],
-                next to players[next]
+                next1 to players[next1],
+                next2 to players[next2]
             )
         }
     }
@@ -139,7 +131,8 @@ class FarkleGameActivity : AppCompatActivity() {
     private fun columnWeight(isActive: Boolean): Float = when {
         totalPlayers == 1 -> 1f
         totalPlayers == 2 -> if (isActive) 0.8f else 0.2f
-        else -> if (isActive) 0.6f else 0.2f
+        totalPlayers <= 5 -> if (isActive) 0.6f else 0.2f
+        else -> if (isActive) 0.4f else 0.15f
     }
 
     override fun attachBaseContext(newBase: Context) {
