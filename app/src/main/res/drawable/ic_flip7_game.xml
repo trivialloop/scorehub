@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Playing card outline -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4,2C2.9,2 2,2.9 2,4v16c0,1.1 0.9,2 2,2h16c1.1,0 2,-0.9 2,-2V4c0,-1.1 -0.9,-2 -2,-2H4zM4,4h16v16H4V4z"/>
+    <!-- Number 7 in the centre -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M8.5,7h7v2l-4,8h-2l4,-8H8.5V7z"/>
+</vector>

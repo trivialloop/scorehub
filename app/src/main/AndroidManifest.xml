@@ -112,6 +112,22 @@
             android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity" />
 
         <activity
+            android:name=".games.flip7.Flip7PlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.flip7.Flip7GameActivity"
+            android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.flip7.Flip7StatsActivity"
+            android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.flip7.Flip7Top20Activity"
+            android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
+
+        <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

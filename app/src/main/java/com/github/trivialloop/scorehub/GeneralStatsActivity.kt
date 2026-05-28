@@ -127,6 +127,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Flip 7 ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "flip7",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerFlip7,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorFlip7,
+                    bestPlayerSection = binding.bestPlayerSectionFlip7,
+                    bestScoreView     = binding.textBestScoreFlip7,
+                    bestScoreColor    = binding.bestScoreColorIndicatorFlip7,
+                    bestScoreSection  = binding.bestScoreSectionFlip7,
+                    noDataView        = binding.textNoDataFlip7,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "skyjo",
