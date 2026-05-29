@@ -82,8 +82,8 @@ class Flip7ScoreManagerTest {
     }
 
     @Test
-    fun `x2 bonus applied after 7-card bonus`() {
-        // sum=21, +15 = 36, x2 → 72
+    fun `x2 bonus applied before 7-card bonus`() {
+        // sum=21, x2=42, +15 → 57
         val turn = Flip7Turn(
             roundNumber   = 1,
             playerId      = 1L,
@@ -91,7 +91,7 @@ class Flip7ScoreManagerTest {
             bonusX2       = true,
             isComplete    = true
         )
-        assertEquals(72, turn.score)
+        assertEquals(57, turn.score)
     }
 
     // ─── Flip7Turn.score — plus bonuses ───────────────────────────────────────
@@ -125,7 +125,7 @@ class Flip7ScoreManagerTest {
 
     @Test
     fun `all bonuses combined with 7-card flip`() {
-        // sum=28 (0+1+2+3+4+7+11), +15=43, x2=86, +2+4=92
+        // sum=28 (0+1+2+3+4+7+11), x2=56, +15=71, +2+4=77
         val turn = Flip7Turn(
             roundNumber   = 1,
             playerId      = 1L,
@@ -134,7 +134,7 @@ class Flip7ScoreManagerTest {
             bonusPlus     = listOf(2, 4),
             isComplete    = true
         )
-        assertEquals(92, turn.score)
+        assertEquals(77, turn.score)
     }
 
     // ─── Flip7Turn.score — edge cases ─────────────────────────────────────────
@@ -154,7 +154,7 @@ class Flip7ScoreManagerTest {
 
     @Test
     fun `max possible score 7 cards (6-12) x2 plus all bonuses`() {
-        // cards 6+7+8+9+10+11+12 = 63, +15=78, x2=156, +2+4+6+8+8+10=38 → 194
+        // cards 6+7+8+9+10+11+12 = 63, x2=126, +15=141, +2+4+6+8+8+10=38 → 179
         val turn = Flip7Turn(
             roundNumber   = 1,
             playerId      = 1L,
@@ -163,7 +163,7 @@ class Flip7ScoreManagerTest {
             bonusPlus     = listOf(2, 4, 6, 8, 8, 10),
             isComplete    = true
         )
-        assertEquals(194, turn.score)
+        assertEquals(179, turn.score)
     }
 
     // ─── Flip7PlayerState.getTotal ────────────────────────────────────────────

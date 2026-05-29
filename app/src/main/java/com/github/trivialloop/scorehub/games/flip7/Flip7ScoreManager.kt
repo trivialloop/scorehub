@@ -27,8 +27,8 @@ data class Flip7Turn(
     /**
      * Computes the final score for this turn:
      *  1. Sum of selected card values
-     *  2. +15 if exactly 7 cards are selected
-     *  3. ×2 if bonusX2 is selected
+     *  2. ×2 if bonusX2 is selected
+     *  3. +15 if exactly 7 cards are selected (Flip 7! bonus)
      *  4. + sum of all bonusPlus values
      */
     val score: Int
@@ -36,8 +36,8 @@ data class Flip7Turn(
             if (choseZero) return 0
             if (!isComplete) return 0
             var base = selectedCards.sum()
-            if (selectedCards.size == 7) base += 15
             if (bonusX2) base *= 2
+            if (selectedCards.size == 7) base += 15
             base += bonusPlus.sum()
             return base
         }

@@ -408,13 +408,13 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_flip7_players">3 à 10 joueurs.</string>
     <string name="help_flip7_objective">Accumulez le plus de points en sélectionnant des valeurs de cartes (0–12) à chaque tour, jusqu\'à 7 cartes. Utilisez les cartes bonus pour multiplier ou ajouter à votre score.</string>
-    <string name="help_flip7_scoring">Additionnez les valeurs des cartes choisies. Si vous avez sélectionné exactement 7 cartes, ajoutez 15 points bonus (Flip 7 !). Appliquez ensuite ×2 si sélectionné, puis ajoutez les bonus +. Choisir 0 vous donne 0 point pour ce tour. Le premier joueur tourne à chaque manche.</string>
+    <string name="help_flip7_scoring">Additionnez les valeurs des cartes choisies. Appliquez ensuite ×2 si sélectionné. Ajoutez ensuite 15 points bonus si vous avez sélectionné exactement 7 cartes (Flip 7 !). Enfin, ajoutez les bonus +. Choisir 0 vous donne 0 point pour ce tour. Le premier joueur tourne à chaque manche.</string>
     <string name="help_flip7_end">La partie se termine après une manche où au moins un joueur atteint ou dépasse 200 points. Le joueur avec le total le plus élevé gagne.</string>
     <string name="help_flip7_wikipedia_url">https://fr.wikipedia.org/wiki/Flip_7</string>
 
     <string name="app_help_flip7_1">À votre tour, appuyez sur « 0 » pour marquer 0 ce tour et passer, ou appuyez sur « Flip ! » pour ouvrir l\'écran de sélection des cartes.</string>
     <string name="app_help_flip7_2">Dans l\'écran de sélection, cochez jusqu\'à 7 valeurs de cartes (0–12 sur deux colonnes). Cochez les modificateurs bonus dans la troisième colonne (+2, +4, +6, +8, +8, +10, ×2). L\'aperçu du score se met à jour en temps réel.</string>
-    <string name="app_help_flip7_3">Appuyez sur OK pour valider. Calcul : somme des cartes + 15 si exactement 7 cartes sélectionnées, puis ×2 si coché, puis addition des bonus +.</string>
+    <string name="app_help_flip7_3">Appuyez sur OK pour valider. Calcul : somme des cartes → ×2 si coché → +15 si exactement 7 cartes sélectionnées → addition des bonus +.</string>
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->

@@ -408,13 +408,13 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_flip7_players">3 to 10 players.</string>
     <string name="help_flip7_objective">Accumulate the most points by selecting card values (0–12) each turn, up to 7 cards. Use bonus cards to multiply or add to your score.</string>
-    <string name="help_flip7_scoring">Sum your selected card values. If you selected exactly 7 cards, add 15 bonus points (Flip 7!). Then apply ×2 if selected, then add any +bonus values. Choosing 0 gives you 0 points for the turn. First player rotates each round.</string>
+    <string name="help_flip7_scoring">Sum your selected card values. Then apply ×2 if selected. Then add 15 bonus points if you selected exactly 7 cards (Flip 7!). Finally add any +bonus values. Choosing 0 gives you 0 points for the turn. First player rotates each round.</string>
     <string name="help_flip7_end">The game ends after a round in which at least one player reaches or exceeds 200 points. The player with the highest total wins.</string>
     <string name="help_flip7_wikipedia_url">https://en.wikipedia.org/wiki/Flip_7</string>
 
     <string name="app_help_flip7_1">On your turn, tap "0" to score 0 this round and pass, or tap "Flip!" to open the card selection screen.</string>
     <string name="app_help_flip7_2">In the card selection screen, check up to 7 card values (0–12 across two columns). Check any bonus modifiers in the third column (+2, +4, +6, +8, +8, +10, ×2). The score preview updates live.</string>
-    <string name="app_help_flip7_3">Tap OK to confirm. Scoring: card sum + 15 if exactly 7 cards selected, then ×2 if chosen, then add + bonuses.</string>
+    <string name="app_help_flip7_3">Tap OK to confirm. Scoring: card sum → ×2 if chosen → +15 if exactly 7 cards selected → + bonuses.</string>
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->

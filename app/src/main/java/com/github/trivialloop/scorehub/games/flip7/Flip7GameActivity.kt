@@ -201,7 +201,13 @@ class Flip7GameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
-        row.addView(makeLabelCellMatchParent(roundNum.toString()))
+
+        // Tint label cell with the color of the first player for this round
+        val labelCell = makeLabelCellMatchParent(roundNum.toString())
+        val firstPlayerForRound = players[firstPlayerIndexForRound(roundNum)]
+        labelCell.background = cellDrawable(firstPlayerForRound.playerColor)
+        labelCell.setTextColor(android.graphics.Color.WHITE)
+        row.addView(labelCell)
 
         for ((colIdx, pair) in visible.withIndex()) {
             val (idx, player) = pair
@@ -304,8 +310,8 @@ class Flip7GameActivity : AppCompatActivity() {
                 orientation  = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
-                addView(makeActionButton(getString(R.string.flip7_btn_zero), isZero = true) { performZero(turn) })
                 addView(makeActionButton(getString(R.string.flip7_btn_add),  isZero = false) { showCardSelectionDialog(turn) })
+                addView(makeActionButton(getString(R.string.flip7_btn_zero), isZero = true) { performZero(turn) })
             })
         }
 
@@ -378,8 +384,8 @@ class Flip7GameActivity : AppCompatActivity() {
             val x2 = cbX2?.isChecked ?: false
 
             var base = selectedCards.sum()
-            if (selectedCards.size == 7) base += 15
             if (x2) base *= 2
+            if (selectedCards.size == 7) base += 15
             base += selectedBonusPlus.sum()
 
             val cardCount = selectedCards.size
