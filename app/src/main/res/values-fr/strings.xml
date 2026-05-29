@@ -147,6 +147,24 @@
     <string name="farkle_score_hint">Score (ex: 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
+    <!-- Flip 7 Game -->
+    <string name="flip7_game">Flip 7</string>
+    <string name="flip7_round_label">#</string>
+    <string name="flip7_total">Total</string>
+    <string name="flip7_btn_zero">0</string>
+    <string name="flip7_btn_add">Flip !</string>
+    <string name="flip7_cards_label">Cartes</string>
+    <string name="flip7_bonuses_label">Bonus</string>
+    <string name="flip7_score_preview">Score : %1$d  (%2$d/%3$d cartes%4$s)</string>
+    <string name="flip7_bonus_flip7">Flip 7 !</string>
+    <string name="flip7_minimum_players">Minimum 3 joueurs requis</string>
+    <string name="flip7_maximum_players">Maximum 10 joueurs autorisés</string>
+    <string name="flip7_game_over_title">Fin de partie ?</string>
+    <string name="flip7_game_over_confirm">Un joueur a atteint 200 points. Terminer la partie ?</string>
+    <string name="flip7_quit_game">Quitter la partie</string>
+    <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="flip7_best_score_label">Meilleur Score</string>
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -384,6 +402,20 @@
     <string name="app_help_farkle_2">La dernière entrée est ré-éditable — appuyez dessus pour corriger une erreur avant de banquer.</string>
     <string name="app_help_farkle_3">Appuyez sur Banquer pour valider votre score de tour et passer au joueur suivant. Appuyez sur Farkle ! si aucun dé ne rapporte de points — votre score du tour passe à 0.</string>
     <string name="app_help_farkle_4">Quand un joueur atteint 10 000 points, la partie se termine et le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Flip 7                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_flip7_players">3 à 10 joueurs.</string>
+    <string name="help_flip7_objective">Accumulez le plus de points en sélectionnant des valeurs de cartes (0–12) à chaque tour, jusqu\'à 7 cartes. Utilisez les cartes bonus pour multiplier ou ajouter à votre score.</string>
+    <string name="help_flip7_scoring">Additionnez les valeurs des cartes choisies. Appliquez ensuite ×2 si sélectionné. Ajoutez ensuite 15 points bonus si vous avez sélectionné exactement 7 cartes (Flip 7 !). Enfin, ajoutez les bonus +. Choisir 0 vous donne 0 point pour ce tour. Le premier joueur tourne à chaque manche.</string>
+    <string name="help_flip7_end">La partie se termine après une manche où au moins un joueur atteint ou dépasse 200 points. Le joueur avec le total le plus élevé gagne.</string>
+    <string name="help_flip7_wikipedia_url">https://fr.wikipedia.org/wiki/Flip_7</string>
+
+    <string name="app_help_flip7_1">À votre tour, appuyez sur « 0 » pour marquer 0 ce tour et passer, ou appuyez sur « Flip ! » pour ouvrir l\'écran de sélection des cartes.</string>
+    <string name="app_help_flip7_2">Dans l\'écran de sélection, cochez jusqu\'à 7 valeurs de cartes (0–12 sur deux colonnes). Cochez les modificateurs bonus dans la troisième colonne (+2, +4, +6, +8, +8, +10, ×2). L\'aperçu du score se met à jour en temps réel.</string>
+    <string name="app_help_flip7_3">Appuyez sur OK pour valider. Calcul : somme des cartes → ×2 si coché → +15 si exactement 7 cartes sélectionnées → addition des bonus +.</string>
+    <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                  -->

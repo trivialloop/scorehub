@@ -5,6 +5,7 @@ import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -122,6 +123,17 @@ object GameRegistry {
             maxPlayers     = 8,
             teamMode       = false,
             equipment      = setOf(Equipment.DICE)
+        ),
+        GameDefinition(
+            gameType       = "flip7",
+            nameEnFallback = "Flip 7",
+            nameResId      = R.string.flip7_game,
+            iconResId      = R.drawable.ic_flip7_game,
+            activityClass  = Flip7PlayerSelectionActivity::class.java,
+            minPlayers     = 3,
+            maxPlayers     = 10,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
             gameType       = "skyjo",

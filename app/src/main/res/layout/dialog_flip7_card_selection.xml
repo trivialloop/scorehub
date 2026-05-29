@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CARD VALUES — 3 columns: 0–6 | 7–12 | bonuses -->
+        <!-- ══════════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <!-- Column 1: cards 0–6 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flip7_cards_label"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="4dp" />
+
+                <CheckBox android:id="@+id/cbCard0"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard1"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="1"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard2"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="2"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard3"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="3"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard4"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="4"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard5"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="5"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard6"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="6"  android:textSize="14sp" android:minHeight="40dp" />
+            </LinearLayout>
+
+            <!-- Column 2: cards 7–12 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <!-- Spacer to align with column 1 header -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp" />
+
+                <CheckBox android:id="@+id/cbCard7"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="7"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard8"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="8"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard9"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="9"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard10" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="10" android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard11" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="11" android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbCard12" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="12" android:textSize="14sp" android:minHeight="40dp" />
+            </LinearLayout>
+
+            <!-- Column 3: bonuses -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flip7_bonuses_label"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="4dp" />
+
+                <CheckBox android:id="@+id/cbBonus2"   android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+2"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonus4"   android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+4"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonus6"   android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+6"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonus8a"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+8"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonus8b"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+8"  android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonus10"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="+10" android:textSize="14sp" android:minHeight="40dp" />
+                <CheckBox android:id="@+id/cbBonusX2"  android:layout_width="match_parent" android:layout_height="wrap_content" android:text="×2"  android:textSize="14sp" android:minHeight="40dp"
+                    android:textColor="?attr/colorPrimary" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Score preview -->
+        <TextView
+            android:id="@+id/textScorePreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:padding="8dp" />
+
+    </LinearLayout>
+</ScrollView>
