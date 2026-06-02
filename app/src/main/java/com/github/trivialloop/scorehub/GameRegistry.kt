@@ -6,6 +6,7 @@ import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionAct
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.oh_hell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -134,6 +135,17 @@ object GameRegistry {
             maxPlayers     = 10,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "oh_hell",
+            nameEnFallback = "Oh Hell",
+            nameResId      = R.string.oh_hell_game,
+            iconResId      = R.drawable.ic_oh_hell_game,
+            activityClass  = OhHellPlayerSelectionActivity::class.java,
+            minPlayers     = 3,
+            maxPlayers     = 8,
+            teamMode       = false,
+            equipment      = setOf(Equipment.CARDS)
         ),
         GameDefinition(
             gameType       = "skyjo",

@@ -165,6 +165,17 @@
     <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="flip7_best_score_label">Meilleur Score</string>
 
+    <!-- Oh Hell Game -->
+    <string name="oh_hell_game">OhHell</string>
+    <string name="oh_hell_total">Total</string>
+    <string name="oh_hell_round_label">M%1$d/%2$d</string>
+    <string name="oh_hell_max_cards">max %1$d</string>
+    <string name="oh_hell_choose_contract">Choisir le contrat</string>
+    <string name="oh_hell_choose_result">Résultat</string>
+    <string name="oh_hell_best_score_label">Meilleur Score</string>
+    <string name="oh_hell_quit_game">Quitter la partie</string>
+    <string name="oh_hell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -416,6 +427,20 @@
     <string name="app_help_flip7_2">Dans l\'écran de sélection, cochez jusqu\'à 7 valeurs de cartes (0–12 sur deux colonnes). Cochez les modificateurs bonus dans la troisième colonne (+2, +4, +6, +8, +8, +10, ×2). L\'aperçu du score se met à jour en temps réel.</string>
     <string name="app_help_flip7_3">Appuyez sur OK pour valider. Calcul : somme des cartes → ×2 si coché → +15 si exactement 7 cartes sélectionnées → addition des bonus +.</string>
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Oh Hell                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_oh_hell_players">3 à 8 joueurs.</string>
+    <string name="help_oh_hell_objective">Annoncez exactement le nombre de plis que vous allez remporter à chaque manche. Marquez des points en respectant votre contrat — en prendre trop ou pas assez vous pénalise.</string>
+    <string name="help_oh_hell_scoring">Succès : 5 + 2 × contrat points. Échec : −2 × nombre de plis d\'écart. Le dernier joueur à enchérir ne peut pas choisir un contrat dont le total égalerait le maximum de la manche.</string>
+    <string name="help_oh_hell_end">La partie se termine quand toutes les manches sont jouées. Le nombre de manches dépend du nombre de joueurs : (51 ÷ joueurs) × 2. Le total le plus élevé gagne.</string>
+    <string name="help_oh_hell_wikipedia_url">https://fr.wikipedia.org/wiki/OhHell_(jeu_de_cartes)</string>
+
+    <string name="app_help_oh_hell_1">À chaque manche, les joueurs annoncent leur contrat l\'un après l\'autre. Appuyez sur votre case dans la ligne contrat pour choisir. Le dernier ne peut pas choisir une valeur qui ferait égaler le total au maximum de la manche.</string>
+    <string name="app_help_oh_hell_2">Une fois tous les contrats saisis, appuyez sur votre case résultat : ✅ si vous avez réussi exactement, ou ❌ répété pour chaque pli d\'écart.</string>
+    <string name="app_help_oh_hell_3">Le succès rapporte 5 + 2 × contrat points. Chaque croix rapporte −2. Les scores se mettent à jour automatiquement dans la ligne résultat.</string>
+    <string name="app_help_oh_hell_4">La partie se termine quand toutes les manches sont jouées. Le joueur avec le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                  -->

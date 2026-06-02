@@ -94,6 +94,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
+        "oh_hell" -> GameHelp(
+            players      = context.getString(R.string.help_oh_hell_players),
+            objective    = context.getString(R.string.help_oh_hell_objective),
+            scoring      = context.getString(R.string.help_oh_hell_scoring),
+            endCondition = context.getString(R.string.help_oh_hell_end),
+            wikipediaUrl = context.getString(R.string.help_oh_hell_wikipedia_url)
+        )
+
         "skyjo" -> GameHelp(
             players      = context.getString(R.string.help_skyjo_players),
             objective    = context.getString(R.string.help_skyjo_objective),
@@ -170,6 +178,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_2),
             context.getString(R.string.app_help_flip7_3),
             context.getString(R.string.app_help_flip7_4)
+        ))
+
+        "oh_hell" -> AppHelp(listOf(
+            context.getString(R.string.app_help_oh_hell_1),
+            context.getString(R.string.app_help_oh_hell_2),
+            context.getString(R.string.app_help_oh_hell_3),
+            context.getString(R.string.app_help_oh_hell_4)
         ))
 
         "skyjo" -> AppHelp(listOf(
