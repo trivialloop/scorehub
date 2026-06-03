@@ -141,6 +141,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Oh Hell ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "oh_hell",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerOhHell,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorOhHell,
+                    bestPlayerSection = binding.bestPlayerSectionOhHell,
+                    bestScoreView     = binding.textBestScoreOhHell,
+                    bestScoreColor    = binding.bestScoreColorIndicatorOhHell,
+                    bestScoreSection  = binding.bestScoreSectionOhHell,
+                    noDataView        = binding.textNoDataOhHell,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "skyjo",
