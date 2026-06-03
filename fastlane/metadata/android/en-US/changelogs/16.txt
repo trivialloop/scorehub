@@ -1,0 +1,9 @@
+### Added
+- Add oh hell game
+- Add flip7 game
+
+### Changed
+- Increase player number on yahtzee and farkle
+
+### Fixed
+- Fix scrollable rounds

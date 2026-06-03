@@ -1,0 +1,9 @@
+### Ajout
+- Ajout du jeu ascenseur
+- Ajout du jeu flip7
+
+### Changement
+- Augmente le nombre de joueurs dans les jeux de Yams et Farkle
+
+### Correction
+- Corrige le scroll entre les manches
