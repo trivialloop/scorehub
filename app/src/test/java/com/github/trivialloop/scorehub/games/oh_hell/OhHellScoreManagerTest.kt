@@ -7,211 +7,282 @@ class OhHellScoreManagerTest {
 
     // ── totalRoundsForPlayers ─────────────────────────────
 
-    @Test
-    fun totalRounds_3players() = assertEquals(34, OhHellScoreManager.totalRoundsForPlayers(3))
-
-    @Test
-    fun totalRounds_4players() = assertEquals(24, OhHellScoreManager.totalRoundsForPlayers(4))
-
-    @Test
-    fun totalRounds_5players() = assertEquals(20, OhHellScoreManager.totalRoundsForPlayers(5))
-
-    @Test
-    fun totalRounds_6players() = assertEquals(16, OhHellScoreManager.totalRoundsForPlayers(6))
-
-    @Test
-    fun totalRounds_7players() = assertEquals(14, OhHellScoreManager.totalRoundsForPlayers(7))
-
-    @Test
-    fun totalRounds_8players() = assertEquals(12, OhHellScoreManager.totalRoundsForPlayers(8))
+    @Test fun totalRounds_3players() = assertEquals(34, totalRoundsForPlayers(3))
+    @Test fun totalRounds_4players() = assertEquals(24, totalRoundsForPlayers(4))
+    @Test fun totalRounds_5players() = assertEquals(20, totalRoundsForPlayers(5))
+    @Test fun totalRounds_6players() = assertEquals(16, totalRoundsForPlayers(6))
+    @Test fun totalRounds_7players() = assertEquals(14, totalRoundsForPlayers(7))
+    @Test fun totalRounds_8players() = assertEquals(12, totalRoundsForPlayers(8))
 
     // ── maxCardsForRound ──────────────────────────────────
 
     @Test
     fun maxCards_4players_ascending() {
-        // 24 rounds, half=12 → rounds 1..12 ascend, 13..24 descend
-        val total = OhHellScoreManager.totalRoundsForPlayers(4)
-        assertEquals(1,  OhHellScoreManager.maxCardsForRound(1,  total))
-        assertEquals(6,  OhHellScoreManager.maxCardsForRound(6,  total))
-        assertEquals(12, OhHellScoreManager.maxCardsForRound(12, total))
+        val total = totalRoundsForPlayers(4)
+        assertEquals(1,  maxCardsForRound(1,  total))
+        assertEquals(6,  maxCardsForRound(6,  total))
+        assertEquals(12, maxCardsForRound(12, total))
     }
 
     @Test
     fun maxCards_4players_descending() {
-        val total = OhHellScoreManager.totalRoundsForPlayers(4)
-        assertEquals(12, OhHellScoreManager.maxCardsForRound(13, total))
-        assertEquals(6,  OhHellScoreManager.maxCardsForRound(19, total))
-        assertEquals(1,  OhHellScoreManager.maxCardsForRound(24, total))
+        val total = totalRoundsForPlayers(4)
+        assertEquals(12, maxCardsForRound(13, total))
+        assertEquals(6,  maxCardsForRound(19, total))
+        assertEquals(1,  maxCardsForRound(24, total))
     }
 
     @Test
     fun maxCards_symmetry_4players() {
-        val total = OhHellScoreManager.totalRoundsForPlayers(4)
+        val total = totalRoundsForPlayers(4)
         for (r in 1..total) {
             val mirror = total - r + 1
-            assertEquals(
-                OhHellScoreManager.maxCardsForRound(r, total),
-                OhHellScoreManager.maxCardsForRound(mirror, total)
-            )
+            assertEquals(maxCardsForRound(r, total), maxCardsForRound(mirror, total))
         }
     }
 
     @Test
-    fun maxCards_6players_peak() {
-        // 16 rounds, half=8 → peak is 8
-        val total = OhHellScoreManager.totalRoundsForPlayers(6)
-        assertEquals(8, OhHellScoreManager.maxCardsForRound(8, total))
-        assertEquals(8, OhHellScoreManager.maxCardsForRound(9, total))
+    fun maxCards_6players_two_central_rounds_equal() {
+        val total = totalRoundsForPlayers(6) // 16
+        // rounds 8 and 9 are the two central ones — both should be the peak
+        assertEquals(maxCardsForRound(8, total), maxCardsForRound(9, total))
+        assertEquals(8, maxCardsForRound(8, total))
     }
 
-    // ── allowedContracts / forbiddenContract ─────────────
+    // ── startPlayerIndexForRound / biddingOrderForRound ───
 
     @Test
-    fun allowedContracts_notLastBidder() {
-        // Not last bidder → any value 0..maxCards is allowed
-        val allowed = OhHellScoreManager.allowedContracts(
-            maxCards = 5,
-            sumBidsSoFar = 2,
-            isLastBidder = false
+    fun startPlayer_rotates_each_round() {
+        assertEquals(0, startPlayerIndexForRound(1, 4))
+        assertEquals(1, startPlayerIndexForRound(2, 4))
+        assertEquals(2, startPlayerIndexForRound(3, 4))
+        assertEquals(3, startPlayerIndexForRound(4, 4))
+        assertEquals(0, startPlayerIndexForRound(5, 4))
+    }
+
+    @Test
+    fun biddingOrder_starts_at_correct_player() {
+        val order = biddingOrderForRound(2, 4)  // round 2 → start index 1
+        assertEquals(listOf(1, 2, 3, 0), order)
+    }
+
+    @Test
+    fun biddingOrder_covers_all_players() {
+        val numPlayers = 5
+        val order = biddingOrderForRound(3, numPlayers)
+        assertEquals(numPlayers, order.distinct().size)
+        assertTrue(order.containsAll((0 until numPlayers).toList()))
+    }
+
+    // ── OhHellRound.allowedContracts ──────────────────────
+
+    private fun makeRound(
+        maxCards: Int,
+        startPlayerIndex: Int,
+        playerIds: List<Long>,
+        contractsSoFar: Map<Long, Int> = emptyMap()
+    ): OhHellRound {
+        val round = OhHellRound(
+            roundNumber      = 1,
+            maxCards         = maxCards,
+            startPlayerIndex = startPlayerIndex
         )
+        contractsSoFar.forEach { (id, v) -> round.contracts[id] = v }
+        return round
+    }
+
+    @Test
+    fun allowedContracts_notLastBidder_allValuesAllowed() {
+        // 4 players (ids 0L..3L), startPlayer=0, maxCards=5
+        // player 0 bids first → not the last bidder
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(maxCards = 5, startPlayerIndex = 0, playerIds = ids)
+        val allowed = round.allowedContracts(playerIndex = 0, playerIds = ids)
         assertEquals((0..5).toList(), allowed)
     }
 
     @Test
-    fun allowedContracts_lastBidder_excludesForbidden() {
-        // maxCards=5, sumSoFar=3 → forbidden=2 (5-3)
-        val allowed = OhHellScoreManager.allowedContracts(
-            maxCards = 5,
-            sumBidsSoFar = 3,
-            isLastBidder = true
+    fun allowedContracts_lastBidder_excludesForbiddenValue() {
+        // startPlayer=0, lastBidder=3 (index 3 = start-1 mod 4)
+        // players 0,1,2 already bid 1,1,1 → sum=3; forbidden = 5-3 = 2
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(
+            maxCards         = 5,
+            startPlayerIndex = 0,
+            playerIds        = ids,
+            contractsSoFar   = mapOf(0L to 1, 1L to 1, 2L to 1)
         )
+        val allowed = round.allowedContracts(playerIndex = 3, playerIds = ids)
         assertFalse(allowed.contains(2))
-        assertTrue(allowed.contains(0))
-        assertTrue(allowed.contains(1))
-        assertTrue(allowed.contains(3))
-        assertTrue(allowed.contains(5))
+        assertTrue(allowed.containsAll(listOf(0, 1, 3, 4, 5)))
     }
 
     @Test
     fun allowedContracts_lastBidder_forbiddenNegative_allAllowed() {
-        // maxCards=3, sumSoFar=5 → forbidden would be -2 (impossible) → all allowed
-        val allowed = OhHellScoreManager.allowedContracts(
-            maxCards = 3,
-            sumBidsSoFar = 5,
-            isLastBidder = true
+        // sum of others already exceeds maxCards → no forbidden value
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(
+            maxCards         = 3,
+            startPlayerIndex = 0,
+            playerIds        = ids,
+            contractsSoFar   = mapOf(0L to 2, 1L to 2, 2L to 2)
         )
+        val allowed = round.allowedContracts(playerIndex = 3, playerIds = ids)
         assertEquals((0..3).toList(), allowed)
     }
 
+    // ── OhHellRound.forbiddenContractForLastBidder ────────
+
     @Test
     fun forbiddenContract_basic() {
-        assertEquals(2, OhHellScoreManager.forbiddenContract(maxCards = 5, sumBidsSoFar = 3))
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(
+            maxCards         = 5,
+            startPlayerIndex = 0,
+            playerIds        = ids,
+            contractsSoFar   = mapOf(0L to 1, 1L to 1, 2L to 1)
+        )
+        assertEquals(2, round.forbiddenContractForLastBidder(ids))
     }
 
     @Test
-    fun forbiddenContract_zeroSoFar() {
-        assertEquals(5, OhHellScoreManager.forbiddenContract(maxCards = 5, sumBidsSoFar = 0))
-    }
-
-    // ── getScore ──────────────────────────────────────────
-
-    @Test
-    fun score_exactBid_zero() {
-        // bid=0, tricks=0 → success → 5 + 2*0 = 5
-        assertEquals(5, OhHellScoreManager.getScore(bid = 0, tricksTaken = 0))
-    }
-
-    @Test
-    fun score_exactBid_three() {
-        // bid=3, tricks=3 → 5 + 2*3 = 11
-        assertEquals(11, OhHellScoreManager.getScore(bid = 3, tricksTaken = 3))
+    fun forbiddenContract_zeroSumSoFar() {
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(
+            maxCards         = 5,
+            startPlayerIndex = 0,
+            playerIds        = ids,
+            contractsSoFar   = mapOf(0L to 0, 1L to 0, 2L to 0)
+        )
+        assertEquals(5, round.forbiddenContractForLastBidder(ids))
     }
 
     @Test
-    fun score_oneMiss() {
-        // bid=2, tricks=3 → miss by 1 → -2*1 = -2
-        assertEquals(-2, OhHellScoreManager.getScore(bid = 2, tricksTaken = 3))
+    fun forbiddenContract_noForbiddenWhenSumExceedsMax() {
+        val ids = listOf(0L, 1L, 2L, 3L)
+        val round = makeRound(
+            maxCards         = 3,
+            startPlayerIndex = 0,
+            playerIds        = ids,
+            contractsSoFar   = mapOf(0L to 2, 1L to 2, 2L to 2)
+        )
+        assertNull(round.forbiddenContractForLastBidder(ids))
+    }
+
+    // ── OhHellRound.getScore ──────────────────────────────
+
+    private fun roundWithResult(
+        contract: Int,
+        crosses: Int,
+        playerId: Long = 1L
+    ): OhHellRound {
+        val round = OhHellRound(roundNumber = 1, maxCards = 10, startPlayerIndex = 0)
+        round.contracts[playerId] = contract
+        round.results[playerId]   = crosses
+        return round
     }
 
     @Test
-    fun score_threeMiss() {
-        // bid=5, tricks=2 → miss by 3 → -2*3 = -6
-        assertEquals(-6, OhHellScoreManager.getScore(bid = 5, tricksTaken = 2))
+    fun score_exactBid_zero() = assertEquals(5,  roundWithResult(0, 0).getScore(1L))
+    @Test
+    fun score_exactBid_three() = assertEquals(11, roundWithResult(3, 0).getScore(1L))
+    @Test
+    fun score_oneMiss() = assertEquals(-2, roundWithResult(2, 1).getScore(1L))
+    @Test
+    fun score_threeMiss() = assertEquals(-6, roundWithResult(5, 3).getScore(1L))
+    @Test
+    fun score_missByOne_bidZero() = assertEquals(-2, roundWithResult(0, 1).getScore(1L))
+
+    @Test
+    fun score_returnsNull_whenContractMissing() {
+        val round = OhHellRound(roundNumber = 1, maxCards = 5, startPlayerIndex = 0)
+        round.results[1L] = 0
+        assertNull(round.getScore(1L))
     }
 
     @Test
-    fun score_bidHighMiss() {
-        // bid=0, tricks=1 → miss by 1 → -2
-        assertEquals(-2, OhHellScoreManager.getScore(bid = 0, tricksTaken = 1))
+    fun score_returnsNull_whenResultMissing() {
+        val round = OhHellRound(roundNumber = 1, maxCards = 5, startPlayerIndex = 0)
+        round.contracts[1L] = 2
+        assertNull(round.getScore(1L))
     }
 
-    // ── getResultLabel ────────────────────────────────────
+    // ── OhHellRound.getResultLabel ────────────────────────
 
     @Test
-    fun resultLabel_success() {
-        assertEquals("✅", OhHellScoreManager.getResultLabel(bid = 3, tricksTaken = 3))
-    }
+    fun resultLabel_success() = assertEquals("✅", roundWithResult(3, 0).getResultLabel(1L))
+    @Test
+    fun resultLabel_oneCross() = assertEquals("❌", roundWithResult(2, 1).getResultLabel(1L))
+    @Test
+    fun resultLabel_threeCrosses() = assertEquals("❌❌❌", roundWithResult(0, 3).getResultLabel(1L))
 
     @Test
-    fun resultLabel_oneCross() {
-        assertEquals("❌", OhHellScoreManager.getResultLabel(bid = 2, tricksTaken = 3))
-    }
-
-    @Test
-    fun resultLabel_threeCrosses() {
-        assertEquals("❌❌❌", OhHellScoreManager.getResultLabel(bid = 0, tricksTaken = 3))
-    }
-
-    @Test
-    fun resultLabel_neverCompact() {
-        // Must never produce formats like "❌×6"
-        val label = OhHellScoreManager.getResultLabel(bid = 0, tricksTaken = 6)
-        assertFalse(label.contains("×"))
+    fun resultLabel_neverCompactNotation() {
+        val label = roundWithResult(0, 6).getResultLabel(1L)
+        assertFalse("Must not contain ×", label.contains("×"))
         assertEquals("❌❌❌❌❌❌", label)
     }
 
-    // ── isComplete ────────────────────────────────────────
+    @Test
+    fun resultLabel_emptyWhenNotEntered() {
+        val round = OhHellRound(roundNumber = 1, maxCards = 5, startPlayerIndex = 0)
+        assertEquals("", round.getResultLabel(1L))
+    }
+
+    // ── OhHellRound.isComplete / isContractPhaseComplete ─
 
     @Test
-    fun isComplete_allRoundsPlayed() {
-        val manager = OhHellScoreManager(playerCount = 4)
-        val totalRounds = OhHellScoreManager.totalRoundsForPlayers(4)
-        repeat(totalRounds) { round ->
-            val maxCards = OhHellScoreManager.maxCardsForRound(round + 1, totalRounds)
-            for (p in 0 until 4) {
-                manager.setBid(round, p, 1.coerceAtMost(maxCards))
-                manager.setTricks(round, p, 1.coerceAtMost(maxCards))
-            }
-        }
-        assertTrue(manager.isComplete())
+    fun isComplete_falseWhenNoResults() {
+        val ids = listOf(1L, 2L)
+        val round = OhHellRound(roundNumber = 1, maxCards = 3, startPlayerIndex = 0)
+        assertFalse(round.isComplete(ids))
     }
 
     @Test
-    fun isComplete_notFinished() {
-        val manager = OhHellScoreManager(playerCount = 4)
-        assertFalse(manager.isComplete())
+    fun isComplete_trueWhenAllResultsEntered() {
+        val ids = listOf(1L, 2L)
+        val round = OhHellRound(roundNumber = 1, maxCards = 3, startPlayerIndex = 0)
+        round.results[1L] = 0; round.results[2L] = 1
+        assertTrue(round.isComplete(ids))
     }
 
-    // ── getTotal ──────────────────────────────────────────
+    @Test
+    fun contractPhaseComplete_trueWhenAllContractsEntered() {
+        val ids = listOf(1L, 2L, 3L)
+        val round = OhHellRound(roundNumber = 1, maxCards = 5, startPlayerIndex = 0)
+        round.contracts[1L] = 1; round.contracts[2L] = 2; round.contracts[3L] = 0
+        assertTrue(round.isContractPhaseComplete(ids))
+    }
+
+    // ── OhHellPlayerState.getTotal ────────────────────────
+
+    @Test
+    fun getTotal_emptyRounds() {
+        val player = OhHellPlayerState(1L, "Alice", 0xFF0000)
+        assertEquals(0, player.getTotal(emptyList()))
+    }
 
     @Test
     fun getTotal_singleRoundSuccess() {
-        val manager = OhHellScoreManager(playerCount = 3)
-        // Round 0, player 0: bid=2, tricks=2 → score=9
-        manager.setBid(0, 0, 2)
-        manager.setTricks(0, 0, 2)
-        assertEquals(9, manager.getTotal(0))
+        val player = OhHellPlayerState(1L, "Alice", 0xFF0000)
+        val round = roundWithResult(contract = 2, crosses = 0, playerId = 1L)
+        // 5 + 2*2 = 9
+        assertEquals(9, player.getTotal(listOf(round)))
     }
 
     @Test
     fun getTotal_twoRounds_mixedResults() {
-        val manager = OhHellScoreManager(playerCount = 3)
-        // Round 0: bid=1, tricks=1 → +7
-        manager.setBid(0, 0, 1)
-        manager.setTricks(0, 0, 1)
-        // Round 1: bid=2, tricks=0 → -4
-        manager.setBid(1, 0, 2)
-        manager.setTricks(1, 0, 0)
-        assertEquals(3, manager.getTotal(0))
+        val player = OhHellPlayerState(1L, "Alice", 0xFF0000)
+        val r1 = roundWithResult(contract = 1, crosses = 0, playerId = 1L) // +7
+        val r2 = roundWithResult(contract = 2, crosses = 2, playerId = 1L) // -4
+        assertEquals(3, player.getTotal(listOf(r1, r2)))
+    }
+
+    @Test
+    fun getTotal_ignoresRoundsWithMissingData() {
+        val player = OhHellPlayerState(1L, "Alice", 0xFF0000)
+        val r1 = roundWithResult(contract = 3, crosses = 0, playerId = 1L) // +11
+        val r2 = OhHellRound(roundNumber = 2, maxCards = 5, startPlayerIndex = 0) // no data → 0
+        assertEquals(11, player.getTotal(listOf(r1, r2)))
     }
 }
