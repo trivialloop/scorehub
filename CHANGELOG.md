@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0]
+
+### Added
+- Add oh hell game
+- Add flip7 game
+
+### Changed
+- Increase player number on yahtzee and farkle
+
+### Fixed
+- Fix scrollable rounds
 
 ## [1.10.0]
 
@@ -137,7 +148,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.11.0...HEAD
+[1.10.0]:https://github.com/trivialloop/scorehub/compare/v1.10.0...v1.11.0
 [1.10.0]:https://github.com/trivialloop/scorehub/compare/v1.9.0...v1.10.0
 [1.9.0]:https://github.com/trivialloop/scorehub/compare/v1.8.0...v1.9.0
 [1.8.0]:https://github.com/trivialloop/scorehub/compare/v1.7.2...v1.8.0
