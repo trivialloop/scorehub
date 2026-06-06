@@ -144,6 +144,22 @@
             android:parentActivityName=".games.oh_hell.OhHellPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.qwixx.QwixxPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.qwixx.QwixxGameActivity"
+            android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.qwixx.QwixxStatsActivity"
+            android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.qwixx.QwixxTop20Activity"
+            android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

@@ -166,7 +166,7 @@
     <string name="flip7_best_score_label">Meilleur Score</string>
 
     <!-- Oh Hell Game -->
-    <string name="oh_hell_game">OhHell</string>
+    <string name="oh_hell_game">Ascenseur</string>
     <string name="oh_hell_total">Total</string>
     <string name="oh_hell_round_label">M%1$d/%2$d</string>
     <string name="oh_hell_max_cards">max %1$d</string>
@@ -175,6 +175,25 @@
     <string name="oh_hell_best_score_label">Meilleur Score</string>
     <string name="oh_hell_quit_game">Quitter la partie</string>
     <string name="oh_hell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  QWIXX GAME                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="qwixx_game">Qwixx</string>
+    <string name="qwixx_total">Total</string>
+    <string name="qwixx_penalty_symbol">✗</string>
+    <string name="qwixx_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="qwixx_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="qwixx_game_over_title">Fin de partie</string>
+    <string name="qwixx_game_over_penalties">Un joueur a 4 malus. Fin de partie !</string>
+    <string name="qwixx_game_over_locks">2 couleurs sont verrouillées. Fin de partie !</string>
+    <string name="qwixx_quit_game">Quitter la partie</string>
+    <string name="qwixx_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="qwixx_best_score_label">Meilleur Score</string>
+    <string name="qwixx_phase_active_first">%1$s — choisir une couleur (optionnel)</string>
+    <string name="qwixx_phase_others">%1$s — votre tour (appuyez sur le nom pour passer)</string>
+    <string name="qwixx_phase_active_second">%1$s — choisir à nouveau%2$s</string>
+    <string name="qwixx_phase_active_second_mandatory"> (obligatoire ou malus)</string>
 
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
@@ -435,12 +454,26 @@
     <string name="help_oh_hell_objective">Annoncez exactement le nombre de plis que vous allez remporter à chaque manche. Marquez des points en respectant votre contrat — en prendre trop ou pas assez vous pénalise.</string>
     <string name="help_oh_hell_scoring">Succès : 5 + 2 × contrat points. Échec : −2 × nombre de plis d\'écart. Le dernier joueur à enchérir ne peut pas choisir un contrat dont le total égalerait le maximum de la manche.</string>
     <string name="help_oh_hell_end">La partie se termine quand toutes les manches sont jouées. Le nombre de manches dépend du nombre de joueurs : (51 ÷ joueurs) × 2. Le total le plus élevé gagne.</string>
-    <string name="help_oh_hell_wikipedia_url">https://fr.wikipedia.org/wiki/OhHell_(jeu_de_cartes)</string>
+    <string name="help_oh_hell_wikipedia_url">https://fr.wikipedia.org/wiki/Ascenseur_(jeu_de_cartes)</string>
 
     <string name="app_help_oh_hell_1">À chaque manche, les joueurs annoncent leur contrat l\'un après l\'autre. Appuyez sur votre case dans la ligne contrat pour choisir. Le dernier ne peut pas choisir une valeur qui ferait égaler le total au maximum de la manche.</string>
     <string name="app_help_oh_hell_2">Une fois tous les contrats saisis, appuyez sur votre case résultat : ✅ si vous avez réussi exactement, ou ❌ répété pour chaque pli d\'écart.</string>
     <string name="app_help_oh_hell_3">Le succès rapporte 5 + 2 × contrat points. Chaque croix rapporte −2. Les scores se mettent à jour automatiquement dans la ligne résultat.</string>
     <string name="app_help_oh_hell_4">La partie se termine quand toutes les manches sont jouées. Le joueur avec le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Qwixx                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_qwixx_players">2 à 5 joueurs.</string>
+    <string name="help_qwixx_objective">Cochez des chiffres sur votre feuille de score pour marquer des points. Chaque rangée de couleur suit un sens fixe (rouge et jaune croissant 2→12, vert et bleu décroissant 12→2). Le total le plus élevé gagne.</string>
+    <string name="help_qwixx_scoring">Score par couleur = somme triangulaire des cases cochées (1 case = 1 pt, 2 = 3 pt, 3 = 6 pt … 12 = 78 pt). Chaque malus coûte 5 points. Total = rouge + jaune + vert + bleu − malus.</string>
+    <string name="help_qwixx_end">La partie se termine immédiatement quand un joueur coche un 4e malus, ou quand 2 rangées de couleur sont verrouillées (verrou = dernier chiffre coché avec au moins 5 autres dans cette rangée).</string>
+    <string name="help_qwixx_wikipedia_url">https://de.wikipedia.org/wiki/Qwixx</string>
+
+    <string name="app_help_qwixx_1">La colonne du joueur actif est mise en évidence. À son premier tour, il peut appuyer sur une case disponible pour cocher un chiffre dans une rangée de couleur.</string>
+    <string name="app_help_qwixx_2">Les joueurs non actifs ont ensuite chacun un coché optionnel (appuyez sur une case) ou passent (appuyez sur leur nom).</string>
+    <string name="app_help_qwixx_3">Le joueur actif dispose ensuite d\'un second coché. S\'il a passé son premier tour, ce second coché est obligatoire (case couleur OU malus ✗). Appuyez sur son nom pour passer s\'il a déjà coché à l\'étape 1.</string>
+    <string name="app_help_qwixx_4">La partie se termine automatiquement quand 4 malus sont atteints par un joueur ou que 2 couleurs sont verrouillées. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                  -->

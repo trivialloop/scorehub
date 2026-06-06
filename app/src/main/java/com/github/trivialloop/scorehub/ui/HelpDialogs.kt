@@ -102,6 +102,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_oh_hell_wikipedia_url)
         )
 
+        "qwixx" -> GameHelp(
+            players      = context.getString(R.string.help_qwixx_players),
+            objective    = context.getString(R.string.help_qwixx_objective),
+            scoring      = context.getString(R.string.help_qwixx_scoring),
+            endCondition = context.getString(R.string.help_qwixx_end),
+            wikipediaUrl = context.getString(R.string.help_qwixx_wikipedia_url)
+        )
+
         "skyjo" -> GameHelp(
             players      = context.getString(R.string.help_skyjo_players),
             objective    = context.getString(R.string.help_skyjo_objective),
@@ -185,6 +193,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_oh_hell_2),
             context.getString(R.string.app_help_oh_hell_3),
             context.getString(R.string.app_help_oh_hell_4)
+        ))
+
+        "qwixx" -> AppHelp(listOf(
+            context.getString(R.string.app_help_qwixx_1),
+            context.getString(R.string.app_help_qwixx_2),
+            context.getString(R.string.app_help_qwixx_3),
+            context.getString(R.string.app_help_qwixx_4)
         ))
 
         "skyjo" -> AppHelp(listOf(

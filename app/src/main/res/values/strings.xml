@@ -176,6 +176,25 @@
     <string name="oh_hell_quit_game">Quit Game</string>
     <string name="oh_hell_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  QWIXX GAME                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="qwixx_game">Qwixx</string>
+    <string name="qwixx_total">Total</string>
+    <string name="qwixx_penalty_symbol">✗</string>
+    <string name="qwixx_minimum_players">Minimum 2 players required</string>
+    <string name="qwixx_maximum_players">Maximum 5 players allowed</string>
+    <string name="qwixx_game_over_title">Game Over</string>
+    <string name="qwixx_game_over_penalties">A player has 4 penalties. Game over!</string>
+    <string name="qwixx_game_over_locks">2 colors are locked. Game over!</string>
+    <string name="qwixx_quit_game">Quit Game</string>
+    <string name="qwixx_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="qwixx_best_score_label">Best Score</string>
+    <string name="qwixx_phase_active_first">%1$s — choose a color (optional)</string>
+    <string name="qwixx_phase_others">%1$s — your turn (tap name to pass)</string>
+    <string name="qwixx_phase_active_second">%1$s — choose again%2$s</string>
+    <string name="qwixx_phase_active_second_mandatory"> (mandatory or penalty)</string>
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -441,6 +460,20 @@
     <string name="app_help_oh_hell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
     <string name="app_help_oh_hell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
     <string name="app_help_oh_hell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Qwixx                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_qwixx_players">2 to 5 players.</string>
+    <string name="help_qwixx_objective">Cross off numbers on your scoresheet to score points. Each color row runs in a fixed direction (red and yellow ascending 2→12, green and blue descending 12→2). Highest total score wins.</string>
+    <string name="help_qwixx_scoring">Score per color = triangular sum of checked boxes (1 check = 1 pt, 2 = 3 pt, 3 = 6 pt … 12 = 78 pt). Each penalty costs 5 points. Total = red + yellow + green + blue − penalties.</string>
+    <string name="help_qwixx_end">The game ends immediately when a player marks a 4th penalty, or when 2 color rows are locked (lock = last number checked with at least 5 others in that row).</string>
+    <string name="help_qwixx_wikipedia_url">https://de.wikipedia.org/wiki/Qwixx</string>
+
+    <string name="app_help_qwixx_1">The active player\'s column is highlighted. On their first turn they may tap any available checkbox to cross off a number in a color row.</string>
+    <string name="app_help_qwixx_2">Non-active players then each get one optional check (tap a checkbox) or pass (tap their name).</string>
+    <string name="app_help_qwixx_3">The active player then gets a second check. If they skipped their first check, this second one is mandatory (color box OR penalty ✗). Tap their name to pass if they already checked in step 1.</string>
+    <string name="app_help_qwixx_4">The game ends automatically when 4 penalties are reached by any player or 2 colors are locked. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                  -->

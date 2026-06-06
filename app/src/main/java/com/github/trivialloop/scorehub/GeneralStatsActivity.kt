@@ -155,6 +155,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Qwixx ─────────────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "qwixx",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerQwixx,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorQwixx,
+                    bestPlayerSection = binding.bestPlayerSectionQwixx,
+                    bestScoreView     = binding.textBestScoreQwixx,
+                    bestScoreColor    = binding.bestScoreColorIndicatorQwixx,
+                    bestScoreSection  = binding.bestScoreSectionQwixx,
+                    noDataView        = binding.textNoDataQwixx,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Skyjo ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "skyjo",
