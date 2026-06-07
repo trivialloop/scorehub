@@ -126,6 +126,22 @@
         <activity
             android:name=".games.flip7.Flip7Top20Activity"
             android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
+        
+        <activity
+            android:name=".games.free_game.FreeGamePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.free_game.FreeGameActivity"
+            android:parentActivityName=".games.free_game.FreeGamePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.free_game.FreeGameStatsActivity"
+            android:parentActivityName=".games.free_game.FreeGamePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.free_game.FreeGameTop20Activity"
+            android:parentActivityName=".games.free_game.FreeGamePlayerSelectionActivity" />
 
         <activity
             android:name=".games.oh_hell.OhHellPlayerSelectionActivity"

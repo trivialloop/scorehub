@@ -141,6 +141,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Free Game ───────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "free_game",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerFreegame,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorFreegame,
+                    bestPlayerSection = binding.bestPlayerSectionFreegame,
+                    bestScoreView     = binding.textBestScoreFreegame,
+                    bestScoreColor    = binding.bestScoreColorIndicatorFreegame,
+                    bestScoreSection  = binding.bestScoreSectionFreegame,
+                    noDataView        = binding.textNoDataFreegame,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Oh Hell ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "oh_hell",
