@@ -143,7 +143,7 @@ class GeneralStatsActivity : AppCompatActivity() {
 
                 // ── Free Game ───────────────────────────────────────────────
                 loadGameStats(
-                    gameType          = "free_game",
+                    gameType          = "freegame",
                     players           = players,
                     bestPlayerView    = binding.textBestPlayerFreegame,
                     bestPlayerColor   = binding.bestPlayerColorIndicatorFreegame,

@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.free_game
+package com.github.trivialloop.scorehub.games.freegame
 
 import org.junit.Test
 import org.junit.Assert.*

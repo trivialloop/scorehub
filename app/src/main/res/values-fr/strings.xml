@@ -166,13 +166,13 @@
     <string name="flip7_best_score_label">Meilleur Score</string>
 
     <!-- Free Game -->
-    <string name="free_game_game">Jeu Libre</string>
-    <string name="free_game_round_label">#</string>
-    <string name="free_game_total">Total</string>
-    <string name="free_game_current_round">Manche</string>
-    <string name="free_game_quit_game">Quitter la partie</string>
-    <string name="free_game_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="free_game_best_score_label">Meilleur Score</string>
+    <string name="freegame_game">Jeu Libre</string>
+    <string name="freegame_round_label">#</string>
+    <string name="freegame_total">Total</string>
+    <string name="freegame_current_round">Manche</string>
+    <string name="freegame_quit_game">Quitter la partie</string>
+    <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="freegame_best_score_label">Meilleur Score</string>
 
     <!-- Oh Hell Game -->
     <string name="oh_hell_game">OhHell</string>

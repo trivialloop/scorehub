@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.free_game
+package com.github.trivialloop.scorehub.games.freegame
 
 /**
  * Represents one scoring entry in a Free Game round.

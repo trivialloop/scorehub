@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.free_game
+package com.github.trivialloop.scorehub.games.freegame
 
 import android.content.Context
 import android.graphics.Color
@@ -44,7 +44,7 @@ class FreeGameActivity : AppCompatActivity() {
     private val commitRunnable = Runnable { commitCurrentRound() }
 
     companion object {
-        const val GAME_TYPE        = "free_game"
+        const val GAME_TYPE        = "freegame"
         private const val COMMIT_DELAY_MS  = 2000L
         private const val HEADER_ROW_DP    = 52
         private const val ROUND_ROW_DP     = 40
@@ -85,7 +85,7 @@ class FreeGameActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.free_game_game)
+        supportActionBar?.title = getString(R.string.freegame_game)
 
         buildTable()
     }
@@ -235,7 +235,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(visible: List<Pair<Int, FreeGamePlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)
-        row.addView(makeLabelCell(getString(R.string.free_game_round_label), HEADER_ROW_DP))
+        row.addView(makeLabelCell(getString(R.string.freegame_round_label), HEADER_ROW_DP))
         for ((idx, player) in visible) {
             val cell = makePlayerNameCell(player, idx == currentPlayerIndex, columnWeight(idx == currentPlayerIndex))
             cell.setOnClickListener {
@@ -280,7 +280,7 @@ class FreeGameActivity : AppCompatActivity() {
         }
 
         val scoreLabelCell = TextView(this).apply {
-            text = getString(R.string.free_game_current_round)
+            text = getString(R.string.freegame_current_round)
             textSize = 12f; setTypeface(null, Typeface.BOLD)
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
@@ -398,7 +398,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(visible: List<Pair<Int, FreeGamePlayerState>>, allTotals: List<Int>): LinearLayout {
         val row = makeRow(TOTAL_ROW_DP)
-        row.addView(makeLabelCell(getString(R.string.free_game_total), TOTAL_ROW_DP))
+        row.addView(makeLabelCell(getString(R.string.freegame_total), TOTAL_ROW_DP))
         for ((colIdx, pair) in visible.withIndex()) {
             val (idx, _) = pair
             val isActive = idx == currentPlayerIndex
@@ -504,7 +504,7 @@ class FreeGameActivity : AppCompatActivity() {
     // ─── Options menu ─────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_free_game_game, menu)
+        menuInflater.inflate(R.menu.menu_freegame_game, menu)
         return true
     }
 
@@ -512,8 +512,8 @@ class FreeGameActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 AlertDialog.Builder(this)
-                    .setTitle(R.string.free_game_quit_game)
-                    .setMessage(R.string.free_game_quit_game_message)
+                    .setTitle(R.string.freegame_quit_game)
+                    .setMessage(R.string.freegame_quit_game_message)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         commitHandler.removeCallbacks(commitRunnable)
                         finish()

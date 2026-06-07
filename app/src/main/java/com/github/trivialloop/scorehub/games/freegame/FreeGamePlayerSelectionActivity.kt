@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.free_game
+package com.github.trivialloop.scorehub.games.freegame
 
 import android.content.Context
 import android.content.Intent
@@ -38,7 +38,7 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
     private val selectedPlayers = mutableSetOf<Player>()
 
     companion object {
-        const val GAME_TYPE = "free_game"
+        const val GAME_TYPE = "freegame"
         private const val MIN_PLAYERS = 1
         private const val MAX_PLAYERS = 10
     }
@@ -63,7 +63,7 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
         database = AppDatabase.getDatabase(this)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.free_game_game)
+        supportActionBar?.title = getString(R.string.freegame_game)
 
         setupRecyclerView()
 
@@ -237,13 +237,13 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
     }
 
     private fun savePlayerOrder(players: List<Player>) {
-        getSharedPreferences("free_game_prefs", Context.MODE_PRIVATE)
+        getSharedPreferences("freegame_prefs", Context.MODE_PRIVATE)
             .edit().putString("last_player_order", players.joinToString(",") { it.id.toString() }).apply()
     }
 
     private fun loadLastPlayerOrder() {
         lifecycleScope.launch {
-            val saved = getSharedPreferences("free_game_prefs", Context.MODE_PRIVATE)
+            val saved = getSharedPreferences("freegame_prefs", Context.MODE_PRIVATE)
                 .getString("last_player_order", null) ?: return@launch
             if (allPlayers.isEmpty()) return@launch
             val savedIds = saved.split(",").mapNotNull { it.toLongOrNull() }
@@ -256,7 +256,7 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_free_game_player_selection, menu)
+        menuInflater.inflate(R.menu.menu_freegame_player_selection, menu)
         return true
     }
 

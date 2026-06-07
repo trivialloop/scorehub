@@ -6,7 +6,7 @@ import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionAct
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
-import com.github.trivialloop.scorehub.games.free_game.FreeGamePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.freegame.FreeGamePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.oh_hell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
@@ -138,10 +138,10 @@ object GameRegistry {
             equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
-            gameType       = "free_game",
+            gameType       = "freegame",
             nameEnFallback = "Free Game",
-            nameResId      = R.string.free_game_game,
-            iconResId      = R.drawable.ic_free_game_game,          // create a simple icon
+            nameResId      = R.string.freegame_game,
+            iconResId      = R.drawable.ic_freegame_game,          // create a simple icon
             activityClass  = FreeGamePlayerSelectionActivity::class.java,
             minPlayers     = 1,
             maxPlayers     = 10,

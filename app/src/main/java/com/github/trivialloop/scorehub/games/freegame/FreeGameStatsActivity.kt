@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.free_game
+package com.github.trivialloop.scorehub.games.freegame
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -26,7 +26,7 @@ class FreeGameStatsActivity : AppCompatActivity() {
     private lateinit var database: AppDatabase
 
     companion object {
-        const val GAME_TYPE = "free_game"
+        const val GAME_TYPE = "freegame"
     }
 
     override fun attachBaseContext(newBase: Context) {
