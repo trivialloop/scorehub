@@ -9,10 +9,8 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -42,34 +40,36 @@ class QwixxGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "qwixx"
 
-        // Color row accent colors (ARGB)
         private val ROW_COLOR_RED     = 0xFFE53935.toInt()
         private val ROW_COLOR_YELLOW  = 0xFFFDD835.toInt()
         private val ROW_COLOR_GREEN   = 0xFF43A047.toInt()
         private val ROW_COLOR_BLUE    = 0xFF1E88E5.toInt()
-        private val ROW_COLOR_PENALTY = 0xFF9E9E9E.toInt()
+        private val ROW_COLOR_PENALTY = 0xFF757575.toInt()
 
-        // Grid layout: 4 columns × 3 rows (then last row has lock)
-        // Ascending  (RED/YELLOW):  2 6 10 / 3 7 11 / 4 8 12 / 5 9 🔒
-        // Descending (GREEN/BLUE): 12 8 4 / 11 7 3 / 10 6 2 /  9 5 🔒
+        // Ascending grid layout (RED / YELLOW): 4 rows × 3 cols, null = lock
         private val ASCENDING_GRID = listOf(
             listOf(2, 6, 10),
             listOf(3, 7, 11),
             listOf(4, 8, 12),
-            listOf(5, 9, null)   // null = lock
+            listOf(5, 9, null)
         )
+        // Descending grid layout (GREEN / BLUE)
         private val DESCENDING_GRID = listOf(
             listOf(12, 8, 4),
             listOf(11, 7, 3),
             listOf(10, 6, 2),
-            listOf(9, 5, null)   // null = lock
+            listOf(9, 5, null)
         )
-
-        // Penalty grid: 2 columns × 2 rows
+        // Penalty grid: 2 rows × 2 cols
         private val PENALTY_GRID = listOf(
             listOf(0, 1),
             listOf(2, 3)
         )
+
+        // Cell size in dp — uniform for every player
+        private const val CELL_DP = 44
+        // Label column width in dp
+        private const val LABEL_COL_DP = 28
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -113,22 +113,7 @@ class QwixxGameActivity : AppCompatActivity() {
         val container = binding.scoreTableContainer
         container.removeAllViews()
 
-        val totalPlayers = gameState.players.size
-        val activeIdx    = gameState.activePlayerIndex
-
-        // Determine visible players (same logic as Yahtzee for 6+, but max is 5)
-        val visibleIndices = when {
-            totalPlayers <= 5 -> (0 until totalPlayers).toList()
-            else -> {
-                val p2 = (activeIdx - 2 + totalPlayers) % totalPlayers
-                val p1 = (activeIdx - 1 + totalPlayers) % totalPlayers
-                val n1 = (activeIdx + 1) % totalPlayers
-                val n2 = (activeIdx + 2) % totalPlayers
-                listOf(p2, p1, activeIdx, n1, n2)
-            }
-        }
-
-        // Build main horizontal scroll container
+        // Outer horizontal scroll so all players are always reachable
         val scrollH = android.widget.HorizontalScrollView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -138,330 +123,324 @@ class QwixxGameActivity : AppCompatActivity() {
         }
 
         val mainRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
+            orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
         }
 
-        // Label column
+        // Label column (color swatches)
         mainRow.addView(buildLabelColumn())
 
-        // Player columns
-        for (playerIdx in visibleIndices) {
-            val isActive = playerIdx == activeIdx
-            mainRow.addView(buildPlayerColumn(playerIdx, isActive))
+        // One column per player — all the same fixed width
+        for (idx in gameState.players.indices) {
+            mainRow.addView(buildPlayerColumn(idx))
         }
 
         scrollH.addView(mainRow)
         container.addView(scrollH)
     }
 
-    // ─── Label column ────────────────────────────────────────────────────────
+    // ─── Label column ─────────────────────────────────────────────────────────
 
     private fun buildLabelColumn(): LinearLayout {
         val col = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(dpToPx(60), LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LinearLayout.LayoutParams(
+                dpToPx(LABEL_COL_DP),
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
         }
 
-        // Header spacer
-        col.addView(makeHeaderSpacerCell(dpToPx(48)))
+        // Header (player name height)
+        col.addView(spacerCell(dpToPx(CELL_DP)))
 
-        // Color rows
-        col.addView(makeColorLabelCell(ROW_COLOR_RED,     dpToPx(colorRowHeight(QwixxColor.RED))))
-        col.addView(makeColorLabelCell(ROW_COLOR_YELLOW,  dpToPx(colorRowHeight(QwixxColor.YELLOW))))
-        col.addView(makeColorLabelCell(ROW_COLOR_GREEN,   dpToPx(colorRowHeight(QwixxColor.GREEN))))
-        col.addView(makeColorLabelCell(ROW_COLOR_BLUE,    dpToPx(colorRowHeight(QwixxColor.BLUE))))
-        col.addView(makeColorLabelCell(ROW_COLOR_PENALTY, dpToPx(colorRowHeight(null))))
+        // 4 color rows: 4 grid-rows × CELL_DP each
+        col.addView(colorSwatchCell(ROW_COLOR_RED,     4 * dpToPx(CELL_DP)))
+        col.addView(colorSwatchCell(ROW_COLOR_YELLOW,  4 * dpToPx(CELL_DP)))
+        col.addView(colorSwatchCell(ROW_COLOR_GREEN,   4 * dpToPx(CELL_DP)))
+        col.addView(colorSwatchCell(ROW_COLOR_BLUE,    4 * dpToPx(CELL_DP)))
 
-        // Total label
-        col.addView(makeTotalLabelCell())
+        // Penalty row: 2 grid-rows × CELL_DP
+        col.addView(colorSwatchCell(ROW_COLOR_PENALTY, 2 * dpToPx(CELL_DP)))
+
+        // Total row
+        col.addView(totalLabelCell())
 
         return col
     }
 
-    private fun makeHeaderSpacerCell(height: Int): android.view.View = android.view.View(this).apply {
+    private fun spacerCell(height: Int): android.view.View = android.view.View(this).apply {
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-        background = cellDrawable(ContextCompat.getColor(this@QwixxGameActivity, R.color.header_cell_background))
+        background = solidDrawable(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.header_cell_background))
     }
 
-    private fun makeColorLabelCell(color: Int, height: Int): android.view.View = android.view.View(this).apply {
+    private fun colorSwatchCell(color: Int, height: Int): android.view.View = android.view.View(this).apply {
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-        background = cellDrawable(color)
+        background = solidDrawable(color)
     }
 
-    private fun makeTotalLabelCell(): TextView = TextView(this).apply {
+    private fun totalLabelCell(): TextView = TextView(this).apply {
         text = getString(R.string.qwixx_total)
-        gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(44))
-        background = cellDrawable(ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
+        gravity = Gravity.CENTER; textSize = 10f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(CELL_DP))
+        background = solidDrawable(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
         setTextColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
     }
 
     // ─── Player column ────────────────────────────────────────────────────────
 
-    private fun buildPlayerColumn(playerIdx: Int, isActive: Boolean): LinearLayout {
-        val player = gameState.players[playerIdx]
-        val weight = columnWeight(isActive)
+    private fun buildPlayerColumn(playerIdx: Int): LinearLayout {
+        val player   = gameState.players[playerIdx]
+        val isActive = playerIdx == gameState.activePlayerIndex
+
+        // Fixed width: 3 cells wide
+        val colWidth = 3 * dpToPx(CELL_DP)
 
         val col = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+            layoutParams = LinearLayout.LayoutParams(colWidth, LinearLayout.LayoutParams.MATCH_PARENT)
         }
 
-        col.addView(makePlayerNameCell(player, isActive, playerIdx))
-        col.addView(buildColorRow(playerIdx, QwixxColor.RED))
-        col.addView(buildColorRow(playerIdx, QwixxColor.YELLOW))
-        col.addView(buildColorRow(playerIdx, QwixxColor.GREEN))
-        col.addView(buildColorRow(playerIdx, QwixxColor.BLUE))
-        col.addView(buildPenaltyRow(playerIdx))
+        col.addView(buildNameCell(player, isActive, playerIdx))
+        col.addView(buildColorRowGrid(playerIdx, QwixxColor.RED,     ASCENDING_GRID,  ROW_COLOR_RED))
+        col.addView(buildColorRowGrid(playerIdx, QwixxColor.YELLOW,  ASCENDING_GRID,  ROW_COLOR_YELLOW))
+        col.addView(buildColorRowGrid(playerIdx, QwixxColor.GREEN,   DESCENDING_GRID, ROW_COLOR_GREEN))
+        col.addView(buildColorRowGrid(playerIdx, QwixxColor.BLUE,    DESCENDING_GRID, ROW_COLOR_BLUE))
+        col.addView(buildPenaltyGrid(playerIdx))
         col.addView(buildTotalCell(player))
 
         return col
     }
 
-    private fun makePlayerNameCell(player: QwixxPlayerState, isActive: Boolean, playerIdx: Int): TextView =
+    private fun buildNameCell(player: QwixxPlayerState, isActive: Boolean, playerIdx: Int): TextView =
         TextView(this).apply {
             text = player.playerName
-            gravity = Gravity.CENTER; textSize = if (isActive) 14f else 11f
-            setTypeface(null, Typeface.BOLD)
+            gravity = Gravity.CENTER
+            textSize = 12f
+            setTypeface(null, if (isActive) Typeface.BOLD else Typeface.NORMAL)
             maxLines = 1; ellipsize = TextUtils.TruncateAt.END
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48))
-            background = cellDrawable(player.playerColor); setTextColor(Color.WHITE)
-            // Tap to switch active player view (non-active player's turn in OTHERS phase)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(CELL_DP))
+            // Active player: full opacity; others: slightly dimmed
+            alpha = if (isActive) 1f else 0.7f
+            background = solidDrawable(player.playerColor)
+            setTextColor(Color.WHITE)
+            // Tap = pass (for non-active in OTHERS phase, or active passing in ACTIVE_SECOND)
             setOnClickListener { onPlayerNameTapped(playerIdx) }
         }
 
-    // ─── Color row ────────────────────────────────────────────────────────────
+    // ─── Color grid ───────────────────────────────────────────────────────────
 
-    private fun buildColorRow(playerIdx: Int, color: QwixxColor): LinearLayout {
-        val player   = gameState.players[playerIdx]
-        val rowState = player.rowState(color)
-        val rowColor = rowAccentColor(color)
-        val isGloballyLocked = gameState.lockState.isLocked(color)
-        val grid     = if (color == QwixxColor.RED || color == QwixxColor.YELLOW) ASCENDING_GRID else DESCENDING_GRID
+    /**
+     * Builds a 4-row × 3-col grid of number cells for one color row.
+     * No visible separators between cells — each cell is CELL_DP × CELL_DP.
+     */
+    private fun buildColorRowGrid(
+        playerIdx: Int,
+        color: QwixxColor,
+        grid: List<List<Int?>>,
+        accentColor: Int
+    ): LinearLayout {
+        val player         = gameState.players[playerIdx]
+        val rowState       = player.rowState(color)
+        val globallyLocked = gameState.lockState.isLocked(color)
 
-        val rowContainer = LinearLayout(this).apply {
+        val gridLayout = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(colorRowHeight(color))
+                4 * dpToPx(CELL_DP)
             )
-            background = cellDrawable(adjustAlpha(rowColor, 0.15f))
         }
 
         for (gridRow in grid) {
-            val lineLayout = LinearLayout(this).apply {
+            val rowLayout = LinearLayout(this).apply {
                 orientation  = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(CELL_DP))
             }
             for (number in gridRow) {
                 if (number == null) {
-                    // Lock checkbox
-                    lineLayout.addView(buildLockCell(playerIdx, color, rowState, isGloballyLocked, rowColor))
+                    rowLayout.addView(buildLockCell(rowState, accentColor))
                 } else {
-                    lineLayout.addView(buildNumberCell(playerIdx, color, number, rowState, isGloballyLocked, rowColor))
+                    rowLayout.addView(buildNumberCell(playerIdx, color, number, rowState, globallyLocked, accentColor))
                 }
             }
-            rowContainer.addView(lineLayout)
+            gridLayout.addView(rowLayout)
         }
-        return rowContainer
+        return gridLayout
     }
 
+    /**
+     * A single number cell — CELL_DP × CELL_DP square.
+     *
+     * Visual states:
+     *  - checked   : accent color background, white text, ✓ checkmark
+     *  - skipped   : very faint background, faded text (number is behind last checked)
+     *  - canCheck  : light yellow (cell_editable_bg) background, normal text — tappable
+     *  - default   : white background, normal text — not tappable
+     */
     private fun buildNumberCell(
-        playerIdx: Int, color: QwixxColor, number: Int,
-        rowState: QwixxRowState, isGloballyLocked: Boolean, accentColor: Int
-    ): LinearLayout {
+        playerIdx: Int,
+        color: QwixxColor,
+        number: Int,
+        rowState: QwixxRowState,
+        globallyLocked: Boolean,
+        accentColor: Int
+    ): TextView {
         val isChecked  = rowState.checked.contains(number)
-        val canCheck   = !isGloballyLocked && rowState.canCheck(number) && canPlayerCheckColor(playerIdx)
-        val isSkipped  = !isChecked && !rowState.canCheck(number) && !isGloballyLocked
+        val canCheck   = !globallyLocked && rowState.canCheck(number) && canPlayerInteract(playerIdx, color)
+        val isSkipped  = !isChecked && !globallyLocked && !rowState.locked && run {
+            // A number is "skipped" (no longer reachable) if it comes before the last checked in sequence
+            val seq = rowState.numbers
+            val lastCheckedIdx = rowState.checked.mapNotNull { seq.indexOf(it).takeIf { i -> i >= 0 } }.maxOrNull() ?: -1
+            val myIdx = seq.indexOf(number)
+            myIdx in 0 until lastCheckedIdx
+        }
 
-        val cell = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity     = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            val bg = when {
-                isChecked   -> accentColor
-                isSkipped   -> adjustAlpha(accentColor, 0.1f)
-                canCheck    -> ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_editable_bg)
-                else        -> ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_background)
+        val bgColor = when {
+            isChecked  -> accentColor
+            isSkipped  -> blendColor(accentColor, 0.08f)
+            canCheck   -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+            else       -> ContextCompat.getColor(this, R.color.score_cell_background)
+        }
+
+        return TextView(this).apply {
+            // Show ✓ when checked, number otherwise
+            text = if (isChecked) "✓\n$number" else number.toString()
+            gravity = Gravity.CENTER
+            textSize = if (isChecked) 11f else 13f
+            setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(CELL_DP), dpToPx(CELL_DP))
+            background = solidDrawable(bgColor)
+            setTextColor(when {
+                isChecked -> Color.WHITE
+                isSkipped -> blendColor(
+                    ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_text), 0.25f)
+                else      -> ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_text)
+            })
+            if (canCheck) {
+                setOnClickListener { onNumberChecked(playerIdx, color, number) }
             }
-            background = cellDrawable(bg)
         }
-
-        val cb = CheckBox(this).apply {
-            isEnabled       = canCheck && !isChecked
-            isClickable     = canCheck && !isChecked
-            buttonTintList  = android.content.res.ColorStateList.valueOf(accentColor)
-            layoutParams    = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { gravity = Gravity.CENTER }
-            if (isSkipped) alpha = 0.2f
-            if (canCheck && !isChecked) {
-                setOnClickListener {
-                    onNumberChecked(playerIdx, color, number)
-                }
-            }
-        }
-
-        val tv = TextView(this).apply {
-            text     = number.toString()
-            textSize = 10f
-            gravity  = Gravity.CENTER
-            setTextColor(if (isChecked) Color.WHITE else ContextCompat.getColor(
-                this@QwixxGameActivity, R.color.score_cell_text))
-            if (isSkipped) alpha = 0.2f
-        }
-
-        cell.addView(cb)
-        cell.addView(tv)
-        return cell
     }
 
-    private fun buildLockCell(
-        playerIdx: Int, color: QwixxColor,
-        rowState: QwixxRowState, isGloballyLocked: Boolean, accentColor: Int
-    ): LinearLayout {
-        val isChecked = rowState.locked
-
-        val cell = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity     = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            background = cellDrawable(
-                if (isChecked) accentColor
+    /**
+     * Lock cell — shown as 🔒 with accent background when locked, grey otherwise.
+     */
+    private fun buildLockCell(rowState: QwixxRowState, accentColor: Int): TextView =
+        TextView(this).apply {
+            text = "🔒"
+            gravity = Gravity.CENTER; textSize = 16f
+            layoutParams = LinearLayout.LayoutParams(dpToPx(CELL_DP), dpToPx(CELL_DP))
+            background = solidDrawable(
+                if (rowState.locked) accentColor
                 else ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_never_bg)
             )
+            alpha = if (rowState.locked) 1f else 0.4f
         }
 
-        val cb = CheckBox(this).apply {
-            this.isChecked = isChecked
-            isEnabled      = false
-            isClickable    = false
-            buttonTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            layoutParams   = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { gravity = Gravity.CENTER }
-        }
+    // ─── Penalty grid ─────────────────────────────────────────────────────────
 
-        val tv = TextView(this).apply {
-            text     = "🔒"
-            textSize = 10f
-            gravity  = Gravity.CENTER
-        }
-
-        cell.addView(cb)
-        cell.addView(tv)
-        return cell
-    }
-
-    // ─── Penalty row ──────────────────────────────────────────────────────────
-
-    private fun buildPenaltyRow(playerIdx: Int): LinearLayout {
-        val player  = gameState.players[playerIdx]
-        val penaltyCount = player.penalties
+    private fun buildPenaltyGrid(playerIdx: Int): LinearLayout {
+        val player        = gameState.players[playerIdx]
+        val penaltyCount  = player.penalties
         val canAddPenalty = canPlayerAddPenalty(playerIdx)
 
-        val rowContainer = LinearLayout(this).apply {
+        val gridLayout = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(colorRowHeight(null))
+                2 * dpToPx(CELL_DP)
             )
-            background = cellDrawable(adjustAlpha(ROW_COLOR_PENALTY, 0.15f))
         }
 
         for (gridRow in PENALTY_GRID) {
-            val lineLayout = LinearLayout(this).apply {
+            val rowLayout = LinearLayout(this).apply {
                 orientation  = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(CELL_DP))
             }
             for (penaltyIdx in gridRow) {
                 val isChecked = penaltyIdx < penaltyCount
                 val canCheck  = canAddPenalty && penaltyIdx == penaltyCount
+                val bgColor = when {
+                    isChecked -> ROW_COLOR_PENALTY
+                    canCheck  -> ContextCompat.getColor(this, R.color.cell_editable_bg)
+                    else      -> ContextCompat.getColor(this, R.color.score_cell_background)
+                }
 
-                val cell = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL
-                    gravity     = Gravity.CENTER
-                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-                    background  = cellDrawable(
-                        if (isChecked) ROW_COLOR_PENALTY
-                        else if (canCheck) ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_editable_bg)
-                        else ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_background)
+                val cell = TextView(this).apply {
+                    text = if (isChecked) "✓\n✗" else "✗"
+                    gravity = Gravity.CENTER
+                    textSize = if (isChecked) 11f else 14f
+                    setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
+                    layoutParams = LinearLayout.LayoutParams(dpToPx(CELL_DP), dpToPx(CELL_DP))
+                    background = solidDrawable(bgColor)
+                    setTextColor(
+                        if (isChecked) Color.WHITE
+                        else ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_text)
                     )
+                    if (canCheck) setOnClickListener { onPenaltyChecked(playerIdx) }
                 }
-
-                val cb = CheckBox(this).apply {
-                    this.isChecked = isChecked
-                    isEnabled      = canCheck
-                    isClickable    = canCheck
-                    buttonTintList = android.content.res.ColorStateList.valueOf(ROW_COLOR_PENALTY)
-                    layoutParams   = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply { gravity = Gravity.CENTER }
-                    if (canCheck) setOnClickListener {
-                        onPenaltyChecked(playerIdx)
-                    }
-                }
-
-                val tv = TextView(this).apply {
-                    text     = getString(R.string.qwixx_penalty_symbol)
-                    textSize = 10f
-                    gravity  = Gravity.CENTER
-                    setTextColor(if (isChecked) Color.WHITE
-                    else ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_text))
-                }
-
-                cell.addView(cb)
-                cell.addView(tv)
-                lineLayout.addView(cell)
+                rowLayout.addView(cell)
             }
-            rowContainer.addView(lineLayout)
+            // Filler cell (3rd column placeholder so width matches color rows)
+            rowLayout.addView(android.view.View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(dpToPx(CELL_DP), dpToPx(CELL_DP))
+                background = solidDrawable(
+                    ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_background))
+            })
+            gridLayout.addView(rowLayout)
         }
-        return rowContainer
+        return gridLayout
     }
 
     // ─── Total cell ───────────────────────────────────────────────────────────
 
-    private fun buildTotalCell(player: QwixxPlayerState): TextView {
-        val total = player.totalScore()
-        return TextView(this).apply {
-            text = total.toString()
-            gravity = Gravity.CENTER; textSize = 15f; setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(44))
-            background = cellDrawable(ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
+    private fun buildTotalCell(player: QwixxPlayerState): TextView =
+        TextView(this).apply {
+            text = player.totalScore().toString()
+            gravity = Gravity.CENTER; textSize = 14f; setTypeface(null, Typeface.BOLD)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(CELL_DP))
+            background = solidDrawable(
+                ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
             setTextColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
         }
-    }
 
-    // ─── Game logic ───────────────────────────────────────────────────────────
+    // ─── Turn / interaction logic ─────────────────────────────────────────────
 
     /**
-     * Returns true if [playerIdx] is currently allowed to interact with color checkboxes.
+     * Returns true if [playerIdx] is allowed to tap a color number cell right now.
+     *
+     * ACTIVE_FIRST  → only the active player
+     * OTHERS        → any non-active player who hasn't finished this phase yet
+     * ACTIVE_SECOND → only the active player
+     *
+     * Special: during OTHERS phase the active player can also tap 12/2 (last number)
+     * if they already checked it in ACTIVE_FIRST — that is handled inside onNumberChecked.
+     * Here we just block color interactions for the active player during OTHERS.
      */
-    private fun canPlayerCheckColor(playerIdx: Int): Boolean {
+    private fun canPlayerInteract(playerIdx: Int, color: QwixxColor): Boolean {
         if (gameState.isOver) return false
         val round = gameState.currentRound ?: return false
         return when (round.phase) {
             QwixxRoundPhase.ACTIVE_FIRST  -> playerIdx == round.activePlayerIndex
-            QwixxRoundPhase.OTHERS        -> {
-                // Any non-active player who hasn't finished yet
-                playerIdx != round.activePlayerIndex && !round.othersFinished.contains(playerIdx)
-            }
+            QwixxRoundPhase.OTHERS        -> playerIdx != round.activePlayerIndex &&
+                    !round.othersFinished.contains(playerIdx)
             QwixxRoundPhase.ACTIVE_SECOND -> playerIdx == round.activePlayerIndex
         }
     }
 
     /**
-     * Returns true if [playerIdx] is currently allowed to check a penalty.
-     * Only the active player in ACTIVE_SECOND phase (mandatory if no color was checked).
+     * Penalty can only be added by the active player in ACTIVE_SECOND phase
+     * when they did NOT check any color in ACTIVE_FIRST.
      */
     private fun canPlayerAddPenalty(playerIdx: Int): Boolean {
         if (gameState.isOver) return false
@@ -470,100 +449,116 @@ class QwixxGameActivity : AppCompatActivity() {
         return round.phase == QwixxRoundPhase.ACTIVE_SECOND && !round.activeCheckedFirst
     }
 
+    // ─── Event handlers ───────────────────────────────────────────────────────
+
     private fun onPlayerNameTapped(playerIdx: Int) {
-        val round = gameState.currentRound ?: return
         if (gameState.isOver) return
+        val round = gameState.currentRound ?: return
 
         when (round.phase) {
+            QwixxRoundPhase.ACTIVE_FIRST -> {
+                // Active player taps their own name = pass (skip their first check)
+                if (playerIdx == round.activePlayerIndex) {
+                    // Move directly to OTHERS (or ACTIVE_SECOND if solo)
+                    round.phase = if (gameState.players.size == 1)
+                        QwixxRoundPhase.ACTIVE_SECOND
+                    else
+                        QwixxRoundPhase.OTHERS
+                    buildTable()
+                }
+            }
             QwixxRoundPhase.OTHERS -> {
-                // Tapping a non-active player name = that player passes
-                if (playerIdx != round.activePlayerIndex && !round.othersFinished.contains(playerIdx)) {
+                // Non-active player taps their name = pass
+                if (playerIdx != round.activePlayerIndex &&
+                    !round.othersFinished.contains(playerIdx)) {
                     round.othersFinished.add(playerIdx)
                     advanceOthersOrNextPhase()
+                    buildTable()
                 }
             }
             QwixxRoundPhase.ACTIVE_SECOND -> {
-                // Tapping active player in ACTIVE_SECOND = they pass (only if they already checked in phase 1)
+                // Active player taps their name = pass (only allowed if they already checked in phase 1)
                 if (playerIdx == round.activePlayerIndex && round.activeCheckedFirst) {
                     advanceToNextRound()
+                    if (!gameState.checkEndCondition()) buildTable()
+                    else endGame()
                 }
             }
-            else -> {}
         }
-        buildTable()
     }
 
     private fun onNumberChecked(playerIdx: Int, color: QwixxColor, number: Int) {
-        val round = gameState.currentRound ?: return
+        if (gameState.isOver) return
+        val round  = gameState.currentRound ?: return
         val player = gameState.players[playerIdx]
 
+        // Attempt to check the number in this player's row
         val success = player.rowState(color).check(number)
-        if (!success) {
-            buildTable()
-            return
-        }
+        if (!success) { buildTable(); return }
 
-        // Sync global lock state
-        gameState.syncLocks()
+        // If this player locked their row, register the global lock
+        if (player.rowState(color).locked) {
+            gameState.lockState.lock(color)
+            // Propagate lock to all other players' rows
+            for (p in gameState.players) {
+                if (p.playerId != player.playerId) {
+                    p.rowState(color).locked = true
+                }
+            }
+        }
 
         when (round.phase) {
             QwixxRoundPhase.ACTIVE_FIRST -> {
                 round.activeCheckedFirst = true
-                round.phase = QwixxRoundPhase.OTHERS
-                // If only 1 player, skip OTHERS phase
-                if (gameState.players.size == 1) round.phase = QwixxRoundPhase.ACTIVE_SECOND
+                round.phase = if (gameState.players.size == 1)
+                    QwixxRoundPhase.ACTIVE_SECOND
+                else
+                    QwixxRoundPhase.OTHERS
             }
             QwixxRoundPhase.OTHERS -> {
                 round.othersFinished.add(playerIdx)
                 advanceOthersOrNextPhase()
             }
             QwixxRoundPhase.ACTIVE_SECOND -> {
-                // Active player's second check (or first if they skipped phase 1)
+                // Active player's second check — end of turn
                 advanceToNextRound()
+                if (gameState.checkEndCondition()) { endGame(); return }
                 buildTable()
                 return
             }
         }
 
-        if (gameState.checkEndCondition()) {
-            endGame()
-            return
-        }
+        if (gameState.checkEndCondition()) { endGame(); return }
         buildTable()
     }
 
     private fun onPenaltyChecked(playerIdx: Int) {
+        if (gameState.isOver) return
         val round = gameState.currentRound ?: return
         if (round.phase != QwixxRoundPhase.ACTIVE_SECOND) return
         if (playerIdx != round.activePlayerIndex) return
-        if (round.activeCheckedFirst) return   // penalty only mandatory when no color was checked
+        if (round.activeCheckedFirst) return
 
-        val player = gameState.players[playerIdx]
-        player.penalties++
-
+        gameState.players[playerIdx].penalties++
         advanceToNextRound()
 
-        if (gameState.checkEndCondition()) {
-            endGame()
-            return
-        }
+        if (gameState.checkEndCondition()) { endGame(); return }
         buildTable()
     }
 
     private fun advanceOthersOrNextPhase() {
         val round = gameState.currentRound ?: return
         val allNonActive = gameState.players.indices.filter { it != round.activePlayerIndex }
-        val allFinished  = allNonActive.all { round.othersFinished.contains(it) }
-        if (allFinished) {
+        if (allNonActive.all { round.othersFinished.contains(it) }) {
             round.phase = QwixxRoundPhase.ACTIVE_SECOND
         }
     }
 
     private fun advanceToNextRound() {
         val round = gameState.currentRound ?: return
-        val nextActiveIdx = (round.activePlayerIndex + 1) % gameState.players.size
-        gameState.activePlayerIndex = nextActiveIdx
-        gameState.currentRound = QwixxRound(round.roundNumber + 1, nextActiveIdx)
+        val nextIdx = (round.activePlayerIndex + 1) % gameState.players.size
+        gameState.activePlayerIndex = nextIdx
+        gameState.currentRound = QwixxRound(round.roundNumber + 1, nextIdx)
     }
 
     private fun endGame() {
@@ -598,38 +593,28 @@ class QwixxGameActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+    // ─── Drawing helpers ──────────────────────────────────────────────────────
 
-    private fun colorRowHeight(color: QwixxColor?): Int = when (color) {
-        null -> 88   // penalty: 2 rows × ~44dp
-        else -> 176  // 4 grid rows × ~44dp
+    /**
+     * Blends [color] toward white (or black) at the given [alpha].
+     * Used to produce faded / ghost variants of accent colors.
+     */
+    private fun blendColor(color: Int, alpha: Float): Int {
+        val bg = ContextCompat.getColor(this, R.color.score_cell_background)
+        val r  = (Color.red(color)   * alpha + Color.red(bg)   * (1f - alpha)).toInt()
+        val g  = (Color.green(color) * alpha + Color.green(bg) * (1f - alpha)).toInt()
+        val b  = (Color.blue(color)  * alpha + Color.blue(bg)  * (1f - alpha)).toInt()
+        return Color.argb(255, r, g, b)
     }
 
-    private fun columnWeight(isActive: Boolean): Float = when {
-        gameState.players.size == 1 -> 1f
-        gameState.players.size == 2 -> if (isActive) 0.75f else 0.25f
-        gameState.players.size <= 5 -> if (isActive) 0.5f  else 0.15f
-        else                        -> if (isActive) 0.4f  else 0.15f
-    }
-
-    private fun rowAccentColor(color: QwixxColor) = when (color) {
-        QwixxColor.RED    -> ROW_COLOR_RED
-        QwixxColor.YELLOW -> ROW_COLOR_YELLOW
-        QwixxColor.GREEN  -> ROW_COLOR_GREEN
-        QwixxColor.BLUE   -> ROW_COLOR_BLUE
-    }
-
-    private fun adjustAlpha(color: Int, alpha: Float): Int {
-        val a = (255 * alpha).toInt()
-        return (color and 0x00FFFFFF) or (a shl 24)
-    }
-
-    private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
+    private fun solidDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
         setStroke(1, ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_border))
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
+
+    // ─── Menu ─────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_qwixx_game, menu); return true
