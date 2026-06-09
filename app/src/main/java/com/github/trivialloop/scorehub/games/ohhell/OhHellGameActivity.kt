@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.oh_hell
+package com.github.trivialloop.scorehub.games.ohhell
 
 import android.content.Context
 import android.graphics.Color
@@ -112,7 +112,7 @@ class OhHellGameActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.oh_hell_game)
+        supportActionBar?.title = getString(R.string.ohhell_game)
 
         startNextRound()
         buildTable()
@@ -280,7 +280,7 @@ class OhHellGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(visible: List<Pair<Int, OhHellPlayerState>>): LinearLayout {
         val row = makeRow()
-        row.addView(makeLabelCell(getString(R.string.oh_hell_total), isTotal = true))
+        row.addView(makeLabelCell(getString(R.string.ohhell_total), isTotal = true))
 
         val allTotals = visible.map { (_, p) -> p.getTotal(rounds) }
 
@@ -322,9 +322,9 @@ class OhHellGameActivity : AppCompatActivity() {
         else null
 
         val title = if (isEdit)
-            "✏️ ${player.playerName} — ${getString(R.string.oh_hell_choose_contract)} (${getString(R.string.oh_hell_max_cards, round.maxCards)})"
+            "✏️ ${player.playerName} — ${getString(R.string.ohhell_choose_contract)} (${getString(R.string.ohhell_max_cards, round.maxCards)})"
         else
-            "${player.playerName} — ${getString(R.string.oh_hell_choose_contract)} (${getString(R.string.oh_hell_max_cards, round.maxCards)})"
+            "${player.playerName} — ${getString(R.string.ohhell_choose_contract)} (${getString(R.string.ohhell_max_cards, round.maxCards)})"
 
         val items = allowed.map { v ->
             if (forbidden != null && v == forbidden) "✗ $v" else "$v"
@@ -358,9 +358,9 @@ class OhHellGameActivity : AppCompatActivity() {
         isEdit: Boolean = false
     ) {
         val title = if (isEdit)
-            "✏️ ${player.playerName} — ${getString(R.string.oh_hell_choose_result)}"
+            "✏️ ${player.playerName} — ${getString(R.string.ohhell_choose_result)}"
         else
-            "${player.playerName} — ${getString(R.string.oh_hell_choose_result)}"
+            "${player.playerName} — ${getString(R.string.ohhell_choose_result)}"
 
         // 0 = ✅, 1..maxCards = repeated ❌ (never compact)
         val items = buildList {
@@ -562,8 +562,8 @@ class OhHellGameActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 AlertDialog.Builder(this)
-                    .setTitle(R.string.oh_hell_quit_game)
-                    .setMessage(R.string.oh_hell_quit_game_message)
+                    .setTitle(R.string.ohhell_quit_game)
+                    .setMessage(R.string.ohhell_quit_game_message)
                     .setPositiveButton(R.string.yes) { _, _ -> finish() }
                     .setNegativeButton(R.string.no, null)
                     .show()

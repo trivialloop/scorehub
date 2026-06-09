@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.oh_hell
+package com.github.trivialloop.scorehub.games.ohhell
 
 import android.content.Context
 import android.content.Intent
@@ -64,7 +64,7 @@ class OhHellPlayerSelectionActivity : AppCompatActivity() {
         database = AppDatabase.getDatabase(this)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.oh_hell_game)
+        supportActionBar?.title = getString(R.string.ohhell_game)
 
         setupRecyclerView()
 
@@ -243,13 +243,13 @@ class OhHellPlayerSelectionActivity : AppCompatActivity() {
     }
 
     private fun savePlayerOrder(players: List<Player>) {
-        getSharedPreferences("oh_hell_prefs", Context.MODE_PRIVATE)
+        getSharedPreferences("ohhell_prefs", Context.MODE_PRIVATE)
             .edit().putString("last_player_order", players.joinToString(",") { it.id.toString() }).apply()
     }
 
     private fun loadLastPlayerOrder() {
         lifecycleScope.launch {
-            val saved = getSharedPreferences("oh_hell_prefs", Context.MODE_PRIVATE)
+            val saved = getSharedPreferences("ohhell_prefs", Context.MODE_PRIVATE)
                 .getString("last_player_order", null) ?: return@launch
             if (allPlayers.isEmpty()) return@launch
             val savedIds = saved.split(",").mapNotNull { it.toLongOrNull() }
@@ -270,10 +270,10 @@ class OhHellPlayerSelectionActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> { finish(); true }
-            R.id.action_oh_hell_game_stats -> {
+            R.id.action_ohhell_game_stats -> {
                 startActivity(Intent(this, OhHellStatsActivity::class.java)); true
             }
-            R.id.action_oh_hell_top20 -> {
+            R.id.action_ohhell_top20 -> {
                 startActivity(Intent(this, OhHellTop20Activity::class.java)); true
             }
             R.id.action_help -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }

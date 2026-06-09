@@ -979,7 +979,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/oh_hell_game"
+                        android:text="@string/ohhell_game"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorPrimary"
@@ -1071,7 +1071,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/oh_hell_best_score_label"
+                                android:text="@string/ohhell_best_score_label"
                                 android:textSize="14sp"
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:textStyle="bold" />
