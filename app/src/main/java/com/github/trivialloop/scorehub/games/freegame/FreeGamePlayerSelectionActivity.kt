@@ -38,7 +38,7 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
     private val selectedPlayers = mutableSetOf<Player>()
 
     companion object {
-        const val GAME_TYPE = "freegame"
+        const val GAME_TYPE    = "freegame"
         private const val MIN_PLAYERS = 1
         private const val MAX_PLAYERS = 10
     }
@@ -189,11 +189,13 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
     private fun addPlayer(name: String, color: Int) {
         lifecycleScope.launch {
             if (database.playerDao().getPlayerByName(name) != null) {
-                Toast.makeText(this@FreeGamePlayerSelectionActivity, R.string.player_name_already_exists, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FreeGamePlayerSelectionActivity,
+                    R.string.player_name_already_exists, Toast.LENGTH_SHORT).show()
             } else {
                 val playerId = database.playerDao().insertPlayer(Player(name = name, color = color))
                 selectedPlayers.add(Player(id = playerId, name = name, color = color))
-                Toast.makeText(this@FreeGamePlayerSelectionActivity, getString(R.string.player_added, name), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FreeGamePlayerSelectionActivity,
+                    getString(R.string.player_added, name), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -202,11 +204,13 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val existing = database.playerDao().getPlayerByName(newName)
             if (existing != null && existing.id != player.id) {
-                Toast.makeText(this@FreeGamePlayerSelectionActivity, R.string.player_name_already_exists, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FreeGamePlayerSelectionActivity,
+                    R.string.player_name_already_exists, Toast.LENGTH_SHORT).show()
             } else {
                 database.playerDao().updatePlayer(player.copy(name = newName, color = newColor))
                 database.gameResultDao().updatePlayerNameInResults(player.id, newName)
-                Toast.makeText(this@FreeGamePlayerSelectionActivity, getString(R.string.player_updated, newName), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FreeGamePlayerSelectionActivity,
+                    getString(R.string.player_updated, newName), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -219,7 +223,8 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     database.playerDao().deletePlayer(player)
                     selectedPlayers.remove(player)
-                    Toast.makeText(this@FreeGamePlayerSelectionActivity, getString(R.string.player_deleted, player.name), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FreeGamePlayerSelectionActivity,
+                        getString(R.string.player_deleted, player.name), Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton(R.string.no, null)
@@ -238,7 +243,9 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
 
     private fun savePlayerOrder(players: List<Player>) {
         getSharedPreferences("freegame_prefs", Context.MODE_PRIVATE)
-            .edit().putString("last_player_order", players.joinToString(",") { it.id.toString() }).apply()
+            .edit()
+            .putString("last_player_order", players.joinToString(",") { it.id.toString() })
+            .apply()
     }
 
     private fun loadLastPlayerOrder() {
@@ -250,11 +257,13 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
             val ordered  = mutableListOf<Player>()
             for (id in savedIds) allPlayers.find { it.id == id }?.let { ordered.add(it) }
             for (p in allPlayers) if (!ordered.contains(p)) ordered.add(p)
-            allPlayers.clear(); allPlayers.addAll(ordered)
+            allPlayers.clear()
+            allPlayers.addAll(ordered)
             adapter.notifyDataSetChanged()
         }
     }
 
+    // No stats / top20 / help for Free Game — menu only has back navigation
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_freegame_player_selection, menu)
         return true
@@ -267,6 +276,8 @@ class FreeGamePlayerSelectionActivity : AppCompatActivity() {
         }
     }
 }
+
+// ─── Adapter ──────────────────────────────────────────────────────────────────
 
 class FreeGamePlayerSelectionAdapter(
     private val players: List<Player>,

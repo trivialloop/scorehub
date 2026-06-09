@@ -4,12 +4,12 @@ package com.github.trivialloop.scorehub.games.freegame
  * Represents one scoring entry in a Free Game round.
  *
  * A round belongs to a single player (the one who scored).
- * The round is finalized automatically after 2 seconds of inactivity.
+ * It is finalized automatically after 2 seconds of inactivity.
  */
 data class FreeGameRound(
     val roundNumber: Int,
     val playerId: Long,
-    var score: Int = 0,           // accumulated score for this round
+    var score: Int = 0,
     var isComplete: Boolean = false
 )
 

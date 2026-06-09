@@ -35,7 +35,7 @@ class FreeGameScoreManagerTest {
         val rounds = listOf(
             FreeGameRound(1, 1L, score = 3, isComplete = true),
             FreeGameRound(2, 1L, score = 5, isComplete = true),
-            FreeGameRound(3, 1L, score = 2, isComplete = false) // not complete
+            FreeGameRound(3, 1L, score = 2, isComplete = false)
         )
         assertEquals(8, player.getTotal(rounds))
     }
@@ -56,7 +56,7 @@ class FreeGameScoreManagerTest {
     fun `getTotal handles negative scores`() {
         val player = FreeGamePlayerState(1L, "Alice", 0xFF0000)
         val rounds = listOf(
-            FreeGameRound(1, 1L, score = 5, isComplete = true),
+            FreeGameRound(1, 1L, score = 5,  isComplete = true),
             FreeGameRound(2, 1L, score = -2, isComplete = true)
         )
         assertEquals(3, player.getTotal(rounds))
@@ -82,10 +82,73 @@ class FreeGameScoreManagerTest {
         assertEquals(150, player.getTotal(rounds))
     }
 
+    @Test
+    fun `getTotal with multiple players returns correct individual totals`() {
+        val alice = FreeGamePlayerState(1L, "Alice", 0xFF0000)
+        val bob   = FreeGamePlayerState(2L, "Bob",   0x00FF00)
+        val rounds = listOf(
+            FreeGameRound(1, 1L, score = 3, isComplete = true),
+            FreeGameRound(2, 2L, score = 7, isComplete = true),
+            FreeGameRound(3, 1L, score = 5, isComplete = true),
+            FreeGameRound(4, 2L, score = 2, isComplete = true)
+        )
+        assertEquals(8,  alice.getTotal(rounds))
+        assertEquals(9,  bob.getTotal(rounds))
+    }
+
     // ─── Score accumulation ───────────────────────────────────────────────────
 
     @Test
-    fun `score increments correctly`() {
+    fun `score increments by +1`() {
+        val round = FreeGameRound(1, 1L)
+        round.score += 1
+        assertEquals(1, round.score)
+    }
+
+    @Test
+    fun `score increments by +2`() {
+        val round = FreeGameRound(1, 1L)
+        round.score += 2
+        assertEquals(2, round.score)
+    }
+
+    @Test
+    fun `score increments by +5`() {
+        val round = FreeGameRound(1, 1L)
+        round.score += 5
+        assertEquals(5, round.score)
+    }
+
+    @Test
+    fun `score decrements by -1`() {
+        val round = FreeGameRound(1, 1L, score = 5)
+        round.score -= 1
+        assertEquals(4, round.score)
+    }
+
+    @Test
+    fun `score decrements by -2`() {
+        val round = FreeGameRound(1, 1L, score = 5)
+        round.score -= 2
+        assertEquals(3, round.score)
+    }
+
+    @Test
+    fun `score decrements by -5`() {
+        val round = FreeGameRound(1, 1L, score = 5)
+        round.score -= 5
+        assertEquals(0, round.score)
+    }
+
+    @Test
+    fun `score can go negative`() {
+        val round = FreeGameRound(1, 1L, score = 2)
+        round.score -= 5
+        assertEquals(-3, round.score)
+    }
+
+    @Test
+    fun `multiple increments accumulate correctly`() {
         val round = FreeGameRound(1, 1L)
         round.score += 2
         round.score += 5
@@ -94,16 +157,35 @@ class FreeGameScoreManagerTest {
     }
 
     @Test
-    fun `score decrements correctly`() {
-        val round = FreeGameRound(1, 1L, score = 10)
-        round.score -= 3
-        assertEquals(7, round.score)
+    fun `mix of increments and decrements`() {
+        val round = FreeGameRound(1, 1L)
+        round.score += 5
+        round.score += 2
+        round.score -= 1
+        round.score += 5
+        round.score -= 2
+        assertEquals(9, round.score)
+    }
+
+    // ─── Completion ───────────────────────────────────────────────────────────
+
+    @Test
+    fun `incomplete round is not counted in total`() {
+        val player = FreeGamePlayerState(1L, "Alice", 0xFF0000)
+        val rounds = listOf(
+            FreeGameRound(1, 1L, score = 10, isComplete = true),
+            FreeGameRound(2, 1L, score = 3,  isComplete = false)
+        )
+        assertEquals(10, player.getTotal(rounds))
     }
 
     @Test
-    fun `score can go negative`() {
-        val round = FreeGameRound(1, 1L, score = 2)
-        round.score -= 5
-        assertEquals(-3, round.score)
+    fun `completing a round includes it in total`() {
+        val player = FreeGamePlayerState(1L, "Alice", 0xFF0000)
+        val round  = FreeGameRound(1, 1L, score = 7)
+        val rounds = listOf(round)
+        assertEquals(0, player.getTotal(rounds))
+        round.isComplete = true
+        assertEquals(7, player.getTotal(rounds))
     }
 }

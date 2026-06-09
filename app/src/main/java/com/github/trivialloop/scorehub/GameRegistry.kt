@@ -141,7 +141,7 @@ object GameRegistry {
             gameType       = "freegame",
             nameEnFallback = "Free Game",
             nameResId      = R.string.freegame_game,
-            iconResId      = R.drawable.ic_freegame_game,          // create a simple icon
+            iconResId      = R.drawable.ic_freegame_game,
             activityClass  = FreeGamePlayerSelectionActivity::class.java,
             minPlayers     = 1,
             maxPlayers     = 10,

@@ -136,14 +136,6 @@
             android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity" />
 
         <activity
-            android:name=".games.freegame.FreeGameStatsActivity"
-            android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity" />
-
-        <activity
-            android:name=".games.freegame.FreeGameTop20Activity"
-            android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity" />
-
-        <activity
             android:name=".games.oh_hell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

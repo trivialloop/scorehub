@@ -28,15 +28,16 @@ import com.github.trivialloop.scorehub.utils.ScoreColorRole
 class FreeGameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFreegameGameBinding
+
     private lateinit var playerIds: LongArray
     private lateinit var playerNames: Array<String>
     private lateinit var playerColors: IntArray
     private lateinit var players: List<FreeGamePlayerState>
 
-    // All completed rounds + the current in-progress round (if any)
+    // All rounds: completed ones + possibly one in-progress
     private val rounds = mutableListOf<FreeGameRound>()
 
-    // Index of the currently selected/active player
+    // Index of the currently active (scoring) player
     private var currentPlayerIndex = 0
 
     // Handler + Runnable for the 2-second auto-commit timer
@@ -44,14 +45,14 @@ class FreeGameActivity : AppCompatActivity() {
     private val commitRunnable = Runnable { commitCurrentRound() }
 
     companion object {
-        const val GAME_TYPE        = "freegame"
-        private const val COMMIT_DELAY_MS  = 2000L
-        private const val HEADER_ROW_DP    = 52
-        private const val ROUND_ROW_DP     = 40
-        private const val ACTIVE_ROW_DP    = 44
-        private const val BTN_ROW_DP       = 48
-        private const val TOTAL_ROW_DP     = 52
-        private const val LABEL_COL_DP     = 65
+        const val GAME_TYPE       = "freegame"
+        private const val COMMIT_DELAY_MS = 2000L
+        private const val HEADER_ROW_DP   = 52
+        private const val ACTIVE_ROW_DP   = 44
+        private const val BTN_ROW_DP      = 48
+        private const val ROUND_ROW_DP    = 40
+        private const val TOTAL_ROW_DP    = 52
+        private const val LABEL_COL_DP    = 65
     }
 
     private val totalPlayers get() = players.size
@@ -118,7 +119,7 @@ class FreeGameActivity : AppCompatActivity() {
         totalPlayers == 1 -> 1f
         totalPlayers == 2 -> if (isActive) 0.8f else 0.2f
         totalPlayers <= 5 -> if (isActive) 0.6f else 0.2f
-        else -> if (isActive) 0.4f else 0.15f
+        else              -> if (isActive) 0.4f else 0.15f
     }
 
     // ─── Round / timer logic ──────────────────────────────────────────────────
@@ -128,17 +129,16 @@ class FreeGameActivity : AppCompatActivity() {
         rounds.lastOrNull { !it.isComplete }
 
     /**
-     * Add a score delta to the active player's current round.
-     * Resets the 2-second commit timer.
+     * Add [delta] to the active player's current round score.
+     * Creates a new round if needed. Resets the 2-second commit timer.
      */
     private fun addScore(delta: Int) {
         val active = players[currentPlayerIndex]
 
-        // If there is no in-progress round for the active player, create one.
         val round = currentRound()
             ?.takeIf { it.playerId == active.playerId }
             ?: run {
-                // Commit any lingering round from a different player first.
+                // Commit any lingering round from a different player
                 currentRound()?.let { it.isComplete = true }
                 val newRound = FreeGameRound(
                     roundNumber = rounds.count { it.isComplete } + 1,
@@ -150,42 +150,40 @@ class FreeGameActivity : AppCompatActivity() {
 
         round.score += delta
 
-        // Reset the 2-second timer
         commitHandler.removeCallbacks(commitRunnable)
         commitHandler.postDelayed(commitRunnable, COMMIT_DELAY_MS)
 
         buildTable()
     }
 
-    /** Commit the current in-progress round (called after 2s timeout). */
+    /** Called automatically after 2 s of inactivity. */
     private fun commitCurrentRound() {
         currentRound()?.isComplete = true
         buildTable()
     }
 
     /**
-     * Delete the last completed round (only if there is no active in-progress round)
-     * and start a new editable 2-second window for the same player.
-     * Used when the user taps the last round cell of the active player.
+     * Tap on the last completed round of the active player while no round
+     * is in-progress: removes that round, restores its score as editable,
+     * and starts a fresh 2-second window.
      */
     private fun undoLastRound() {
-        // Only allow undo when there is no active in-progress round
-        if (currentRound() != null) return
+        if (currentRound() != null) return   // already an active round
 
-        val lastCompleted = rounds.lastOrNull { it.isComplete } ?: return
-        rounds.remove(lastCompleted)
+        val last = rounds.lastOrNull { it.isComplete } ?: return
+        rounds.remove(last)
 
-        // Re-create the round as in-progress
-        currentPlayerIndex = players.indexOfFirst { it.playerId == lastCompleted.playerId }
+        // Switch active player to whoever owned the last round
+        currentPlayerIndex = players.indexOfFirst { it.playerId == last.playerId }
             .takeIf { it >= 0 } ?: currentPlayerIndex
+
         val restored = FreeGameRound(
             roundNumber = rounds.count { it.isComplete } + 1,
-            playerId    = lastCompleted.playerId,
-            score       = lastCompleted.score
+            playerId    = last.playerId,
+            score       = last.score
         )
         rounds.add(restored)
 
-        // Start the 2-second window
         commitHandler.removeCallbacks(commitRunnable)
         commitHandler.postDelayed(commitRunnable, COMMIT_DELAY_MS)
 
@@ -195,53 +193,51 @@ class FreeGameActivity : AppCompatActivity() {
     // ─── Table construction ───────────────────────────────────────────────────
 
     private fun buildTable() {
-        val visible      = getVisiblePlayers()
+        val visible = getVisiblePlayers()
+
         val completedByPlayer: Map<Long, List<FreeGameRound>> = visible.associate { (_, p) ->
             p.playerId to rounds.filter { it.playerId == p.playerId && it.isComplete }
         }
-        val activeRound  = currentRound()
-        val allTotals    = visible.map { (_, p) -> p.getTotal(rounds) }
+        val activeRound   = currentRound()
+        val maxCompleted  = completedByPlayer.values.maxOfOrNull { it.size } ?: 0
+        val totalSlots    = if (activeRound != null) maxCompleted + 1 else maxCompleted
+        val allTotals     = visible.map { (_, p) -> p.getTotal(rounds) }
 
-        val maxCompleted = completedByPlayer.values.maxOfOrNull { it.size } ?: 0
-        // If there is an active round being entered, we need one extra slot
-        val activeSlot   = if (activeRound != null) maxCompleted else -1
-        val totalSlots   = if (activeRound != null) maxCompleted + 1 else maxCompleted
+        // Fixed header: player names + current-round score display + ± buttons
+        binding.headerContainer.removeAllViews()
+        binding.headerContainer.addView(buildHeaderRow(visible))
+        binding.headerContainer.addView(buildCurrentRoundRow(activeRound))
+        binding.headerContainer.addView(buildButtonRow(isPositive = true))
+        binding.headerContainer.addView(buildButtonRow(isPositive = false))
 
-        val headerRow    = buildHeaderRow(visible)
-        val slotRows     = (0 until totalSlots).map { slotIdx ->
-            val isActiveSlot = activeRound != null && slotIdx == maxCompleted
+        // Scrollable: one row per slot + total row
+        binding.tableContainer.removeAllViews()
+        for (slotIdx in 0 until totalSlots) {
+            val isActiveSlot  = activeRound != null && slotIdx == maxCompleted
             val slotScores: List<Int?> = visible.map { (_, p) ->
                 completedByPlayer[p.playerId]?.getOrNull(slotIdx)?.score
             }
-            buildSlotRow(visible, completedByPlayer, slotIdx, isActiveSlot, activeRound, slotScores)
+            binding.tableContainer.addView(
+                buildSlotRow(visible, completedByPlayer, slotIdx, isActiveSlot, activeRound, slotScores)
+            )
         }
-        val totalRow     = buildTotalRow(visible, allTotals)
-        val controlRow   = buildControlRow()
-
-        // Fixed header
-        binding.headerContainer.removeAllViews()
-        binding.headerContainer.addView(headerRow)
-        binding.headerContainer.addView(controlRow)
-
-        // Scrollable: slot rows + total
-        binding.tableContainer.removeAllViews()
-        slotRows.forEach { binding.tableContainer.addView(it) }
-        binding.tableContainer.addView(totalRow)
+        binding.tableContainer.addView(buildTotalRow(visible, allTotals))
 
         binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
-    // ─── Header row ───────────────────────────────────────────────────────────
+    // ─── Header: player name row ──────────────────────────────────────────────
 
     private fun buildHeaderRow(visible: List<Pair<Int, FreeGamePlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)
         row.addView(makeLabelCell(getString(R.string.freegame_round_label), HEADER_ROW_DP))
         for ((idx, player) in visible) {
-            val cell = makePlayerNameCell(player, idx == currentPlayerIndex, columnWeight(idx == currentPlayerIndex))
+            val isActive = idx == currentPlayerIndex
+            val cell = makePlayerNameCell(player, isActive, columnWeight(isActive))
             cell.setOnClickListener {
                 val realIdx = players.indexOfFirst { it.playerId == player.playerId }
                 if (realIdx >= 0 && realIdx != currentPlayerIndex) {
-                    // Commit any in-progress round before switching player
+                    // Commit any in-progress round before switching
                     commitHandler.removeCallbacks(commitRunnable)
                     commitCurrentRound()
                     currentPlayerIndex = realIdx
@@ -253,83 +249,51 @@ class FreeGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ─── Control row (+1 +2 +5 / -1 -2 -5) ──────────────────────────────────
+    // ─── Header: current-round score display ──────────────────────────────────
 
-    private fun buildControlRow(): LinearLayout {
-        val container = LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
+    private fun buildCurrentRoundRow(activeRound: FreeGameRound?): LinearLayout {
+        val row = makeRow(ACTIVE_ROW_DP)
+        val active = players[currentPlayerIndex]
+        val score  = activeRound
+            ?.takeIf { it.playerId == active.playerId }
+            ?.score
 
-        // Current round score display
-        val activeRound   = currentRound()
-        val activePlayer  = players[currentPlayerIndex]
-        val currentScore  = activeRound
-            ?.takeIf { it.playerId == activePlayer.playerId }
-            ?.score ?: 0
+        val labelCell = makeLabelCell(getString(R.string.freegame_current_round), ACTIVE_ROW_DP)
+        row.addView(labelCell)
 
-        val scoreRow = LinearLayout(this).apply {
-            orientation  = LinearLayout.HORIZONTAL
-            gravity      = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ACTIVE_ROW_DP))
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity,
-                if (activeRound != null && activeRound.playerId == activePlayer.playerId)
-                    R.color.cell_editable_bg else R.color.score_cell_background))
-        }
-
-        val scoreLabelCell = TextView(this).apply {
-            text = getString(R.string.freegame_current_round)
-            textSize = 12f; setTypeface(null, Typeface.BOLD)
-            gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
-            setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_text))
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_background))
-        }
-
-        val scoreValueCell = TextView(this).apply {
-            text = if (activeRound != null && activeRound.playerId == activePlayer.playerId)
-                currentScore.toString() else ""
-            textSize = 20f; setTypeface(null, Typeface.BOLD)
-            gravity = Gravity.CENTER
+        // One cell spanning all player columns — shows the active score
+        val scoreCell = TextView(this).apply {
+            text = score?.toString() ?: ""
+            gravity   = Gravity.CENTER
+            textSize  = 22f
+            setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            background = cellDrawable(
+                ContextCompat.getColor(this@FreeGameActivity,
+                    if (score != null) R.color.cell_editable_filled_bg
+                    else R.color.score_cell_background)
+            )
             setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_text))
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity,
-                if (activeRound != null && activeRound.playerId == activePlayer.playerId)
-                    R.color.cell_editable_filled_bg else R.color.score_cell_background))
         }
-        scoreRow.addView(scoreLabelCell)
-        scoreRow.addView(scoreValueCell)
-        container.addView(scoreRow)
+        row.addView(scoreCell)
+        return row
+    }
 
-        // Row 1: + buttons
-        val plusRow = makeRow(BTN_ROW_DP)
-        val labelPlus = TextView(this).apply {
-            text = ""; gravity = Gravity.CENTER
+    // ─── Header: +1 +2 +5 or -1 -2 -5 button row ────────────────────────────
+
+    private fun buildButtonRow(isPositive: Boolean): LinearLayout {
+        val row = makeRow(BTN_ROW_DP)
+        // Empty label column
+        row.addView(TextView(this).apply {
             layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
             background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_background))
+        })
+        for (v in listOf(1, 2, 5)) {
+            val delta = if (isPositive) v else -v
+            val label = if (isPositive) "+$v" else "-$v"
+            row.addView(makeScoreButton(label, isPositive) { addScore(delta) })
         }
-        plusRow.addView(labelPlus)
-        for (delta in listOf(1, 2, 5)) {
-            plusRow.addView(makeScoreButton("+$delta", isPositive = true) { addScore(delta) })
-        }
-        container.addView(plusRow)
-
-        // Row 2: - buttons
-        val minusRow = makeRow(BTN_ROW_DP)
-        val labelMinus = TextView(this).apply {
-            text = ""; gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_background))
-        }
-        minusRow.addView(labelMinus)
-        for (delta in listOf(1, 2, 5)) {
-            minusRow.addView(makeScoreButton("-$delta", isPositive = false) { addScore(-delta) })
-        }
-        container.addView(minusRow)
-
-        return container
+        return row
     }
 
     // ─── Slot row ─────────────────────────────────────────────────────────────
@@ -348,32 +312,33 @@ class FreeGameActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
-        val roundNum = slotIdx + 1
-        row.addView(makeLabelCellMatchParent(roundNum.toString()))
+        row.addView(makeLabelCellMatchParent((slotIdx + 1).toString()))
 
         for ((colIdx, pair) in visible.withIndex()) {
             val (idx, player) = pair
             val isActive = idx == currentPlayerIndex
             val w        = columnWeight(isActive)
 
+            val completedRound = completedByPlayer[player.playerId]?.getOrNull(slotIdx)
+
             when {
-                isActiveSlot && isActive && activeRound != null && activeRound.playerId == player.playerId -> {
-                    // Active in-progress cell for this player
-                    val cell = makeScoringCell(activeRound.score.toString(), weight = w)
-                    row.addView(cell)
+                // Active in-progress cell for the current player
+                isActiveSlot && isActive &&
+                        activeRound != null && activeRound.playerId == player.playerId -> {
+                    row.addView(makeScoringCell(activeRound.score.toString(), w))
                 }
-                completedByPlayer[player.playerId]?.getOrNull(slotIdx) != null -> {
-                    val roundScore = completedByPlayer[player.playerId]!![slotIdx].score
-                    val role       = ScoreColorRole(slotScores[colIdx], slotScores, higherIsBetter = true)
-                    val textColor  = when (role) {
+
+                // Completed round cell
+                completedRound != null -> {
+                    val role = ScoreColorRole(slotScores[colIdx], slotScores, higherIsBetter = true)
+                    val textColor = when (role) {
                         ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
                         ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
                         else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
                     }
-                    val cell = makeCompletedRoundCell(roundScore.toString(), textColor, isActive, w)
+                    val cell = makeCompletedRoundCell(completedRound.score.toString(), textColor, isActive, w)
 
-                    // Allow undo only on the last completed round of the active player
-                    // when there is no active round in progress
+                    // Last completed round of the active player is tappable for undo
                     val isLastCompletedForActive = isActive &&
                             activeRound == null &&
                             completedByPlayer[player.playerId]?.lastIndex == slotIdx
@@ -384,10 +349,8 @@ class FreeGameActivity : AppCompatActivity() {
                     }
                     row.addView(cell)
                 }
-                isActiveSlot && activeRound != null && activeRound.playerId != player.playerId -> {
-                    // Another player's column during an active round — show empty editable-like cell
-                    row.addView(makePlaceholderCell(w))
-                }
+
+                // Empty placeholder
                 else -> row.addView(makePlaceholderCell(w))
             }
         }
@@ -396,14 +359,17 @@ class FreeGameActivity : AppCompatActivity() {
 
     // ─── Total row ────────────────────────────────────────────────────────────
 
-    private fun buildTotalRow(visible: List<Pair<Int, FreeGamePlayerState>>, allTotals: List<Int>): LinearLayout {
+    private fun buildTotalRow(
+        visible: List<Pair<Int, FreeGamePlayerState>>,
+        allTotals: List<Int>
+    ): LinearLayout {
         val row = makeRow(TOTAL_ROW_DP)
         row.addView(makeLabelCell(getString(R.string.freegame_total), TOTAL_ROW_DP))
         for ((colIdx, pair) in visible.withIndex()) {
             val (idx, _) = pair
-            val isActive = idx == currentPlayerIndex
-            val total    = allTotals[colIdx]
-            val role     = ScoreColorRole(total, allTotals, higherIsBetter = true)
+            val isActive  = idx == currentPlayerIndex
+            val total     = allTotals[colIdx]
+            val role      = ScoreColorRole(total, allTotals, higherIsBetter = true)
             val textColor = when (role) {
                 ScoreColorRole.BEST  -> ContextCompat.getColor(this, R.color.score_text_best)
                 ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
@@ -420,36 +386,54 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
         orientation  = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
     }
 
     private fun makeLabelCell(text: String, heightDp: Int): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+        this.text = text
+        gravity   = Gravity.CENTER
+        textSize  = 11f
+        setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
         background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_text))
     }
 
     private fun makeLabelCellMatchParent(text: String): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
+        this.text = text
+        gravity   = Gravity.CENTER
+        textSize  = 11f
+        setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(
+            dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
         background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.header_cell_text))
     }
 
-    private fun makePlayerNameCell(player: FreeGamePlayerState, isActive: Boolean, weight: Float): TextView =
-        TextView(this).apply {
-            text = player.playerName; gravity = Gravity.CENTER; textSize = 13f
-            setTypeface(null, Typeface.BOLD)
-            maxLines = 1; ellipsize = TextUtils.TruncateAt.END
-            layoutParams = LinearLayout.LayoutParams(0, dpToPx(HEADER_ROW_DP), weight)
-            background = cellDrawable(player.playerColor); setTextColor(Color.WHITE)
-            alpha = if (isActive) 1f else 0.7f
-        }
+    private fun makePlayerNameCell(
+        player: FreeGamePlayerState,
+        isActive: Boolean,
+        weight: Float
+    ): TextView = TextView(this).apply {
+        text     = player.playerName
+        gravity  = Gravity.CENTER
+        textSize = 13f
+        setTypeface(null, Typeface.BOLD)
+        maxLines  = 1
+        ellipsize = TextUtils.TruncateAt.END
+        layoutParams = LinearLayout.LayoutParams(0, dpToPx(HEADER_ROW_DP), weight)
+        background = cellDrawable(player.playerColor)
+        setTextColor(Color.WHITE)
+        alpha = if (isActive) 1f else 0.65f
+    }
 
     private fun makeScoreButton(label: String, isPositive: Boolean, onClick: () -> Unit): TextView =
         TextView(this).apply {
-            text = label; gravity = Gravity.CENTER; textSize = 16f; setTypeface(null, Typeface.BOLD)
+            text     = label
+            gravity  = Gravity.CENTER
+            textSize = 18f
+            setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
             val bgColor = if (isPositive)
                 ContextCompat.getColor(this@FreeGameActivity, R.color.score_text_best)
@@ -461,36 +445,54 @@ class FreeGameActivity : AppCompatActivity() {
         }
 
     private fun makeScoringCell(text: String, weight: Float): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 14f; setTypeface(null, Typeface.BOLD)
+        this.text = text
+        gravity   = Gravity.CENTER
+        textSize  = 16f
+        setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.cell_editable_filled_bg))
+        background = cellDrawable(
+            ContextCompat.getColor(this@FreeGameActivity, R.color.cell_editable_filled_bg))
         setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_text))
         minimumHeight = dpToPx(ROUND_ROW_DP)
     }
 
-    private fun makeCompletedRoundCell(text: String, textColor: Int, isActive: Boolean, weight: Float): TextView =
-        TextView(this).apply {
-            this.text = text; gravity = Gravity.CENTER; textSize = 14f
-            setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
-            setTextColor(textColor); alpha = if (isActive) 1f else 0.65f
-            minimumHeight = dpToPx(ROUND_ROW_DP)
-        }
+    private fun makeCompletedRoundCell(
+        text: String,
+        textColor: Int,
+        isActive: Boolean,
+        weight: Float
+    ): TextView = TextView(this).apply {
+        this.text = text
+        gravity   = Gravity.CENTER
+        textSize  = 14f
+        setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+        background = cellDrawable(
+            ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
+        setTextColor(textColor)
+        alpha = if (isActive) 1f else 0.65f
+        minimumHeight = dpToPx(ROUND_ROW_DP)
+    }
 
     private fun makePlaceholderCell(weight: Float): TextView = TextView(this).apply {
-        text = ""; layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
+        text = ""
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+        background = cellDrawable(
+            ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
         minimumHeight = dpToPx(ROUND_ROW_DP)
     }
 
     private fun makeTotalCell(text: String, isActive: Boolean, weight: Float): TextView =
         TextView(this).apply {
-            this.text = text; gravity = Gravity.CENTER; textSize = 16f
+            this.text = text
+            gravity   = Gravity.CENTER
+            textSize  = 16f
             setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(0, dpToPx(TOTAL_ROW_DP), weight)
-            background = cellDrawable(ContextCompat.getColor(this@FreeGameActivity, R.color.cell_calculated_bg))
-            setTextColor(ContextCompat.getColor(this@FreeGameActivity, R.color.score_calculated_cell_text))
+            background = cellDrawable(
+                ContextCompat.getColor(this@FreeGameActivity, R.color.cell_calculated_bg))
+            setTextColor(
+                ContextCompat.getColor(this@FreeGameActivity, R.color.score_calculated_cell_text))
             alpha = if (isActive) 1f else 0.75f
         }
 
@@ -501,7 +503,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
-    // ─── Options menu ─────────────────────────────────────────────────────────
+    // ─── Menu ─────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_freegame_game, menu)
