@@ -133,13 +133,15 @@ data class QwixxRound(
     var phase: QwixxRoundPhase = QwixxRoundPhase.ACTIVE_FIRST,
     /** Whether the active player checked something in the ACTIVE_FIRST phase. */
     var activeCheckedFirst: Boolean = false,
+    /** Non-active players who have already passed or checked this round (indices into player list). */
+    val othersFinished: MutableSet<Int> = mutableSetOf(),
     /**
-     * Index (within the non-active players list) of which non-active player
-     * is currently taking their turn. Ranges from 0 until (playerCount - 1).
+     * Colors that were globally locked during THIS turn (i.e. a player just checked the last
+     * number in that color row this round). Used by [QwixxGameActivity] to allow other players
+     * who haven't acted yet to still check the last number themselves, earning their own lock,
+     * even though the global lock is already set.
      */
-    var othersCurrentIndex: Int = 0,
-    /** Non-active players who have already passed or checked this round. */
-    val othersFinished: MutableSet<Int> = mutableSetOf()   // indices into full player list
+    val colorsLockedThisTurn: MutableSet<QwixxColor> = mutableSetOf()
 )
 
 /**
