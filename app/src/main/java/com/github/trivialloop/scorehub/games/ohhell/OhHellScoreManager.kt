@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.oh_hell
+package com.github.trivialloop.scorehub.games.ohhell
 
 /**
  * Total number of rounds for a game.
