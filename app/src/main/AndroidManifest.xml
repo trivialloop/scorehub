@@ -128,20 +128,20 @@
             android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
 
         <activity
-            android:name=".games.ohhell.OhHellPlayerSelectionActivity"
+            android:name=".games.oh_hell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".games.ohhell.OhHellGameActivity"
-            android:parentActivityName=".games.ohhell.OhHellPlayerSelectionActivity" />
+            android:name=".games.oh_hell.OhHellGameActivity"
+            android:parentActivityName=".games.oh_hell.OhHellPlayerSelectionActivity" />
 
         <activity
-            android:name=".games.ohhell.OhHellStatsActivity"
-            android:parentActivityName=".games.ohhell.OhHellPlayerSelectionActivity" />
+            android:name=".games.oh_hell.OhHellStatsActivity"
+            android:parentActivityName=".games.oh_hell.OhHellPlayerSelectionActivity" />
 
         <activity
-            android:name=".games.ohhell.OhHellTop20Activity"
-            android:parentActivityName=".games.ohhell.OhHellPlayerSelectionActivity" />
+            android:name=".games.oh_hell.OhHellTop20Activity"
+            android:parentActivityName=".games.oh_hell.OhHellPlayerSelectionActivity" />
 
         <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"

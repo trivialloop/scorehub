@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.ohhell
+package com.github.trivialloop.scorehub.games.oh_hell
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -26,7 +26,7 @@ class OhHellStatsActivity : AppCompatActivity() {
     private lateinit var database: AppDatabase
 
     companion object {
-        const val GAME_TYPE = "ohhell"
+        const val GAME_TYPE = "oh_hell"
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_ohhell_game_stats"
+        android:id="@+id/action_oh_hell_game_stats"
         android:title="@string/game_statistics"
         android:icon="@drawable/ic_leaderboard"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_ohhell_top20"
+        android:id="@+id/action_oh_hell_top20"
         android:title="@string/top_20"
         android:icon="@drawable/ic_trophy"
         app:showAsAction="ifRoom" />

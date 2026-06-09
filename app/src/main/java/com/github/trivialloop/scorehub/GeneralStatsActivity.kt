@@ -143,7 +143,7 @@ class GeneralStatsActivity : AppCompatActivity() {
 
                 // ── Oh Hell ─────────────────────────────────────────────────
                 loadGameStats(
-                    gameType          = "ohhell",
+                    gameType          = "oh_hell",
                     players           = players,
                     bestPlayerView    = binding.textBestPlayerOhHell,
                     bestPlayerColor   = binding.bestPlayerColorIndicatorOhHell,
