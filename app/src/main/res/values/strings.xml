@@ -166,15 +166,15 @@
     <string name="flip7_best_score_label">Best Score</string>
 
     <!-- Oh Hell Game -->
-    <string name="oh_hell_game">Oh Hell</string>
-    <string name="oh_hell_total">Total</string>
-    <string name="oh_hell_round_label">R%1$d/%2$d</string>
-    <string name="oh_hell_max_cards">max %1$d</string>
-    <string name="oh_hell_choose_contract">Choose contract</string>
-    <string name="oh_hell_choose_result">Result</string>
-    <string name="oh_hell_best_score_label">Best Score</string>
-    <string name="oh_hell_quit_game">Quit Game</string>
-    <string name="oh_hell_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="ohhell_game">Oh Hell</string>
+    <string name="ohhell_total">Total</string>
+    <string name="ohhell_round_label">R%1$d/%2$d</string>
+    <string name="ohhell_max_cards">max %1$d</string>
+    <string name="ohhell_choose_contract">Choose contract</string>
+    <string name="ohhell_choose_result">Result</string>
+    <string name="ohhell_best_score_label">Best Score</string>
+    <string name="ohhell_quit_game">Quit Game</string>
+    <string name="ohhell_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  QWIXX GAME                                                   -->
@@ -450,16 +450,16 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <string name="help_oh_hell_players">3 to 8 players.</string>
-    <string name="help_oh_hell_objective">Bid exactly the number of tricks you will win each round. Score points by meeting your contract exactly — overbidding or underbidding costs you.</string>
-    <string name="help_oh_hell_scoring">Success: 5 + 2 × contract points. Failure: −2 × number of tricks missed. The last bidder each round cannot choose a contract that would make the total equal the round maximum.</string>
-    <string name="help_oh_hell_end">The game ends after all rounds are played. The number of rounds depends on the number of players: (51 ÷ players) × 2. Highest total score wins.</string>
-    <string name="help_oh_hell_wikipedia_url">https://en.wikipedia.org/wiki/Oh_hell</string>
+    <string name="help_ohhell_players">3 to 8 players.</string>
+    <string name="help_ohhell_objective">Bid exactly the number of tricks you will win each round. Score points by meeting your contract exactly — overbidding or underbidding costs you.</string>
+    <string name="help_ohhell_scoring">Success: 5 + 2 × contract points. Failure: −2 × number of tricks missed. The last bidder each round cannot choose a contract that would make the total equal the round maximum.</string>
+    <string name="help_ohhell_end">The game ends after all rounds are played. The number of rounds depends on the number of players: (51 ÷ players) × 2. Highest total score wins.</string>
+    <string name="help_ohhell_wikipedia_url">https://en.wikipedia.org/wiki/Oh_hell</string>
 
-    <string name="app_help_oh_hell_1">Each round, players bid their contract one by one. Tap your cell in the contract row to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
-    <string name="app_help_oh_hell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
-    <string name="app_help_oh_hell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
-    <string name="app_help_oh_hell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
+    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell in the contract row to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
+    <string name="app_help_ohhell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
+    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
+    <string name="app_help_ohhell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Qwixx                                                  -->

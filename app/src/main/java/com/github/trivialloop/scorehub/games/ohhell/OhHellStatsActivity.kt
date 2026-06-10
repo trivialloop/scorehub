@@ -1,4 +1,4 @@
-package com.github.trivialloop.scorehub.games.oh_hell
+package com.github.trivialloop.scorehub.games.ohhell
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
