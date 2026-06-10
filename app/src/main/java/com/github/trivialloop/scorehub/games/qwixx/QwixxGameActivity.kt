@@ -38,8 +38,9 @@ class QwixxGameActivity : AppCompatActivity() {
 
     private lateinit var gameState: QwixxGameState
 
-    // Cell size in px — computed once from screen dimensions
-    private var cellPx: Int = 0
+    // Cell dimensions in px — computed from screen size
+    private var cellW: Int = 0   // width of one cell  (varies with player count)
+    private var cellH: Int = 0   // height of one cell (fills screen vertically)
 
     companion object {
         const val GAME_TYPE = "qwixx"
@@ -50,7 +51,6 @@ class QwixxGameActivity : AppCompatActivity() {
         private val ROW_COLOR_BLUE    = 0xFF1E88E5.toInt()
         private val ROW_COLOR_PENALTY = 0xFF757575.toInt()
 
-        // Grid layouts — null = lock cell
         private val ASCENDING_GRID = listOf(
             listOf(2,  6,  10),
             listOf(3,  7,  11),
@@ -63,30 +63,18 @@ class QwixxGameActivity : AppCompatActivity() {
             listOf(10, 6,  2),
             listOf(9,  5,  null)
         )
-
-        // Penalty: 1 row × 4 cols (indices 0-3)
         private val PENALTY_ROW = listOf(0, 1, 2, 3)
 
-        // Thick separator between color sections (dp)
+        // Thick border between players (dp)
+        private const val PLAYER_BORDER_DP  = 3
+        // Thin divider between color sections within a player (dp)
         private const val SECTION_BORDER_DP = 2
 
-        // Layout:
-        //   label col  = 1 cell wide
-        //   player col = 3 cells wide
-        //   total cols = 1 + players*3
-        //
-        // Rows (in cells):
-        //   name header  = 1
-        //   RED          = 4
-        //   YELLOW       = 4
-        //   GREEN        = 4
-        //   BLUE         = 4
-        //   PENALTY      = 1
-        //   TOTAL        = 1
-        //   total rows   = 19
-        //   + 6 dividers (2dp each, negligible)
-        //
-        // cellPx = min(screenW / totalCols, screenH / 19)
+        // Grid rows count (used for height calculation):
+        // 1 name + 4 color rows × 4 lines + 1 penalty + 1 total = 19
+        private const val GRID_ROWS = 19
+        // Each player column is 3 cells wide
+        private const val CELLS_PER_PLAYER = 3
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -121,22 +109,34 @@ class QwixxGameActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.qwixx_game)
 
-        binding.scoreTableContainer.post {
-            val w = binding.scoreTableContainer.width
-            val h = binding.scoreTableContainer.height
-            val totalCols = 1 + gameState.players.size * 3
-            val totalRows = 19  // 1 name + 4*4 color + 1 penalty + 1 total
-            val cellByW = w / totalCols
-            val cellByH = h / totalRows
-            cellPx = minOf(cellByW, cellByH)
-            buildTable()
-        }
+        binding.scoreTableContainer.post { computeCellSize(); buildTable() }
+    }
+
+    // ─── Cell size ────────────────────────────────────────────────────────────
+
+    private fun computeCellSize() {
+        val w = binding.scoreTableContainer.width
+        val h = binding.scoreTableContainer.height
+
+        val nPlayers   = gameState.players.size
+        // Total cell-columns = 1 label + nPlayers * CELLS_PER_PLAYER
+        val totalCols  = 1 + nPlayers * CELLS_PER_PLAYER
+        // Account for thick player borders (between players, and between label and first player)
+        val playerBorderTotal = dpToPx(PLAYER_BORDER_DP) * (nPlayers + 1)
+        val availW     = w - playerBorderTotal
+
+        // Height: GRID_ROWS rows + 6 section dividers (negligible)
+        val sectionDividerTotal = dpToPx(SECTION_BORDER_DP) * 6
+        val availH     = h - sectionDividerTotal
+
+        cellW = availW / totalCols
+        cellH = availH / GRID_ROWS
     }
 
     // ─── Table ────────────────────────────────────────────────────────────────
 
     private fun buildTable() {
-        if (cellPx == 0) return
+        if (cellW == 0 || cellH == 0) return
         val container = binding.scoreTableContainer
         container.removeAllViews()
 
@@ -147,9 +147,29 @@ class QwixxGameActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
         }
+
+        // Thick left border before label column
+        mainRow.addView(playerBorderView())
         mainRow.addView(buildLabelColumn())
-        for (idx in gameState.players.indices) mainRow.addView(buildPlayerColumn(idx))
+
+        for (idx in gameState.players.indices) {
+            // Thick border before each player column
+            mainRow.addView(playerBorderView())
+            mainRow.addView(buildPlayerColumn(idx))
+        }
+
+        // Thick right border after last player
+        mainRow.addView(playerBorderView())
+
         container.addView(mainRow)
+    }
+
+    private fun playerBorderView() = android.view.View(this).apply {
+        layoutParams = LinearLayout.LayoutParams(
+            dpToPx(PLAYER_BORDER_DP),
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        setBackgroundColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.header_cell_background))
     }
 
     // ─── Label column ─────────────────────────────────────────────────────────
@@ -157,9 +177,11 @@ class QwixxGameActivity : AppCompatActivity() {
     private fun buildLabelColumn(): LinearLayout {
         val col = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(cellPx, LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LinearLayout.LayoutParams(cellW, LinearLayout.LayoutParams.MATCH_PARENT)
         }
-        col.addView(blankCell(cellPx))  // name row
+
+        col.addView(blankCell())   // name row
+
         listOf(
             ROW_COLOR_RED     to 4,
             ROW_COLOR_YELLOW  to 4,
@@ -167,17 +189,19 @@ class QwixxGameActivity : AppCompatActivity() {
             ROW_COLOR_BLUE    to 4,
             ROW_COLOR_PENALTY to 1
         ).forEachIndexed { i, (color, rows) ->
-            if (i > 0) col.addView(divider())
-            col.addView(colorSwatchCell(color, rows * cellPx))
+            if (i > 0) col.addView(sectionDivider())
+            col.addView(colorSwatchCell(color, rows * cellH))
         }
-        col.addView(divider())
+
+        col.addView(sectionDivider())
         col.addView(totalLabelCell())
         return col
     }
 
-    private fun blankCell(height: Int) = android.view.View(this).apply {
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-        setBackgroundColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.header_cell_background))
+    private fun blankCell() = android.view.View(this).apply {
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, cellH)
+        setBackgroundColor(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.header_cell_background))
     }
 
     private fun colorSwatchCell(color: Int, height: Int) = android.view.View(this).apply {
@@ -187,13 +211,17 @@ class QwixxGameActivity : AppCompatActivity() {
 
     private fun totalLabelCell() = TextView(this).apply {
         text = getString(R.string.qwixx_total)
-        gravity = Gravity.CENTER; textSize = labelTextSize(); setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, cellPx)
-        setBackgroundColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
-        setTextColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
+        gravity = Gravity.CENTER
+        textSize = labelTextSize()
+        setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, cellH)
+        setBackgroundColor(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
+        setTextColor(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
     }
 
-    private fun divider() = android.view.View(this).apply {
+    private fun sectionDivider() = android.view.View(this).apply {
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SECTION_BORDER_DP))
         setBackgroundColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_border))
@@ -208,7 +236,7 @@ class QwixxGameActivity : AppCompatActivity() {
         val col = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
-                3 * cellPx, LinearLayout.LayoutParams.MATCH_PARENT)
+                CELLS_PER_PLAYER * cellW, LinearLayout.LayoutParams.MATCH_PARENT)
         }
 
         col.addView(nameCell(player, isActive, playerIdx))
@@ -219,13 +247,13 @@ class QwixxGameActivity : AppCompatActivity() {
             Triple(QwixxColor.GREEN,  DESCENDING_GRID, ROW_COLOR_GREEN),
             Triple(QwixxColor.BLUE,   DESCENDING_GRID, ROW_COLOR_BLUE)
         ).forEachIndexed { i, (color, grid, accent) ->
-            if (i > 0) col.addView(divider())
+            if (i > 0) col.addView(sectionDivider())
             col.addView(buildColorRowGrid(playerIdx, color, grid, accent))
         }
 
-        col.addView(divider())
+        col.addView(sectionDivider())
         col.addView(buildPenaltyRow(playerIdx))
-        col.addView(divider())
+        col.addView(sectionDivider())
         col.addView(totalCell(player))
         return col
     }
@@ -233,11 +261,12 @@ class QwixxGameActivity : AppCompatActivity() {
     private fun nameCell(player: QwixxPlayerState, isActive: Boolean, playerIdx: Int) =
         TextView(this).apply {
             text = player.playerName
-            gravity = Gravity.CENTER; textSize = labelTextSize()
+            gravity = Gravity.CENTER
+            textSize = labelTextSize()
             setTypeface(null, if (isActive) Typeface.BOLD else Typeface.NORMAL)
             maxLines = 1; ellipsize = TextUtils.TruncateAt.END
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, cellPx)
+                LinearLayout.LayoutParams.MATCH_PARENT, cellH)
             alpha = if (isActive) 1f else 0.75f
             setBackgroundColor(player.playerColor)
             setTextColor(Color.WHITE)
@@ -254,22 +283,19 @@ class QwixxGameActivity : AppCompatActivity() {
     ): LinearLayout {
         val player         = gameState.players[playerIdx]
         val rowState       = player.rowState(color)
-        // "globallyLocked" means no new checks allowed at all —
-        // but during OTHERS phase a player can still check the last number
-        // if the global lock was just set this same turn.
         val globallyLocked = isColorLockedForPlayer(playerIdx, color)
 
         val gridLayout = LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 4 * cellPx)
+                LinearLayout.LayoutParams.MATCH_PARENT, 4 * cellH)
         }
 
         for (gridRow in grid) {
             val rowLayout = LinearLayout(this).apply {
                 orientation  = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, cellPx)
+                    LinearLayout.LayoutParams.MATCH_PARENT, cellH)
             }
             for (number in gridRow) {
                 if (number == null) rowLayout.addView(lockCell(rowState, accentColor))
@@ -282,30 +308,24 @@ class QwixxGameActivity : AppCompatActivity() {
     }
 
     /**
-     * Determines whether a player can still check numbers in [color].
-     *
      * A color is locked for a player when:
-     *  - the global lock was set in a PREVIOUS turn (i.e. not the current round), OR
-     *  - the player has already checked the last number themselves (their row is locked), OR
-     *  - the global lock was set this turn AND that player is not currently eligible to act.
+     * - their own row is locked (they checked the last number), OR
+     * - the global lock was set in a PREVIOUS turn, OR
+     * - the global lock was set THIS turn but it's no longer this player's turn to act.
      *
-     * Key rule: during OTHERS phase, the global lock may have just been set by the active
-     * player checking the last number. Other non-active players who still haven't taken their
-     * turn CAN still check that last number too (and earn their own lock), as long as they
-     * have >= 5 checks in that row.
+     * During the OTHERS phase: if the active player just locked a color this turn,
+     * non-active players who haven't acted yet can still check the last number.
      */
     private fun isColorLockedForPlayer(playerIdx: Int, color: QwixxColor): Boolean {
         val player = gameState.players[playerIdx]
-        // If this player's own row is locked, they can't check anything
         if (player.rowState(color).locked) return true
-        // If no global lock, nothing to do
         if (!gameState.lockState.isLocked(color)) return false
-        // Global lock exists. Was it set this turn?
         val round = gameState.currentRound ?: return true
-        if (!round.colorsLockedThisTurn.contains(color)) return true  // locked in a previous turn
-        // It was locked this turn. The player can still check IF they haven't acted yet
-        // and it's currently their turn to act.
-        return !canPlayerInteract(playerIdx, color)
+        // If locked this turn, allow the player to still act if it's their turn
+        if (round.colorsLockedThisTurn.contains(color)) {
+            return !canPlayerInteract(playerIdx, color)
+        }
+        return true  // locked in a previous turn
     }
 
     private fun numberCell(
@@ -320,8 +340,8 @@ class QwixxGameActivity : AppCompatActivity() {
         val canCheck  = !globallyLocked && rowState.canCheck(number) &&
                 canPlayerInteract(playerIdx, color)
         val isSkipped = !isChecked && !globallyLocked && !rowState.locked && run {
-            val seq      = rowState.numbers
-            val lastIdx  = rowState.checked
+            val seq     = rowState.numbers
+            val lastIdx = rowState.checked
                 .mapNotNull { seq.indexOf(it).takeIf { i -> i >= 0 } }
                 .maxOrNull() ?: -1
             val myIdx = seq.indexOf(number)
@@ -340,7 +360,7 @@ class QwixxGameActivity : AppCompatActivity() {
             gravity = Gravity.CENTER
             textSize = cellTextSize()
             setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
-            layoutParams = LinearLayout.LayoutParams(cellPx, cellPx)
+            layoutParams = LinearLayout.LayoutParams(cellW, cellH)
             background = bottomBorderOnly(bgColor)
             setTextColor(when {
                 isChecked -> Color.WHITE
@@ -355,35 +375,30 @@ class QwixxGameActivity : AppCompatActivity() {
 
     private fun lockCell(rowState: QwixxRowState, accentColor: Int) = TextView(this).apply {
         text = "🔒"
-        gravity = Gravity.CENTER; textSize = cellTextSize()
-        layoutParams = LinearLayout.LayoutParams(cellPx, cellPx)
+        gravity = Gravity.CENTER
+        textSize = cellTextSize()
+        layoutParams = LinearLayout.LayoutParams(cellW, cellH)
         background = bottomBorderOnly(
             if (rowState.locked) accentColor
             else ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_never_bg))
         alpha = if (rowState.locked) 1f else 0.35f
     }
 
-    // ─── Penalty row ─────────────────────────────────────────────────────────
+    // ─── Penalty row ──────────────────────────────────────────────────────────
 
-    /**
-     * Single row of 4 cells (indices 0-3), each CELL_DP wide.
-     * The row is 3 cells wide (same as player column) — 3rd cell is used for the 3rd penalty,
-     * 4th penalty goes on top of the 4th cell... but we only have 3 cells width.
-     * Solution: 4 penalty cells each at 0.75× width so all 4 fit in 3×cellPx total.
-     */
     private fun buildPenaltyRow(playerIdx: Int): LinearLayout {
         val player       = gameState.players[playerIdx]
         val penaltyCount = player.penalties
         val canAdd       = canPlayerAddPenalty(playerIdx)
 
+        // 4 cells evenly filling 3*cellW
+        val penaltyW = (CELLS_PER_PLAYER * cellW) / 4
+
         val rowLayout = LinearLayout(this).apply {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, cellPx)
+                LinearLayout.LayoutParams.MATCH_PARENT, cellH)
         }
-
-        // 4 penalty cells, each 3/4 of cellPx wide so they fill exactly 3*cellPx
-        val penaltyW = (3 * cellPx) / 4
 
         for (penaltyIdx in PENALTY_ROW) {
             val isChecked = penaltyIdx < penaltyCount
@@ -393,19 +408,18 @@ class QwixxGameActivity : AppCompatActivity() {
                 canCheck  -> ContextCompat.getColor(this, R.color.cell_editable_bg)
                 else      -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
-            val cell = TextView(this).apply {
+            rowLayout.addView(TextView(this).apply {
                 text = "✗"
                 gravity = Gravity.CENTER
                 textSize = cellTextSize()
                 setTypeface(null, if (isChecked) Typeface.BOLD else Typeface.NORMAL)
-                layoutParams = LinearLayout.LayoutParams(penaltyW, cellPx)
+                layoutParams = LinearLayout.LayoutParams(penaltyW, cellH)
                 background = bottomBorderOnly(bgColor)
                 setTextColor(
                     if (isChecked) Color.WHITE
                     else ContextCompat.getColor(this@QwixxGameActivity, R.color.score_cell_text))
                 if (canCheck) setOnClickListener { onPenaltyChecked(playerIdx) }
-            }
-            rowLayout.addView(cell)
+            })
         }
         return rowLayout
     }
@@ -414,11 +428,15 @@ class QwixxGameActivity : AppCompatActivity() {
 
     private fun totalCell(player: QwixxPlayerState) = TextView(this).apply {
         text = player.totalScore().toString()
-        gravity = Gravity.CENTER; textSize = cellTextSize() + 1f; setTypeface(null, Typeface.BOLD)
+        gravity = Gravity.CENTER
+        textSize = cellTextSize() + 1f
+        setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, cellPx)
-        setBackgroundColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
-        setTextColor(ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
+            LinearLayout.LayoutParams.MATCH_PARENT, cellH)
+        setBackgroundColor(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_calculated_bg))
+        setTextColor(
+            ContextCompat.getColor(this@QwixxGameActivity, R.color.score_calculated_cell_text))
     }
 
     // ─── Interaction helpers ──────────────────────────────────────────────────
@@ -465,8 +483,7 @@ class QwixxGameActivity : AppCompatActivity() {
             }
             QwixxRoundPhase.ACTIVE_SECOND -> {
                 if (playerIdx == round.activePlayerIndex && round.activeCheckedFirst) {
-                    advanceToNextRound()
-                    if (gameState.checkEndCondition()) endGame() else buildTable()
+                    finishActiveSecondPhase()
                 }
             }
         }
@@ -480,10 +497,8 @@ class QwixxGameActivity : AppCompatActivity() {
         val success = player.rowState(color).check(number)
         if (!success) { buildTable(); return }
 
-        // If this player just locked their own row (checked last number),
-        // record the global lock for this turn.
-        // Other players who haven't acted yet can still check the last number themselves
-        // (isColorLockedForPlayer handles this via colorsLockedThisTurn).
+        // If this player just locked their row, set the global lock for this turn.
+        // Other players who haven't acted yet can still check the last number.
         if (player.rowState(color).locked) {
             gameState.lockState.lock(color)
             round.colorsLockedThisTurn.add(color)
@@ -494,20 +509,17 @@ class QwixxGameActivity : AppCompatActivity() {
                 round.activeCheckedFirst = true
                 round.phase = if (gameState.players.size == 1)
                     QwixxRoundPhase.ACTIVE_SECOND else QwixxRoundPhase.OTHERS
+                buildTable()
             }
             QwixxRoundPhase.OTHERS -> {
                 round.othersFinished.add(playerIdx)
                 advanceOthersOrNextPhase()
+                buildTable()
             }
             QwixxRoundPhase.ACTIVE_SECOND -> {
-                advanceToNextRound()
-                if (gameState.checkEndCondition()) { endGame(); return }
-                buildTable(); return
+                finishActiveSecondPhase()
             }
         }
-
-        if (gameState.checkEndCondition()) { endGame(); return }
-        buildTable()
     }
 
     private fun onPenaltyChecked(playerIdx: Int) {
@@ -518,13 +530,27 @@ class QwixxGameActivity : AppCompatActivity() {
         if (round.activeCheckedFirst) return
 
         gameState.players[playerIdx].penalties++
+        finishActiveSecondPhase()
+    }
+
+    /**
+     * Called when the active player finishes their second action (checked a number,
+     * checked a penalty, or tapped their name to pass).
+     *
+     * The end condition is only evaluated HERE — after the active player's full turn
+     * is complete. This ensures every player has had a chance to act before the game ends.
+     */
+    private fun finishActiveSecondPhase() {
         advanceToNextRound()
-        if (gameState.checkEndCondition()) { endGame(); return }
-        buildTable()
+        if (gameState.checkEndCondition()) {
+            endGame()
+        } else {
+            buildTable()
+        }
     }
 
     private fun advanceOthersOrNextPhase() {
-        val round = gameState.currentRound ?: return
+        val round    = gameState.currentRound ?: return
         val nonActive = gameState.players.indices.filter { it != round.activePlayerIndex }
         if (nonActive.all { round.othersFinished.contains(it) }) {
             round.phase = QwixxRoundPhase.ACTIVE_SECOND
@@ -570,7 +596,7 @@ class QwixxGameActivity : AppCompatActivity() {
 
     // ─── Drawing helpers ──────────────────────────────────────────────────────
 
-    /** Only a bottom hairline — no borders between sibling cells in the same row. */
+    /** Bottom hairline only — no left/right/top borders, so siblings look seamless. */
     private fun bottomBorderOnly(bgColor: Int): LayerDrawable {
         val bg     = GradientDrawable().apply { setColor(bgColor) }
         val border = GradientDrawable().apply {
@@ -578,7 +604,7 @@ class QwixxGameActivity : AppCompatActivity() {
             setStroke(1, ContextCompat.getColor(this@QwixxGameActivity, R.color.cell_border))
         }
         return LayerDrawable(arrayOf(bg, border)).also {
-            it.setLayerInset(1, 0, -dpToPx(4), 0, 0)   // clip top/left/right, keep bottom
+            it.setLayerInset(1, 0, -dpToPx(4), 0, 0)
         }
     }
 
@@ -591,10 +617,10 @@ class QwixxGameActivity : AppCompatActivity() {
     }
 
     private fun cellTextSize(): Float =
-        (cellPx / resources.displayMetrics.density * 0.30f).coerceIn(8f, 14f)
+        (cellW / resources.displayMetrics.density * 0.30f).coerceIn(7f, 14f)
 
     private fun labelTextSize(): Float =
-        (cellPx / resources.displayMetrics.density * 0.28f).coerceIn(7f, 13f)
+        (cellW / resources.displayMetrics.density * 0.27f).coerceIn(6f, 12f)
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
