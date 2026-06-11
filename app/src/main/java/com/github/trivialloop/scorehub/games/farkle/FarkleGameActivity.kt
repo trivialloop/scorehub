@@ -1,6 +1,7 @@
 package com.github.trivialloop.scorehub.games.farkle
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -129,12 +130,29 @@ class FarkleGameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+
+        val darkMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+
+        controller.isAppearanceLightStatusBars = !darkMode
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+
+            val systemBars =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.root.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
-
         database     = AppDatabase.getDatabase(this)
         playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
         playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()

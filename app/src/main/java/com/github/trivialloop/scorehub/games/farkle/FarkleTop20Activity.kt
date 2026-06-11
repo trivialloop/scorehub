@@ -1,6 +1,7 @@
 package com.github.trivialloop.scorehub.games.farkle
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.MenuItem
@@ -42,14 +43,24 @@ class FarkleTop20Activity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
 
-            binding.appBarLayout.setPadding(
-                0,
-                statusBarInsets.top,
-                0,
-                0
+        val darkMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+
+        controller.isAppearanceLightStatusBars = !darkMode
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+
+            val systemBars =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.root.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
             )
 
             insets
