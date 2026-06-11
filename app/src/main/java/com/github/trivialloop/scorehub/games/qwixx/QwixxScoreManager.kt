@@ -79,8 +79,12 @@ data class QwixxRowState(
      * (locking means you have >= 6 checks: 5 + the last number, so the lock
      * adds one more to the count only if already included in [checked]).
      */
+    /**
+     * When locked, the 🔒 cell counts as one extra box on top of [checked].
+     * Example: 6 numbers checked + lock = 7 boxes → 7*8/2 = 28 pts.
+     */
     fun score(): Int {
-        val n = checked.size   // the lock number is already in checked when locked
+        val n = checked.size + if (locked) 1 else 0
         return n * (n + 1) / 2
     }
 }

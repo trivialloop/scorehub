@@ -176,11 +176,32 @@ class QwixxScoreManagerTest {
     }
 
     @Test
-    fun `score is 78 with all 12 checks`() {
+    fun `score is 91 with all 12 checks plus lock`() {
         val row = QwixxRowState(QwixxColor.RED)
         for (n in 2..11) row.check(n)   // 10 checks
-        row.check(12)                    // last (with 10 >= 5 already)
-        assertEquals(78, row.score())    // 1+2+...+12 = 78
+        row.check(12)                    // last number → also locks (locked = true)
+        // 12 numbers + 1 lock cell = 13 boxes → 13*14/2 = 91
+        assertEquals(91, row.score())
+    }
+
+    @Test
+    fun `score is 78 with 12 checks when not locked`() {
+        // Simulate 12 checks manually without triggering the lock
+        // (edge case: locked flag false but 12 items in checked)
+        val row = QwixxRowState(QwixxColor.RED)
+        for (n in 2..12) row.checked.add(n)   // bypass check() to avoid setting locked
+        // locked = false, so no +1
+        assertEquals(78, row.score())
+    }
+
+    @Test
+    fun `score adds 1 for lock cell when locked`() {
+        val row = QwixxRowState(QwixxColor.RED)
+        // 5 checks then check 12 to lock
+        for (n in 2..6) row.check(n)   // 5 checks
+        row.check(12)                  // 6th check + lock
+        // 6 numbers + 1 lock = 7 boxes → 7*8/2 = 28
+        assertEquals(28, row.score())
     }
 
     // ─── QwixxPlayerState.totalScore ─────────────────────────────────────────
