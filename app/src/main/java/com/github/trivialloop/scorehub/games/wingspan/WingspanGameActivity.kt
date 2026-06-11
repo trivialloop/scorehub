@@ -74,9 +74,16 @@ class WingspanGameActivity : AppCompatActivity() {
             val systemBars =
                 insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
+            binding.appBarLayout.setPadding(
+                0,
+                systemBars.top,
+                0,
+                0
+            )
+
             binding.root.setPadding(
                 systemBars.left,
-                systemBars.top,
+                0,
                 systemBars.right,
                 systemBars.bottom
             )

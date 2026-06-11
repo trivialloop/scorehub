@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -116,9 +117,16 @@ class MainActivity : AppCompatActivity() {
             val systemBars =
                 insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
+            binding.appBarLayout.setPadding(
+                0,
+                systemBars.top,
+                0,
+                0
+            )
+
             binding.root.setPadding(
                 systemBars.left,
-                systemBars.top,
+                0,
                 systemBars.right,
                 systemBars.bottom
             )
