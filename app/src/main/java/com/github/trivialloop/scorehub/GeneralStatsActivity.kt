@@ -33,13 +33,21 @@ class GeneralStatsActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             binding.appBarLayout.setPadding(
                 0,
-                statusBarInsets.top,
+                systemBars.top,
                 0,
                 0
+            )
+
+            binding.root.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                systemBars.bottom
             )
 
             insets
