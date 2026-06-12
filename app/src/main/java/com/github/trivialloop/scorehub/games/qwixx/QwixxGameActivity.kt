@@ -313,8 +313,8 @@ class QwixxGameActivity : AppCompatActivity() {
      * - the global lock was set in a PREVIOUS turn, OR
      * - the global lock was set THIS turn but it's no longer this player's turn to act.
      *
-     * During the OTHERS phase: if the active player just locked a color this turn,
-     * non-active players who haven't acted yet can still check the last number.
+     * During the ALL phase: if a player just locked a color this turn,
+     * other players who haven't acted yet can still check the last number.
      */
     private fun isColorLockedForPlayer(playerIdx: Int, color: QwixxColor): Boolean {
         val player = gameState.players[playerIdx]
@@ -446,9 +446,7 @@ class QwixxGameActivity : AppCompatActivity() {
         if (gameState.isOver) return false
         val round = gameState.currentRound ?: return false
         return when (round.phase) {
-            QwixxRoundPhase.ACTIVE_FIRST  -> playerIdx == round.activePlayerIndex
-            QwixxRoundPhase.OTHERS        -> playerIdx != round.activePlayerIndex &&
-                    !round.othersFinished.contains(playerIdx)
+            QwixxRoundPhase.ALL           -> !round.playersFinished.contains(playerIdx)
             QwixxRoundPhase.ACTIVE_SECOND -> playerIdx == round.activePlayerIndex
         }
     }
@@ -466,18 +464,10 @@ class QwixxGameActivity : AppCompatActivity() {
         if (gameState.isOver) return
         val round = gameState.currentRound ?: return
         when (round.phase) {
-            QwixxRoundPhase.ACTIVE_FIRST -> {
-                if (playerIdx == round.activePlayerIndex) {
-                    round.phase = if (gameState.players.size == 1)
-                        QwixxRoundPhase.ACTIVE_SECOND else QwixxRoundPhase.OTHERS
-                    buildTable()
-                }
-            }
-            QwixxRoundPhase.OTHERS -> {
-                if (playerIdx != round.activePlayerIndex &&
-                    !round.othersFinished.contains(playerIdx)) {
-                    round.othersFinished.add(playerIdx)
-                    advanceOthersOrNextPhase()
+            QwixxRoundPhase.ALL -> {
+                if (!round.playersFinished.contains(playerIdx)) {
+                    round.playersFinished.add(playerIdx)
+                    advanceAllOrNextPhase()
                     buildTable()
                 }
             }
@@ -505,15 +495,12 @@ class QwixxGameActivity : AppCompatActivity() {
         }
 
         when (round.phase) {
-            QwixxRoundPhase.ACTIVE_FIRST -> {
-                round.activeCheckedFirst = true
-                round.phase = if (gameState.players.size == 1)
-                    QwixxRoundPhase.ACTIVE_SECOND else QwixxRoundPhase.OTHERS
-                buildTable()
-            }
-            QwixxRoundPhase.OTHERS -> {
-                round.othersFinished.add(playerIdx)
-                advanceOthersOrNextPhase()
+            QwixxRoundPhase.ALL -> {
+                if (playerIdx == round.activePlayerIndex) {
+                    round.activeCheckedFirst = true
+                }
+                round.playersFinished.add(playerIdx)
+                advanceAllOrNextPhase()
                 buildTable()
             }
             QwixxRoundPhase.ACTIVE_SECOND -> {
@@ -549,10 +536,9 @@ class QwixxGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun advanceOthersOrNextPhase() {
-        val round    = gameState.currentRound ?: return
-        val nonActive = gameState.players.indices.filter { it != round.activePlayerIndex }
-        if (nonActive.all { round.othersFinished.contains(it) }) {
+    private fun advanceAllOrNextPhase() {
+        val round = gameState.currentRound ?: return
+        if (gameState.players.indices.all { round.playersFinished.contains(it) }) {
             round.phase = QwixxRoundPhase.ACTIVE_SECOND
         }
     }

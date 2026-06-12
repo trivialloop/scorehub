@@ -343,4 +343,45 @@ class QwixxScoreManagerTest {
         // 15 + 1 - 5 = 11
         assertEquals(11, player.totalScore())
     }
+
+    // ─── QwixxRound / QwixxRoundPhase ────────────────────────────────────────
+    // A round now has only two phases:
+    //   ALL           – every player (active and non-active) checks a number or passes
+    //   ACTIVE_SECOND – the active player's mandatory/optional second action
+
+    @Test
+    fun `a new round starts in the ALL phase`() {
+        val round = QwixxRound(roundNumber = 1, activePlayerIndex = 0)
+        assertEquals(QwixxRoundPhase.ALL, round.phase)
+    }
+
+    @Test
+    fun `a new round has nobody finished yet and no active check`() {
+        val round = QwixxRound(roundNumber = 1, activePlayerIndex = 0)
+        assertTrue(round.playersFinished.isEmpty())
+        assertFalse(round.activeCheckedFirst)
+    }
+
+    @Test
+    fun `a new round has no colors locked this turn`() {
+        val round = QwixxRound(roundNumber = 1, activePlayerIndex = 0)
+        assertTrue(round.colorsLockedThisTurn.isEmpty())
+    }
+
+    @Test
+    fun `QwixxRoundPhase only has ALL and ACTIVE_SECOND`() {
+        assertEquals(
+            listOf(QwixxRoundPhase.ALL, QwixxRoundPhase.ACTIVE_SECOND),
+            QwixxRoundPhase.entries.toList()
+        )
+    }
+
+    @Test
+    fun `playersFinished can track any player including the active one`() {
+        val round = QwixxRound(roundNumber = 1, activePlayerIndex = 0)
+        round.playersFinished.add(round.activePlayerIndex)
+        round.playersFinished.add(1)
+        assertTrue(round.playersFinished.contains(0))
+        assertTrue(round.playersFinished.contains(1))
+    }
 }

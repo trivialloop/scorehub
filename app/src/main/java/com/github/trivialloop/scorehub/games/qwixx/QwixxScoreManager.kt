@@ -113,32 +113,30 @@ data class QwixxPlayerState(
  * Represents one full round of Qwixx.
  *
  * A round proceeds as follows:
- * 1. The active player may check one number in any color row (their "first check").
- * 2. Each non-active player may check one number in any color row (or pass).
- * 3. The active player may check a second number (can be in any row including penalty).
- *    If the active player did NOT check in step 1, they MUST check one number now
+ * 1. Every player (the active player and all the others) may check one number
+ *    in any color row, or pass — all simultaneously / in any order.
+ * 2. The active player may check a second number (can be in any row including penalty).
+ *    If the active player did NOT check anything in step 1, they MUST check one number now
  *    (which CAN be a penalty box).
  *
  * [activePlayerIndex] is the index into the game's player list.
  * [phase] tracks whether we are in:
- *   ACTIVE_FIRST   – active player's first optional color check
- *   OTHERS         – non-active players each check or pass
+ *   ALL            – every player (active and non-active) checks one number or passes
  *   ACTIVE_SECOND  – active player's mandatory/optional second check
  */
 enum class QwixxRoundPhase {
-    ACTIVE_FIRST,
-    OTHERS,
+    ALL,
     ACTIVE_SECOND
 }
 
 data class QwixxRound(
     val roundNumber: Int,
     val activePlayerIndex: Int,
-    var phase: QwixxRoundPhase = QwixxRoundPhase.ACTIVE_FIRST,
-    /** Whether the active player checked something in the ACTIVE_FIRST phase. */
+    var phase: QwixxRoundPhase = QwixxRoundPhase.ALL,
+    /** Whether the active player checked something during the ALL phase. */
     var activeCheckedFirst: Boolean = false,
-    /** Non-active players who have already passed or checked this round (indices into player list). */
-    val othersFinished: MutableSet<Int> = mutableSetOf(),
+    /** All players (active and non-active) who have already passed or checked this round (indices into player list). */
+    val playersFinished: MutableSet<Int> = mutableSetOf(),
     /**
      * Colors that were globally locked during THIS turn (i.e. a player just checked the last
      * number in that color row this round). Used by [QwixxGameActivity] to allow other players
