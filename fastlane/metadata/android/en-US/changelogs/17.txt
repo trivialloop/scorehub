@@ -1,0 +1,9 @@
+### Added
+- Add Qwixx game
+
+### Changed
+- Update dependencies
+
+### Fixed
+- Fix scroring in Yahtzee
+- Fix interface for button navigation

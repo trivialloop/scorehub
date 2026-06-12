@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0]
+
+### Added
+- Add Qwixx game
+
+### Changed
+- Update dependencies
+
+### Fixed
+- Fix scroring in Yahtzee
+- Fix interface for button navigation
+
 ## [1.11.0]
 
 ### Added
@@ -148,8 +160,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.11.0...HEAD
-[1.10.0]:https://github.com/trivialloop/scorehub/compare/v1.10.0...v1.11.0
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.12.0...HEAD
+[1.12.0]:https://github.com/trivialloop/scorehub/compare/v1.11.0...v1.12.0
+[1.11.0]:https://github.com/trivialloop/scorehub/compare/v1.10.0...v1.11.0
 [1.10.0]:https://github.com/trivialloop/scorehub/compare/v1.9.0...v1.10.0
 [1.9.0]:https://github.com/trivialloop/scorehub/compare/v1.8.0...v1.9.0
 [1.8.0]:https://github.com/trivialloop/scorehub/compare/v1.7.2...v1.8.0
