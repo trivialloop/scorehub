@@ -94,8 +94,7 @@ class Flip7GameActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
 
-            val systemBars =
-                insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             binding.appBarLayout.setPadding(
                 0,
