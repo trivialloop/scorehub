@@ -44,8 +44,8 @@ enum class YahtzeeCategory {
         FIVES        -> listOf(0, 5, 10, 15, 20, 25)
         SIXES        -> listOf(0, 6, 12, 18, 24, 30)
         CHANCE       -> (5..30).toList()
-        THREE_OF_KIND -> listOf(0, 3, 6, 9, 12, 15, 18)
-        FOUR_OF_KIND  -> listOf(0, 4, 8, 12, 16, 20, 24)
+        THREE_OF_KIND -> listOf(0) + (5..30).toList()
+        FOUR_OF_KIND  -> listOf(0) + (5..30).toList()
         FULL_HOUSE    -> listOf(0, 25)
         SMALL_STRAIGHT -> listOf(0, 30)
         LARGE_STRAIGHT -> listOf(0, 40)
@@ -53,5 +53,5 @@ enum class YahtzeeCategory {
     }
 
     /** True if the score picker should scroll to the bottom on open (so large values are visible first). */
-    fun scrollToBottom(): Boolean = this == CHANCE
+    fun scrollToBottom(): Boolean = this in setOf(CHANCE, THREE_OF_KIND, FOUR_OF_KIND)
 }
