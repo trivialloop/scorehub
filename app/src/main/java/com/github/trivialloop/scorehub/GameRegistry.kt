@@ -7,6 +7,7 @@ import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
@@ -146,6 +147,17 @@ object GameRegistry {
             maxPlayers     = 8,
             teamMode       = false,
             equipment      = setOf(Equipment.CARDS)
+        ),
+        GameDefinition(
+            gameType       = "qwixx",
+            nameEnFallback = "Qwixx",
+            nameResId      = R.string.qwixx_game,
+            iconResId      = R.drawable.ic_qwixx_game,
+            activityClass  = QwixxPlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
             gameType       = "skyjo",
