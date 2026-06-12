@@ -2,7 +2,6 @@ package com.github.trivialloop.scorehub.games.tarot
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -55,14 +54,6 @@ class TarotPlayerSelectionActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val controller = WindowCompat.getInsetsController(window, window.decorView)
-
-        val darkMode =
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-
-        controller.isAppearanceLightStatusBars = !darkMode
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
 

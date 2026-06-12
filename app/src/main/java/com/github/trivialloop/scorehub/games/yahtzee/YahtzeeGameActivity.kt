@@ -1,7 +1,6 @@
 package com.github.trivialloop.scorehub.games.yahtzee
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -53,14 +52,6 @@ class YahtzeeGameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val controller = WindowCompat.getInsetsController(window, window.decorView)
-
-        val darkMode =
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-
-        controller.isAppearanceLightStatusBars = !darkMode
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
 
