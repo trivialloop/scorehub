@@ -1,0 +1,9 @@
+### Ajout
+- Ajout du jeu Qwixx
+
+### Changement
+- Mise a jour de dépendances
+
+### Correction
+- Corrige le comptage de point dans le jeu Yams
+- Corrige l'interface pour la navigation bouton d'android
