@@ -94,9 +94,25 @@ class OhHellGameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val sb = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.appBarLayout.setPadding(0, sb.top, 0, 0)
+
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                systemBars.top,
+                0,
+                0
+            )
+
+            binding.root.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
 
