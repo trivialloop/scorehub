@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP DIALOGS — generic labels                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_game_title">ℹ️ Game Rules</string>
+    <string name="help_app_title">ℹ️ How to use the app</string>
+    <string name="help_label_players">👥 Players</string>
+    <string name="help_label_objective">🎯 Objective</string>
+    <string name="help_label_scoring">🔢 Scoring</string>
+    <string name="help_label_end">🏁 End of game</string>
+    <string name="help_wikipedia_link">📖 Read more on Wikipedia</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Cactus                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_cactus_players">2 to 8 players.</string>
+    <string name="help_cactus_objective">Look at your own cards without showing them, then announce "Cactus!" when you think you have the lowest total score.</string>
+    <string name="help_cactus_scoring">The player who called "Cactus!" scores 1 point if their hand is strictly the lowest (5 or fewer). Otherwise the lowest non-caller scores 1 point. First to 10 points wins.</string>
+    <string name="help_cactus_end">The game ends when a player reaches 10 points. The player with the most points wins.</string>
+    <string name="help_cactus_wikipedia_url">https://en.wikipedia.org/wiki/Cactus_(card_game)</string>
+
+    <string name="app_help_cactus_1">Tap the round number (#) to select who called "Cactus!" for that round.</string>
+    <string name="app_help_cactus_2">Then tap each player cell to enter their raw hand score (0–40).</string>
+    <string name="app_help_cactus_3">The app calculates the winner of the round automatically and updates totals.</string>
+    <string name="app_help_cactus_4">Once a player reaches 10 points, the game is over.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Akropolis                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_akropolis_players">2 to 4 players.</string>
+    <string name="help_akropolis_objective">Build the most prestigious city by placing tiles to create districts of 5 colors. Score points by multiplying your stars by the number of districts of each color.</string>
+    <string name="help_akropolis_scoring">For each color, multiply the number of star symbols by the number of districts of that color in your city. Add 1 point per leftover stone. Highest total wins.</string>
+    <string name="help_akropolis_end">The game ends when all tile stacks are exhausted. Then players tally their scores.</string>
+    <string name="help_akropolis_wikipedia_url">https://en.wikipedia.org/wiki/Akropolis_(board_game)</string>
+
+    <string name="app_help_akropolis_1">For each color row, tap the top cell to enter the number of stars of that color in your city.</string>
+    <string name="app_help_akropolis_2">Tap the middle cell of the same color to enter the number of districts. The subtotal (stars × districts) is calculated automatically below.</string>
+    <string name="app_help_akropolis_3">Tap the Stones row to enter the number of leftover stones (worth 1 point each).</string>
+    <string name="app_help_akropolis_4">When all cells are filled, the game ends and shows the final results. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Cribbage                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_cribbage_players">2 players.</string>
+    <string name="help_cribbage_objective">Be the first to reach 121 points by scoring combinations in hand, the crib, and during play.</string>
+    <string name="help_cribbage_scoring">Points are scored during play (pairs, runs, 15s) and from the hand and crib at the end of each round. The dealer holds the crib each round.</string>
+    <string name="help_cribbage_end">The first player to reach 121 points wins immediately, even mid-round.</string>
+    <string name="help_cribbage_wikipedia_url">https://en.wikipedia.org/wiki/Cribbage</string>
+
+    <string name="app_help_cribbage_1">Use the − / + buttons to record points scored during play ("In play") for each player.</string>
+    <string name="app_help_cribbage_2">The player who goes first enters their end-of-round hand score first — this locks the in-play phase.</string>
+    <string name="app_help_cribbage_3">Then the dealer enters their hand score, followed by the crib score. The grey cell marks the player who has no crib this round.</string>
+    <string name="app_help_cribbage_4">The game ends automatically when a player reaches 121 points.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Escoba                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_escoba_players">2 players.</string>
+    <string name="help_escoba_objective">Score points by capturing table cards so they sum to exactly 11, clearing the table (escoba) when possible.</string>
+    <string name="help_escoba_scoring">Points are awarded for most cards, most golds, 7 of gold, and each escoba. The first to 21 points wins.</string>
+    <string name="help_escoba_end">The game ends when a player reaches 21 points after a full round.</string>
+    <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
+
+    <string name="app_help_escoba_1">Use − / + to record points scored during play for each player.</string>
+    <string name="app_help_escoba_2">At the end of each round, tap a player cell to enter their end-of-round score (0–20). Once the first player enters their score, the in-play phase locks.</string>
+    <string name="app_help_escoba_3">When a player reaches 21, the game is over.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Farkle                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_farkle_players">2 to 8 players.</string>
+    <string name="help_farkle_objective">Roll 6 dice and set aside scoring combinations to accumulate points. Be the first player to reach 10,000 points.</string>
+    <string name="help_farkle_scoring">Common scoring: single 1 = 100 pts, single 5 = 50 pts, three of a kind = face value × 100 (three 1s = 1,000), four of a kind = three of a kind * 2, five of a kind = three of a kind * 3, six of a kind = three of a kind * 4, straight 1–6 = 1,500, three pairs = 750. A "Farkle" (no scoring dice) ends your turn with 0 points for that round. 3 "Farkle" in a row make you lose all the points</string>
+    <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+
+    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
+    <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
+    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
+    <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Flip 7                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_flip7_players">3 to 10 players.</string>
+    <string name="help_flip7_objective">Accumulate the most points by selecting card values (0–12) each turn, up to 7 cards. Use bonus cards to multiply or add to your score.</string>
+    <string name="help_flip7_scoring">Sum your selected card values. Then apply ×2 if selected. Then add 15 bonus points if you selected exactly 7 cards (Flip 7!). Finally add any +bonus values. Choosing 0 gives you 0 points for the turn. First player rotates each round.</string>
+    <string name="help_flip7_end">The game ends after a round in which at least one player reaches or exceeds 200 points. The player with the highest total wins.</string>
+    <string name="help_flip7_wikipedia_url">https://en.wikipedia.org/wiki/Flip_7</string>
+
+    <string name="app_help_flip7_1">On your turn, tap "0" to score 0 this round and pass, or tap "Flip!" to open the card selection screen.</string>
+    <string name="app_help_flip7_2">In the card selection screen, check up to 7 card values (0–12 across two columns). Check any bonus modifiers in the third column (+2, +4, +6, +8, +8, +10, ×2). The score preview updates live.</string>
+    <string name="app_help_flip7_3">Tap OK to confirm. Scoring: card sum → ×2 if chosen → +15 if exactly 7 cards selected → + bonuses.</string>
+    <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Oh Hell                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_ohhell_players">3 to 8 players.</string>
+    <string name="help_ohhell_objective">Bid exactly the number of tricks you will win each round. Score points by meeting your contract exactly — overbidding or underbidding costs you.</string>
+    <string name="help_ohhell_scoring">Success: 5 + 2 × contract points. Failure: −2 × number of tricks missed. The last bidder each round cannot choose a contract that would make the total equal the round maximum.</string>
+    <string name="help_ohhell_end">The game ends after all rounds are played. The number of rounds depends on the number of players: (51 ÷ players) × 2. Highest total score wins.</string>
+    <string name="help_ohhell_wikipedia_url">https://en.wikipedia.org/wiki/Oh_hell</string>
+
+    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell in the contract row to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
+    <string name="app_help_ohhell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
+    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
+    <string name="app_help_ohhell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Qwixx                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_qwixx_players">2 to 5 players.</string>
+    <string name="help_qwixx_objective">Cross off numbers on your scoresheet to score points. Each color row runs in a fixed direction (red and yellow ascending 2→12, green and blue descending 12→2). Highest total score wins.</string>
+    <string name="help_qwixx_scoring">Score per color = triangular sum of checked boxes (1 check = 1 pt, 2 = 3 pt, 3 = 6 pt … 12 = 78 pt). Each penalty costs 5 points. Total = red + yellow + green + blue − penalties.</string>
+    <string name="help_qwixx_end">The game ends immediately when a player marks a 4th penalty, or when 2 color rows are locked (lock = last number checked with at least 5 others in that row).</string>
+    <string name="help_qwixx_wikipedia_url">https://de.wikipedia.org/wiki/Qwixx</string>
+
+    <string name="app_help_qwixx_1">The active player\'s column is highlighted. On their first turn they may tap any available checkbox to cross off a number in a color row.</string>
+    <string name="app_help_qwixx_2">Non-active players then each get one optional check (tap a checkbox) or pass (tap their name).</string>
+    <string name="app_help_qwixx_3">The active player then gets a second check. If they skipped their first check, this second one is mandatory (color box OR penalty ✗). Tap their name to pass if they already checked in step 1.</string>
+    <string name="app_help_qwixx_4">The game ends automatically when 4 penalties are reached by any player or 2 colors are locked. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Skyjo                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_skyjo_players">2 to 8 players.</string>
+    <string name="help_skyjo_objective">Finish each round with the lowest possible total score. Avoid accumulating points — lower is better.</string>
+    <string name="help_skyjo_scoring">Each card is worth its face value. The player who ends the round gets their score doubled if they are not strictly the lowest scorer. The game ends when someone reaches 100 points.</string>
+    <string name="help_skyjo_end">When a player reaches 100 points the game ends, and the player with the lowest total wins.</string>
+    <string name="help_skyjo_wikipedia_url">https://fr.wikipedia.org/wiki/Skyjo</string>
+
+    <string name="app_help_skyjo_1">Tap the round number (#) to select who ended that round.</string>
+    <string name="app_help_skyjo_2">Then tap each player cell to enter their raw score for the round.</string>
+    <string name="app_help_skyjo_3">The app applies the doubling penalty automatically and shows the final score per player.</string>
+    <string name="app_help_skyjo_4">When someone reaches 100 points, the game is over.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Tarot                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_tarot_players">3 to 5 players.</string>
+    <string name="help_tarot_objective">The declarer bids a contract and tries to reach the required number of points with the help of oudlers (bouts). Other players cooperate to make the declarer fail.</string>
+    <string name="help_tarot_scoring">Score depends on the contract multiplier, the number of bouts, and whether the declarer succeeded. Options like Poignée, Petit au Bout, and Chelem add bonuses or penalties. Scores are zero-sum across all players.</string>
+    <string name="help_tarot_end">The game ends when a player reaches 1000 points. Highest score wins.</string>
+    <string name="help_tarot_wikipedia_url">https://en.wikipedia.org/wiki/French_tarot</string>
+
+    <string name="app_help_tarot_1">Tap the next round row to record a new round (3 steps: declarer + contract, optional bonuses, points made).</string>
+    <string name="app_help_tarot_2">Tap an existing round number to edit or delete it.</string>
+    <string name="app_help_tarot_3">The app computes scores automatically using official French Tarot Federation rules (zero-sum).</string>
+    <string name="app_help_tarot_4">When a player reaches 1000, the game is over.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Wingspan                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_wingspan_players">2 to 5 players.</string>
+    <string name="help_wingspan_objective">Attract birds to your wildlife preserve by playing bird cards, gathering food, and laying eggs. Score the most points across six categories.</string>
+    <string name="help_wingspan_scoring">Points come from: Birds played, Bonus cards, End-of-round goals, Eggs on birds, Food on cards, and Tucked cards. Highest total wins.</string>
+    <string name="help_wingspan_end">After 4 rounds, players tally all six scoring categories. The game ends in one session.</string>
+    <string name="help_wingspan_wikipedia_url">https://en.wikipedia.org/wiki/Wingspan_(board_game)</string>
+
+    <string name="app_help_wingspan_1">Tap each cell in a player column to enter their score for each category.</string>
+    <string name="app_help_wingspan_2">Once all cells are filled, the game ends and shows the final results.</string>
+    <string name="app_help_wingspan_3">The player with the highest total wins. Green highlights the best score per row, red the lowest.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Yahtzee                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_yahtzee_players">1 to 8 players.</string>
+    <string name="help_yahtzee_objective">Roll 5 dice up to 3 times per turn and score combinations in 13 categories. Highest total score wins.</string>
+    <string name="help_yahtzee_scoring">Upper section: sum of matching dice (1s to 6s). Bonus of 35 pts if upper total ≥ 63. Lower section: Three/Four of a Kind, Full House, Straights, Yahtzee (50 pts), and Chance.</string>
+    <string name="help_yahtzee_end">The game ends when all players have filled every category (13 turns each).</string>
+    <string name="help_yahtzee_wikipedia_url">https://en.wikipedia.org/wiki/Yahtzee</string>
+
+    <string name="app_help_yahtzee_1">The active player is highlighted — tap their column to navigate between players with 4+.</string>
+    <string name="app_help_yahtzee_2">Tap an empty cell to enter a score for the current player. The app then advances to the next player automatically.</string>
+    <string name="app_help_yahtzee_3">The last filled category is re-editable. Tap it to change the value.</string>
+    <string name="app_help_yahtzee_4">When all categories are filled the game ends and shows the final results.</string>
+</resources>
