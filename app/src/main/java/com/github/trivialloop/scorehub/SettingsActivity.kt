@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +13,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.SupportedLanguages
 import com.github.trivialloop.scorehub.utils.ThemeHelper
 
 class SettingsActivity : AppCompatActivity() {
@@ -58,35 +61,24 @@ class SettingsActivity : AppCompatActivity() {
     }
     
     private fun setupLanguageSpinner() {
-        val languages = arrayOf(
-            getString(R.string.english),
-            getString(R.string.french)
-        )
-        
+        val languages = SupportedLanguages.ALL.map { getString(it.displayNameResId) }.toTypedArray()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerLanguage.adapter = adapter
-        
+
         val currentLanguage = LocaleHelper.getPersistedLocale(this)
-        binding.spinnerLanguage.setSelection(if (currentLanguage == "fr") 1 else 0)
-        
-        binding.spinnerLanguage.onItemSelectedListener = 
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: android.view.View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val newLanguage = if (position == 1) "fr" else "en"
-                    if (newLanguage != currentLanguage) {
-                        LocaleHelper.setLocale(this@SettingsActivity, newLanguage)
-                        restartApp()
-                    }
+        binding.spinnerLanguage.setSelection(SupportedLanguages.indexOf(currentLanguage))
+
+        binding.spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val newLanguage = SupportedLanguages.ALL[position].code
+                if (newLanguage != currentLanguage) {
+                    LocaleHelper.setLocale(this@SettingsActivity, newLanguage)
+                    restartApp()
                 }
-                
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
             }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
     
     private fun setupThemeSpinner() {
