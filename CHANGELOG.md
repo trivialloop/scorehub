@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.1]
+
+### Fixed
+- Fix reset games when rotate device
+
 ## [1.12.0]
 
 ### Added
@@ -160,7 +165,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.12.1...HEAD
+[1.12.1]:https://github.com/trivialloop/scorehub/compare/v1.12.0...v1.12.1
 [1.12.0]:https://github.com/trivialloop/scorehub/compare/v1.11.0...v1.12.0
 [1.11.0]:https://github.com/trivialloop/scorehub/compare/v1.10.0...v1.11.0
 [1.10.0]:https://github.com/trivialloop/scorehub/compare/v1.9.0...v1.10.0
