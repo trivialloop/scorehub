@@ -37,7 +37,8 @@
 
         <activity
             android:name=".games.akropolis.AkropolisGameActivity"
-            android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity" />
+            android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.akropolis.AkropolisStatsActivity"
@@ -53,7 +54,8 @@
 
         <activity
             android:name=".games.cactus.CactusGameActivity"
-            android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity" />
+            android:parentActivityName=".games.cactus.CactusPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.cactus.CactusStatsActivity"
@@ -69,7 +71,8 @@
 
         <activity
             android:name=".games.cribbage.CribbageGameActivity"
-            android:parentActivityName=".games.cribbage.CribbagePlayerSelectionActivity" />
+            android:parentActivityName=".games.cribbage.CribbagePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.cribbage.CribbageStatsActivity"
@@ -85,7 +88,8 @@
 
         <activity
             android:name=".games.escoba.EscobaGameActivity"
-            android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity" />
+            android:parentActivityName=".games.escoba.EscobaPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.escoba.EscobaStatsActivity"
@@ -101,7 +105,8 @@
 
         <activity
             android:name=".games.farkle.FarkleGameActivity"
-            android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity" />
+            android:parentActivityName=".games.farkle.FarklePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.farkle.FarkleStatsActivity"
@@ -117,7 +122,8 @@
 
         <activity
             android:name=".games.flip7.Flip7GameActivity"
-            android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
+            android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.flip7.Flip7StatsActivity"
@@ -133,7 +139,8 @@
 
         <activity
             android:name=".games.ohhell.OhHellGameActivity"
-            android:parentActivityName=".games.ohhell.OhHellPlayerSelectionActivity" />
+            android:parentActivityName=".games.ohhell.OhHellPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.ohhell.OhHellStatsActivity"
@@ -149,7 +156,8 @@
 
         <activity
             android:name=".games.qwixx.QwixxGameActivity"
-            android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
+            android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.qwixx.QwixxStatsActivity"
@@ -165,7 +173,8 @@
 
         <activity
             android:name=".games.skyjo.SkyjoGameActivity"
-            android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity" />
+            android:parentActivityName=".games.skyjo.SkyjoPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.skyjo.SkyjoStatsActivity"
@@ -181,7 +190,8 @@
 
         <activity
             android:name=".games.tarot.TarotGameActivity"
-            android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity" />
+            android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.tarot.TarotStatsActivity"
@@ -197,7 +207,8 @@
 
         <activity
             android:name=".games.wingspan.WingspanGameActivity"
-            android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity" />
+            android:parentActivityName=".games.wingspan.WingspanPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.wingspan.WingspanStatsActivity"
@@ -213,7 +224,8 @@
 
         <activity
             android:name=".games.yahtzee.YahtzeeGameActivity"
-            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity" />
+            android:parentActivityName=".games.yahtzee.YahtzeePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
             android:name=".games.yahtzee.YahtzeeStatsActivity"
