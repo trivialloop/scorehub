@@ -15,6 +15,7 @@
     <string name="filter_players_label">Anzahl Spieler</string>
     <string name="filter_players_any">beliebig</string>
     <string name="filter_mode_label">Spielprinzip</string>
+<<<<<<< HEAD
     <string name="filter_mode_solo">gegeneinander</string>
     <string name="filter_mode_team">im Team</string>
     <string name="filter_equipment_label">Benötigtes Material</string>
@@ -87,4 +88,6 @@
     <string name="cribbage_in_play">Im Spiel</string>
     <string name="cribbage_hand">Ende der Runde</string>
     <string name="cribbage_hand_score">Endrundenscore</string>
+=======
+>>>>>>> f8e6656 (chore(l10n): update German translation)
 </resources>
