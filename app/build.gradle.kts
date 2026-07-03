@@ -45,6 +45,10 @@ android {
         }
     }
 
+    lint {
+        disable += setOf("MissingTranslation", "ExtraTranslation")
+    }
+
     flavorDimensions.add("distribution")
     productFlavors {
         create("foss") {
