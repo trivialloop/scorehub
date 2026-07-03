@@ -3,13 +3,14 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg)](https://android-arsenal.com/api?level=24)
+[![Translation status](https://hosted.weblate.org/widget/scorehub/svg-badge.svg)](https://hosted.weblate.org/engage/scorehub/)
 
 A simple and intuitive Android application for tracking game scores across multiple players.
 
 ## 🚀 Download
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.github.trivialloop.scorehub)
+alt="Get it on F-Droid" height="100"/>](https://f-droid.org/en/packages/com.github.trivialloop.scorehub)
 
 ## 📱 Features
 
@@ -19,18 +20,29 @@ alt="Get it on F-Droid" height="80"/>](https://f-droid.org/en/packages/com.githu
   - Best and worst scores
   - Player rankings
   - Top 20 high scores
-- **Multi-language**: Supports English and French
+- **Multi-language**
 - **Offline First**: All data stored locally using Room database
 
 ## 🎮 Supported Games
 
-### Cactus (Cactus)
-### Cribbage (Cribbage)
-### Escoba (Escoba)
-### Skyjo (Skyjo)
-### Tarot (Tarot)
-### Wingspan (Wingspan)
-### Yahtzee (Yams)
+- Akropolis
+- Cactus
+- Cribbage
+- Escoba
+- Farkle
+- Flip7
+- Oh Hell
+- Qwixx
+- Skyjo
+- Tarot
+- Wingspan
+- Yahtzee
+
+
+## 🌍 Multi-language
+
+This project is translated thanks to the community on Weblate.
+[![Translation status](https://hosted.weblate.org/widget/scorehub/multi-auto.svg)](https://hosted.weblate.org/engage/scorehub/)
 
 ## 📸 Screenshots
 
