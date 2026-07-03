@@ -1,3 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">ScoreHub</string>
+    <string name="search_game">Suche ein Spiel…</string>
+    <string name="no_games_played">Noch keine Spiele gespielt</string>
+    <string name="last_played_date">Zuletzt gespielt: %1$s</string>
+    <string name="sort_games">Sortiere Spiele</string>
+    <string name="sort_alphabetical">Alphabetisch</string>
+    <string name="sort_recently_played">Kürzlich gespielt</string>
+    <string name="sort_most_played">Meistgespielt</string>
+    <string name="sort_label_alphabetical">Sortiert: A → Z</string>
+    <string name="sort_label_recently_played">Sortiert: kürzlich gespielt</string>
+    <string name="sort_label_most_played">Sortiert: meistgespielt</string>
+    <string name="filter_title">Filter</string>
+    <string name="filter_players_label">Anzahl Spieler</string>
+    <string name="filter_players_any">beliebig</string>
+    <string name="filter_mode_label">Spielprinzip</string>
 </resources>
