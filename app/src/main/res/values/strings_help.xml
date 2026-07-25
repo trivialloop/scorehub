@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Forest Shuffle                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_forestshuffle_players">2 to 4 players.</string>
+    <string name="help_forestshuffle_objective">Draft cards to build a thriving forest ecosystem: trees, and the animals, plants and fungi that live around, above and below them.</string>
+    <string name="help_forestshuffle_scoring">Trees score based on their own printed rule (some scale with quantity, some need specific conditions). Top/Bottom and Left/Right dweller cards score based on their own printed rule. Cards stored under the Cave score 1 point each. Highest total wins.</string>
+    <string name="help_forestshuffle_end">The game ends when the third Winter card is drawn from the deck. Players then tally their final score.</string>
+    <string name="help_forestshuffle_wikipedia_url">https://boardgamegeek.com/boardgame/373106/forest-shuffle</string>
+
+    <string name="app_help_forestshuffle_1">Trees are split into their 8 species. Tap a species cell to pick how many you played — the app calculates the points for species with a fixed or self-contained rule (Birch, Douglas Fir, Beech, Horse Chestnut, Oak, Sycamore, Linden).</string>
+    <string name="app_help_forestshuffle_2">Silver Fir scores from a separate row: enter the total number of dweller cards attached across all your Silver Firs, the app doubles it automatically. The Silver Fir tree count itself is informational only (used by Sycamore/Oak).</string>
+    <string name="app_help_forestshuffle_3">Enter Saplings (generic trees) so Sycamore\'s forest-size bonus stays accurate, then fill in your Top/Bottom and Left/Right dweller subtotals by computing them yourself from your cards (too many unique cards to automate).</string>
+    <string name="app_help_forestshuffle_4">Enter the number of cards stored under your Cave. Once every player has filled every row, confirm the end of the game to see the final ranking.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 to 8 players.</string>

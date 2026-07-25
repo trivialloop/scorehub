@@ -94,6 +94,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
+        "forest_shuffle" -> GameHelp(
+            players      = context.getString(R.string.help_forestshuffle_players),
+            objective    = context.getString(R.string.help_forestshuffle_objective),
+            scoring      = context.getString(R.string.help_forestshuffle_scoring),
+            endCondition = context.getString(R.string.help_forestshuffle_end),
+            wikipediaUrl = context.getString(R.string.help_forestshuffle_wikipedia_url)
+        )
+
         "oh_hell" -> GameHelp(
             players      = context.getString(R.string.help_ohhell_players),
             objective    = context.getString(R.string.help_ohhell_objective),
@@ -186,6 +194,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_2),
             context.getString(R.string.app_help_flip7_3),
             context.getString(R.string.app_help_flip7_4)
+        ))
+
+        "forest_shuffle" -> AppHelp(listOf(
+            context.getString(R.string.app_help_forestshuffle_1),
+            context.getString(R.string.app_help_forestshuffle_2),
+            context.getString(R.string.app_help_forestshuffle_3),
+            context.getString(R.string.app_help_forestshuffle_4)
         ))
 
         "oh_hell" -> AppHelp(listOf(

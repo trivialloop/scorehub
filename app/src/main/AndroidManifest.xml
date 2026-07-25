@@ -134,6 +134,23 @@
             android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
 
         <activity
+            android:name=".games.forestshuffle.ForestShufflePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.forestshuffle.ForestShuffleGameActivity"
+            android:parentActivityName=".games.forestshuffle.ForestShufflePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.forestshuffle.ForestShuffleStatsActivity"
+            android:parentActivityName=".games.forestshuffle.ForestShufflePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.forestshuffle.ForestShuffleTop20Activity"
+            android:parentActivityName=".games.forestshuffle.ForestShufflePlayerSelectionActivity" />
+            
+        <activity
             android:name=".games.ohhell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
