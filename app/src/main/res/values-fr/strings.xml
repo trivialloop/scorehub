@@ -165,14 +165,6 @@
     <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="flip7_best_score_label">Meilleur Score</string>
 
-    <!-- Jeu Libre -->
-    <string name="freegame_game">Jeu Libre</string>
-    <string name="freegame_round_label">#</string>
-    <string name="freegame_total">Total</string>
-    <string name="freegame_current_round">Manche</string>
-    <string name="freegame_quit_game">Quitter la partie</string>
-    <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Ascenseur</string>
     <string name="ohhell_total">Total</string>

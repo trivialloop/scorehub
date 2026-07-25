@@ -134,14 +134,6 @@
             android:parentActivityName=".games.flip7.Flip7PlayerSelectionActivity" />
 
         <activity
-            android:name=".games.freegame.FreeGamePlayerSelectionActivity"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".games.freegame.FreeGameActivity"
-            android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity" />
-            
-        <activity
             android:name=".games.ohhell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
