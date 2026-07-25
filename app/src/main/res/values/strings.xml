@@ -165,6 +165,14 @@
     <string name="flip7_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
     <string name="flip7_best_score_label">Best Score</string>
 
+    <!-- Free Game -->
+    <string name="freegame_game">Free Game</string>
+    <string name="freegame_round_label">#</string>
+    <string name="freegame_total">Total</string>
+    <string name="freegame_current_round">Round</string>
+    <string name="freegame_quit_game">Quit Game</string>
+    <string name="freegame_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Oh Hell</string>
     <string name="ohhell_total">Total</string>
