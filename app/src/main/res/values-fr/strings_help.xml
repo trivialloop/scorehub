@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Forest Shuffle                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_forestshuffle_players">2 à 4 joueurs.</string>
+    <string name="help_forestshuffle_objective">Draftez des cartes pour construire un écosystème forestier prospère : des arbres, et les animaux, plantes et champignons qui vivent autour, au-dessus et en dessous.</string>
+    <string name="help_forestshuffle_scoring">Les arbres marquent selon leur règle propre (certains selon leur quantité, d\'autres sous conditions). Les cartes Haut/Bas et Gauche/Droite marquent selon leur règle propre. Les cartes sous la Grotte valent 1 point chacune. Le total le plus élevé gagne.</string>
+    <string name="help_forestshuffle_end">La partie se termine quand la 3e carte Hiver est piochée. Les joueurs comptent alors leur score final.</string>
+    <string name="help_forestshuffle_wikipedia_url">https://boardgamegeek.com/boardgame/373106/forest-shuffle</string>
+
+    <string name="app_help_forestshuffle_1">Les arbres sont séparés par essence (8 lignes). Appuie sur une case pour choisir combien tu en as joué — l\'appli calcule automatiquement les points pour les essences à règle autonome (Bouleau, Douglas, Hêtre, Marronnier, Chêne, Sycomore, Tilleul).</string>
+    <string name="app_help_forestshuffle_2">Le Sapin argenté se calcule via une ligne séparée : indique le nombre total de cartes accrochées à tes Sapins argentés, l\'appli double automatiquement. Le nombre de Sapins argentés lui-même est juste informatif (utilisé par le Sycomore/Chêne).</string>
+    <string name="app_help_forestshuffle_3">Renseigne les Semis (arbres génériques) pour que le bonus du Sycomore reste juste, puis remplis toi-même les sous-totaux Haut/Bas et Gauche/Droite en les calculant depuis tes cartes (trop de cartes uniques pour automatiser).</string>
+    <string name="app_help_forestshuffle_4">Indique le nombre de cartes stockées sous ta Grotte. Une fois que chaque joueur a rempli chaque ligne, confirme la fin de partie pour voir le classement final.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 à 8 joueurs.</string>

@@ -6,6 +6,7 @@ import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionAct
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.forestshuffle.ForestShufflePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
@@ -136,6 +137,17 @@ object GameRegistry {
             maxPlayers     = 10,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "forest_shuffle",
+            nameEnFallback = "Forest Shuffle",
+            nameResId      = R.string.forestshuffle_game,
+            iconResId      = R.drawable.ic_forestshuffle_game,
+            activityClass  = ForestShufflePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 4,
+            teamMode       = false,
+            equipment      = setOf(Equipment.CARDS)
         ),
         GameDefinition(
             gameType       = "oh_hell",

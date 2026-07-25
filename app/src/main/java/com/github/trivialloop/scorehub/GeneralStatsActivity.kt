@@ -149,6 +149,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Forest Shuffle ───────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "forest_shuffle",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerForestShuffle,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorForestShuffle,
+                    bestPlayerSection = binding.bestPlayerSectionForestShuffle,
+                    bestScoreView     = binding.textBestScoreForestShuffle,
+                    bestScoreColor    = binding.bestScoreColorIndicatorForestShuffle,
+                    bestScoreSection  = binding.bestScoreSectionForestShuffle,
+                    noDataView        = binding.textNoDataForestShuffle,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Oh Hell ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "oh_hell",
