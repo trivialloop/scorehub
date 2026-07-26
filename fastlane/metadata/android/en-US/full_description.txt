@@ -6,15 +6,20 @@ Features:
 • Comprehensive statistics and rankings
 • Top 20 high scores leaderboard
 • Win/loss/draw tracking
-• Multi-language support (English and French)
+• Multi-language support
 • Fully offline
 
 Perfect for board game enthusiasts who want to keep detailed records of their gaming sessions!
 
 Currently supported games:
+- Akropolis
 - Cactus
 - Cribbage
 - Escoba
+- Farkle
+- Flip7
+- Oh Hell
+- Qwixx
 - Skyjo
 - Tarot
 - Wingspan
