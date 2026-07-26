@@ -139,7 +139,8 @@
 
         <activity
             android:name=".games.freegame.FreeGameActivity"
-            android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity" />
+            android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
             
         <activity
             android:name=".games.ohhell.OhHellPlayerSelectionActivity"
