@@ -1,0 +1,6 @@
+### Added
+- Add free game
+- Add german language
+
+### Changed
+- Update dependencies

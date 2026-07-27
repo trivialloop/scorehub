@@ -1,0 +1,6 @@
+### Ajout
+- Ajout du jeu libre
+- Ajout de la langue allemande
+
+### Changement
+- Mise a jour de dépendances

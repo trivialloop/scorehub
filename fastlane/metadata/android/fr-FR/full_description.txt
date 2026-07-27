@@ -6,15 +6,20 @@ Fonctionnalités :
 • Statistiques complètes et classements
 • Tableau des 20 meilleurs scores
 • Suivi des victoires/défaites/nuls
-• Support multilingue (anglais et français)
+• Support multilingue
 • Entièrement hors ligne
 
 Parfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions de jeu !
 
 Jeux actuellement supportés :
+- Akropolis
 - Cactus
 - Cribbage
 - Escoba
+- Farkle
+- Flip7
+- Oh Hell
+- Qwixx
 - Skyjo
 - Tarot
 - Wingspan
