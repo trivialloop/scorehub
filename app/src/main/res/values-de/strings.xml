@@ -57,6 +57,9 @@
     <string name="reorder">Umordnen</string>
     <string name="akropolis_game">Akropolis</string>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cd4b599 (chore(l10n): update German translation)
     <string name="akropolis_total">Insgesamt</string>
     <string name="akropolis_stones">Steinblöcke</string>
     <string name="akropolis_stars">Sterne</string>
@@ -92,8 +95,11 @@
     <string name="cribbage_in_play">Im Spiel</string>
     <string name="cribbage_hand">Ende der Runde</string>
     <string name="cribbage_hand_score">Endrundenscore</string>
+<<<<<<< HEAD
 =======
 >>>>>>> f8e6656 (chore(l10n): update German translation)
 =======
 >>>>>>> 6061631 (chore(l10n): update German translation)
+=======
+>>>>>>> cd4b599 (chore(l10n): update German translation)
 </resources>
