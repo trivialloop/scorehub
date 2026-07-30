@@ -18,7 +18,8 @@ object SupportedLanguages {
     // NOTE: "en" has no values-XX suffix (it's the default `values/` folder)
     val ALL: List<LanguageEntry> = listOf(
         LanguageEntry("en", com.github.trivialloop.scorehub.R.string.english),
-        LanguageEntry("fr", com.github.trivialloop.scorehub.R.string.french)
+        LanguageEntry("fr", com.github.trivialloop.scorehub.R.string.french),
+        LanguageEntry("de", com.github.trivialloop.scorehub.R.string.german)
         // Add new languages here as they become available, e.g.:
         // LanguageEntry("de", com.github.trivialloop.scorehub.R.string.german)
     )
