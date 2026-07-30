@@ -341,6 +341,7 @@
     <string name="language">Language</string>
     <string name="english">English</string>
     <string name="french">Français</string>
+    <string name="german">Deutsch</string>
     <string name="theme">Theme</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
