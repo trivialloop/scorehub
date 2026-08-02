@@ -213,6 +213,7 @@ class FreeGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setBaselineAligned(false)
         }
 
         // Empty label cell spanning all three button rows
@@ -233,6 +234,7 @@ class FreeGameActivity : AppCompatActivity() {
                     orientation  = LinearLayout.HORIZONTAL
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+                    setBaselineAligned(false)
                 }
                 btnRow.addView(makeScoreButton("-$v", isPositive = false) { addScore(player, -v) })
                 btnRow.addView(makeScoreButton("+$v", isPositive = true)  { addScore(player, v)  })
@@ -260,6 +262,11 @@ class FreeGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROUND_ROW_DP))
+            // Without this, LinearLayout tries to align all children on the text
+            // baseline of the tallest/only-text child. Since placeholder cells
+            // have empty text, their background gets vertically offset and only
+            // a sliver (a "line") of the cell border remains visible.
+            setBaselineAligned(false)
         }
 
         row.addView(makeLabelCellFixed(slotIdx.toString()))
@@ -312,6 +319,7 @@ class FreeGameActivity : AppCompatActivity() {
         orientation  = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+        setBaselineAligned(false)
     }
 
     private fun makeLabelCell(text: String, heightDp: Int): TextView = TextView(this).apply {
@@ -392,6 +400,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun makePlaceholderCell(): TextView = TextView(this).apply {
         text = ""
+        gravity = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROUND_ROW_DP), 1f)
         background = cellDrawable(
             ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
