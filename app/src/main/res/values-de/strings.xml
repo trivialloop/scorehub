@@ -274,4 +274,11 @@
     <string name="flip7_game">Flip 7</string>
     <string name="flip7_btn_add">Flip!</string>
     <string name="flip7_bonus_flip7">Flip 7!</string>
+    <string name="skyjo_score_hint">Bsp.: -2 oder 7</string>
+    <string name="tarot_game">Tarot</string>
+    <string name="tarot_round_title">Runde %1$d</string>
+    <string name="skyjo_worst_score_short">Schlechtester: %1$d</string>
+    <string name="tarot_next">Weiter →</string>
+    <string name="tarot_back">← Zurück</string>
+    <string name="tarot_delete_round">Runde löschen</string>
 </resources>
