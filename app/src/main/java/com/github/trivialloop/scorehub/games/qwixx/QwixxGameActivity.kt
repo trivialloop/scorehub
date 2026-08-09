@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -125,6 +126,10 @@ class QwixxGameActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.qwixx_game)
 
         binding.scoreTableContainer.post { computeCellSize(); buildTable() }
+
+        onBackPressedDispatcher.addCallback(this) {
+            showQuitGameDialog()
+        }
     }
 
     // ─── Cell size ────────────────────────────────────────────────────────────
@@ -625,6 +630,15 @@ class QwixxGameActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    private fun showQuitGameDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.qwixx_quit_game)
+            .setMessage(R.string.qwixx_quit_game_message)
+            .setPositiveButton(R.string.yes) { _, _ -> finish() }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
     // ─── Menu ─────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -633,14 +647,7 @@ class QwixxGameActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.qwixx_quit_game)
-                    .setMessage(R.string.qwixx_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ -> finish() }
-                    .setNegativeButton(R.string.no, null).show()
-                true
-            }
+            android.R.id.home -> { showQuitGameDialog(); true }
             R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }
