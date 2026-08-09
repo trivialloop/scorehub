@@ -1,0 +1,3 @@
+### Correction
+- Corrige l'affichage edge to edge dans le jeu libre
+- Corrige le bouton de retour pour la navigation
