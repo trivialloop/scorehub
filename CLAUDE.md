@@ -146,7 +146,6 @@ ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
 ```
 
 This applies to **every screen with a toolbar/appBarLayout**, including one-off screens like Free Game that don't follow the round-based grid pattern.
----
 
 ## Localisation
 
