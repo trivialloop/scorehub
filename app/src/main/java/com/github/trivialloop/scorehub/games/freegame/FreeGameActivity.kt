@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -109,6 +110,10 @@ class FreeGameActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.freegame_game)
 
         buildTable()
+
+        onBackPressedDispatcher.addCallback(this) {
+            showQuitGameDialog()
+        }
     }
 
     override fun onDestroy() {
@@ -441,6 +446,18 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    private fun showQuitGameDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.freegame_quit_game)
+            .setMessage(R.string.freegame_quit_game_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                commitHandler.removeCallbacks(commitRunnable)
+                finish()
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
     // ─── Menu ─────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -450,18 +467,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.freegame_quit_game)
-                    .setMessage(R.string.freegame_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        commitHandler.removeCallbacks(commitRunnable)
-                        finish()
-                    }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
-                true
-            }
+            android.R.id.home -> { showQuitGameDialog(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
