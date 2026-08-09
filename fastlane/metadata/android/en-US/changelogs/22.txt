@@ -1,0 +1,3 @@
+### Fixed
+- Fix edge to edge for free game
+- Fix return navigation
