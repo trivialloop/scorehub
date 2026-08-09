@@ -103,6 +103,49 @@ Use `ScoreColorHelper.scoreColorRole(value, allValues)` from `utils/ScoreColorHe
 - **Background color**: use `cell_editable_bg` for empty editable cells, `cell_editable_filled_bg` for filled+editable.
 - **Keyboard auto-open**: all score input dialogs must call `dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)` and `editText.requestFocus()` so the soft keyboard opens immediately on dialog show.
 
+### Edge-to-edge window insets (mandatory for every Activity)
+
+Every Activity must apply system bar insets the same way. **Never use `Type.statusBars()` alone** — always use `Type.systemBars()` and apply padding to both `appBarLayout` (top only) and `binding.root` (left/right/bottom), so gesture navigation and horizontal insets (landscape, notches) are handled correctly.
+
+Required in every Activity's `onCreate()`, right after `setContentView`:
+
+```kotlin
+WindowCompat.setDecorFitsSystemWindows(window, false)
+
+ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+
+    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+    binding.appBarLayout.setPadding(
+        0,
+        systemBars.top,
+        0,
+        0
+    )
+
+    binding.root.setPadding(
+        systemBars.left,
+        0,
+        systemBars.right,
+        systemBars.bottom
+    )
+
+    insets
+}
+```
+
+**Do NOT** use the older pattern below — it only pads the top of `appBarLayout` via `statusBars()` and never pads `binding.root`, which causes layout/display bugs (e.g. content hidden or misaligned behind system bars) on devices with gesture navigation or side insets:
+
+```kotlin
+// ❌ DEPRECATED — do not use
+ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+    val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+    binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+    insets
+}
+```
+
+This applies to **every screen with a toolbar/appBarLayout**, including one-off screens like Free Game that don't follow the round-based grid pattern.
 ---
 
 ## Localisation
