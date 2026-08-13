@@ -159,7 +159,7 @@ object GameRegistry {
             minPlayers     = 2,
             maxPlayers     = 12,
             teamMode       = false,
-            equipment      = setOf(Equipment.CARDS)
+            equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
             gameType       = "oh_hell",

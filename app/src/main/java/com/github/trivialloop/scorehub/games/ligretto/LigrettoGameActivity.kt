@@ -45,7 +45,7 @@ class LigrettoGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "ligretto"
-        private const val SCORE_LIMIT = 99
+        private const val SCORE_LIMIT = 100
         private const val MAX_CARDS_PLAYED = 40
         private const val MAX_STACK_LEFT = 10
         private const val LABEL_COL_DP = 65
@@ -168,6 +168,11 @@ class LigrettoGameActivity : AppCompatActivity() {
         }
         row.addView(labelCell)
 
+        // Per-column coloring: compare all players' raw values for this round,
+        // independently for "Played" and "Left" (see docs/games/ligretto.md).
+        val allPlayed = players.map { round.cardsPlayed[it.playerId] }
+        val allLeft   = players.map { round.stackLeft[it.playerId] }
+
         for (player in players) {
             val played = round.cardsPlayed[player.playerId]
             val left   = round.stackLeft[player.playerId]
@@ -177,10 +182,14 @@ class LigrettoGameActivity : AppCompatActivity() {
 
             val editable = canEnter || canEditPrev
 
+            val playedRole = ScoreColorRole(played, allPlayed, higherIsBetter = true)
+            val leftRole   = ScoreColorRole(left, allLeft, higherIsBetter = false)
+
             row.addView(makeSubScoreCell(
-                text    = played?.toString() ?: "",
-                canEdit = editable,
-                filled  = played != null
+                text      = played?.toString() ?: "",
+                canEdit   = editable,
+                filled    = played != null,
+                colorRole = playedRole
             ) {
                 showNumberPicker(
                     title    = "${player.playerName} — ${getString(R.string.ligretto_played)}",
@@ -193,9 +202,10 @@ class LigrettoGameActivity : AppCompatActivity() {
             })
 
             row.addView(makeSubScoreCell(
-                text    = left?.toString() ?: "",
-                canEdit = editable,
-                filled  = left != null
+                text      = left?.toString() ?: "",
+                canEdit   = editable,
+                filled    = left != null,
+                colorRole = leftRole
             ) {
                 showNumberPicker(
                     title    = "${player.playerName} — ${getString(R.string.ligretto_left)}",
@@ -339,7 +349,13 @@ class LigrettoGameActivity : AppCompatActivity() {
         setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_text))
     }
 
-    private fun makeSubScoreCell(text: String, canEdit: Boolean, filled: Boolean, onClick: () -> Unit): TextView =
+    private fun makeSubScoreCell(
+        text: String,
+        canEdit: Boolean,
+        filled: Boolean,
+        colorRole: ScoreColorRole = ScoreColorRole.NEUTRAL,
+        onClick: () -> Unit
+    ): TextView =
         TextView(this).apply {
             this.text = text; gravity = Gravity.CENTER; textSize = 13f
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
@@ -349,7 +365,8 @@ class LigrettoGameActivity : AppCompatActivity() {
                 else               -> ContextCompat.getColor(this@LigrettoGameActivity, R.color.score_cell_background)
             }
             background = cellDrawable(bgColor)
-            setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.score_cell_text))
+            setTextColor(colorRole.toColor(this@LigrettoGameActivity))
+            if (colorRole != ScoreColorRole.NEUTRAL && filled) setTypeface(null, Typeface.BOLD)
             if (canEdit) setOnClickListener { onClick() } else alpha = if (filled) 0.75f else 1f
         }
 
