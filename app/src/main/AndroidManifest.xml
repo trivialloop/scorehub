@@ -143,6 +143,23 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
             
         <activity
+            android:name=".games.ligretto.LigrettoPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoGameActivity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoStatsActivity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoTop20Activity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity" />
+            
+        <activity
             android:name=".games.ohhell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Ligretto                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_ligretto_players">2 to 12 players.</string>
+    <string name="help_ligretto_objective">Race in real time to empty your own Ligretto stack by playing cards of the same color in ascending order onto the shared central piles.</string>
+    <string name="help_ligretto_scoring">At the end of each round, you gain 1 point for every card you played to the central piles, then lose 2 points for every card left in your own Ligretto stack.</string>
+    <string name="help_ligretto_end">The game ends once a player reaches 99 points. If several players are at or above 99, the highest total wins.</string>
+    <string name="help_ligretto_wikipedia_url">https://en.wikipedia.org/wiki/Ligretto</string>
+
+    <string name="app_help_ligretto_1">Optionally tap the round number (#) to mark who shouted "Ligretto!" first — this is just a visual tag and does not affect scoring.</string>
+    <string name="app_help_ligretto_2">For each player, tap the "Played" cell to enter how many cards they placed on the central piles that round, and the "Left" cell to enter how many cards remained in their Ligretto stack (0–10).</string>
+    <string name="app_help_ligretto_3">The app calculates each round's score automatically (Played − 2 × Left) and updates the running totals.</string>
+    <string name="app_help_ligretto_4">Once a player reaches 99 points, the app asks if the game is over. The player with the highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 to 8 players.</string>

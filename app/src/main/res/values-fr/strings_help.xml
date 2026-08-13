@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Ligretto                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_ligretto_players">2 à 12 joueurs.</string>
+    <string name="help_ligretto_objective">Soyez le plus rapide à vider votre pioche Ligretto en posant des cartes de la même couleur dans l\'ordre croissant sur les piles communes.</string>
+    <string name="help_ligretto_scoring">À la fin de chaque manche, vous gagnez 1 point par carte posée sur les piles communes, puis perdez 2 points par carte restant dans votre pioche Ligretto.</string>
+    <string name="help_ligretto_end">La partie se termine quand un joueur atteint 99 points. Si plusieurs joueurs sont à 99 ou plus, celui avec le total le plus élevé gagne.</string>
+    <string name="help_ligretto_wikipedia_url">https://fr.wikipedia.org/wiki/Ligretto</string>
+
+    <string name="app_help_ligretto_1">Appuyez éventuellement sur le numéro de manche (#) pour indiquer qui a crié « Ligretto ! » en premier — c\'est purement indicatif et n\'influence pas le score.</string>
+    <string name="app_help_ligretto_2">Pour chaque joueur, appuyez sur la case « Jouées » pour saisir le nombre de cartes posées sur les piles communes, et sur la case « Restantes » pour saisir le nombre de cartes restant dans sa pioche Ligretto (0–10).</string>
+    <string name="app_help_ligretto_3">L\'application calcule automatiquement le score de la manche (Jouées − 2 × Restantes) et met à jour les totaux.</string>
+    <string name="app_help_ligretto_4">Dès qu\'un joueur atteint 99 points, l\'application demande si la partie est terminée. Le joueur avec le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 à 8 joueurs.</string>
