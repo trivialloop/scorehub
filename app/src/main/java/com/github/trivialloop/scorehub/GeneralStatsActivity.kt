@@ -149,6 +149,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Ligretto ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "ligretto",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerLigretto,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorLigretto,
+                    bestPlayerSection = binding.bestPlayerSectionLigretto,
+                    bestScoreView     = binding.textBestScoreLigretto,
+                    bestScoreColor    = binding.bestScoreColorIndicatorLigretto,
+                    bestScoreSection  = binding.bestScoreSectionLigretto,
+                    noDataView        = binding.textNoDataLigretto,
+                    bestScoreIsLowest = false   // highest total wins in Ligretto
+                )
+
                 // ── Oh Hell ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "oh_hell",

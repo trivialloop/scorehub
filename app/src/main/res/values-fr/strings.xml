@@ -173,6 +173,21 @@
     <string name="freegame_quit_game">Quitter la partie</string>
     <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     
+    <!-- Jeu Ligretto -->
+    <string name="ligretto_game">Ligretto</string>
+    <string name="ligretto_round_label">#</string>
+    <string name="ligretto_total">Total</string>
+    <string name="ligretto_played">Jouées</string>
+    <string name="ligretto_left">Restantes</string>
+    <string name="ligretto_who_called">Qui a crié « Ligretto ! » en premier ?</string>
+    <string name="ligretto_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="ligretto_maximum_players">Maximum 12 joueurs autorisés</string>
+    <string name="ligretto_game_over_title">Fin de partie ?</string>
+    <string name="ligretto_game_over_confirm">Un joueur a atteint 99 points. Terminer la partie ?</string>
+    <string name="ligretto_quit_game">Quitter la partie</string>
+    <string name="ligretto_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="ligretto_best_score_label">Meilleur Score</string>
+
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Ascenseur</string>
     <string name="ohhell_total">Total</string>
@@ -184,9 +199,7 @@
     <string name="ohhell_quit_game">Quitter la partie</string>
     <string name="ohhell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  QWIXX GAME                                                   -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- Qwixx -->
     <string name="qwixx_game">Qwixx</string>
     <string name="qwixx_total">Total</string>
     <string name="qwixx_penalty_symbol">✗</string>
