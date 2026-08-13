@@ -100,7 +100,7 @@ object HelpDialogs {
             scoring      = context.getString(R.string.help_ligretto_scoring),
             endCondition = context.getString(R.string.help_ligretto_end),
             wikipediaUrl = context.getString(R.string.help_ligretto_wikipedia_url)
-        ),
+        )
 
         "oh_hell" -> GameHelp(
             players      = context.getString(R.string.help_ohhell_players),
