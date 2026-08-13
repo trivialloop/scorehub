@@ -201,7 +201,7 @@ object HelpDialogs {
             context.getString(R.string.app_help_ligretto_2),
             context.getString(R.string.app_help_ligretto_3),
             context.getString(R.string.app_help_ligretto_4)
-        )),
+        ))
 
         "oh_hell" -> AppHelp(listOf(
             context.getString(R.string.app_help_ohhell_1),
