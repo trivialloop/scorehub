@@ -149,6 +149,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Harmonies ──────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "harmonies",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerHarmonies,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorHarmonies,
+                    bestPlayerSection = binding.bestPlayerSectionHarmonies,
+                    bestScoreView     = binding.textBestScoreHarmonies,
+                    bestScoreColor    = binding.bestScoreColorIndicatorHarmonies,
+                    bestScoreSection  = binding.bestScoreSectionHarmonies,
+                    noDataView        = binding.textNoDataHarmonies,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Ligretto ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "ligretto",

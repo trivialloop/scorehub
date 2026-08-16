@@ -94,6 +94,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
+        "harmonies" -> GameHelp(
+            players      = context.getString(R.string.help_harmonies_players),
+            objective    = context.getString(R.string.help_harmonies_objective),
+            scoring      = context.getString(R.string.help_harmonies_scoring),
+            endCondition = context.getString(R.string.help_harmonies_end),
+            wikipediaUrl = context.getString(R.string.help_harmonies_wikipedia_url)
+        )
+
         "ligretto" -> GameHelp(
             players      = context.getString(R.string.help_ligretto_players),
             objective    = context.getString(R.string.help_ligretto_objective),
@@ -194,6 +202,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_2),
             context.getString(R.string.app_help_flip7_3),
             context.getString(R.string.app_help_flip7_4)
+        ))
+
+        "harmonies" -> AppHelp(listOf(
+            context.getString(R.string.app_help_harmonies_1),
+            context.getString(R.string.app_help_harmonies_2),
+            context.getString(R.string.app_help_harmonies_3),
+            context.getString(R.string.app_help_harmonies_4)
         ))
 
         "ligretto" -> AppHelp(listOf(

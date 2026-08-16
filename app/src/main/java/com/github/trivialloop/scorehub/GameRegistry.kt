@@ -7,6 +7,7 @@ import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.freegame.FreeGamePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.harmonies.HarmoniesPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ligretto.LigrettoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
@@ -149,6 +150,17 @@ object GameRegistry {
             maxPlayers     = 10,
             teamMode       = false,
             equipment      = setOf(Equipment.CARDS, Equipment.DICE, Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "harmonies",
+            nameEnFallback = "Harmonies",
+            nameResId      = R.string.harmonies_game,
+            iconResId      = R.drawable.ic_harmonies_game,
+            activityClass  = HarmoniesPlayerSelectionActivity::class.java,
+            minPlayers     = 1,
+            maxPlayers     = 4,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
             gameType       = "ligretto",

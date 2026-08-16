@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Harmonies                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_harmonies_players">1 to 4 players.</string>
+    <string name="help_harmonies_objective">Place stacks of colored tokens on your personal board to build Trees, Mountains, Fields, Buildings and a River, and complete Animal cards, to earn the most points.</string>
+    <string name="help_harmonies_scoring">Trees and Mountains score 1/3/7 pts by height (a Mountain scores 0 if not adjacent to another Mountain). Each group of Fields is worth 5 pts, and each Building surrounded by 3+ colors is worth 5 pts. The River scores based on its length or the islands it creates. Animal cards each add their own points when completed.</string>
+    <string name="help_harmonies_end">The game ends once every player has used all their tokens (no more legal placements). Highest total score wins.</string>
+    <string name="help_harmonies_wikipedia_url">https://en.wikipedia.org/wiki/Harmonies_(board_game)</string>
+
+    <string name="app_help_harmonies_1">Tap a player\'s cell in the Trees, Mountains, Fields, Buildings, River or Animals row to enter the subtotal you computed from your physical board for that category.</string>
+    <string name="app_help_harmonies_2">The last-filled value in a cell is re-editable — tap it again to correct a mistake, indicated by a ✏️ in the dialog title.</string>
+    <string name="app_help_harmonies_3">The Total row updates automatically as you fill in categories, and is color-coded (green = best, red = worst) once every player has entered a score for that row.</string>
+    <string name="app_help_harmonies_4">Once every player has filled in all 6 categories, the app asks if the game is over and shows the final results. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Ligretto                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ligretto_players">2 to 12 players.</string>

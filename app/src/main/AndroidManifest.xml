@@ -141,7 +141,24 @@
             android:name=".games.freegame.FreeGameActivity"
             android:parentActivityName=".games.freegame.FreeGamePlayerSelectionActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
-            
+
+        <activity
+            android:name=".games.harmonies.HarmoniesPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.harmonies.HarmoniesGameActivity"
+            android:parentActivityName=".games.harmonies.HarmoniesPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.harmonies.HarmoniesStatsActivity"
+            android:parentActivityName=".games.harmonies.HarmoniesPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.harmonies.HarmoniesTop20Activity"
+            android:parentActivityName=".games.harmonies.HarmoniesPlayerSelectionActivity" />
+
         <activity
             android:name=".games.ligretto.LigrettoPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
