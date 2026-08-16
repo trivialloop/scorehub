@@ -54,8 +54,16 @@ data class TicketToRidePlayerScore(
 
         const val LONGEST_PATH_BONUS = 10
 
-        /** Reasonable upper bound for how many routes of one length a single player can claim. */
-        const val MAX_ROUTE_COUNT = 12
+        /**
+         * Upper bound for how many routes of a given length a single player can claim,
+         * used only to size the input picker for that route length.
+         *
+         * The exact number of routes per length varies by map and isn't consistently
+         * documented across official sources, so each length defaults to a generous
+         * value of 20 (well above what's physically possible on any official map) rather
+         * than risk under-counting on an unusual board.
+         */
+        val MAX_ROUTE_COUNT: Map<Int, Int> = ROUTE_LENGTHS.associateWith { 20 }
 
         /** Selectable point values for a destination ticket (covers all official maps). */
         val TICKET_VALUES: List<Int> = (1..30).toList()

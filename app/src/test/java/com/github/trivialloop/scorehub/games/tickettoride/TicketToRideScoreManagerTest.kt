@@ -145,4 +145,11 @@ class TicketToRideScoreManagerTest {
     fun `TICKET_VALUES starts at 1`() {
         assertEquals(1, TicketToRidePlayerScore.TICKET_VALUES.first())
     }
+
+    @Test
+    fun `MAX_ROUTE_COUNT defaults to 20 for every length`() {
+        TicketToRidePlayerScore.ROUTE_LENGTHS.forEach { length ->
+            assertEquals(20, TicketToRidePlayerScore.MAX_ROUTE_COUNT[length])
+        }
+    }
 }

@@ -278,7 +278,8 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun showRouteCountPicker(player: TicketToRidePlayerScore, length: Int) {
         val current = player.routeCounts[length] ?: 0
-        val values = (0..TicketToRidePlayerScore.MAX_ROUTE_COUNT).toList()
+        val maxCount = TicketToRidePlayerScore.MAX_ROUTE_COUNT[length] ?: 20
+        val values = (0..maxCount).toList()
         val items = values.map { it.toString() }.toTypedArray()
         val title = "${player.playerName} — ${getString(R.string.tickettoride_route_length_label, length)}"
 
@@ -387,11 +388,18 @@ class TicketToRideGameActivity : AppCompatActivity() {
     private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
         orientation  = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+        // Without this, LinearLayout tries to align all children on the text baseline of
+        // the tallest/most-prominent child. Rows that mix empty cells (e.g. no ticket yet,
+        // no longest-path bonus) with filled/bold ones then render each cell at a slightly
+        // different vertical offset, producing a visible row-to-row misalignment even
+        // though every cell shares the same fixed height.
+        isBaselineAligned = false
     }
 
     private fun makeLabelCell(text: String, heightDp: Int, isCalc: Boolean): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
-        maxLines = 2
+        this.text = text; gravity = Gravity.CENTER; textSize = 9f; setTypeface(null, Typeface.BOLD)
+        maxLines = 3
+        setPadding(dpToPx(2), 0, dpToPx(2), 0)
         layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
         val bg = if (isCalc) R.color.cell_calculated_bg else R.color.header_cell_background
         val fg = if (isCalc) R.color.score_calculated_cell_text else R.color.header_cell_text
