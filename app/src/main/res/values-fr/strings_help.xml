@@ -165,6 +165,20 @@
     <string name="app_help_tarot_4">Quand un joueur atteint 1000 points, la partie est terminée.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Les Aventuriers du Rail                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_tickettoride_players">2 à 5 joueurs.</string>
+    <string name="help_tickettoride_objective">Construisez des voies ferrées sur la carte à l\'aide de cartes wagon, et réalisez des cartes destination reliant des villes éloignées.</string>
+    <string name="help_tickettoride_scoring">Chaque tronçon posé rapporte des points selon sa longueur : 1→1, 2→2, 3→4, 4→7, 5→10, 6→15 points. Chaque carte destination réussie ajoute sa valeur imprimée ; chaque carte échouée en fin de partie la retire. Le joueur qui a le plus long chemin continu de tronçons obtient un bonus de +10 (partagé en cas d\'égalité).</string>
+    <string name="help_tickettoride_end">La partie se termine dès qu\'un joueur a 2 wagons ou moins au début de son tour ; tous les joueurs (y compris lui) jouent un dernier tour, puis les cartes destination sont révélées et les scores comptés.</string>
+    <string name="help_tickettoride_wikipedia_url">https://fr.wikipedia.org/wiki/Les_Aventuriers_du_rail</string>
+
+    <string name="app_help_tickettoride_1">Pour chaque longueur de tronçon (1 à 6 wagons), appuyez sur la case pour indiquer combien de tronçons de cette longueur chaque joueur a posé pendant la partie.</string>
+    <string name="app_help_tickettoride_2">Appuyez sur « + » sous Objectifs réussis pour ajouter une carte destination terminée par le joueur, et choisissez sa valeur imprimée — elle sera ajoutée à son score.</string>
+    <string name="app_help_tickettoride_3">Appuyez sur « + » sous Objectifs échoués pour ajouter une carte destination non réalisée — sa valeur sera soustraite. Appuyez sur une carte déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_tickettoride_4">Appuyez sur la ligne Plus long chemin pour marquer le(s) joueur(s) qui détiennent le plus long chemin continu (+10 pts), puis appuyez sur « Terminer la partie » pour verrouiller les scores et voir les résultats.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Wingspan                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_wingspan_players">2 à 5 joueurs.</string>

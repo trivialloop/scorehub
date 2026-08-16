@@ -12,6 +12,7 @@ import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.tickettoride.TicketToRidePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 
@@ -201,6 +202,17 @@ object GameRegistry {
             iconResId      = R.drawable.ic_tarot_game,
             activityClass  = TarotPlayerSelectionActivity::class.java,
             minPlayers     = 3,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "ticket_to_ride",
+            nameEnFallback = "Ticket to Ride",
+            nameResId      = R.string.tickettoride_game,
+            iconResId      = R.drawable.ic_tickettoride_game,
+            activityClass  = TicketToRidePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
             maxPlayers     = 5,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)

@@ -277,6 +277,27 @@
     <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="tarot_best_score_label">Meilleur Score</string>
 
+    <!-- Jeu Les Aventuriers du Rail -->
+    <string name="tickettoride_game">Les Aventuriers du Rail</string>
+    <string name="tickettoride_route_length_label">%1$d 🚃</string>
+    <string name="tickettoride_route_points">Points tronçons</string>
+    <string name="tickettoride_completed_tickets">🎫✅ Objectifs réussis</string>
+    <string name="tickettoride_failed_tickets">🎫❌ Objectifs échoués</string>
+    <string name="tickettoride_subtotal">Sous-total</string>
+    <string name="tickettoride_longest_path">🏆 Plus long chemin</string>
+    <string name="tickettoride_total">Total</string>
+    <string name="tickettoride_add_ticket_title">Ajouter une carte destination</string>
+    <string name="tickettoride_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="tickettoride_delete_entry">Supprimer</string>
+    <string name="tickettoride_finish_game">Terminer la partie</string>
+    <string name="tickettoride_finish_game_title">Terminer la partie ?</string>
+    <string name="tickettoride_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="tickettoride_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="tickettoride_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="tickettoride_quit_game">Quitter la partie</string>
+    <string name="tickettoride_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="tickettoride_best_score_label">Meilleur Score</string>
+
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
     <string name="wingspan_category_label">Catégorie</string>
