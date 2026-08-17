@@ -219,6 +219,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Ticket to Ride ──────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "ticket_to_ride",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerTicketToRide,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorTicketToRide,
+                    bestPlayerSection = binding.bestPlayerSectionTicketToRide,
+                    bestScoreView     = binding.textBestScoreTicketToRide,
+                    bestScoreColor    = binding.bestScoreColorIndicatorTicketToRide,
+                    bestScoreSection  = binding.bestScoreSectionTicketToRide,
+                    noDataView        = binding.textNoDataTicketToRide,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Wingspan ──────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "wingspan",
