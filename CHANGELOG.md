@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0]
+
+### Added
+- Add ligretto game
+- Add ticket to ride game
+
+### Changed
+- Update german language
+
 ## [1.13.3]
 
 ### Fixed
@@ -190,7 +199,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.13.3...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.14.0...HEAD
+[1.14.0]:https://github.com/trivialloop/scorehub/compare/v1.13.3...v1.14.0
 [1.13.3]:https://github.com/trivialloop/scorehub/compare/v1.13.2...v1.13.3
 [1.13.2]:https://github.com/trivialloop/scorehub/compare/v1.13.1...v1.13.2
 [1.13.1]:https://github.com/trivialloop/scorehub/compare/v1.13.0...v1.13.1
