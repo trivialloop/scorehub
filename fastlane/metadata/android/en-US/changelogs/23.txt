@@ -1,0 +1,6 @@
+### Added
+- Add ligretto game
+- Add ticket to ride game
+
+### Changed
+- Update german language

@@ -1,0 +1,6 @@
+### Ajout
+- Ajout du jeu ligretto
+- Ajout du jeu ticket to ride
+
+### Changement
+- Mise a jour de la langue allemande
