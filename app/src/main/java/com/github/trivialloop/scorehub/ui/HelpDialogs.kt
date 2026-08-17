@@ -94,6 +94,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
+        "ligretto" -> GameHelp(
+            players      = context.getString(R.string.help_ligretto_players),
+            objective    = context.getString(R.string.help_ligretto_objective),
+            scoring      = context.getString(R.string.help_ligretto_scoring),
+            endCondition = context.getString(R.string.help_ligretto_end),
+            wikipediaUrl = context.getString(R.string.help_ligretto_wikipedia_url)
+        )
+
         "oh_hell" -> GameHelp(
             players      = context.getString(R.string.help_ohhell_players),
             objective    = context.getString(R.string.help_ohhell_objective),
@@ -124,6 +132,14 @@ object HelpDialogs {
             scoring      = context.getString(R.string.help_tarot_scoring),
             endCondition = context.getString(R.string.help_tarot_end),
             wikipediaUrl = context.getString(R.string.help_tarot_wikipedia_url)
+        )
+
+        "ticket_to_ride" -> GameHelp(
+            players      = context.getString(R.string.help_tickettoride_players),
+            objective    = context.getString(R.string.help_tickettoride_objective),
+            scoring      = context.getString(R.string.help_tickettoride_scoring),
+            endCondition = context.getString(R.string.help_tickettoride_end),
+            wikipediaUrl = context.getString(R.string.help_tickettoride_wikipedia_url)
         )
 
         "wingspan" -> GameHelp(
@@ -188,6 +204,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_4)
         ))
 
+        "ligretto" -> AppHelp(listOf(
+            context.getString(R.string.app_help_ligretto_1),
+            context.getString(R.string.app_help_ligretto_2),
+            context.getString(R.string.app_help_ligretto_3),
+            context.getString(R.string.app_help_ligretto_4)
+        ))
+
         "oh_hell" -> AppHelp(listOf(
             context.getString(R.string.app_help_ohhell_1),
             context.getString(R.string.app_help_ohhell_2),
@@ -214,6 +237,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_tarot_2),
             context.getString(R.string.app_help_tarot_3),
             context.getString(R.string.app_help_tarot_4)
+        ))
+
+        "ticket_to_ride" -> AppHelp(listOf(
+            context.getString(R.string.app_help_tickettoride_1),
+            context.getString(R.string.app_help_tickettoride_2),
+            context.getString(R.string.app_help_tickettoride_3),
+            context.getString(R.string.app_help_tickettoride_4)
         ))
 
         "wingspan" -> AppHelp(listOf(

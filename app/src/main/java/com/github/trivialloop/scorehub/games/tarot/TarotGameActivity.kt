@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -102,6 +103,10 @@ class TarotGameActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.tarot_game)
 
         buildTable()
+
+        onBackPressedDispatcher.addCallback(this) {
+            showQuitGameDialog()
+        }
     }
 
     // ─── Table ────────────────────────────────────────────────────────────────
@@ -579,6 +584,15 @@ class TarotGameActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    private fun showQuitGameDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.tarot_quit_game)
+            .setMessage(R.string.tarot_quit_game_message)
+            .setPositiveButton(R.string.yes) { _, _ -> finish() }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_tarot_game, menu)
         return true
@@ -586,15 +600,7 @@ class TarotGameActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.tarot_quit_game)
-                    .setMessage(R.string.tarot_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ -> finish() }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
-                true
-            }
+            android.R.id.home -> { showQuitGameDialog(); true }
             R.id.action_help -> { HelpDialogs.showAppHelp(this, GAME_TYPE); true }
             else -> super.onOptionsItemSelected(item)
         }

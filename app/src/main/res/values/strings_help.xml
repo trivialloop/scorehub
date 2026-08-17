@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Ligretto                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_ligretto_players">2 to 12 players.</string>
+    <string name="help_ligretto_objective">Race in real time to empty your own Ligretto stack by playing cards of the same color in ascending order onto the shared central piles.</string>
+    <string name="help_ligretto_scoring">At the end of each round, you gain 1 point for every card you played to the central piles, then lose 2 points for every card left in your own Ligretto stack.</string>
+    <string name="help_ligretto_end">The game ends once a player reaches 99 points. If several players are at or above 99, the highest total wins.</string>
+    <string name="help_ligretto_wikipedia_url">https://en.wikipedia.org/wiki/Ligretto</string>
+
+    <string name="app_help_ligretto_1">Optionally tap the round number (#) to mark who shouted "Ligretto!" first — this is just a visual tag and does not affect scoring.</string>
+    <string name="app_help_ligretto_2">For each player, tap the "Played" cell to enter how many cards they placed on the central piles that round, and the "Left" cell to enter how many cards remained in their Ligretto stack (0–10).</string>
+    <string name="app_help_ligretto_3">The app calculates each round\'s score automatically (Played − 2 × Left) and updates the running totals.</string>
+    <string name="app_help_ligretto_4">Once a player reaches 99 points, the app asks if the game is over. The player with the highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 to 8 players.</string>
@@ -149,6 +163,20 @@
     <string name="app_help_tarot_2">Tap an existing round number to edit or delete it.</string>
     <string name="app_help_tarot_3">The app computes scores automatically using official French Tarot Federation rules (zero-sum).</string>
     <string name="app_help_tarot_4">When a player reaches 1000, the game is over.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Ticket to Ride                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_tickettoride_players">2 to 5 players.</string>
+    <string name="help_tickettoride_objective">Claim railway routes across the map with train cards, and complete Destination Ticket cards connecting distant cities.</string>
+    <string name="help_tickettoride_scoring">Each claimed route scores points based on its length: 1→1, 2→2, 3→4, 4→7, 5→10, 6→15 points. Each completed Destination Ticket adds its printed value; each uncompleted one at game end subtracts it. Whoever has the single longest continuous path of routes gets a +10 bonus (shared on a tie).</string>
+    <string name="help_tickettoride_end">The game ends once a player has 2 or fewer train cars left at the start of a turn; everyone (including that player) gets one final turn, then tickets are revealed and scores tallied.</string>
+    <string name="help_tickettoride_wikipedia_url">https://en.wikipedia.org/wiki/Ticket_to_Ride_(board_game)</string>
+
+    <string name="app_help_tickettoride_1">For each route length (1 to 6 train cars), tap the cell to enter how many routes of that length each player claimed during the game.</string>
+    <string name="app_help_tickettoride_2">Tap "+" under Completed tickets to add a destination ticket the player finished, and pick its printed point value — it will be added to their score.</string>
+    <string name="app_help_tickettoride_3">Tap "+" under Failed tickets to add a destination ticket the player did not complete — its value will be subtracted. Tap any entered ticket to edit or delete it.</string>
+    <string name="app_help_tickettoride_4">Tap the Longest path row to mark whichever player(s) hold the single longest continuous route (+10 pts), then tap "Finish game" to lock scores and see the results.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Wingspan                                               -->

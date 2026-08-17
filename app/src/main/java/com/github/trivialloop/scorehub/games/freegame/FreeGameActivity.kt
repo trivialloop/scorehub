@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -74,9 +75,25 @@ class FreeGameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.appBarLayout.setPadding(
+                0,
+                systemBars.top,
+                0,
+                0
+            )
+
+            binding.root.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
 
@@ -93,6 +110,10 @@ class FreeGameActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.freegame_game)
 
         buildTable()
+
+        onBackPressedDispatcher.addCallback(this) {
+            showQuitGameDialog()
+        }
     }
 
     override fun onDestroy() {
@@ -213,6 +234,7 @@ class FreeGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setBaselineAligned(false)
         }
 
         // Empty label cell spanning all three button rows
@@ -233,6 +255,7 @@ class FreeGameActivity : AppCompatActivity() {
                     orientation  = LinearLayout.HORIZONTAL
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+                    setBaselineAligned(false)
                 }
                 btnRow.addView(makeScoreButton("-$v", isPositive = false) { addScore(player, -v) })
                 btnRow.addView(makeScoreButton("+$v", isPositive = true)  { addScore(player, v)  })
@@ -260,6 +283,11 @@ class FreeGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROUND_ROW_DP))
+            // Without this, LinearLayout tries to align all children on the text
+            // baseline of the tallest/only-text child. Since placeholder cells
+            // have empty text, their background gets vertically offset and only
+            // a sliver (a "line") of the cell border remains visible.
+            setBaselineAligned(false)
         }
 
         row.addView(makeLabelCellFixed(slotIdx.toString()))
@@ -312,6 +340,7 @@ class FreeGameActivity : AppCompatActivity() {
         orientation  = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+        setBaselineAligned(false)
     }
 
     private fun makeLabelCell(text: String, heightDp: Int): TextView = TextView(this).apply {
@@ -392,6 +421,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun makePlaceholderCell(): TextView = TextView(this).apply {
         text = ""
+        gravity = Gravity.CENTER
         layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROUND_ROW_DP), 1f)
         background = cellDrawable(
             ContextCompat.getColor(this@FreeGameActivity, R.color.score_cell_background))
@@ -416,6 +446,18 @@ class FreeGameActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
+    private fun showQuitGameDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.freegame_quit_game)
+            .setMessage(R.string.freegame_quit_game_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                commitHandler.removeCallbacks(commitRunnable)
+                finish()
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
     // ─── Menu ─────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -425,18 +467,7 @@ class FreeGameActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.freegame_quit_game)
-                    .setMessage(R.string.freegame_quit_game_message)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        commitHandler.removeCallbacks(commitRunnable)
-                        finish()
-                    }
-                    .setNegativeButton(R.string.no, null)
-                    .show()
-                true
-            }
+            android.R.id.home -> { showQuitGameDialog(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }

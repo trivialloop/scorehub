@@ -2,7 +2,7 @@
 
 ## Project overview
 
-**ScoreHub** is an Android board game score tracking application, built in Kotlin using a View-based architecture (not Compose). It currently supports Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot, Wingspan, Yahtzee, and Akropolis.
+**ScoreHub** is an Android board game score tracking application, built in Kotlin using a View-based architecture (not Compose).
 
 - **Package** : `com.github.trivialloop.scorehub`
 - **Min SDK** : 24 (Android 7.0)
@@ -11,6 +11,11 @@
 - **UI** : XML Views + ViewBinding (no Jetpack Compose)
 - **DB** : Room (SQLite)
 - **License** : GPL v3
+
+This file covers rules that apply to the **whole project**. Game-specific notes
+(scoring rules, layout quirks, player counts, help text, etc.) live in
+`docs/games/<game>.md` — one file per game. Read the relevant per-game doc
+before touching that game's code, in addition to this file.
 
 ---
 
@@ -22,6 +27,7 @@ app/src/main/java/com/github/trivialloop/scorehub/
 ├── GeneralStatsActivity.kt          # Cross-game general statistics
 ├── SettingsActivity.kt              # Language + theme
 ├── ScoreHubApplication.kt           # Application class (theme init)
+├── GameRegistry.kt                  # Central registry of all games
 ├── data/
 │   ├── AppDatabase.kt               # Room database singleton
 │   ├── Player.kt                    # Player entity (id, name, color ARGB, createdAt)
@@ -30,19 +36,15 @@ app/src/main/java/com/github/trivialloop/scorehub/
 │   ├── GameResultDao.kt             # Stats + top20 queries
 │   └── PlayersColors.kt             # Available color palette
 ├── games/
-│   ├── akropolis/
-│   ├── cactus/
-│   ├── cribbage/
-│   ├── escoba/
-│   ├── farkle/
-│   ├── skyjo/
-│   ├── tarot/
-│   ├── wingspan/
-│   └── yahtzee/
+│   ├── akropolis/  cactus/  cribbage/  escoba/  farkle/  flip7/
+│   ├── freegame/    ligretto/  oh_hell/  qwixx/  skyjo/  tarot/
+│   └── wingspan/  yahtzee/
 └── utils/
     ├── LocaleHelper.kt              # Runtime language switching
-    ├── ScoreColorHelper.kt          # Shared utility: scoreColorRole()
+    ├── ScoreColorHelper.kt          # Shared utility: ScoreColorRole
     └── ThemeHelper.kt               # Light / Dark / System
+
+docs/games/                          # One markdown file per game (rules, UI notes)
 ```
 
 ---
@@ -55,7 +57,7 @@ app/src/main/java/com/github/trivialloop/scorehub/
 ### Database
 - **Never modify** `AppDatabase` without creating a **Room migration** (`addMigrations(...)` in the builder).
 - Current version is **`version = 1`** — any column or table addition must increment this number and provide the SQL migration script.
-- `GameResult.gameType` is a plain string (`"yahtzee"`, `"skyjo"`, etc., not an enum).
+- `GameResult.gameType` is a plain string (`"yahtzee"`, `"skyjo"`, `"ligretto"`, etc., not an enum).
 
 ---
 
@@ -93,9 +95,9 @@ Per row (manche / category row / etc.):
 - **Maximum value** → `score_text_worst` (red), **bold**.
 - **Everything else** → `score_cell_text` (neutral).
 
-For Skyjo (lower = better): minimum → red, maximum → green (use `ScoreColorHelper.scoreColorRole(lowerIsBetter = true)`).
+For games where lower is better (e.g. Skyjo): minimum → red, maximum → green (use `ScoreColorRole(value, allValues, higherIsBetter = false)`).
 
-Use `ScoreColorHelper.scoreColorRole(value, allValues)` from `utils/ScoreColorHelper.kt` for all score color decisions.
+Use `ScoreColorRole(value, allValues)` from `utils/ScoreColorHelper.kt` for all score color decisions.
 
 ### Editable cell visual convention
 
@@ -103,7 +105,49 @@ Use `ScoreColorHelper.scoreColorRole(value, allValues)` from `utils/ScoreColorHe
 - **Background color**: use `cell_editable_bg` for empty editable cells, `cell_editable_filled_bg` for filled+editable.
 - **Keyboard auto-open**: all score input dialogs must call `dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)` and `editText.requestFocus()` so the soft keyboard opens immediately on dialog show.
 
----
+### Edge-to-edge window insets (mandatory for every Activity)
+
+Every Activity must apply system bar insets the same way. **Never use `Type.statusBars()` alone** — always use `Type.systemBars()` and apply padding to both `appBarLayout` (top only) and `binding.root` (left/right/bottom), so gesture navigation and horizontal insets (landscape, notches) are handled correctly.
+
+Required in every Activity's `onCreate()`, right after `setContentView`:
+
+```kotlin
+WindowCompat.setDecorFitsSystemWindows(window, false)
+
+ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+
+    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+    binding.appBarLayout.setPadding(
+        0,
+        systemBars.top,
+        0,
+        0
+    )
+
+    binding.root.setPadding(
+        systemBars.left,
+        0,
+        systemBars.right,
+        systemBars.bottom
+    )
+
+    insets
+}
+```
+
+**Do NOT** use the older pattern below — it only pads the top of `appBarLayout` via `statusBars()` and never pads `binding.root`, which causes layout/display bugs (e.g. content hidden or misaligned behind system bars) on devices with gesture navigation or side insets:
+
+```kotlin
+// ❌ DEPRECATED — do not use
+ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+    val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+    binding.appBarLayout.setPadding(0, statusBarInsets.top, 0, 0)
+    insets
+}
+```
+
+This applies to **every screen with a toolbar/appBarLayout**, including one-off screens like Free Game that don't follow the round-based grid pattern.
 
 ## Localisation
 
@@ -131,7 +175,7 @@ All `PlayerSelectionActivity` classes must follow this behaviour (same as Cribba
 
 ### Label column width — uniform across all round-based games
 
-**All round-based games (Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot) must use `LABEL_COL_DP = 65` for the first (label/round-number) column.**
+**All round-based games must use `LABEL_COL_DP = 65` for the first (label/round-number) column.**
 
 This constant is also used by Akropolis (`ICON_COL_DP = 65`) and is the canonical width for all left-side label columns in score grids. Never use a different hardcoded value.
 
@@ -147,9 +191,31 @@ The label cell layout params must reference this constant:
 layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
 ```
 
+### Row baseline alignment (mandatory for every hand-built grid row)
+
+Every `LinearLayout` row built in code (via a `makeRow()`-style helper) **must** set
+`isBaselineAligned = false`. By default, Android's horizontal `LinearLayout` aligns
+child views on their text baseline rather than centering them within the row's fixed
+height. This is invisible when every cell in a row has the same kind of content, but as
+soon as a row mixes empty cells with filled/bold ones — subtotal rows, "add" buttons
+next to filled entries, toggle cells (checked vs. unchecked) — the cells render at
+slightly different vertical offsets, producing a visible row-to-row misalignment even
+though every cell shares the same declared height.
+
+```kotlin
+private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
+    orientation  = LinearLayout.HORIZONTAL
+    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+    isBaselineAligned = false   // ← always set this
+}
+```
+
+`FreeGameActivity.kt`, `QwixxGameActivity.kt`, and `TicketToRideGameActivity.kt` already
+follow this rule — use them as reference when adding a new game's grid.
+
 ### Fixed header + scrollable content (mandatory for all round-based games)
 
-**All games with rounds (Cactus, Cribbage, Escoba, Farkle, Skyjo, Tarot) MUST use the following layout pattern unconditionally.**
+**All games with rounds MUST use the following layout pattern unconditionally.**
 
 The behaviour is:
 - The **header row** (player names / column labels) is always **fixed** at the top of the screen.
@@ -204,11 +270,15 @@ private fun buildTable() {
 - Use a conditional like `if (totalNaturalHeight > screenHeight)` to switch between layouts. The split header/scroll is always active.
 - Declare a `totalContainer` in XML at all.
 
+> Note: a few older games (Cactus, Cribbage, Skyjo, Tarot) still contain a
+> conditional-height fallback predating this rule; treat the unconditional
+> pattern above as the standard for any **new** game and any refactor.
+
 Games that are **not** round-based (Wingspan, Yahtzee, Akropolis) keep their own layout approach — this rule does not apply to them.
 
-### Fixed row height (Cribbage / Escoba / Farkle pattern)
+### Fixed row height (Cribbage / Escoba / Farkle / Ligretto pattern)
 
-For multi-column grids with fixed-height rows (Cribbage, Escoba, Farkle), all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header and round rows.
+For multi-column grids with fixed-height rows, all rows use a **fixed height** (`ROW_HEIGHT_DP = 48dp`) so cells align perfectly across the header and round rows.
 
 ### In-play cells
 
@@ -216,65 +286,9 @@ Games with an in-play phase (Cribbage, Escoba, Farkle) use a `[−] score [+]` c
 
 ---
 
-## Game-specific notes
-
-### Yahtzee
-- Highest score = best. Column coloring: highest grand total = green, lowest = red.
-- **Chance category**: `getPossibleValues()` returns `30 downTo 5` so the dialog opens showing large values first.
-- Last-filled category: re-editable with `"✏ "` prefix and `cell_editable_filled_bg` background.
-- Solo games (1 player) do not count toward win/loss statistics.
-
-### Skyjo
-- Lower score = best. Score limit: **100 pts**.
-- Finisher penalty: if not strictly lowest alone, score is **doubled**.
-- Coloring: finisher cell uses background color (green/red), others use text color.
-- Uses the fixed header / scrollable content pattern — **reference implementation** for all other round-based games.
-
-### Escoba
-- 2-column layout per player per round: **In play** (weight 1.5) + **End of round** (weight 1).
-- In-play via +/− buttons; locked once any player enters their end-of-round score.
-- End-of-round score: dialog with auto-focus keyboard; pencil prefix when re-editing.
-- Score limit: **21 pts**. Highest score wins.
-- Previous round editable until the new round gets any in-play activity.
-- Uses the fixed header / scrollable content pattern with `ROW_HEIGHT_DP = 48`.
-
-### Cribbage
-- 3-column layout per player: **In play** + **End of round** + **Crib**.
-- Only the dealer has a crib; the other player's crib column uses `cell_never_bg`.
-- Win condition: **121 pts**. Highest score wins.
-- Uses the fixed header / scrollable content pattern with `ROW_HEIGHT_DP = 48`.
-
-### Cactus
-- Round label cell tinted with the finisher's color.
-- Score coloring: finisher GREEN if sole lowest, RED otherwise; non-finishers GREEN if lowest among them, RED if highest.
-- Score limit: **10 pts**. Highest total wins.
-- Uses the fixed header / scrollable content pattern (always unconditionally).
-
-### Farkle
-- Turn-based: each player takes turns rolling dice. In-progress turn shows Add / Bank / Farkle buttons.
-- Score limit: **10 000 pts**. After a player reaches the limit, all other players get one last turn.
-- Uses the fixed header / scrollable content pattern; `ROW_HEIGHT_DP = 48` for completed round rows.
-
-### Tarot
-- Round label cell tinted with the declarer's color.
-- 3-step round entry dialog: declarer/contract/bouts → options (optional) → points made.
-- Score limit: **1 000 pts**. Highest total wins. Scores are zero-sum per round.
-- Uses the fixed header / scrollable content pattern (header = player names, scroll = round rows + add-round row + total row).
-
-### Wingspan
-- One-shot grid (no rounds): all category rows colored per row once all players have entered scores.
-- Highest total = winner.
-
-### Akropolis
-- One-shot grid per player: 5 color groups × (stars + districts + subtotal) + stones + total.
-- Highest total = winner.
-
----
-
 ## Statistics
 
-- **Yahtzee, Cactus, Escoba, Cribbage, Wingspan, Tarot, Farkle, Akropolis**: highest score = best. `getBestScoreByPlayer` = MAX.
-- **Skyjo**: lowest score = best. `getBestScoreByPlayer` returns MIN (inverted in `SkyjoStatsActivity`).
+- For most games, highest score = best. `getBestScoreByPlayer` = MAX. See each game's doc in `docs/games/` for the exception list (currently only **Skyjo**, where lowest score = best and `getBestScoreByPlayer` is inverted).
 - `getCountedGamesPlayedByPlayer` excludes solo games (sessions where `playedAt` appears for only one player).
 
 ---
@@ -284,17 +298,7 @@ Games with an in-play phase (Cribbage, Escoba, Farkle) use a `[−] score [+]` c
 - Unit tests in `app/src/test/` (JVM, no Android context).
 - Instrumented tests in `app/src/androidTest/` (Room in-memory).
 - Test file naming: `<Game>ScoreManagerTest.kt` (e.g. `YahtzeeScoreManagerTest.kt`).
-- Existing test files:
-  - `YahtzeeScoreManagerTest.kt` — Yahtzee scoring logic
-  - `SkyjoScoreManagerTest.kt` — Skyjo rounds, penalties, colors
-  - `EscobaScoreManagerTest.kt` — Escoba rounds, in-play, totals
-  - `CribbageScoreManagerTest.kt` — Cribbage rounds, in-play, crib
-  - `TarotScoreManagerTest.kt` — Tarot zero-sum, scoring
-  - `WingspanScoreManagerTest.kt` — Wingspan category totals
-  - `CactusScoreManagerTest.kt` — Cactus points, cell colors
-  - `FarkleScoreManagerTest.kt` — Farkle rounds, bank, farkle
-  - `AkropolisScoreManagerTest.kt` — Akropolis district totals
-  - `DatabaseTest.kt` — Room DAOs
+- One test file per game score manager, plus `DatabaseTest.kt` for Room DAOs.
 
 ---
 
@@ -350,15 +354,18 @@ The main screen reads its game list from a **central registry** — no change to
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. **Add a section** in `activity_general_stats.xml` and `GeneralStatsActivity.kt`.
 9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. Mandatory — cover scoring logic, state helpers, and edge cases.
-10. **Add help content** in `ui/HelpDialogs.kt`:
-    - In `getGameHelp()`: add a `GameHelp` entry for the game type with:
-      - `players` — number of players supported
-      - `objective` — one-sentence summary of the game goal
-      - `scoring` — how points are counted
-      - `endCondition` — what triggers the end of the game
-      - `wikipediaUrlEn` — English Wikipedia URL for the game
-      - `wikipediaUrlFr` — French Wikipedia URL for the game
-    - In `getAppHelp()`: add an `AppHelp` entry with 3–4 concise steps explaining how to use the ScoreHub interface for that game (e.g. how to pick the finisher, how to enter scores, when the game ends in the app).
-    - Add the corresponding strings in both `values/strings.xml` and `values-fr/strings.xml` following the naming convention:
-      - Game rules: `help_<game>_players`, `help_<game>_objective`, `help_<game>_scoring`, `help_<game>_end`
-      - App usage: `app_help_<game>_1` through `app_help_<game>_N`
+10. **Add help content** in `ui/HelpDialogs.kt` (see below).
+11. **Write `docs/games/<game>.md`** — a short doc following the template of the existing per-game files, covering scoring rules, player counts, and any UI quirks specific to that game.
+
+### Help content (`ui/HelpDialogs.kt`)
+
+- In `getGameHelp()`: add a `GameHelp` entry for the game type with:
+  - `players` — number of players supported
+  - `objective` — one-sentence summary of the game goal
+  - `scoring` — how points are counted
+  - `endCondition` — what triggers the end of the game
+  - `wikipediaUrl` — Wikipedia URL for the game (resolved per-locale via string resources)
+- In `getAppHelp()`: add an `AppHelp` entry with 3–4 concise steps explaining how to use the ScoreHub interface for that game (e.g. how to pick the finisher, how to enter scores, when the game ends in the app).
+- Add the corresponding strings in both `values/strings.xml` and `values-fr/strings.xml` following the naming convention:
+  - Game rules: `help_<game>_players`, `help_<game>_objective`, `help_<game>_scoring`, `help_<game>_end`, `help_<game>_wikipedia_url`
+  - App usage: `app_help_<game>_1` through `app_help_<game>_N`

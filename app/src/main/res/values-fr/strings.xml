@@ -160,7 +160,23 @@
     <string name="freegame_total">Total</string>
     <string name="freegame_current_round">Manche</string>
     <string name="freegame_quit_game">Quitter la partie</string>
-    <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    
+    <!-- Jeu Ligretto -->
+    <string name="ligretto_game">Ligretto</string>
+    <string name="ligretto_round_label">#</string>
+    <string name="ligretto_total">Total</string>
+    <string name="ligretto_played">Jouées</string>
+    <string name="ligretto_left">Restantes</string>
+    <string name="ligretto_who_called">Qui a crié « Ligretto ! » en premier ?</string>
+    <string name="ligretto_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="ligretto_maximum_players">Maximum 12 joueurs autorisés</string>
+    <string name="ligretto_game_over_title">Fin de partie ?</string>
+    <string name="ligretto_game_over_confirm">Un joueur a atteint 99 points. Terminer la partie ?</string>
+    <string name="ligretto_quit_game">Quitter la partie</string>
+    <string name="ligretto_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="ligretto_best_score_label">Meilleur Score</string>
+
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Ascenseur</string>
     <string name="ohhell_total">Total</string>
@@ -170,10 +186,9 @@
     <string name="ohhell_choose_result">Résultat</string>
     <string name="ohhell_best_score_label">Meilleur Score</string>
     <string name="ohhell_quit_game">Quitter la partie</string>
-    <string name="ohhell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  QWIXX GAME                                                   -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="ohhell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
+    <!-- Qwixx -->
     <string name="qwixx_game">Qwixx</string>
     <string name="qwixx_total">Total</string>
     <string name="qwixx_penalty_symbol">✗</string>
@@ -248,6 +263,28 @@
     <string name="tarot_quit_game">Quitter la partie</string>
     <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="tarot_best_score_label">Meilleur Score</string>
+
+    <!-- Jeu Les Aventuriers du Rail -->
+    <string name="tickettoride_game">Les Aventuriers du Rail</string>
+    <string name="tickettoride_route_length_label">%1$d 🚃</string>
+    <string name="tickettoride_route_points">Points tronçons</string>
+    <string name="tickettoride_completed_tickets">🎫✅ Objectifs réussis</string>
+    <string name="tickettoride_failed_tickets">🎫❌ Objectifs échoués</string>
+    <string name="tickettoride_subtotal">Sous-total</string>
+    <string name="tickettoride_longest_path">🏆 Plus long chemin</string>
+    <string name="tickettoride_total">Total</string>
+    <string name="tickettoride_add_ticket_title">Ajouter une carte destination</string>
+    <string name="tickettoride_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="tickettoride_delete_entry">Supprimer</string>
+    <string name="tickettoride_finish_game">Terminer la partie</string>
+    <string name="tickettoride_finish_game_title">Terminer la partie ?</string>
+    <string name="tickettoride_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="tickettoride_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="tickettoride_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="tickettoride_quit_game">Quitter la partie</string>
+    <string name="tickettoride_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="tickettoride_best_score_label">Meilleur Score</string>
+
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
     <string name="wingspan_category_label">Catégorie</string>

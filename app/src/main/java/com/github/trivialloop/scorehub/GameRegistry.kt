@@ -7,10 +7,12 @@ import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.freegame.FreeGamePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.ligretto.LigrettoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.tickettoride.TicketToRidePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.wingspan.WingspanPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.yahtzee.YahtzeePlayerSelectionActivity
 
@@ -33,8 +35,8 @@ enum class Equipment {
  * **How to add a new game:**
  * 1. Add a [GameDefinition] entry to [ALL_GAMES] below — that is the ONLY change
  *    needed here. The home screen, search, sort, and filter all pick it up automatically.
- * 2. Create the game package under `games/<gamename>/` (see CLAUDE.md for the full
- *    checklist).
+ * 2. Create the game package under `games/<gamename>/` (see CLAUDE.md and
+ *    `docs/games/<gamename>.md` for the full checklist).
  */
 object GameRegistry {
 
@@ -150,6 +152,17 @@ object GameRegistry {
             equipment      = setOf(Equipment.CARDS, Equipment.DICE, Equipment.BOARD)
         ),
         GameDefinition(
+            gameType       = "ligretto",
+            nameEnFallback = "Ligretto",
+            nameResId      = R.string.ligretto_game,
+            iconResId      = R.drawable.ic_ligretto_game,
+            activityClass  = LigrettoPlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 12,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
             gameType       = "oh_hell",
             nameEnFallback = "Oh Hell",
             nameResId      = R.string.ohhell_game,
@@ -189,6 +202,17 @@ object GameRegistry {
             iconResId      = R.drawable.ic_tarot_game,
             activityClass  = TarotPlayerSelectionActivity::class.java,
             minPlayers     = 3,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "ticket_to_ride",
+            nameEnFallback = "Ticket to Ride",
+            nameResId      = R.string.tickettoride_game,
+            iconResId      = R.drawable.ic_tickettoride_game,
+            activityClass  = TicketToRidePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
             maxPlayers     = 5,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)

@@ -1,0 +1,2 @@
+### Fixed
+- Fix german language selection

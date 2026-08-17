@@ -1,0 +1,2 @@
+### Fixed
+- Fix cells in free game

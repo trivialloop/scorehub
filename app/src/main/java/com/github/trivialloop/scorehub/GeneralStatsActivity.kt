@@ -149,6 +149,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Ligretto ─────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "ligretto",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerLigretto,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorLigretto,
+                    bestPlayerSection = binding.bestPlayerSectionLigretto,
+                    bestScoreView     = binding.textBestScoreLigretto,
+                    bestScoreColor    = binding.bestScoreColorIndicatorLigretto,
+                    bestScoreSection  = binding.bestScoreSectionLigretto,
+                    noDataView        = binding.textNoDataLigretto,
+                    bestScoreIsLowest = false   // highest total wins in Ligretto
+                )
+
                 // ── Oh Hell ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "oh_hell",
@@ -202,6 +216,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreColor    = binding.bestScoreColorIndicatorTarot,
                     bestScoreSection  = binding.bestScoreSectionTarot,
                     noDataView        = binding.textNoDataTarot,
+                    bestScoreIsLowest = false
+                )
+
+                // ── Ticket to Ride ──────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "ticket_to_ride",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerTicketToRide,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorTicketToRide,
+                    bestPlayerSection = binding.bestPlayerSectionTicketToRide,
+                    bestScoreView     = binding.textBestScoreTicketToRide,
+                    bestScoreColor    = binding.bestScoreColorIndicatorTicketToRide,
+                    bestScoreSection  = binding.bestScoreSectionTicketToRide,
+                    noDataView        = binding.textNoDataTicketToRide,
                     bestScoreIsLowest = false
                 )
 

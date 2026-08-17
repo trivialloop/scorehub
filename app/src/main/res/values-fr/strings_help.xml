@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Ligretto                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_ligretto_players">2 à 12 joueurs.</string>
+    <string name="help_ligretto_objective">Soyez le plus rapide à vider votre pioche Ligretto en posant des cartes de la même couleur dans l\'ordre croissant sur les piles communes.</string>
+    <string name="help_ligretto_scoring">À la fin de chaque manche, vous gagnez 1 point par carte posée sur les piles communes, puis perdez 2 points par carte restant dans votre pioche Ligretto.</string>
+    <string name="help_ligretto_end">La partie se termine quand un joueur atteint 99 points. Si plusieurs joueurs sont à 99 ou plus, celui avec le total le plus élevé gagne.</string>
+    <string name="help_ligretto_wikipedia_url">https://fr.wikipedia.org/wiki/Ligretto</string>
+
+    <string name="app_help_ligretto_1">Appuyez éventuellement sur le numéro de manche (#) pour indiquer qui a crié « Ligretto ! » en premier — c\'est purement indicatif et n\'influence pas le score.</string>
+    <string name="app_help_ligretto_2">Pour chaque joueur, appuyez sur la case « Jouées » pour saisir le nombre de cartes posées sur les piles communes, et sur la case « Restantes » pour saisir le nombre de cartes restant dans sa pioche Ligretto (0–10).</string>
+    <string name="app_help_ligretto_3">L\'application calcule automatiquement le score de la manche (Jouées − 2 × Restantes) et met à jour les totaux.</string>
+    <string name="app_help_ligretto_4">Dès qu\'un joueur atteint 99 points, l\'application demande si la partie est terminée. Le joueur avec le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Oh Hell                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 à 8 joueurs.</string>
@@ -149,6 +163,20 @@
     <string name="app_help_tarot_2">Appuyez sur le numéro d\'une manche existante pour la modifier ou la supprimer.</string>
     <string name="app_help_tarot_3">L\'application calcule les scores automatiquement selon les règles officielles de la Fédération Française de Tarot (somme nulle).</string>
     <string name="app_help_tarot_4">Quand un joueur atteint 1000 points, la partie est terminée.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Les Aventuriers du Rail                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_tickettoride_players">2 à 5 joueurs.</string>
+    <string name="help_tickettoride_objective">Construisez des voies ferrées sur la carte à l\'aide de cartes wagon, et réalisez des cartes destination reliant des villes éloignées.</string>
+    <string name="help_tickettoride_scoring">Chaque tronçon posé rapporte des points selon sa longueur : 1→1, 2→2, 3→4, 4→7, 5→10, 6→15 points. Chaque carte destination réussie ajoute sa valeur imprimée ; chaque carte échouée en fin de partie la retire. Le joueur qui a le plus long chemin continu de tronçons obtient un bonus de +10 (partagé en cas d\'égalité).</string>
+    <string name="help_tickettoride_end">La partie se termine dès qu\'un joueur a 2 wagons ou moins au début de son tour ; tous les joueurs (y compris lui) jouent un dernier tour, puis les cartes destination sont révélées et les scores comptés.</string>
+    <string name="help_tickettoride_wikipedia_url">https://fr.wikipedia.org/wiki/Les_Aventuriers_du_rail</string>
+
+    <string name="app_help_tickettoride_1">Pour chaque longueur de tronçon (1 à 6 wagons), appuyez sur la case pour indiquer combien de tronçons de cette longueur chaque joueur a posé pendant la partie.</string>
+    <string name="app_help_tickettoride_2">Appuyez sur « + » sous Objectifs réussis pour ajouter une carte destination terminée par le joueur, et choisissez sa valeur imprimée — elle sera ajoutée à son score.</string>
+    <string name="app_help_tickettoride_3">Appuyez sur « + » sous Objectifs échoués pour ajouter une carte destination non réalisée — sa valeur sera soustraite. Appuyez sur une carte déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_tickettoride_4">Appuyez sur la ligne Plus long chemin pour marquer le(s) joueur(s) qui détiennent le plus long chemin continu (+10 pts), puis appuyez sur « Terminer la partie » pour verrouiller les scores et voir les résultats.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Wingspan                                               -->

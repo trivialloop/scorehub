@@ -143,6 +143,23 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
             
         <activity
+            android:name=".games.ligretto.LigrettoPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoGameActivity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoStatsActivity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.ligretto.LigrettoTop20Activity"
+            android:parentActivityName=".games.ligretto.LigrettoPlayerSelectionActivity" />
+            
+        <activity
             android:name=".games.ohhell.OhHellPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
@@ -210,6 +227,23 @@
             android:name=".games.tarot.TarotTop20Activity"
             android:parentActivityName=".games.tarot.TarotPlayerSelectionActivity" />
 
+        <activity
+            android:name=".games.tickettoride.TicketToRidePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.tickettoride.TicketToRideGameActivity"
+            android:parentActivityName=".games.tickettoride.TicketToRidePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.tickettoride.TicketToRideStatsActivity"
+            android:parentActivityName=".games.tickettoride.TicketToRidePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.tickettoride.TicketToRideTop20Activity"
+            android:parentActivityName=".games.tickettoride.TicketToRidePlayerSelectionActivity" />
+            
         <activity
             android:name=".games.wingspan.WingspanPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
