@@ -189,9 +189,9 @@
         <item quantity="other">%d Spiele</item>
     </plurals>
     <string name="games_played">Spiele gespielt</string>
-    <string name="win_percentage">% Gewonnen</string>
-    <string name="draw_percentage">% Unentschieden</string>
-    <string name="loss_percentage">% Verloren</string>
+    <string name="win_percentage">%% Gewonnen</string>
+    <string name="draw_percentage">%% Unentschieden</string>
+    <string name="loss_percentage">%% Verloren</string>
     <string name="best_player_label">Bester Spieler</string>
     <string name="best_ratio_player">Beste Gewinnquote: %1$s</string>
     <string name="games_info">Gesamt: %1$d | Anzahl: %2$d</string>
