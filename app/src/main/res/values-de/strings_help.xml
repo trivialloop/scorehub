@@ -19,4 +19,19 @@
     <string name="help_tarot_players">3 bis 5 Spieler.</string>
     <string name="help_wingspan_players">2 bis 5 Spieler.</string>
     <string name="help_yahtzee_players">1 bis 8 Spieler.</string>
+    <string name="help_yahtzee_wikipedia_url">https://de.wikipedia.org/wiki/Kniffel</string>
+    <string name="help_wingspan_wikipedia_url">https://de.wikipedia.org/wiki/Flügelschlag</string>
+    <string name="help_tickettoride_wikipedia_url">https://de.wikipedia.org/wiki/Zug_um_Zug_(Spiel)</string>
+    <string name="help_tickettoride_players">2 bis 5 Spieler.</string>
+    <string name="help_tarot_wikipedia_url">https://de.wikipedia.org/wiki/Französisches_Tarock</string>
+    <string name="help_skyjo_wikipedia_url">https://de.wikipedia.org/wiki/Skyjo</string>
+    <string name="help_qwixx_wikipedia_url">https://de.wikipedia.org/wiki/Qwixx</string>
+    <string name="help_ohhell_wikipedia_url">https://de.wikipedia.org/wiki/Stiche-Raten</string>
+    <string name="help_ligretto_wikipedia_url">https://de.wikipedia.org/wiki/Ligretto</string>
+    <string name="help_flip7_wikipedia_url">https://de.wikipedia.org/wiki/Flip_7</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+    <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
+    <string name="help_cribbage_wikipedia_url">https://de.wikipedia.org/wiki/Cribbage</string>
+    <string name="help_akropolis_wikipedia_url">https://de.wikipedia.org/wiki/Akropolis_(Spiel)</string>
+    <string name="help_cactus_wikipedia_url">https://de.wikipedia.org/wiki/Dutch_(Kartenspiel)</string>
 </resources>
