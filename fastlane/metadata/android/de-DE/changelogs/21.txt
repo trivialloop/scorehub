@@ -1,0 +1,2 @@
+### Behoben
+- Zellen in „Freies Spiel“ korrigiert

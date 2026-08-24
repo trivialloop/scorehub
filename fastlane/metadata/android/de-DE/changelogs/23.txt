@@ -1,0 +1,6 @@
+### Zugefügt
+- Neues Spiel: Ligretto
+- Neues Spiel: Zug um Zug
+
+### Geändert
+- Sprache aktualisiert: Deutsch

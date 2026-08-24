@@ -1,0 +1,26 @@
+ScoreHub ist eine einfache und intuitive App, um Spielergebnisse von Gesellschaftsspielen mit mehreren Personen nachverfolgen zu können.
+
+Features:
+• Unterstützt mehrere Spiele
+• Spieler-Management mit benutzerdefinierten Farben
+• Umfassende Statistiken und Ranglisten
+• Rangliste der Top 20 Highscores
+• Sieg/Niederlage/Unentschieden nachverfolgen
+• Mehrsprachig (wachsende Anzahl an Sprachen durch die Community)
+• Vollständig offline
+
+Perfekt für Brettspiel-Enthusiasten, die detaillierte Aufzeichnungen ihrer Spiele behalten wollen!
+
+Derzeit unterstützte Spiele:
+- Akropolis
+- Dutch/Cabo/Cactus/Tamalou/Cambio
+- Cribbage
+- Escoba/Scopa/Besen
+- Farkle
+- Flip 7
+- Oh Hell
+- Qwixx
+- Skyjo
+- Tarot/Tarock
+- Flügelschlag
+- Kniffel/Yahtzee

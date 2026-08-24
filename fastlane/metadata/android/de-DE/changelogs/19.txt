@@ -1,0 +1,6 @@
+### Zugefügt
+- Spiel zugefügt: Freies Spiel
+- Neue Sprache: Deutsch
+
+### Geändert
+- Abhängigkeiten aktualisiert
