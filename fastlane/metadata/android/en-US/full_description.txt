@@ -18,9 +18,14 @@ Currently supported games:
 - Escoba
 - Farkle
 - Flip7
+- Harmonies
+- Ligretto
 - Oh Hell
 - Qwixx
 - Skyjo
 - Tarot
+- Ticket to ride
 - Wingspan
 - Yahtzee
+
+- Free Game

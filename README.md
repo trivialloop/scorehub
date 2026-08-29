@@ -31,12 +31,17 @@ alt="Get it on F-Droid" height="100"/>](https://f-droid.org/en/packages/com.gith
 - Escoba
 - Farkle
 - Flip7
+- Harmonies
+- Ligretto
 - Oh Hell
 - Qwixx
 - Skyjo
 - Tarot
+- Ticket to ride
 - Wingspan
 - Yahtzee
+
+- Free Game
 
 
 ## 🌍 Multi-language
