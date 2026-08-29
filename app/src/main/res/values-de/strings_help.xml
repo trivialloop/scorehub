@@ -1,3 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="help_game_title">ℹ️ Spiel-Regeln</string>
+    <string name="help_app_title">ℹ️ App-Benutzung</string>
+    <string name="help_label_players">👥 Spieler</string>
+    <string name="help_label_objective">🎯 Ziel</string>
+    <string name="help_label_scoring">🔢 Wertung</string>
+    <string name="help_label_end">🏁 Ende des Spiels</string>
+    <string name="help_wikipedia_link">📖 Weiterlesen auf Wikipedia</string>
+    <string name="help_cactus_players">2 bis 8 Spieler.</string>
+    <string name="help_akropolis_players">2 bis 4 Spieler.</string>
+    <string name="help_cribbage_players">2 Spieler.</string>
+    <string name="help_escoba_players">2 Spieler.</string>
+    <string name="help_farkle_players">2 bis 8 Spieler.</string>
+    <string name="help_flip7_players">3 bis 10 Spieler.</string>
+    <string name="help_ohhell_players">3 bis 8 Spieler.</string>
+    <string name="help_qwixx_players">2 bis 5 Spieler.</string>
+    <string name="help_skyjo_players">2 bis 8 Spieler.</string>
+    <string name="help_tarot_players">3 bis 5 Spieler.</string>
+    <string name="help_wingspan_players">2 bis 5 Spieler.</string>
+    <string name="help_yahtzee_players">1 bis 8 Spieler.</string>
 </resources>

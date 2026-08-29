@@ -2,12 +2,10 @@
 <resources>
     <!-- App -->
     <string name="app_name">ScoreHub</string>
-
     <!-- Main screen — search -->
     <string name="search_game">Rechercher un jeu…</string>
     <string name="no_games_played">Aucune partie jouée</string>
     <string name="last_played_date">Dernière partie : %1$s</string>
-
     <!-- Main screen — sort -->
     <string name="sort_games">Trier les jeux</string>
     <string name="sort_alphabetical">Ordre alphabétique</string>
@@ -16,7 +14,6 @@
     <string name="sort_label_alphabetical">Tri : A → Z</string>
     <string name="sort_label_recently_played">Tri : joué récemment</string>
     <string name="sort_label_most_played">Tri : le plus joué</string>
-
     <!-- Main screen — filter dialog -->
     <string name="filter_title">Filtres</string>
     <string name="filter_players_label">Nombre de joueurs</string>
@@ -32,7 +29,6 @@
     <string name="filter_apply">Appliquer</string>
     <string name="filter_active_players">%1$d joueurs</string>
     <string name="filter_active_summary">Filtres : %1$s</string>
-
     <!-- Player Selection -->
     <string name="player_selection_title">Sélection des joueurs</string>
     <string name="selected_players">Joueurs sélectionnés</string>
@@ -60,7 +56,6 @@
     <string name="delete_player">Supprimer le joueur</string>
     <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
     <string name="reorder">Réorganiser</string>
-
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
     <string name="akropolis_total">Total</string>
@@ -81,7 +76,6 @@
     <string name="akropolis_quit_game">Quitter la partie</string>
     <string name="akropolis_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="akropolis_best_score_label">Meilleur Score</string>
-
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
     <string name="cactus_round_label">#</string>
@@ -97,8 +91,7 @@
     <string name="cactus_worst_score_short">Pire : %1$d</string>
     <string name="cactus_best_score_label">Meilleur Score (le plus haut)</string>
     <string name="cactus_quit_game">Quitter la partie</string>
-    <string name="cactus_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
+    <string name="cactus_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <!-- Cribbage Game -->
     <string name="cribbage_game">Cribbage</string>
     <string name="cribbage_round_label">#</string>
@@ -111,9 +104,8 @@
     <string name="cribbage_minimum_players">Exactement 2 joueurs requis</string>
     <string name="cribbage_maximum_players">Exactement 2 joueurs requis</string>
     <string name="cribbage_quit_game">Quitter la partie</string>
-    <string name="cribbage_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="cribbage_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="cribbage_best_score_label">Meilleur Score</string>
-
     <!-- Escoba Game -->
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
@@ -128,9 +120,8 @@
     <string name="escoba_game_over_title">Fin de partie ?</string>
     <string name="escoba_game_over_confirm">Un joueur a atteint 21 points. Terminer la partie ?</string>
     <string name="escoba_quit_game">Quitter la partie</string>
-    <string name="escoba_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="escoba_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="escoba_best_score_label">Meilleur Score</string>
-
     <!-- Farkle Game -->
     <string name="farkle_game">Farkle</string>
     <string name="farkle_total">Total</string>
@@ -139,14 +130,13 @@
     <string name="farkle_game_over_title">Fin de partie ?</string>
     <string name="farkle_game_over_confirm">Un joueur a atteint 10 000 points. Terminer la partie ?</string>
     <string name="farkle_quit_game">Quitter la partie</string>
-    <string name="farkle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="farkle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="farkle_best_score_label">Meilleur Score</string>
     <string name="farkle_btn_add">Ajout</string>
     <string name="farkle_btn_bank">Banque</string>
     <string name="farkle_btn_farkle">Farkle !</string>
     <string name="farkle_score_hint">Score (ex: 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
-
     <!-- Flip 7 Game -->
     <string name="flip7_game">Flip 7</string>
     <string name="flip7_round_label">#</string>
@@ -162,9 +152,8 @@
     <string name="flip7_game_over_title">Fin de partie ?</string>
     <string name="flip7_game_over_confirm">Un joueur a atteint 200 points. Terminer la partie ?</string>
     <string name="flip7_quit_game">Quitter la partie</string>
-    <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="flip7_best_score_label">Meilleur Score</string>
-
     <!-- Jeu Libre -->
     <string name="freegame_game">Jeu Libre</string>
     <string name="freegame_round_label">#</string>
@@ -232,7 +221,6 @@
     <string name="qwixx_phase_others">%1$s — votre tour (appuyez sur le nom pour passer)</string>
     <string name="qwixx_phase_active_second">%1$s — choisir à nouveau%2$s</string>
     <string name="qwixx_phase_active_second_mandatory"> (obligatoire ou malus)</string>
-
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -248,8 +236,7 @@
     <string name="skyjo_score_hint">ex: -2 or 7</string>
     <string name="skyjo_best_score_label">Meilleur Score (le plus bas)</string>
     <string name="skyjo_quit_game">Quitter la partie</string>
-    <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
+    <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <!-- Tarot Game -->
     <string name="tarot_game">Tarot</string>
     <string name="tarot_total">Total</string>
@@ -291,8 +278,29 @@
     <string name="tarot_game_over_title">Fin de partie ?</string>
     <string name="tarot_game_over_confirm">Un joueur a atteint 1000 points. Terminer la partie ?</string>
     <string name="tarot_quit_game">Quitter la partie</string>
-    <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="tarot_best_score_label">Meilleur Score</string>
+
+    <!-- Jeu Les Aventuriers du Rail -->
+    <string name="tickettoride_game">Les Aventuriers du Rail</string>
+    <string name="tickettoride_route_length_label">%1$d 🚃</string>
+    <string name="tickettoride_route_points">Points tronçons</string>
+    <string name="tickettoride_completed_tickets">🎫✅ Objectifs réussis</string>
+    <string name="tickettoride_failed_tickets">🎫❌ Objectifs échoués</string>
+    <string name="tickettoride_subtotal">Sous-total</string>
+    <string name="tickettoride_longest_path">🏆 Plus long chemin</string>
+    <string name="tickettoride_total">Total</string>
+    <string name="tickettoride_add_ticket_title">Ajouter une carte destination</string>
+    <string name="tickettoride_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="tickettoride_delete_entry">Supprimer</string>
+    <string name="tickettoride_finish_game">Terminer la partie</string>
+    <string name="tickettoride_finish_game_title">Terminer la partie ?</string>
+    <string name="tickettoride_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="tickettoride_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="tickettoride_maximum_players">Maximum 5 joueurs autorisés</string>
+    <string name="tickettoride_quit_game">Quitter la partie</string>
+    <string name="tickettoride_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="tickettoride_best_score_label">Meilleur Score</string>
 
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
@@ -310,12 +318,11 @@
     <string name="wingspan_total">Total</string>
     <string name="wingspan_minimum_players">Minimum 2 joueurs requis</string>
     <string name="wingspan_maximum_players">Maximum 5 joueurs autorisés</string>
-    <string name="wingspan_game_complete">Partie terminée ?</string>
-    <string name="wingspan_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="wingspan_game_complete">Partie terminée ?</string>
+    <string name="wingspan_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="wingspan_quit_game">Quitter la partie</string>
-    <string name="wingspan_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="wingspan_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="wingspan_best_score_label">Meilleur Score</string>
-
     <!-- Yahtzee Game -->
     <string name="yahtzee_game">Yams</string>
     <string name="yahtzee_ones">Un</string>
@@ -335,14 +342,13 @@
     <string name="yahtzee_upper_total">Total supérieur</string>
     <string name="yahtzee_bonus">Bonus</string>
     <string name="yahtzee_lower_total">Total inférieur</string>
-    <string name="yahtzee_game_complete">Partie terminée ?</string>
-    <string name="yahtzee_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="yahtzee_game_complete">Partie terminée ?</string>
+    <string name="yahtzee_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="yahtzee_game_results">Résultats de la partie</string>
     <string name="yahtzee_winner_message">Vainqueur : %1$s !</string>
     <string name="yahtzee_draw_message">Match nul !</string>
     <string name="yahtzee_quit_game">Quitter la partie</string>
-    <string name="yahtzee_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
+    <string name="yahtzee_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>
     <string name="game_statistics">Statistiques du jeu</string>
@@ -365,7 +371,6 @@
     <string name="best_score_short">Meilleur : %1$d</string>
     <string name="worst_score_short">Pire : %1$d</string>
     <string name="wins">victoires</string>
-
     <!-- Settings -->
     <string name="settings">Paramètres</string>
     <string name="language">Langue</string>
@@ -375,14 +380,12 @@
     <string name="theme_system">Système</string>
     <string name="theme_light">Clair</string>
     <string name="theme_dark">Sombre</string>
-
     <!-- Common -->
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
-    
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  ABOUT — add these entries inside the <resources> block        -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -390,12 +393,10 @@
     <string name="about_version">Version %1$s</string>
     <string name="about_github_button">Voir sur GitHub</string>
     <string name="about_description">ScoreHub est une application simple et intuitive pour suivre les scores de jeux de société sur plusieurs joueurs.\n\nFonctionnalités :\n• Support multi-jeux\n• Gestion des joueurs avec couleurs personnalisées\n• Statistiques complètes et classements\n• Tableau des 20 meilleurs scores\n• Suivi des victoires / défaites / égalités\n• Support multilingue (anglais et français)\n• Entièrement hors ligne\n\nParfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions !</string>
-
     <plurals name="games_count">
         <item quantity="one">%d partie</item>
         <item quantity="other">%d parties</item>
     </plurals>
-
     <plurals name="filter_players_hint">
         <item quantity="one">%d jeu compatible</item>
         <item quantity="other">%d jeux compatibles</item>

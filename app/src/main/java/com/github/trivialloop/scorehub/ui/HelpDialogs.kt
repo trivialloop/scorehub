@@ -142,6 +142,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_tarot_wikipedia_url)
         )
 
+        "ticket_to_ride" -> GameHelp(
+            players      = context.getString(R.string.help_tickettoride_players),
+            objective    = context.getString(R.string.help_tickettoride_objective),
+            scoring      = context.getString(R.string.help_tickettoride_scoring),
+            endCondition = context.getString(R.string.help_tickettoride_end),
+            wikipediaUrl = context.getString(R.string.help_tickettoride_wikipedia_url)
+        )
+
         "wingspan" -> GameHelp(
             players      = context.getString(R.string.help_wingspan_players),
             objective    = context.getString(R.string.help_wingspan_objective),
@@ -244,6 +252,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_tarot_2),
             context.getString(R.string.app_help_tarot_3),
             context.getString(R.string.app_help_tarot_4)
+        ))
+
+        "ticket_to_ride" -> AppHelp(listOf(
+            context.getString(R.string.app_help_tickettoride_1),
+            context.getString(R.string.app_help_tickettoride_2),
+            context.getString(R.string.app_help_tickettoride_3),
+            context.getString(R.string.app_help_tickettoride_4)
         ))
 
         "wingspan" -> AppHelp(listOf(

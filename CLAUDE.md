@@ -191,6 +191,28 @@ The label cell layout params must reference this constant:
 layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
 ```
 
+### Row baseline alignment (mandatory for every hand-built grid row)
+
+Every `LinearLayout` row built in code (via a `makeRow()`-style helper) **must** set
+`isBaselineAligned = false`. By default, Android's horizontal `LinearLayout` aligns
+child views on their text baseline rather than centering them within the row's fixed
+height. This is invisible when every cell in a row has the same kind of content, but as
+soon as a row mixes empty cells with filled/bold ones — subtotal rows, "add" buttons
+next to filled entries, toggle cells (checked vs. unchecked) — the cells render at
+slightly different vertical offsets, producing a visible row-to-row misalignment even
+though every cell shares the same declared height.
+
+```kotlin
+private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
+    orientation  = LinearLayout.HORIZONTAL
+    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+    isBaselineAligned = false   // ← always set this
+}
+```
+
+`FreeGameActivity.kt`, `QwixxGameActivity.kt`, and `TicketToRideGameActivity.kt` already
+follow this rule — use them as reference when adding a new game's grid.
+
 ### Fixed header + scrollable content (mandatory for all round-based games)
 
 **All games with rounds MUST use the following layout pattern unconditionally.**
