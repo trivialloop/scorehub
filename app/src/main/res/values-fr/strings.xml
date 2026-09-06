@@ -397,7 +397,7 @@
     <string name="about_title">À propos</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_github_button">Voir sur GitHub</string>
-    <string name="about_description">ScoreHub est une application simple et intuitive pour suivre les scores de jeux de société sur plusieurs joueurs.\n\nFonctionnalités :\n• Support multi-jeux\n• Gestion des joueurs avec couleurs personnalisées\n• Statistiques complètes et classements\n• Tableau des 20 meilleurs scores\n• Suivi des victoires / défaites / égalités\n• Support multilingue (anglais et français)\n• Entièrement hors ligne\n\nParfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions !</string>
+    <string name="about_description">ScoreHub est une application simple et intuitive pour suivre les scores de jeux de société sur plusieurs joueurs.\n\nFonctionnalités :\n• Support multi-jeux\n• Gestion des joueurs avec couleurs personnalisées\n• Statistiques complètes et classements\n• Tableau des 20 meilleurs scores\n• Suivi des victoires / défaites / égalités\n• Support multilingue\n• Entièrement hors ligne\n\nParfait pour les amateurs de jeux de société qui souhaitent conserver des enregistrements détaillés de leurs sessions !</string>
     <plurals name="games_count">
         <item quantity="one">%d partie</item>
         <item quantity="other">%d parties</item>
