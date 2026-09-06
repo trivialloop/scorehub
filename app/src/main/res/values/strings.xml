@@ -303,8 +303,7 @@
     <string name="tickettoride_game">Ticket to Ride</string>
     <string name="tickettoride_route_length_label">%1$d 🚃</string>
     <string name="tickettoride_route_points">Route points</string>
-    <string name="tickettoride_completed_tickets">🎫✅ Completed tickets</string>
-    <string name="tickettoride_failed_tickets">🎫❌ Failed tickets</string>
+    <string name="tickettoride_tickets">🎫 Destination tickets</string>
     <string name="tickettoride_subtotal">Subtotal</string>
     <string name="tickettoride_longest_path">🏆 Longest path</string>
     <string name="tickettoride_total">Total</string>
