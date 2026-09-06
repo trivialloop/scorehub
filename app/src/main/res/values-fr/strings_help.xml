@@ -95,6 +95,20 @@
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Harmonies                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_harmonies_players">1 à 4 joueurs.</string>
+    <string name="help_harmonies_objective">Empilez des jetons colorés sur votre plateau personnel pour construire des Arbres, Montagnes, Champs, Bâtiments et une Rivière, et complétez des cartes Animaux, afin de marquer le plus de points.</string>
+    <string name="help_harmonies_scoring">Les Arbres et Montagnes rapportent 1/3/7 points selon leur hauteur (une Montagne rapporte 0 si elle n\'est pas adjacente à une autre Montagne). Chaque groupe de Champs vaut 5 points, ainsi que chaque Bâtiment entouré d\'au moins 3 couleurs différentes. La Rivière rapporte des points selon sa longueur ou les îles qu\'elle crée. Chaque carte Animal complétée rapporte ses propres points.</string>
+    <string name="help_harmonies_end">La partie se termine quand tous les joueurs ont utilisé tous leurs jetons (plus aucun placement possible). Le total le plus élevé gagne.</string>
+    <string name="help_harmonies_wikipedia_url">https://fr.wikipedia.org/wiki/Harmonies_(jeu_de_soci%C3%A9t%C3%A9)</string>
+
+    <string name="app_help_harmonies_1">Appuyez sur la case d\'un joueur dans la ligne Arbres, Montagnes, Champs, Bâtiments ou Rivière pour saisir le sous-total calculé sur votre plateau physique pour cette catégorie.</string>
+    <string name="app_help_harmonies_2">Pour les Animaux, appuyez sur la case « + » à chaque fois qu\'un joueur complète une carte Animal, et choisissez sa valeur en points — une nouvelle ligne est ajoutée. Appuyez sur une carte déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_harmonies_3">Les cases de catégorie restent modifiables — appuyez à nouveau sur une case remplie pour la corriger, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
+    <string name="app_help_harmonies_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Ligretto                                                -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ligretto_players">2 à 12 joueurs.</string>

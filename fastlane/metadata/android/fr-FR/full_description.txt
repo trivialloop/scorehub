@@ -18,9 +18,14 @@ Jeux actuellement supportés :
 - Escoba
 - Farkle
 - Flip7
-- Oh Hell
+- Harmonies
+- Ligretto
+- Ascenseur
 - Qwixx
 - Skyjo
 - Tarot
+- Les Aventuriers Du Rail
 - Wingspan
-- Yams
+- Yahtzee
+
+- Jeu libre

@@ -162,6 +162,28 @@
     <string name="freegame_quit_game">Quitter la partie</string>
     <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     
+    <!-- Harmonies Game -->
+    <string name="harmonies_game">Harmonies</string>
+    <string name="harmonies_trees">Arbres 🌲</string>
+    <string name="harmonies_mountains">Montagnes ⛰️</string>
+    <string name="harmonies_fields">Champs 🌾</string>
+    <string name="harmonies_buildings">Bâtiments 🏠</string>
+    <string name="harmonies_river">Rivière 🌊</string>
+    <string name="harmonies_animals">Animaux 🦌</string>
+    <string name="harmonies_total">Total</string>
+    <string name="harmonies_total_animals">Total Animaux 🦌</string>
+    <string name="harmonies_add_animal_title">Ajouter le score d\'une carte Animal</string>
+    <string name="harmonies_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="harmonies_delete_entry">Supprimer</string>
+    <string name="harmonies_finish_game">Terminer la partie</string>
+    <string name="harmonies_finish_game_title">Terminer la partie ?</string>
+    <string name="harmonies_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="harmonies_minimum_players">Minimum 1 joueur requis</string>
+    <string name="harmonies_maximum_players">Maximum 4 joueurs autorisés</string>
+    <string name="harmonies_quit_game">Quitter la partie</string>
+    <string name="harmonies_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="harmonies_best_score_label">Meilleur Score</string>
+
     <!-- Jeu Ligretto -->
     <string name="ligretto_game">Ligretto</string>
     <string name="ligretto_round_label">#</string>
