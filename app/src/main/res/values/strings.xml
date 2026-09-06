@@ -416,7 +416,7 @@
     <string name="about_title">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_github_button">View on GitHub</string>
-    <string name="about_description">ScoreHub is a simple and intuitive application for tracking board game scores across multiple players.\n\nFeatures:\n• Multi-game support\n• Player management with custom colors\n• Comprehensive statistics and rankings\n• Top 20 high scores leaderboard\n• Win / loss / draw tracking\n• Multi-language support (English and French)\n• Fully offline\n\nPerfect for board game enthusiasts who want to keep detailed records of their sessions!</string>
+    <string name="about_description">ScoreHub is a simple and intuitive application for tracking board game scores across multiple players.\n\nFeatures:\n• Multi-game support\n• Player management with custom colors\n• Comprehensive statistics and rankings\n• Top 20 high scores leaderboard\n• Win / loss / draw tracking\n• Multi-language support\n• Fully offline\n\nPerfect for board game enthusiasts who want to keep detailed records of their sessions!</string>
 
     <plurals name="games_count">
         <item quantity="one">%d game</item>
