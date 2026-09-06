@@ -66,7 +66,7 @@
     <string name="akropolis_quit_game">Partie beenden</string>
     <string name="akropolis_quit_game_message">Sind Sie sicher, dass Sie das Spiel beenden möchten? Das Spiel wird nicht gespeichert.</string>
     <string name="akropolis_best_score_label">Bester Score</string>
-    <string name="cactus_game">Cabo (Cambio/Cactus)</string>
+    <string name="cactus_game">Dutch/Cabo/Cactus/Tamalou/Cambio</string>
     <string name="cactus_round_label">#</string>
     <string name="cactus_total">Summe</string>
     <string name="cactus_who_finished">Wer hat die Runde beendet?</string>
@@ -275,10 +275,11 @@
     <string name="flip7_btn_add">Flip!</string>
     <string name="flip7_bonus_flip7">Flip 7!</string>
     <string name="skyjo_score_hint">Bsp.: -2 oder 7</string>
-    <string name="tarot_game">Tarot</string>
+    <string name="tarot_game">Tarot/Tarock</string>
     <string name="tarot_round_title">Runde %1$d</string>
     <string name="skyjo_worst_score_short">Schlechtester: %1$d</string>
     <string name="tarot_next">Weiter →</string>
     <string name="tarot_back">← Zurück</string>
     <string name="tarot_delete_round">Runde löschen</string>
+    <string name="german">Deutsch</string>
 </resources>
