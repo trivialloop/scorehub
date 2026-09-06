@@ -103,10 +103,10 @@
     <string name="help_harmonies_end">La partie se termine quand tous les joueurs ont utilisé tous leurs jetons (plus aucun placement possible). Le total le plus élevé gagne.</string>
     <string name="help_harmonies_wikipedia_url">https://fr.wikipedia.org/wiki/Harmonies_(jeu_de_soci%C3%A9t%C3%A9)</string>
 
-    <string name="app_help_harmonies_1">Appuyez sur la case d\'un joueur dans la ligne Arbres, Montagnes, Champs, Bâtiments, Rivière ou Animaux pour saisir le sous-total calculé sur votre plateau physique pour cette catégorie.</string>
-    <string name="app_help_harmonies_2">La dernière valeur saisie dans une case reste modifiable — appuyez à nouveau dessus pour corriger une erreur, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
-    <string name="app_help_harmonies_3">La ligne Total se met à jour automatiquement au fur et à mesure, et est colorée (vert = meilleur, rouge = pire) une fois que tous les joueurs ont saisi un score pour cette ligne.</string>
-    <string name="app_help_harmonies_4">Une fois que tous les joueurs ont rempli les 6 catégories, l\'application demande si la partie est terminée et affiche les résultats finaux. Le total le plus élevé gagne.</string>
+    <string name="app_help_harmonies_1">Appuyez sur la case d\'un joueur dans la ligne Arbres, Montagnes, Champs, Bâtiments ou Rivière pour saisir le sous-total calculé sur votre plateau physique pour cette catégorie.</string>
+    <string name="app_help_harmonies_2">Pour les Animaux, appuyez sur la case « + » à chaque fois qu\'un joueur complète une carte Animal, et choisissez sa valeur en points — une nouvelle ligne est ajoutée. Appuyez sur une carte déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_harmonies_3">Les cases de catégorie restent modifiables — appuyez à nouveau sur une case remplie pour la corriger, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
+    <string name="app_help_harmonies_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Ligretto                                                -->
