@@ -1,0 +1,5 @@
+### Ajout
+- Ajout du jeu harmonies
+
+### Changement
+- Changement de l'interface des objectifs de ticket to ride
