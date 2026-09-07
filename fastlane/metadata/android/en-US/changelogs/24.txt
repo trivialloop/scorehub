@@ -1,0 +1,5 @@
+### Added
+- Add harmonies game
+
+### Changed
+- Change ticket to ride objectives selection
