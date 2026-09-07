@@ -44,12 +44,13 @@ class TicketToRideScoreManagerTest {
         assertEquals(15, TicketToRidePlayerScore.ROUTE_POINTS[6])
     }
 
-    // ─── completed / failed tickets ───────────────────────────────────────────
+    // ─── ticketEntries — completed / failed (signed entries) ──────────────────
 
     @Test
-    fun `getCompletedTicketsPoints sums entries`() {
+    fun `getCompletedTicketsPoints sums only positive entries`() {
         val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
-        ps.completedTickets.addAll(listOf(7, 12, 5))
+        ps.ticketEntries.addAll(listOf(7, 12, -5, 5))
+        // positives: 7 + 12 + 5 = 24
         assertEquals(24, ps.getCompletedTicketsPoints())
     }
 
@@ -60,10 +61,56 @@ class TicketToRideScoreManagerTest {
     }
 
     @Test
-    fun `getFailedTicketsPoints sums entries`() {
+    fun `getCompletedTicketsPoints returns 0 when all entries are failed`() {
         val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
-        ps.failedTickets.addAll(listOf(10, 8))
+        ps.ticketEntries.addAll(listOf(-10, -8))
+        assertEquals(0, ps.getCompletedTicketsPoints())
+    }
+
+    @Test
+    fun `getFailedTicketsPoints sums magnitude of negative entries`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.addAll(listOf(-10, -8, 5))
+        // magnitudes: 10 + 8 = 18 (returned as positive)
         assertEquals(18, ps.getFailedTicketsPoints())
+    }
+
+    @Test
+    fun `getFailedTicketsPoints returns 0 with no failed entries`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.addAll(listOf(7, 12))
+        assertEquals(0, ps.getFailedTicketsPoints())
+    }
+
+    // ─── getTicketsTotal ────────────────────────────────────────────────────────
+
+    @Test
+    fun `getTicketsTotal returns 0 with no entries`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        assertEquals(0, ps.getTicketsTotal())
+    }
+
+    @Test
+    fun `getTicketsTotal sums signed entries directly`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.addAll(listOf(12, 8, -5))
+        // 12 + 8 - 5 = 15
+        assertEquals(15, ps.getTicketsTotal())
+    }
+
+    @Test
+    fun `getTicketsTotal can be negative when failures outweigh completions`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.addAll(listOf(3, -10, -8))
+        // 3 - 10 - 8 = -15
+        assertEquals(-15, ps.getTicketsTotal())
+    }
+
+    @Test
+    fun `getTicketsTotal equals completed minus failed`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.addAll(listOf(20, -6, 4, -9))
+        assertEquals(ps.getCompletedTicketsPoints() - ps.getFailedTicketsPoints(), ps.getTicketsTotal())
     }
 
     // ─── longest path bonus ───────────────────────────────────────────────────
@@ -100,9 +147,9 @@ class TicketToRideScoreManagerTest {
     fun `getTotal combines routes, tickets and bonus`() {
         val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
         ps.routeCounts[4] = 2       // 2*7 = 14
-        ps.completedTickets.add(12) // +12
-        ps.completedTickets.add(8)  // +8
-        ps.failedTickets.add(5)     // -5
+        ps.ticketEntries.add(12)    // +12
+        ps.ticketEntries.add(8)     // +8
+        ps.ticketEntries.add(-5)    // -5
         ps.hasLongestPath = true    // +10
         // 14 + 12 + 8 - 5 + 10 = 39
         assertEquals(39, ps.getTotal())
@@ -112,7 +159,7 @@ class TicketToRideScoreManagerTest {
     fun `getTotal can be negative when failed tickets outweigh everything else`() {
         val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
         ps.routeCounts[1] = 1        // +1
-        ps.failedTickets.add(20)     // -20
+        ps.ticketEntries.add(-20)    // -20
         assertEquals(-19, ps.getTotal())
     }
 
@@ -124,6 +171,34 @@ class TicketToRideScoreManagerTest {
         bob.routeCounts[6] = 2       // 30
         assertEquals(15, alice.getTotal())
         assertEquals(30, bob.getTotal())
+    }
+
+    // ─── Sign toggling (icon tap behaviour) ────────────────────────────────────
+
+    @Test
+    fun `negating an entry flips it from completed to failed`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.add(12)
+        assertEquals(12, ps.getCompletedTicketsPoints())
+        assertEquals(0, ps.getFailedTicketsPoints())
+
+        // Simulate tapping the icon: flip the sign in place
+        val idx = 0
+        ps.ticketEntries[idx] = -ps.ticketEntries[idx]
+
+        assertEquals(0, ps.getCompletedTicketsPoints())
+        assertEquals(12, ps.getFailedTicketsPoints())
+        assertEquals(-12, ps.getTicketsTotal())
+    }
+
+    @Test
+    fun `negating a failed entry flips it back to completed`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        ps.ticketEntries.add(-9)
+        val idx = 0
+        ps.ticketEntries[idx] = -ps.ticketEntries[idx]
+        assertEquals(9, ps.ticketEntries[idx])
+        assertEquals(9, ps.getCompletedTicketsPoints())
     }
 
     // ─── ROUTE_LENGTHS / defaults ─────────────────────────────────────────────
@@ -139,6 +214,12 @@ class TicketToRideScoreManagerTest {
         TicketToRidePlayerScore.ROUTE_LENGTHS.forEach { length ->
             assertEquals(0, ps.routeCounts[length])
         }
+    }
+
+    @Test
+    fun `ticketEntries is empty by default`() {
+        val ps = TicketToRidePlayerScore(1L, "Alice", 0xFF0000)
+        assertTrue(ps.ticketEntries.isEmpty())
     }
 
     @Test

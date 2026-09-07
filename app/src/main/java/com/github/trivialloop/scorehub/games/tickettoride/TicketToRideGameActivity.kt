@@ -118,27 +118,15 @@ class TicketToRideGameActivity : AppCompatActivity() {
             getString(R.string.tickettoride_route_points)
         ) { it.getRoutePoints() })
 
-        binding.tableContainer.addView(buildTicketSectionHeaderRow(
-            getString(R.string.tickettoride_completed_tickets), isFailed = false
-        ))
-        val maxCompleted = players.maxOf { it.completedTickets.size }
-        for (slot in 0 until maxCompleted) {
-            binding.tableContainer.addView(buildTicketSlotRow(slot, isFailed = false))
+        // ── Section objectifs unifiée ──────────────────────────────────────
+        binding.tableContainer.addView(buildTicketSectionHeaderRow())
+        val maxTickets = players.maxOf { it.ticketEntries.size }
+        for (slot in 0 until maxTickets) {
+            binding.tableContainer.addView(buildTicketSlotRow(slot))
         }
         binding.tableContainer.addView(buildSubtotalRow(
             getString(R.string.tickettoride_subtotal)
-        ) { it.getCompletedTicketsPoints() })
-
-        binding.tableContainer.addView(buildTicketSectionHeaderRow(
-            getString(R.string.tickettoride_failed_tickets), isFailed = true
-        ))
-        val maxFailed = players.maxOf { it.failedTickets.size }
-        for (slot in 0 until maxFailed) {
-            binding.tableContainer.addView(buildTicketSlotRow(slot, isFailed = true))
-        }
-        binding.tableContainer.addView(buildSubtotalRow(
-            getString(R.string.tickettoride_subtotal)
-        ) { -it.getFailedTicketsPoints() })
+        ) { it.getTicketsTotal() })
 
         binding.tableContainer.addView(buildLongestPathRow())
         binding.tableContainer.addView(buildTotalRow())
@@ -194,41 +182,93 @@ class TicketToRideGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildTicketSectionHeaderRow(title: String, isFailed: Boolean): LinearLayout {
+    // ── Ligne d'en-tête : deux boutons ✅ / ❌ par joueur ─────────────────────
+    private fun buildTicketSectionHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(title, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(getString(R.string.tickettoride_tickets), ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
-            val cell = makeCell(if (gameOver) "" else "+", ROW_HEIGHT_DP, bold = true)
-            cell.background = cellDrawable(
-                ContextCompat.getColor(this, if (!gameOver) R.color.cell_editable_bg else R.color.header_cell_background)
-            )
-            if (!gameOver) cell.setOnClickListener { showAddTicketDialog(player, isFailed) }
-            row.addView(cell)
+            row.addView(makeTicketAddCell(player))
         }
         return row
     }
 
-    private fun buildTicketSlotRow(slot: Int, isFailed: Boolean): LinearLayout {
+    private fun makeTicketAddCell(player: TicketToRidePlayerScore): LinearLayout {
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROW_HEIGHT_DP), 1f)
+            background = cellDrawable(
+                ContextCompat.getColor(this@TicketToRideGameActivity, R.color.header_cell_background)
+            )
+        }
+        if (gameOver) return container
+
+        container.addView(TextView(this).apply {
+            text = "✅"
+            gravity = Gravity.CENTER
+            textSize = 16f
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            background = cellDrawable(ContextCompat.getColor(this@TicketToRideGameActivity, R.color.cell_editable_bg))
+            setOnClickListener { showAddTicketDialog(player, isFailed = false) }
+        })
+        container.addView(TextView(this).apply {
+            text = "❌"
+            gravity = Gravity.CENTER
+            textSize = 16f
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            background = cellDrawable(ContextCompat.getColor(this@TicketToRideGameActivity, R.color.cell_editable_bg))
+            setOnClickListener { showAddTicketDialog(player, isFailed = true) }
+        })
+        return container
+    }
+
+    // ── Ligne d'entrée : icône (tap = inverse le signe) + score (tap = modifie la valeur) ──
+    private fun buildTicketSlotRow(slot: Int): LinearLayout {
         val row = makeRow(TICKET_ROW_HEIGHT_DP)
         row.addView(makeLabelCell("", TICKET_ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
-            val list = if (isFailed) player.failedTickets else player.completedTickets
-            val value = list.getOrNull(slot)
-            val text = value?.let { if (isFailed) "−$it" else "+$it" } ?: ""
-            val textColor = when {
-                value == null -> ContextCompat.getColor(this, R.color.score_cell_text)
-                isFailed -> ContextCompat.getColor(this, R.color.score_text_worst)
-                else -> ContextCompat.getColor(this, R.color.score_text_best)
-            }
-            val cell = makeCell(text, TICKET_ROW_HEIGHT_DP, bold = value != null, textSize = 13f)
-            cell.setTextColor(textColor)
-            cell.background = cellDrawable(ContextCompat.getColor(this, R.color.score_cell_background))
-            if (!gameOver && value != null) {
-                cell.setOnClickListener { showEditTicketDialog(player, isFailed, slot) }
-            }
-            row.addView(cell)
+            row.addView(makeTicketSlotCell(player, slot))
         }
         return row
+    }
+
+    private fun makeTicketSlotCell(player: TicketToRidePlayerScore, slot: Int): LinearLayout {
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(0, dpToPx(TICKET_ROW_HEIGHT_DP), 1f)
+            background = cellDrawable(ContextCompat.getColor(this@TicketToRideGameActivity, R.color.score_cell_background))
+        }
+
+        val value = player.ticketEntries.getOrNull(slot) ?: return container
+        val isFailed = value < 0
+        val textColor = ContextCompat.getColor(
+            this, if (isFailed) R.color.score_text_worst else R.color.score_text_best
+        )
+
+        // Icône — tap = bascule réussi ↔ échoué (inverse le signe)
+        container.addView(TextView(this).apply {
+            text = if (isFailed) "❌" else "✅"
+            gravity = Gravity.CENTER
+            textSize = 14f
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            if (!gameOver) setOnClickListener {
+                player.ticketEntries[slot] = -value
+                buildTable()
+            }
+        })
+        // Score — tap = modifie la valeur (magnitude)
+        container.addView(TextView(this).apply {
+            text = if (isFailed) "$value" else "+$value"
+            gravity = Gravity.CENTER
+            textSize = 13f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(textColor)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            if (!gameOver) setOnClickListener { showEditTicketValueDialog(player, slot) }
+        })
+        return container
     }
 
     private fun buildLongestPathRow(): LinearLayout {
@@ -297,22 +337,22 @@ class TicketToRideGameActivity : AppCompatActivity() {
     private fun showAddTicketDialog(player: TicketToRidePlayerScore, isFailed: Boolean) {
         val values = TicketToRidePlayerScore.TICKET_VALUES
         val items = values.map { it.toString() }.toTypedArray()
-        val title = "${player.playerName} — ${getString(R.string.tickettoride_add_ticket_title)}"
+        val icon = if (isFailed) "❌" else "✅"
+        val title = "${player.playerName} — $icon ${getString(R.string.tickettoride_add_ticket_title)}"
 
         AlertDialog.Builder(this)
             .setTitle(title)
             .setItems(items) { _, which ->
-                if (isFailed) player.failedTickets.add(values[which])
-                else player.completedTickets.add(values[which])
+                val magnitude = values[which]
+                player.ticketEntries.add(if (isFailed) -magnitude else magnitude)
                 buildTable()
             }
             .show()
     }
 
-    private fun showEditTicketDialog(player: TicketToRidePlayerScore, isFailed: Boolean, slot: Int) {
-        val list = if (isFailed) player.failedTickets else player.completedTickets
-        val current = list.getOrNull(slot) ?: return
-
+    /** Tap sur le score d'une entrée existante : propose de modifier la valeur ou de supprimer. */
+    private fun showEditTicketValueDialog(player: TicketToRidePlayerScore, slot: Int) {
+        val current = player.ticketEntries.getOrNull(slot) ?: return
         AlertDialog.Builder(this)
             .setTitle("✏️ ${player.playerName}")
             .setItems(arrayOf(
@@ -320,27 +360,29 @@ class TicketToRideGameActivity : AppCompatActivity() {
                 getString(R.string.tickettoride_delete_entry)
             )) { _, which ->
                 when (which) {
-                    0 -> showTicketValuePicker(player, isFailed, slot, current)
-                    1 -> { list.removeAt(slot); buildTable() }
+                    0 -> showTicketValuePicker(player, slot, current)
+                    1 -> { player.ticketEntries.removeAt(slot); buildTable() }
                 }
             }
             .show()
     }
 
-    private fun showTicketValuePicker(player: TicketToRidePlayerScore, isFailed: Boolean, slot: Int, current: Int) {
+    private fun showTicketValuePicker(player: TicketToRidePlayerScore, slot: Int, current: Int) {
+        val isFailed = current < 0
         val values = TicketToRidePlayerScore.TICKET_VALUES
         val items = values.map { it.toString() }.toTypedArray()
-        val list = if (isFailed) player.failedTickets else player.completedTickets
+        val icon = if (isFailed) "❌" else "✅"
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("✏️ ${player.playerName} — ${getString(R.string.tickettoride_add_ticket_title)}")
+            .setTitle("✏️ ${player.playerName} — $icon ${getString(R.string.tickettoride_add_ticket_title)}")
             .setItems(items) { _, which ->
-                list[slot] = values[which]
+                val magnitude = values[which]
+                player.ticketEntries[slot] = if (isFailed) -magnitude else magnitude
                 buildTable()
             }
             .create()
         dialog.show()
-        val idx = values.indexOf(current)
+        val idx = values.indexOf(kotlin.math.abs(current))
         if (idx >= 0) dialog.listView?.post { dialog.listView?.setSelection(idx) }
     }
 

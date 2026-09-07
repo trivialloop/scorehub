@@ -290,8 +290,7 @@
     <string name="tickettoride_game">Les Aventuriers du Rail</string>
     <string name="tickettoride_route_length_label">%1$d 🚃</string>
     <string name="tickettoride_route_points">Points tronçons</string>
-    <string name="tickettoride_completed_tickets">🎫✅ Objectifs réussis</string>
-    <string name="tickettoride_failed_tickets">🎫❌ Objectifs échoués</string>
+    <string name="tickettoride_tickets">🎫 Objectifs</string>
     <string name="tickettoride_subtotal">Sous-total</string>
     <string name="tickettoride_longest_path">🏆 Plus long chemin</string>
     <string name="tickettoride_total">Total</string>

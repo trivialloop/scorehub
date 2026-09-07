@@ -18,18 +18,31 @@
   | 6 | 15 |
 
   Tap a length cell to open a picker (0–12) and set the count for that player.
-- **Destination tickets** — two independent lists per player, entered the same way as
-  Farkle's roll entries (tap **+** to add, pick the ticket's printed point value from a
-  list, tap an existing entry to edit or delete it):
-  - **Completed tickets**: each value is **added** to the score.
-  - **Failed tickets**: each value is **subtracted** from the score.
+- **Destination tickets** — a single unified list per player, `ticketEntries: MutableList<Int>`,
+  where each entry is a *signed* point value: positive = completed ticket (added to the
+  score), negative = failed ticket (subtracted from the score). This replaces the earlier
+  two-list (`completedTickets` / `failedTickets`) design.
+  - **Header row**: instead of a single "+" cell, each player's header cell shows two tap
+    targets side by side — ✅ (add a completed ticket) and ❌ (add a failed ticket). Tapping
+    either opens the same value picker (1–30); the app stores the value with the
+    corresponding sign.
+  - **Entry rows**: each entry is displayed as an icon (✅ or ❌, matching the entry's sign)
+    next to its signed score (`+12` or `-9`). The two are independently tappable:
+    - Tapping the **icon** flips the entry's sign in place (completed ↔ failed) — the
+      displayed score sign updates accordingly without needing to re-pick the value.
+    - Tapping the **score** opens an edit/delete dialog (prefixed with the entry's icon),
+      letting the player change the magnitude (keeping the current sign) or delete the
+      entry entirely.
   - Rows are laid out as aligned "slots" across all players (like Farkle's completed-round
     cells), so the grid stays tabular even though players may have different numbers of
-    tickets.
+    entries.
+  - `getCompletedTicketsPoints()` sums only positive entries; `getFailedTicketsPoints()`
+    sums the magnitude of negative entries (returned as a positive number, for display);
+    `getTicketsTotal()` is the direct sum of all signed entries and is what feeds `getTotal()`.
 - **Longest path bonus**: a single toggle row. Tapping a player's cell flips
   `hasLongestPath`; multiple players can hold it simultaneously in case of a tie.
   Worth a flat **+10** points.
-- **Total** = route points + completed tickets − failed tickets + longest path bonus.
+- **Total** = route points + net ticket total (`getTicketsTotal()`) + longest path bonus.
   Highest total wins. Colored (green/red) only after the game is finished.
 - Uses the fixed header / scrollable content pattern (`LABEL_COL_DP = 65`), with a
   `btnFinishGame` action bar below the scroll area that locks all inputs, saves the
