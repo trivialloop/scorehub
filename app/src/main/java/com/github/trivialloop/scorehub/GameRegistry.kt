@@ -1,6 +1,7 @@
 package com.github.trivialloop.scorehub
 
 import com.github.trivialloop.scorehub.games.akropolis.AkropolisPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.belote.BelotePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
@@ -85,6 +86,17 @@ object GameRegistry {
             maxPlayers     = 4,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "belote",
+            nameEnFallback = "Belote",
+            nameResId      = R.string.belote_game,
+            iconResId      = R.drawable.ic_belote_game,
+            activityClass  = BelotePlayerSelectionActivity::class.java,
+            minPlayers     = 4,
+            maxPlayers     = 4,
+            teamMode       = true,
+            equipment      = setOf(Equipment.CARDS)
         ),
         GameDefinition(
             gameType       = "cactus",

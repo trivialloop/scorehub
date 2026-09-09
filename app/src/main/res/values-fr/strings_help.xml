@@ -26,6 +26,20 @@
     <string name="app_help_akropolis_4">Quand toutes les cases sont remplies, la partie se termine et les résultats sont affichés. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Belote                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_belote_players">Exactly 4 players, in 2 fixed teams of 2 sitting across from each other.</string>
+    <string name="help_belote_objective">Win the bidding to name trump, then try to score more card points than the opposing team with your partner\'s help.</string>
+    <string name="help_belote_scoring">162 points per hand (152 for tricks + 10 "dix de der"), or 252 on a capot. The attacking team needs strictly more than 81 points to succeed; exactly 81-81 is a "litige" carried to the next hand. Belote-Rebelote adds 20 points, kept even on a failed contract.</string>
+    <string name="help_belote_end">The game ends when a team reaches 501 points.</string>
+    <string name="help_belote_wikipedia_url">https://en.wikipedia.org/wiki/Belote</string>
+
+    <string name="app_help_belote_1">Select exactly 4 players, then assign them into two teams of 2 in the dialog that appears.</string>
+    <string name="app_help_belote_2">Tap the next round row to record a hand: pick the attacking team, enter their points (or check "Capot"), and mark belote-rebelote if announced.</string>
+    <string name="app_help_belote_3">The app automatically handles litige (81-81 ties) by carrying the pending points to the next successful contract.</string>
+    <string name="app_help_belote_4">The game ends automatically once a team reaches 501 points.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Cactus                                                 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_cactus_players">2 à 8 joueurs.</string>
