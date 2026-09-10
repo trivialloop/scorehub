@@ -93,9 +93,13 @@
     <string name="belote_points_hint">0–162</string>
     <string name="belote_points_error">Entrez une valeur entre 0 et 162</string>
     <string name="belote_belote_label">Belote-Rebelote annoncée par</string>
-    <string name="belote_assign_teams_title">Attribuer les équipes</string>
-    <string name="belote_assign_teams_hint">Cochez la case des 2 joueurs qui forment l\'équipe 2. Les deux autres forment l\'équipe 1.</string>
+    <string name="belote_team_mode_title">Composition des équipes</string>
+    <string name="belote_team_mode_random">🎲 Équipes aléatoires</string>
+    <string name="belote_team_mode_manual">✋ Choisir les équipes</string>
+    <string name="belote_team_1">Équipe 1</string>
     <string name="belote_team_2">Équipe 2</string>
+    <string name="belote_drag_hint">Appui long puis glissez un joueur pour le faire passer dans l\'autre équipe</string>
+    <string name="belote_confirm_teams">Démarrer la partie</string>
     <string name="belote_teams_error">Chaque équipe doit avoir exactement 2 joueurs</string>
     <string name="belote_game_over_title">Fin de partie ?</string>
     <string name="belote_game_over_confirm">Une équipe a atteint 501 points. Terminer la partie ?</string>

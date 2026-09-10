@@ -184,10 +184,10 @@ class BeloteScoreManagerTest {
         val team1 = BeloteTeamState(1, "Carol", "Dave", 0x00FF00)
         val rounds = listOf(
             BeloteRound(1, attackingTeam = 0, pointsMade = 81),   // 0 / 81, carry=81
-            BeloteRound(2, attackingTeam = 1, pointsMade = 100)   // 62 / 100
+            BeloteRound(2, attackingTeam = 1, pointsMade = 100)   // 62 / (100+81=181)
         )
         assertEquals(62, team0.getTotal(rounds))
-        assertEquals(181, team1.getTotal(rounds))   // 81 + 100
+        assertEquals(262, team1.getTotal(rounds))   // 81 (round 1) + 181 (round 2)
     }
 
     @Test

@@ -93,9 +93,13 @@
     <string name="belote_points_hint">0–162</string>
     <string name="belote_points_error">Enter a value between 0 and 162</string>
     <string name="belote_belote_label">Belote-Rebelote announced by</string>
-    <string name="belote_assign_teams_title">Assign teams</string>
-    <string name="belote_assign_teams_hint">Check the box for each player who is on Team 2. The other two form Team 1.</string>
+    <string name="belote_team_mode_title">Team assignment</string>
+    <string name="belote_team_mode_random">🎲 Random teams</string>
+    <string name="belote_team_mode_manual">✋ Choose teams manually</string>
+    <string name="belote_team_1">Team 1</string>
     <string name="belote_team_2">Team 2</string>
+    <string name="belote_drag_hint">Long-press and drag a player to move them to the other team</string>
+    <string name="belote_confirm_teams">Start game</string>
     <string name="belote_teams_error">Each team must have exactly 2 players</string>
     <string name="belote_game_over_title">Game Over?</string>
     <string name="belote_game_over_confirm">A team reached 501 points. End the game?</string>

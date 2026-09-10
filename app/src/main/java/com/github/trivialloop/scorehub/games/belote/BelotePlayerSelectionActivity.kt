@@ -80,7 +80,7 @@ class BelotePlayerSelectionActivity : AppCompatActivity() {
                     getString(R.string.player_count_min_error, REQUIRED_PLAYERS, REQUIRED_PLAYERS),
                     Toast.LENGTH_SHORT).show()
             } else {
-                showTeamAssignmentDialog()
+                showTeamModeChooserDialog()
             }
         }
 
@@ -236,69 +236,37 @@ class BelotePlayerSelectionActivity : AppCompatActivity() {
 
     // ─── Team assignment ────────────────────────────────────────────────────────
 
-    /**
-     * Shows a dialog with the 4 selected players (in their current display order) and a
-     * checkbox per player: unchecked = Team 1, checked = Team 2. Defaults to the first two
-     * players (in order) as Team 1 and the last two as Team 2. Requires exactly 2 per team.
-     */
-    private fun showTeamAssignmentDialog() {
+    private fun showTeamModeChooserDialog() {
         val orderedPlayers = allPlayers.filter { it in selectedPlayers }
-        val checkboxes = mutableListOf<CheckBox>()
-
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
-        }
-
-        container.addView(TextView(this).apply {
-            text = getString(R.string.belote_assign_teams_hint)
-            textSize = 13f
-            setPadding(0, 0, 0, dpToPx(12))
-        })
-
-        orderedPlayers.forEachIndexed { index, player ->
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = android.view.Gravity.CENTER_VERTICAL
-                setPadding(0, dpToPx(6), 0, dpToPx(6))
-            }
-            val dot = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(dpToPx(18), dpToPx(18)).also {
-                    it.marginEnd = dpToPx(10)
-                }
-                background = GradientDrawable().apply {
-                    shape = GradientDrawable.OVAL
-                    setColor(player.color)
-                }
-            }
-            val name = TextView(this).apply {
-                text = player.name
-                textSize = 15f
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            }
-            val cb = CheckBox(this).apply {
-                text = getString(R.string.belote_team_2)
-                isChecked = index >= 2   // default: first two = Team 1, last two = Team 2
-            }
-            checkboxes.add(cb)
-            row.addView(dot); row.addView(name); row.addView(cb)
-            container.addView(row)
-        }
-
+        val options = arrayOf(
+            getString(R.string.belote_team_mode_random),
+            getString(R.string.belote_team_mode_manual)
+        )
         AlertDialog.Builder(this)
-            .setTitle(getString(R.string.belote_assign_teams_title))
-            .setView(container)
-            .setPositiveButton(getString(R.string.start_game)) { _, _ ->
-                val team2Count = checkboxes.count { it.isChecked }
-                if (team2Count != 2) {
-                    Toast.makeText(this, getString(R.string.belote_teams_error), Toast.LENGTH_SHORT).show()
-                    showTeamAssignmentDialog()
-                } else {
-                    startGame(orderedPlayers, checkboxes.map { if (it.isChecked) 1 else 0 })
+            .setTitle(getString(R.string.belote_team_mode_title))
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> startGame(orderedPlayers, randomTeamAssignment())
+                    1 -> launchManualTeamAssignment(orderedPlayers)
                 }
             }
-            .setNegativeButton(getString(R.string.cancel), null)
             .show()
+    }
+
+    private fun randomTeamAssignment(): List<Int> {
+        val assignment = mutableListOf(0, 0, 1, 1)
+        assignment.shuffle()
+        return assignment
+    }
+
+    private fun launchManualTeamAssignment(players: List<Player>) {
+        savePlayerOrder(players)
+        val intent = Intent(this, BeloteTeamAssignmentActivity::class.java).apply {
+            putExtra("PLAYER_IDS", players.map { it.id }.toLongArray())
+            putExtra("PLAYER_NAMES", players.map { it.name }.toTypedArray())
+            putExtra("PLAYER_COLORS", players.map { it.color }.toIntArray())
+        }
+        startActivity(intent)
     }
 
     private fun startGame(players: List<Player>, teamAssignment: List<Int>) {
