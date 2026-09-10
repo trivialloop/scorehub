@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.DragEvent
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,7 +20,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.github.trivialloop.scorehub.R
-import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityBeloteTeamAssignmentBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 
@@ -54,7 +54,7 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
         playerIds    = intent.getLongArrayExtra("PLAYER_IDS")     ?: longArrayOf()
         playerNames  = intent.getStringArrayExtra("PLAYER_NAMES") ?: arrayOf()
         playerColors = intent.getIntArrayExtra("PLAYER_COLORS")   ?: intArrayOf()
-        // Default split: first two players = Team 1, last two = Team 2.
+        // Default split: first two players = Team 1, last two = Team 2 (already valid 2v2).
         team = IntArray(playerIds.size) { if (it < 2) 0 else 1 }
 
         setSupportActionBar(binding.toolbar)
@@ -64,13 +64,24 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
         binding.textDragHint.text = getString(R.string.belote_drag_hint)
         binding.textTeam1Title.text = getString(R.string.belote_team_1)
         binding.textTeam2Title.text = getString(R.string.belote_team_2)
+        binding.btnRandomTeams.text = getString(R.string.belote_team_mode_random)
+        binding.btnConfirmTeams.text = getString(R.string.belote_confirm_teams)
 
         setupDropTarget(binding.columnTeam1, teamIndex = 0)
         setupDropTarget(binding.columnTeam2, teamIndex = 1)
 
-        binding.btnConfirmTeams.text = getString(R.string.belote_confirm_teams)
+        binding.btnRandomTeams.setOnClickListener { randomizeTeams() }
         binding.btnConfirmTeams.setOnClickListener { confirmTeams() }
 
+        rebuildColumns()
+    }
+
+    // ─── Random shuffle ─────────────────────────────────────────────────────────
+
+    private fun randomizeTeams() {
+        val assignment = mutableListOf(0, 0, 1, 1)
+        assignment.shuffle()
+        for (i in team.indices) team[i] = assignment.getOrElse(i) { 0 }
         rebuildColumns()
     }
 
@@ -104,12 +115,17 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
             }
             tag = playerIndex
 
-            setOnLongClickListener { view ->
-                val clipData = ClipData.newPlainText("playerIndex", playerIndex.toString())
-                val shadow = View.DragShadowBuilder(view)
-                view.startDragAndDrop(clipData, shadow, view, 0)
-                view.alpha = 0.3f
-                true
+            // Immediate drag on touch down — no long-press required.
+            setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    val clipData = ClipData.newPlainText("playerIndex", playerIndex.toString())
+                    val shadow = View.DragShadowBuilder(view)
+                    view.startDragAndDrop(clipData, shadow, view, 0)
+                    view.alpha = 0.3f
+                    true
+                } else {
+                    false
+                }
             }
         }
     }
@@ -125,11 +141,11 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
                     true
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
-                    view.background = null
+                    view.setBackgroundColor(ContextCompat.getColor(this@BeloteTeamAssignmentActivity, R.color.cell_locked_bg))
                     true
                 }
                 DragEvent.ACTION_DROP -> {
-                    view.background = null
+                    view.setBackgroundColor(ContextCompat.getColor(this@BeloteTeamAssignmentActivity, R.color.cell_locked_bg))
                     val draggedView = event.localState as? View
                     draggedView?.alpha = 1f
                     val playerIndex = (draggedView?.tag as? Int) ?: return@setOnDragListener false
@@ -138,7 +154,7 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
                     true
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    view.background = null
+                    view.setBackgroundColor(ContextCompat.getColor(this@BeloteTeamAssignmentActivity, R.color.cell_locked_bg))
                     (event.localState as? View)?.alpha = 1f
                     true
                 }
@@ -149,7 +165,8 @@ class BeloteTeamAssignmentActivity : AppCompatActivity() {
 
     private fun updateConfirmButtonState() {
         val team1Count = team.count { it == 0 }
-        val valid = team1Count == 2
+        val team2Count = team.count { it == 1 }
+        val valid = team1Count == 2 && team2Count == 2
         binding.btnConfirmTeams.isEnabled = valid
         binding.btnConfirmTeams.alpha = if (valid) 1f else 0.5f
     }

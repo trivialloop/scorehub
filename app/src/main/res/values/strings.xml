@@ -98,7 +98,7 @@
     <string name="belote_team_mode_manual">✋ Choose teams manually</string>
     <string name="belote_team_1">Team 1</string>
     <string name="belote_team_2">Team 2</string>
-    <string name="belote_drag_hint">Long-press and drag a player to move them to the other team</string>
+    <string name="belote_drag_hint">Drag a player to move them to the other team, or tap "Random teams"</string>
     <string name="belote_confirm_teams">Start game</string>
     <string name="belote_teams_error">Each team must have exactly 2 players</string>
     <string name="belote_game_over_title">Game Over?</string>

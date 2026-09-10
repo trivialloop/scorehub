@@ -80,7 +80,14 @@ class BelotePlayerSelectionActivity : AppCompatActivity() {
                     getString(R.string.player_count_min_error, REQUIRED_PLAYERS, REQUIRED_PLAYERS),
                     Toast.LENGTH_SHORT).show()
             } else {
-                showTeamModeChooserDialog()
+                val orderedPlayers = allPlayers.filter { it in selectedPlayers }
+                savePlayerOrder(orderedPlayers)
+                val intent = Intent(this, BeloteTeamAssignmentActivity::class.java).apply {
+                    putExtra("PLAYER_IDS", orderedPlayers.map { it.id }.toLongArray())
+                    putExtra("PLAYER_NAMES", orderedPlayers.map { it.name }.toTypedArray())
+                    putExtra("PLAYER_COLORS", orderedPlayers.map { it.color }.toIntArray())
+                }
+                startActivity(intent)
             }
         }
 
@@ -235,29 +242,6 @@ class BelotePlayerSelectionActivity : AppCompatActivity() {
     }
 
     // ─── Team assignment ────────────────────────────────────────────────────────
-
-    private fun showTeamModeChooserDialog() {
-        val orderedPlayers = allPlayers.filter { it in selectedPlayers }
-        val options = arrayOf(
-            getString(R.string.belote_team_mode_random),
-            getString(R.string.belote_team_mode_manual)
-        )
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.belote_team_mode_title))
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> startGame(orderedPlayers, randomTeamAssignment())
-                    1 -> launchManualTeamAssignment(orderedPlayers)
-                }
-            }
-            .show()
-    }
-
-    private fun randomTeamAssignment(): List<Int> {
-        val assignment = mutableListOf(0, 0, 1, 1)
-        assignment.shuffle()
-        return assignment
-    }
 
     private fun launchManualTeamAssignment(players: List<Player>) {
         savePlayerOrder(players)

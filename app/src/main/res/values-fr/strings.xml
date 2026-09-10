@@ -98,8 +98,7 @@
     <string name="belote_team_mode_manual">✋ Choisir les équipes</string>
     <string name="belote_team_1">Équipe 1</string>
     <string name="belote_team_2">Équipe 2</string>
-    <string name="belote_drag_hint">Appui long puis glissez un joueur pour le faire passer dans l\'autre équipe</string>
-    <string name="belote_confirm_teams">Démarrer la partie</string>
+    <string name="belote_drag_hint">Glissez un joueur pour le faire passer dans l\'autre équipe, ou appuyez sur « Équipes aléatoires »</string>    <string name="belote_confirm_teams">Démarrer la partie</string>
     <string name="belote_teams_error">Chaque équipe doit avoir exactement 2 joueurs</string>
     <string name="belote_game_over_title">Fin de partie ?</string>
     <string name="belote_game_over_confirm">Une équipe a atteint 501 points. Terminer la partie ?</string>
