@@ -49,6 +49,27 @@
             android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.belote.BelotePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.belote.BeloteTeamAssignmentActivity"
+            android:parentActivityName=".games.belote.BelotePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.belote.BeloteGameActivity"
+            android:parentActivityName=".games.belote.BelotePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.belote.BeloteStatsActivity"
+            android:parentActivityName=".games.belote.BelotePlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.belote.BeloteTop20Activity"
+            android:parentActivityName=".games.belote.BelotePlayerSelectionActivity" />
+
+        <activity
             android:name=".games.cactus.CactusPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
