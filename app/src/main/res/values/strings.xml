@@ -82,6 +82,31 @@
     <string name="akropolis_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="akropolis_best_score_label">Meilleur Score</string>
 
+    <!-- Belote Game -->
+    <string name="belote_game">Belote</string>
+    <string name="belote_total">Total</string>
+    <string name="belote_round_title">Round %1$d</string>
+    <string name="belote_who_took">Which team took the contract?</string>
+    <string name="belote_capot">Capot (that team won all 8 tricks)</string>
+    <string name="belote_capot_team">Which team achieved the capot?</string>
+    <string name="belote_points_made">Points made by the attacking team</string>
+    <string name="belote_points_hint">0–162</string>
+    <string name="belote_points_error">Enter a value between 0 and 162</string>
+    <string name="belote_belote_label">Belote-Rebelote announced by</string>
+    <string name="belote_team_mode_title">Team assignment</string>
+    <string name="belote_team_mode_random">🎲 Random teams</string>
+    <string name="belote_team_mode_manual">✋ Choose teams manually</string>
+    <string name="belote_team_1">Team 1</string>
+    <string name="belote_team_2">Team 2</string>
+    <string name="belote_drag_hint">Drag a player to move them to the other team, or tap "Random teams"</string>
+    <string name="belote_confirm_teams">Start game</string>
+    <string name="belote_teams_error">Each team must have exactly 2 players</string>
+    <string name="belote_game_over_title">Game Over?</string>
+    <string name="belote_game_over_confirm">A team reached 501 points. End the game?</string>
+    <string name="belote_quit_game">Quit Game</string>
+    <string name="belote_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="belote_best_score_label">Best Score</string>
+
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
     <string name="cactus_round_label">#</string>

@@ -54,6 +54,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_akropolis_wikipedia_url)
         )
 
+        "belote" -> GameHelp(
+            players      = context.getString(R.string.help_belote_players),
+            objective    = context.getString(R.string.help_belote_objective),
+            scoring      = context.getString(R.string.help_belote_scoring),
+            endCondition = context.getString(R.string.help_belote_end),
+            wikipediaUrl = context.getString(R.string.help_belote_wikipedia_url)
+        )
+
         "cactus" -> GameHelp(
             players      = context.getString(R.string.help_cactus_players),
             objective    = context.getString(R.string.help_cactus_objective),
@@ -176,6 +184,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_akropolis_2),
             context.getString(R.string.app_help_akropolis_3),
             context.getString(R.string.app_help_akropolis_4)
+        ))
+
+        "belote" -> AppHelp(listOf(
+            context.getString(R.string.app_help_belote_1),
+            context.getString(R.string.app_help_belote_2),
+            context.getString(R.string.app_help_belote_3),
+            context.getString(R.string.app_help_belote_4)
         ))
 
         "cactus" -> AppHelp(listOf(

@@ -79,6 +79,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Belote ────────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "belote",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerBelote,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorBelote,
+                    bestPlayerSection = binding.bestPlayerSectionBelote,
+                    bestScoreView     = binding.textBestScoreBelote,
+                    bestScoreColor    = binding.bestScoreColorIndicatorBelote,
+                    bestScoreSection  = binding.bestScoreSectionBelote,
+                    noDataView        = binding.textNoDataBelote,
+                    bestScoreIsLowest = false   // highest score wins in Belote
+                )
+
                 // ── Cactus ────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "cactus",

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ── Attacking team ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/belote_who_took"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgAttackingTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbAttackerTeam0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbAttackerTeam1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+        <!-- ── Capot ── -->
+        <CheckBox
+            android:id="@+id/cbCapot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/belote_capot"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/rowCapotTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/belote_capot_team"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
+
+            <RadioGroup
+                android:id="@+id/rgCapotTeam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbCapotTeam0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbCapotTeam1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- ── Points made ── -->
+        <LinearLayout
+            android:id="@+id/rowPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/belote_points_made"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editPointsMade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="@string/belote_points_hint"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <!-- ── Belote-Rebelote ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/belote_belote_label"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <RadioGroup
+            android:id="@+id/rgBeloteTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbBeloteNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tarot_none"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbBeloteTeam0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/rbBeloteTeam1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+    </LinearLayout>
+</ScrollView>

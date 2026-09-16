@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP DIALOGS — generic labels                                 -->
+    <!--  HELP DIALOGS — generic labels                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_game_title">ℹ️ Règles du jeu</string>
     <string name="help_app_title">ℹ️ Comment utiliser l\'application</string>
@@ -26,7 +26,21 @@
     <string name="app_help_akropolis_4">Quand toutes les cases sont remplies, la partie se termine et les résultats sont affichés. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Cactus                                                 -->
+    <!--  HELP — Belote                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_belote_players">Exactement 4 joueurs, en 2 équipes fixes de 2 assis en face à face.</string>
+    <string name="help_belote_objective">Remporter les enchères pour choisir l\'atout, puis tenter de marquer plus de points aux cartes que l\'équipe adverse, avec l\'aide de son partenaire.</string>
+    <string name="help_belote_scoring">162 points par donne (152 pour les plis + 10 de der), ou 252 en cas de capot. L\'équipe preneuse doit strictement dépasser 81 points pour réussir son contrat ; à 81-81 pile, c\'est un litige reporté sur la prochaine manche gagnée. La Belote-Rebelote ajoute 20 points, conservés même en cas de chute.</string>
+    <string name="help_belote_end">La partie se termine quand une équipe atteint 501 points.</string>
+    <string name="help_belote_wikipedia_url">https://fr.wikipedia.org/wiki/Belote</string>
+
+    <string name="app_help_belote_1">Sélectionnez exactement 4 joueurs, puis choisissez de former les équipes aléatoirement ou manuellement en faisant glisser les joueurs entre les deux colonnes.</string>
+    <string name="app_help_belote_2">Appuyez sur la prochaine ligne de manche pour enregistrer une donne : choisissez l\'équipe preneuse, entrez ses points (ou cochez « Capot »), et indiquez la Belote-Rebelote si annoncée.</string>
+    <string name="app_help_belote_3">L\'application gère automatiquement le litige (81-81) en reportant les points en attente sur la prochaine manche réussie.</string>
+    <string name="app_help_belote_4">La partie se termine automatiquement dès qu\'une équipe atteint 501 points.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Cactus                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_cactus_players">2 à 8 joueurs.</string>
     <string name="help_cactus_objective">Mémorisez vos cartes sans les montrer, puis annoncez « Cactus ! » quand vous pensez avoir le total le plus bas.</string>
@@ -40,7 +54,7 @@
     <string name="app_help_cactus_4">Dès qu\'un joueur atteint 10 points, la partie est terminée.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Cribbage                                               -->
+    <!--  HELP — Cribbage                                                -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_cribbage_players">2 joueurs.</string>
     <string name="help_cribbage_objective">Être le premier à atteindre 121 points en marquant des combinaisons en main, dans le crib et pendant le jeu.</string>
@@ -54,7 +68,7 @@
     <string name="app_help_cribbage_4">La partie se termine automatiquement quand un joueur atteint 121 points.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Escoba                                                 -->
+    <!--  HELP — Escoba                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_escoba_players">2 joueurs.</string>
     <string name="help_escoba_objective">Marquer des points en capturant des cartes de la table dont la somme est exactement 11, en faisant une « escoba » (table nette) si possible.</string>
@@ -123,7 +137,7 @@
     <string name="app_help_ligretto_4">Dès qu\'un joueur atteint 99 points, l\'application demande si la partie est terminée. Le joueur avec le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Oh Hell                                              -->
+    <!--  HELP — Oh Hell                                                 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_ohhell_players">3 à 8 joueurs.</string>
     <string name="help_ohhell_objective">Annoncez exactement le nombre de plis que vous allez remporter à chaque manche. Marquez des points en respectant votre contrat — en prendre trop ou pas assez vous pénalise.</string>
@@ -137,7 +151,7 @@
     <string name="app_help_ohhell_4">La partie se termine quand toutes les manches sont jouées. Le joueur avec le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Qwixx                                                  -->
+    <!--  HELP — Qwixx                                                   -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_qwixx_players">2 à 5 joueurs.</string>
     <string name="help_qwixx_objective">Cochez des chiffres sur votre feuille de score pour marquer des points. Chaque rangée de couleur suit un sens fixe (rouge et jaune croissant 2→12, vert et bleu décroissant 12→2). Le total le plus élevé gagne.</string>
@@ -151,7 +165,7 @@
     <string name="app_help_qwixx_4">La partie se termine automatiquement quand 4 malus sont atteints par un joueur ou que 2 couleurs sont verrouillées. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Skyjo                                                  -->
+    <!--  HELP — Skyjo                                                   -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_skyjo_players">2 à 8 joueurs.</string>
     <string name="help_skyjo_objective">Terminer chaque manche avec le total le plus bas possible. Évitez d\'accumuler des points — moins c\'est mieux.</string>
@@ -165,7 +179,7 @@
     <string name="app_help_skyjo_4">Quand quelqu\'un atteint 100 points, la partie est terminée.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Tarot                                                  -->
+    <!--  HELP — Tarot                                                   -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_tarot_players">3 à 5 joueurs.</string>
     <string name="help_tarot_objective">Le preneur annonce un contrat et tente d\'atteindre le nombre de points requis à l\'aide des bouts. Les autres joueurs coopèrent pour le faire échouer.</string>
@@ -193,7 +207,7 @@
     <string name="app_help_tickettoride_4">Appuyez sur la ligne Plus long chemin pour marquer le(s) joueur(s) qui détiennent le plus long chemin continu (+10 pts), puis appuyez sur « Terminer la partie » pour verrouiller les scores et voir les résultats.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Wingspan                                               -->
+    <!--  HELP — Wingspan                                                -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_wingspan_players">2 à 5 joueurs.</string>
     <string name="help_wingspan_objective">Attirez des oiseaux dans votre réserve naturelle en jouant des cartes, en récoltant de la nourriture et en pondant des œufs. Marquez le plus de points dans six catégories.</string>
@@ -206,7 +220,7 @@
     <string name="app_help_wingspan_3">Le joueur avec le total le plus élevé gagne. Le vert met en valeur le meilleur score par ligne, le rouge le plus faible.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Yahtzee                                                -->
+    <!--  HELP — Yahtzee                                                 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_yahtzee_players">1 à 8 joueurs.</string>
     <string name="help_yahtzee_objective">Lancez 5 dés jusqu\'à 3 fois par tour et marquez des combinaisons dans 13 catégories. Le total le plus élevé gagne.</string>
