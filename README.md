@@ -26,6 +26,7 @@ alt="Get it on F-Droid" height="100"/>](https://f-droid.org/en/packages/com.gith
 ## 🎮 Supported Games
 
 - Akropolis
+- Belote
 - Cactus
 - Cribbage
 - Escoba

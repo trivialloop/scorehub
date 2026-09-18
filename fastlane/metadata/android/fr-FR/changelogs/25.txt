@@ -1,0 +1,5 @@
+### Ajout
+- Ajout du jeu belote
+
+### Correction
+- Corrige le comptage de la partie
