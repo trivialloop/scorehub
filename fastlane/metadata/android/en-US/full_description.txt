@@ -13,6 +13,7 @@ Perfect for board game enthusiasts who want to keep detailed records of their ga
 
 Currently supported games:
 - Akropolis
+- Belote
 - Cactus
 - Cribbage
 - Escoba

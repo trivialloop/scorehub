@@ -1,0 +1,5 @@
+### Added
+- Add belote game
+
+### Fixed
+- Fixed game not always count
