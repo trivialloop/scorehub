@@ -300,6 +300,40 @@ Games with an in-play phase (Cribbage, Escoba, Farkle) use a `[−] score [+]` c
 - Test file naming: `<Game>ScoreManagerTest.kt` (e.g. `YahtzeeScoreManagerTest.kt`).
 - One test file per game score manager, plus `DatabaseTest.kt` for Room DAOs.
 
+### `playedAt` — mandatory shared timestamp per game session
+
+All `GameResult` rows created for the same game session **must share the exact same
+`playedAt` value**. `GameResult.playedAt` defaults to `System.currentTimeMillis()`,
+but that default is evaluated **once per constructed instance** — so calling it
+inside a `.map { players -> GameResult(...) }` gives each player a slightly
+different millisecond timestamp.
+
+This breaks `GameResultDao.getCountedGamesPlayedByPlayer`, which groups rows by
+exact `playedAt` and only counts a game as "played with others" when more than
+one row shares that timestamp. A player whose row gets a different `playedAt`
+than their teammates is silently excluded from "Counted" games in the stats
+screen, even though their score appears correctly in the Top 20 (which doesn't
+group by `playedAt`).
+
+**Always compute `playedAt` once, before the `.map`, and pass it explicitly:**
+
+```kotlin
+private fun saveResultsAndShowSummary() {
+    val totals   = players.associate { it to it.getTotal(rounds) }
+    ...
+    val playedAt = System.currentTimeMillis()   // computed ONCE
+    lifecycleScope.launch {
+        database.gameResultDao().insertGameResults(players.map { player ->
+            GameResult(
+                ...
+                playedAt = playedAt   // same value for every player
+            )
+        })
+        ...
+    }
+}
+```
+
 ---
 
 ## CI/CD

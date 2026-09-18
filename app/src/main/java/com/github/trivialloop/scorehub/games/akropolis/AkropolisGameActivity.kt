@@ -465,13 +465,15 @@ class AkropolisGameActivity : AppCompatActivity() {
         val maxScore = totals.values.maxOrNull() ?: 0
         val winners  = totals.filter { it.value == maxScore }.keys
         val isDraw   = winners.size > 1
+        val playedAt = System.currentTimeMillis()
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(playerScores.map { ps ->
                 GameResult(
                     gameType   = GAME_TYPE, playerId = ps.playerId,
                     playerName = ps.playerName, score = ps.getTotal(),
                     isWinner   = !isDraw && ps in winners,
-                    isDraw     = isDraw && ps in winners
+                    isDraw     = isDraw && ps in winners,
+                    playedAt   = playedAt
                 )
             })
             val sorted = totals.entries.sortedByDescending { it.value }

@@ -347,11 +347,13 @@ class SkyjoGameActivity : AppCompatActivity() {
         val minScore = totals.values.minOrNull() ?: 0
         val winners  = totals.filter { it.value == minScore }.keys
         val isDraw   = winners.size > 1
+        val playedAt = System.currentTimeMillis()
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(gameType = GAME_TYPE, playerId = player.playerId, playerName = player.playerName,
                     score = player.getTotal(rounds),
-                    isWinner = !isDraw && player in winners, isDraw = isDraw && player in winners)
+                    isWinner = !isDraw && player in winners, isDraw = isDraw && player in winners,
+                    playedAt = playedAt)
             })
             val sorted = totals.entries.sortedBy { it.value }
             var rank = 1
