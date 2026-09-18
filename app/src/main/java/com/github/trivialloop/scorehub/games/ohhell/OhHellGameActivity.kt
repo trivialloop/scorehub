@@ -429,6 +429,7 @@ class OhHellGameActivity : AppCompatActivity() {
         val maxScore = totals.values.maxOrNull() ?: 0
         val winners = totals.filter { it.value == maxScore }.keys
         val isDraw = winners.size > 1
+        val playedAt = System.currentTimeMillis()
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(
@@ -437,7 +438,8 @@ class OhHellGameActivity : AppCompatActivity() {
                     playerName = player.playerName,
                     score = player.getTotal(rounds),
                     isWinner = !isDraw && player in winners,
-                    isDraw = isDraw && player in winners
+                    isDraw = isDraw && player in winners,
+                    playedAt = playedAt
                 )
             })
             val sorted = totals.entries.sortedByDescending { it.value }

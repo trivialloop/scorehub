@@ -334,6 +334,7 @@ class BeloteGameActivity : AppCompatActivity() {
         val maxScore = totals.values.maxOrNull() ?: 0
         val winningTeams = totals.filter { it.value == maxScore }.keys
         val isDraw = winningTeams.size > 1
+        val playedAt = System.currentTimeMillis()
 
         lifecycleScope.launch {
             val results = playerIds.indices.map { i ->
@@ -344,7 +345,8 @@ class BeloteGameActivity : AppCompatActivity() {
                     playerName = playerNames[i],
                     score = totals[team] ?: 0,
                     isWinner = !isDraw && team in winningTeams,
-                    isDraw = isDraw && team in winningTeams
+                    isDraw = isDraw && team in winningTeams,
+                    playedAt = playedAt
                 )
             }
             database.gameResultDao().insertGameResults(results)

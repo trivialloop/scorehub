@@ -392,6 +392,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         val winners    = totals.filter { it.value == maxScore }.keys
         val isDraw     = winners.size > 1
         val isSoloGame = playerScores.size == 1
+        val playedAt   = System.currentTimeMillis()
 
         lifecycleScope.launch {
             val results = playerScores.map { ps ->
@@ -399,7 +400,8 @@ class YahtzeeGameActivity : AppCompatActivity() {
                     gameType   = GAME_TYPE, playerId = ps.playerId, playerName = ps.playerName,
                     score      = ps.getGrandTotal(),
                     isWinner   = if (isSoloGame) false else (ps.playerName in winners && !isDraw),
-                    isDraw     = if (isSoloGame) false else (isDraw && ps.playerName in winners)
+                    isDraw     = if (isSoloGame) false else (isDraw && ps.playerName in winners),
+                    playedAt   = playedAt
                 )
             }
             database.gameResultDao().insertGameResults(results)
