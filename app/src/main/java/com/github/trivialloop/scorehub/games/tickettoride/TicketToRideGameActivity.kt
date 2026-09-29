@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -159,14 +160,57 @@ class TicketToRideGameActivity : AppCompatActivity() {
             getString(R.string.tickettoride_route_length_label, length), ROW_HEIGHT_DP, isCalc = false
         ))
         for (player in players) {
-            val count = player.routeCounts[length] ?: 0
-            val bgColor = if (!gameOver) R.color.cell_editable_bg else R.color.score_cell_background
-            val cell = makeCell(count.toString(), ROW_HEIGHT_DP, bold = count > 0)
-            cell.background = cellDrawable(ContextCompat.getColor(this, bgColor))
-            if (!gameOver) cell.setOnClickListener { showRouteCountPicker(player, length) }
-            row.addView(cell)
+            row.addView(makeRouteCell(player, length))
         }
         return row
+    }
+
+    /**
+    * Route cell: points value centered (large), route count in the bottom-right
+    * corner (small, light grey).
+    */
+    private fun makeRouteCell(player: TicketToRidePlayerScore, length: Int): FrameLayout {
+        val count = player.routeCounts[length] ?: 0
+        val points = (TicketToRidePlayerScore.ROUTE_POINTS[length] ?: 0) * count
+        val bgColor = if (!gameOver) R.color.cell_editable_bg else R.color.score_cell_background
+
+        return FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROW_HEIGHT_DP), 1f)
+            background = cellDrawable(ContextCompat.getColor(this@TicketToRideGameActivity, bgColor))
+
+            // Center: points value
+            addView(TextView(this@TicketToRideGameActivity).apply {
+                text = points.toString()
+                gravity = Gravity.CENTER
+                textSize = 16f
+                if (count > 0) setTypeface(null, Typeface.BOLD)
+                setTextColor(ContextCompat.getColor(this@TicketToRideGameActivity, R.color.score_cell_text))
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            })
+
+            // Bottom-right corner: number of routes (small, light grey)
+            if (count > 0) {
+                addView(TextView(this@TicketToRideGameActivity).apply {
+                    text = count.toString()
+                    textSize = 11f
+                    alpha = 0.45f
+                    setTextColor(ContextCompat.getColor(this@TicketToRideGameActivity, R.color.score_cell_text))
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.BOTTOM or Gravity.END
+                    ).also {
+                        it.marginEnd = dpToPx(4)
+                        it.bottomMargin = dpToPx(2)
+                    }
+                })
+            }
+
+            if (!gameOver) setOnClickListener { showRouteCountPicker(player, length) }
+        }
     }
 
     private fun buildSubtotalRow(label: String, valueOf: (TicketToRidePlayerScore) -> Int): LinearLayout {
