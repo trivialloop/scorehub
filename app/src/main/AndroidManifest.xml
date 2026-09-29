@@ -32,6 +32,23 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+            
+        <activity
+            android:name=".games.sevenwonders.SevenWondersGameActivity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.sevenwonders.SevenWondersStatsActivity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.sevenwonders.SevenWondersTop20Activity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.akropolis.AkropolisPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 

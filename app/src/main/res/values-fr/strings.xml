@@ -61,6 +61,25 @@
     <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
     <string name="reorder">Réorganiser</string>
 
+    <!-- 7 Wonders Game -->
+    <string name="sevenwonders_game">7 Wonders</string>
+    <string name="sevenwonders_military">Militaire 🗡️</string>
+    <string name="sevenwonders_coins">Pièces 🪙</string>
+    <string name="sevenwonders_wonder">Merveille 🏛️</string>
+    <string name="sevenwonders_civilian">Civil 🏠</string>
+    <string name="sevenwonders_commerce">Commerce 💰</string>
+    <string name="sevenwonders_guild">Guildes ⚗️</string>
+    <string name="sevenwonders_science_compass">Compas 🧭</string>
+    <string name="sevenwonders_science_gear">Rouage ⚙️</string>
+    <string name="sevenwonders_science_tablet">Tablette 📜</string>
+    <string name="sevenwonders_science_total">Science 🔬</string>
+    <string name="sevenwonders_total">Total</string>
+    <string name="sevenwonders_game_complete">Partie terminée ?</string>
+    <string name="sevenwonders_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="sevenwonders_quit_game">Quitter la partie</string>
+    <string name="sevenwonders_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="sevenwonders_best_score_label">Meilleur Score</string>
+
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
     <string name="akropolis_total">Total</string>

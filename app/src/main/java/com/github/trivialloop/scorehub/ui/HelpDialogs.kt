@@ -46,6 +46,14 @@ object HelpDialogs {
 
     private fun getGameHelp(gameType: String, context: Context): GameHelp? = when (gameType) {
 
+        "sevenwonders" -> GameHelp(
+            players      = context.getString(R.string.help_sevenwonders_players),
+            objective    = context.getString(R.string.help_sevenwonders_objective),
+            scoring      = context.getString(R.string.help_sevenwonders_scoring),
+            endCondition = context.getString(R.string.help_sevenwonders_end),
+            wikipediaUrl = context.getString(R.string.help_sevenwonders_wikipedia_url)
+        )
+
         "akropolis" -> GameHelp(
             players      = context.getString(R.string.help_akropolis_players),
             objective    = context.getString(R.string.help_akropolis_objective),
@@ -178,6 +186,12 @@ object HelpDialogs {
     }
 
     private fun getAppHelp(gameType: String, context: Context): AppHelp? = when (gameType) {
+
+        "sevenwonders" -> AppHelp(listOf(
+            context.getString(R.string.app_help_sevenwonders_1),
+            context.getString(R.string.app_help_sevenwonders_2),
+            context.getString(R.string.app_help_sevenwonders_3)
+        ))
 
         "akropolis" -> AppHelp(listOf(
             context.getString(R.string.app_help_akropolis_1),
