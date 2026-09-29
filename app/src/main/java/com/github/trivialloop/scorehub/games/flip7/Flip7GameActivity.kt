@@ -320,23 +320,21 @@ class Flip7GameActivity : AppCompatActivity() {
     }
 
     /** Active turn cell: shows "0" and "Flip" buttons */
-    private fun makeActiveTurnCell(turn: Flip7Turn, weight: Float): LinearLayout =
-        LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
-            background   = cellDrawable(ContextCompat.getColor(this@Flip7GameActivity, R.color.cell_editable_bg))
+    private fun makeActiveTurnCell(turn: Flip7Turn, weight: Float): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
+        background   = cellDrawable(ContextCompat.getColor(this@Flip7GameActivity, R.color.cell_editable_bg))
 
-            addView(LinearLayout(this@Flip7GameActivity).apply {
-                orientation  = LinearLayout.HORIZONTAL
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
-                addView(makeActionButton("✅",  isZero = false) { showCardSelectionDialog(turn) })
-                addView(makeActionButton("❌", isZero = true) { performZero(turn) })
-            })
-        }
+        addView(LinearLayout(this@Flip7GameActivity).apply {
+            orientation  = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+            addView(makeActionButton("✅",  isZero = false) { showCardSelectionDialog(turn) })
+            addView(makeActionButton("❌", isZero = true) { performZero(turn) })
+        })
+    }
 
-    private fun makeActionButton(label: String, isZero: Boolean, onClick: () -> Unit): TextView =
-    TextView(this).apply {
+    private fun makeActionButton(label: String, isZero: Boolean, onClick: () -> Unit): TextView = TextView(this).apply {
         text = label
         gravity = Gravity.CENTER
         textSize = 22f                       // ← plus grand (avant 12f)
