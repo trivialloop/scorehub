@@ -330,8 +330,8 @@ class Flip7GameActivity : AppCompatActivity() {
                 orientation  = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
-                addView(makeActionButton(getString(R.string.flip7_btn_add),  isZero = false) { showCardSelectionDialog(turn) })
-                addView(makeActionButton(getString(R.string.flip7_btn_zero), isZero = true) { performZero(turn) })
+                addView(makeActionButton("✅",  isZero = false) { showCardSelectionDialog(turn) })
+                addView(makeActionButton("❌", isZero = true) { performZero(turn) })
             })
         }
 
@@ -339,11 +339,7 @@ class Flip7GameActivity : AppCompatActivity() {
         TextView(this).apply {
             text = label; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            val bgColor = if (isZero)
-                ContextCompat.getColor(this@Flip7GameActivity, R.color.score_text_worst)
-            else
-                ContextCompat.getColor(this@Flip7GameActivity, R.color.score_text_best)
-            background = cellDrawable(bgColor)
+            background = cellDrawable(ContextCompat.getColor(this@Flip7GameActivity, R.color.score_cell_background))
             setTextColor(Color.WHITE)
             setOnClickListener { onClick() }
         }
@@ -427,7 +423,7 @@ class Flip7GameActivity : AppCompatActivity() {
         updatePreview()
 
         AlertDialog.Builder(this)
-            .setTitle("${players[currentPlayerIndex].playerName} — ${getString(R.string.flip7_btn_add)}")
+            .setTitle("${players[currentPlayerIndex].playerName}")
             .setView(dialogView)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val selectedCards = cardCheckboxes.filter { it.value.isChecked }.keys.sorted()
