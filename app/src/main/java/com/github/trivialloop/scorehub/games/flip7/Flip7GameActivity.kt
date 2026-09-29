@@ -336,13 +336,25 @@ class Flip7GameActivity : AppCompatActivity() {
         }
 
     private fun makeActionButton(label: String, isZero: Boolean, onClick: () -> Unit): TextView =
-        TextView(this).apply {
-            text = label; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            background = cellDrawable(ContextCompat.getColor(this@Flip7GameActivity, R.color.score_cell_background))
-            setTextColor(Color.WHITE)
-            setOnClickListener { onClick() }
+    TextView(this).apply {
+        text = label
+        gravity = Gravity.CENTER
+        textSize = 22f                       // ← plus grand (avant 12f)
+        setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+
+        val baseColor = ContextCompat.getColor(
+            this@Flip7GameActivity,
+            if (isZero) R.color.score_text_worst else R.color.score_text_best
+        )
+        // Teinte à ~25 % d'opacité : le fond reste identifiable, l'emoji reste lisible
+        val tinted = androidx.core.graphics.ColorUtils.setAlphaComponent(baseColor, 64)
+        background = GradientDrawable().apply {
+            setColor(tinted)
+            setStroke(1, ContextCompat.getColor(this@Flip7GameActivity, R.color.cell_border))
         }
+        setOnClickListener { onClick() }
+    }
 
     private fun makeTotalCell(total: Int, isActive: Boolean, weight: Float): TextView =
         TextView(this).apply {
