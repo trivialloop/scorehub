@@ -298,6 +298,7 @@ class AkropolisGameActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
             background = borderDrawable(
                 ContextCompat.getColor(this@AkropolisGameActivity, R.color.score_cell_background))
+            setPadding(1, 1, 1, 1)
         }
 
         val stars     = ps.stars[color]
