@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -180,17 +181,6 @@ class SkyjoGameActivity : AppCompatActivity() {
             val rawScore   = round.scores[player.playerId]
             val finalScore = round.finalScores[player.playerId]
 
-            val isFinisherPenalized = roundComplete &&
-                    player.playerId == round.finisherId &&
-                    rawScore != null && finalScore != null && finalScore != rawScore
-
-            val displayText = when {
-                isFinisherPenalized -> "$rawScore ×2"
-                roundComplete       -> finalScore?.toString() ?: ""
-                rawScore != null    -> rawScore.toString()
-                else                -> ""
-            }
-
             val canEnter    = isLast && round.finisherId != null && !roundComplete && !gameOver
             val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
 
@@ -202,13 +192,20 @@ class SkyjoGameActivity : AppCompatActivity() {
                 else                            -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
 
-            val cell = makePlayerCell(displayText)
+            val cell = makeScoreCell(finalScore, rawScore)
             cell.background = cellDrawable(bgColor)
 
             if (roundComplete) {
+                val mainText = cell.getChildAt(0) as TextView
                 when (colorRoles[player.playerId]) {
-                    SkyjoRoundColor.GREEN -> { cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best));  cell.setTypeface(null, Typeface.BOLD) }
-                    SkyjoRoundColor.RED   -> { cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst)); cell.setTypeface(null, Typeface.BOLD) }
+                    SkyjoRoundColor.GREEN -> {
+                        mainText.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
+                        mainText.setTypeface(null, Typeface.BOLD)
+                    }
+                    SkyjoRoundColor.RED -> {
+                        mainText.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst))
+                        mainText.setTypeface(null, Typeface.BOLD)
+                    }
                     else -> {}
                 }
             }
@@ -371,6 +368,7 @@ class SkyjoGameActivity : AppCompatActivity() {
         orientation = LinearLayout.HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
+
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(4), cellPaddingV, dpToPx(4), cellPaddingV)
@@ -379,6 +377,7 @@ class SkyjoGameActivity : AppCompatActivity() {
         background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_background))
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.header_cell_text))
     }
+
     private fun makePlayerCell(text: String, bold: Boolean = false): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER
         setPadding(dpToPx(2), cellPaddingV, dpToPx(2), cellPaddingV)
@@ -388,9 +387,53 @@ class SkyjoGameActivity : AppCompatActivity() {
         background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_background))
         setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_text))
     }
+
+    /**
+    * Score cell: final score centered (large), raw score in the bottom-right
+    * corner (small, light grey) — same look as Ticket to Ride route cells.
+    */
+    private fun makeScoreCell(finalScore: Int?, rawScore: Int?): FrameLayout {
+        return FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            background = cellDrawable(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_background))
+            minimumHeight = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
+
+            // Center: final score (after x2 penalty if any)
+            addView(TextView(this@SkyjoGameActivity).apply {
+                text = finalScore?.toString() ?: ""
+                gravity = Gravity.CENTER
+                textSize = cellTextSize + 2f
+                setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_text))
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            })
+
+            // Bottom-right: raw score (small, light grey)
+            if (rawScore != null) {
+                addView(TextView(this@SkyjoGameActivity).apply {
+                    text = rawScore.toString()
+                    textSize = 11f
+                    alpha = 0.45f
+                    setTextColor(ContextCompat.getColor(this@SkyjoGameActivity, R.color.score_cell_text))
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.BOTTOM or Gravity.END
+                    ).also {
+                        it.marginEnd = dpToPx(4)
+                        it.bottomMargin = dpToPx(2)
+                    }
+                })
+            }
+        }
+    }
+
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor); setStroke(1, ContextCompat.getColor(this@SkyjoGameActivity, R.color.cell_border))
     }
+
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
     private fun showQuitGameDialog() {
