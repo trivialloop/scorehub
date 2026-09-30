@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -187,12 +188,6 @@ class CactusGameActivity : AppCompatActivity() {
             val rawScore = round.rawScores[player.playerId]
             val point    = round.points[player.playerId]
 
-            val displayText = when {
-                point != null && rawScore != null -> "$point ($rawScore)"
-                rawScore != null                  -> "($rawScore)"
-                else                              -> ""
-            }
-
             val canEnter    = isLast && round.finisherId != null && !allEntered && !gameOver
             val canEditPrev = isPrev && !gameOver && currentRound.finisherId == null
 
@@ -204,18 +199,19 @@ class CactusGameActivity : AppCompatActivity() {
                 else                            -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
 
-            val cell = makePlayerCell(displayText)
+            val cell = makeScoreCell(point, rawScore)
             cell.background = cellDrawable(bgColor)
 
             if (allEntered) {
+                val mainText = cell.getChildAt(0) as TextView
                 when (colorRoles[player.playerId]) {
                     CactusRoundColor.GREEN -> {
-                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
-                        cell.setTypeface(null, Typeface.BOLD)
+                        mainText.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
+                        mainText.setTypeface(null, Typeface.BOLD)
                     }
                     CactusRoundColor.RED -> {
-                        cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst))
-                        cell.setTypeface(null, Typeface.BOLD)
+                        mainText.setTextColor(ContextCompat.getColor(this, R.color.score_text_worst))
+                        mainText.setTypeface(null, Typeface.BOLD)
                     }
                     else -> {}
                 }
@@ -386,6 +382,48 @@ class CactusGameActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         background = cellDrawable(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_background))
         setTextColor(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_text))
+    }
+
+    /**
+    * Score cell: points centered (large), raw hand score in the bottom-right
+    * corner (small, light grey) — same look as Ticket to Ride route cells.
+    */
+    private fun makeScoreCell(points: Int?, rawScore: Int?): FrameLayout {
+        return FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            background = cellDrawable(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_background))
+            minimumHeight = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
+
+            // Center: points
+            addView(TextView(this@CactusGameActivity).apply {
+                text = points?.toString() ?: ""
+                gravity = Gravity.CENTER
+                textSize = cellTextSize + 2f
+                setTextColor(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_text))
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            })
+
+            // Bottom-right: raw score (small, light grey)
+            if (rawScore != null) {
+                addView(TextView(this@CactusGameActivity).apply {
+                    text = rawScore.toString()
+                    textSize = 11f
+                    alpha = 0.45f
+                    setTextColor(ContextCompat.getColor(this@CactusGameActivity, R.color.score_cell_text))
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.BOTTOM or Gravity.END
+                    ).also {
+                        it.marginEnd = dpToPx(4)
+                        it.bottomMargin = dpToPx(2)
+                    }
+                })
+            }
+        }
     }
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
