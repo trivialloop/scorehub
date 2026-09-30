@@ -89,9 +89,9 @@
     <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
     <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
 
-    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
+    <string name="app_help_farkle_1">On your turn, tap + to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
     <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
-    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
+    <string name="app_help_farkle_3">Tap ✅ to lock in your accumulated turn score and pass to the next player. Tap ❌ if you rolled no scoring dice — your turn score becomes 0.</string>
     <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->

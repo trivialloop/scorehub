@@ -89,9 +89,9 @@
     <string name="help_farkle_end">Le premier joueur à atteindre ou dépasser 10 000 points déclenche le dernier tour. Tous les autres joueurs ont encore un tour, puis le total le plus élevé gagne.</string>
     <string name="help_farkle_wikipedia_url">https://fr.wikipedia.org/wiki/Farkle</string>
 
-    <string name="app_help_farkle_1">À votre tour, appuyez sur Ajouter pour saisir le score de chaque groupe de dés mis de côté. Vous pouvez faire plusieurs ajouts par tour.</string>
+    <string name="app_help_farkle_1">À votre tour, appuyez sur + pour saisir le score de chaque groupe de dés mis de côté. Vous pouvez faire plusieurs ajouts par tour.</string>
     <string name="app_help_farkle_2">La dernière entrée est ré-éditable — appuyez dessus pour corriger une erreur avant de banquer.</string>
-    <string name="app_help_farkle_3">Appuyez sur Banquer pour valider votre score de tour et passer au joueur suivant. Appuyez sur Farkle ! si aucun dé ne rapporte de points — votre score du tour passe à 0.</string>
+    <string name="app_help_farkle_3">Appuyez sur ✅ pour valider votre score de tour et passer au joueur suivant. Appuyez sur ❌ si aucun dé ne rapporte de points — votre score du tour passe à 0.</string>
     <string name="app_help_farkle_4">Quand un joueur atteint 10 000 points, la partie se termine et le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->

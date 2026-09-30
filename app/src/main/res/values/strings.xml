@@ -166,9 +166,6 @@
     <string name="farkle_quit_game">Quit Game</string>
     <string name="farkle_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
     <string name="farkle_best_score_label">Best Score</string>
-    <string name="farkle_btn_add">Add</string>
-    <string name="farkle_btn_bank">Bank</string>
-    <string name="farkle_btn_farkle">Farkle!</string>
     <string name="farkle_score_hint">Score (e.g. 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
