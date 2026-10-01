@@ -53,16 +53,16 @@ class QwixxGameActivity : AppCompatActivity() {
         private val ROW_COLOR_PENALTY = 0xFF757575.toInt()
 
         private val ASCENDING_GRID = listOf(
-            listOf(2,  6,  10),
-            listOf(3,  7,  11),
-            listOf(4,  8,  12),
-            listOf(5,  9,  null)
+            listOf(2,  3,  4),
+            listOf(5,  6,  7),
+            listOf(8,  9,  10),
+            listOf(11, 12, null)
         )
         private val DESCENDING_GRID = listOf(
-            listOf(12, 8,  4),
-            listOf(11, 7,  3),
-            listOf(10, 6,  2),
-            listOf(9,  5,  null)
+            listOf(12, 11, 10),
+            listOf(9,  8,  7),
+            listOf(6,  5,  4),
+            listOf(3,  2,  null)
         )
         private val PENALTY_ROW = listOf(0, 1, 2, 3)
 
@@ -76,6 +76,8 @@ class QwixxGameActivity : AppCompatActivity() {
         private const val GRID_ROWS = 19
         // Each player column is 3 cells wide
         private const val CELLS_PER_PLAYER = 3
+        // 4 dividers between color blocks + 1 before penalty + 1 before total... = 5
+        private const val SECTION_DIVIDERS = 5
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -145,8 +147,8 @@ class QwixxGameActivity : AppCompatActivity() {
         val playerBorderTotal = dpToPx(PLAYER_BORDER_DP) * (nPlayers + 1)
         val availW     = w - playerBorderTotal
 
-        // Height: GRID_ROWS rows + 6 section dividers (negligible)
-        val sectionDividerTotal = dpToPx(SECTION_BORDER_DP) * 6
+        // Height: GRID_ROWS rows + 5 section dividers
+        val sectionDividerTotal = dpToPx(SECTION_BORDER_DP) * SECTION_DIVIDERS
         val availH     = h - sectionDividerTotal
 
         cellW = availW / totalCols
@@ -154,6 +156,9 @@ class QwixxGameActivity : AppCompatActivity() {
     }
 
     // ─── Table ────────────────────────────────────────────────────────────────
+
+    private fun tableHeightPx(): Int =
+        GRID_ROWS * cellH + dpToPx(SECTION_BORDER_DP) * SECTION_DIVIDERS
 
     private fun buildTable() {
         if (cellW == 0 || cellH == 0) return
@@ -164,7 +169,7 @@ class QwixxGameActivity : AppCompatActivity() {
             orientation  = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                tableHeightPx()
             )
         }
 
