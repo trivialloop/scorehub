@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -52,6 +53,7 @@ class OhHellGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "oh_hell"
         private const val LABEL_COL_DP = 65
+        private const val CELL_MIN_HEIGHT_DP = 56
     }
 
     private val numPlayers get() = players.size
@@ -155,14 +157,12 @@ class OhHellGameActivity : AppCompatActivity() {
     private fun buildTable() {
         val visible = getVisiblePlayers()
 
-        // ── Header ────────────────────────────────────────────────────────────
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(buildHeaderRow(visible))
 
-        // ── Scrollable rounds + total ─────────────────────────────────────────
         binding.tableContainer.removeAllViews()
         rounds.forEachIndexed { idx, round ->
-            binding.tableContainer.addView(buildRoundBlock(round, visible, isLast = idx == rounds.lastIndex))
+            binding.tableContainer.addView(buildRoundRow(round, visible, isLast = idx == rounds.lastIndex))
         }
         binding.tableContainer.addView(buildTotalRow(visible))
 
@@ -181,120 +181,75 @@ class OhHellGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ── Round block (contract row + result row) ───────────────────────────────
+    // ── Round row (contract bottom-right, result + score centered) ────────────
 
-    private fun buildRoundBlock(
+    private fun buildRoundRow(
         round: OhHellRound,
         visible: List<Pair<Int, OhHellPlayerState>>,
         isLast: Boolean
     ): LinearLayout {
         val playerIdList = players.map { it.playerId }
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
+        val row = makeRow()
 
-        // The label cell is tinted with the last bidder's color
-        val lastBidderIdx = round.lastBidderIndex(numPlayers)
-        val lastBidderColor = players[lastBidderIdx].playerColor
+        // Label cell is tinted with the FIRST player of the round
+        val firstPlayerColor = players[round.startPlayerIndex].playerColor
+        row.addView(makeRoundLabelCell(round.roundNumber, round.maxCards, firstPlayerColor))
 
-        // ── Contract row ──────────────────────────────────────────────────────
-        val contractRow = makeRow()
-        contractRow.addView(makeRoundLabelCell(round.roundNumber, round.maxCards, lastBidderColor))
-
-        val contractPhaseActive = isLast && !round.isContractPhaseComplete(playerIdList)
-        // Bidding order for this round
         val biddingOrder = biddingOrderForRound(round.roundNumber, numPlayers)
-        // Index in biddingOrder of the current player (used to detect "previous" player)
-        val currentBidPosition = if (contractPhaseActive)
-            biddingOrder.indexOf(currentPlayerIndex)
-        else -1
-        val prevBidderIdx = if (currentBidPosition > 0)
-            biddingOrder[currentBidPosition - 1]
-        else -1
-
-        for ((_, pair) in visible.withIndex()) {
-            val (idx, player) = pair
-            val isActive = idx == currentPlayerIndex
-            val w = columnWeight(isActive)
-            val contract = round.contracts[player.playerId]
-            val playerIndex = players.indexOf(player)
-
-            val isMyContractTurn = contractPhaseActive && idx == currentPlayerIndex && contract == null
-            val canEditPrev = contractPhaseActive && idx == prevBidderIdx && contract != null
-
-            val bgColor = when {
-                isMyContractTurn -> ContextCompat.getColor(this, R.color.cell_editable_bg)
-                canEditPrev -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
-                else -> ContextCompat.getColor(this, R.color.score_cell_background)
-            }
-
-            val cell = makeScoreCell(contract?.toString() ?: "", w, bgColor)
-            when {
-                isMyContractTurn -> cell.setOnClickListener {
-                    showContractPicker(round, player, playerIndex)
-                }
-                canEditPrev -> cell.setOnClickListener {
-                    showContractPicker(round, player, playerIndex, isEdit = true)
-                }
-            }
-            contractRow.addView(cell)
-        }
-        container.addView(contractRow)
-
-        // ── Result row ────────────────────────────────────────────────────────
-        val resultRow = makeRow()
-        resultRow.addView(makeRoundLabelCell(round.roundNumber, round.maxCards, lastBidderColor, subRow = true))
-
         val contractDone = round.isContractPhaseComplete(playerIdList)
+        val contractPhaseActive = isLast && !contractDone
         val resultPhaseActive = isLast && contractDone && !round.isComplete(playerIdList)
-        val currentResultPosition = if (resultPhaseActive)
-            biddingOrder.indexOf(currentPlayerIndex)
-        else -1
-        val prevResultIdx = if (currentResultPosition > 0)
-            biddingOrder[currentResultPosition - 1]
-        else -1
 
-        val allScores = visible.map { (_, p) -> round.getScore(p.playerId) }
+        // Position of the current player in the bidding order (same order for both phases)
+        val currentPos = if (contractPhaseActive || resultPhaseActive)
+            biddingOrder.indexOf(currentPlayerIndex) else -1
+        val prevIdx = if (currentPos > 0) biddingOrder[currentPos - 1] else -1
 
-        for ((colIdx, pair) in visible.withIndex()) {
-            val (idx, player) = pair
+        // Best/worst coloring is computed across ALL players of the row
+        val allScores = players.map { round.getScore(it.playerId) }
+
+        for ((idx, player) in visible) {
             val isActive = idx == currentPlayerIndex
-            val w = columnWeight(isActive)
+            val contract = round.contracts[player.playerId]
             val result = round.results[player.playerId]
-            val score = round.getScore(player.playerId)
 
-            val isMyResultTurn = resultPhaseActive && idx == currentPlayerIndex && result == null
-            val canEditPrevResult = resultPhaseActive && idx == prevResultIdx && result != null
-
-            val role = ScoreColorRole(score, allScores, higherIsBetter = true)
+            val isMyContractTurn = contractPhaseActive && isActive && contract == null
+            val canEditPrevContract = contractPhaseActive && idx == prevIdx && contract != null
+            val isMyResultTurn = resultPhaseActive && isActive && result == null
+            val canEditPrevResult = resultPhaseActive && idx == prevIdx && result != null
 
             val bgColor = when {
-                isMyResultTurn -> ContextCompat.getColor(this, R.color.cell_editable_bg)
-                canEditPrevResult -> ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
+                isMyContractTurn || isMyResultTurn ->
+                    ContextCompat.getColor(this, R.color.cell_editable_bg)
+                canEditPrevContract || canEditPrevResult ->
+                    ContextCompat.getColor(this, R.color.cell_editable_filled_bg)
                 else -> ContextCompat.getColor(this, R.color.score_cell_background)
             }
 
-            val cell = makeTwoLineResultCell(
+            val cell = makeRoundCell(
+                contract = contract,
                 emojiText = round.getResultLabel(player.playerId),
                 scoreText = round.getScoreLabel(player.playerId),
-                weight = w,
+                weight = columnWeight(isActive),
                 bgColor = bgColor,
-                role = role
+                role = ScoreColorRole(round.getScore(player.playerId), allScores, higherIsBetter = true)
             )
+
             when {
+                isMyContractTurn -> cell.setOnClickListener {
+                    showContractPicker(round, player, players.indexOf(player))
+                }
+                canEditPrevContract -> cell.setOnClickListener {
+                    showContractPicker(round, player, players.indexOf(player), isEdit = true)
+                }
                 isMyResultTurn -> cell.setOnClickListener { showResultPicker(round, player) }
                 canEditPrevResult -> cell.setOnClickListener {
                     showResultPicker(round, player, isEdit = true)
                 }
             }
-            resultRow.addView(cell)
+            row.addView(cell)
         }
-        container.addView(resultRow)
-
-        return container
+        return row
     }
 
     // ── Total row ─────────────────────────────────────────────────────────────
@@ -456,6 +411,7 @@ class OhHellGameActivity : AppCompatActivity() {
 
     private fun makeRow(): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
+        isBaselineAligned = false
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -464,16 +420,14 @@ class OhHellGameActivity : AppCompatActivity() {
     /**
      * Label cell for the left column.
      * For round rows: shows "N\n(M)" (round number on first line, max cards in parentheses below).
-     * For the sub-row (result row): shows only a blank tinted cell.
      * For total: shows the "Total" label.
      */
     private fun makeRoundLabelCell(
         roundNumber: Int,
         maxCards: Int,
-        tintColor: Int,
-        subRow: Boolean = false
+        tintColor: Int
     ): TextView = TextView(this).apply {
-        text = if (subRow) "" else "$roundNumber\n($maxCards)"
+        text = "$roundNumber\n($maxCards)"
         gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
         setPadding(dpToPx(2), dpToPx(6), dpToPx(2), dpToPx(6))
         layoutParams = LinearLayout.LayoutParams(
@@ -525,49 +479,76 @@ class OhHellGameActivity : AppCompatActivity() {
     }
 
     /**
-     * Two-line result cell:
-     *   Line 1: result emoji (✅ / ❌❌❌ …)
-     *   Line 2: score delta (+11, −4 …)
-     */
-    private fun makeTwoLineResultCell(
+    * Merged round cell:
+    *  - center       : signed round score (+11, -4…), colored best/worst/neutral
+    *  - bottom-right : result emoji (✅ / ❌❌…) followed by the contract (small, light grey)
+    */
+    private fun makeRoundCell(
+        contract: Int?,
         emojiText: String,
         scoreText: String,
         weight: Float,
         bgColor: Int,
         role: ScoreColorRole
-    ): LinearLayout = LinearLayout(this).apply {
-        orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
+    ): FrameLayout = FrameLayout(this).apply {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         background = cellDrawable(bgColor)
+        minimumHeight = dpToPx(CELL_MIN_HEIGHT_DP)
 
         val scoreColor = when (role) {
-            ScoreColorRole.BEST ->
-                ContextCompat.getColor(this@OhHellGameActivity, R.color.score_text_best)
-            ScoreColorRole.WORST ->
-                ContextCompat.getColor(this@OhHellGameActivity, R.color.score_text_worst)
-            else ->
-                ContextCompat.getColor(this@OhHellGameActivity, R.color.score_cell_text)
+            ScoreColorRole.BEST -> ContextCompat.getColor(this@OhHellGameActivity, R.color.score_text_best)
+            ScoreColorRole.WORST -> ContextCompat.getColor(this@OhHellGameActivity, R.color.score_text_worst)
+            else -> ContextCompat.getColor(this@OhHellGameActivity, R.color.score_cell_text)
         }
 
+        // Center: score only
         addView(TextView(this@OhHellGameActivity).apply {
-            text = emojiText; gravity = Gravity.CENTER; textSize = 12f
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            text = scoreText
+            gravity = Gravity.CENTER
+            textSize = 19f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(scoreColor)
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
             )
-            setTextColor(ContextCompat.getColor(this@OhHellGameActivity, R.color.score_cell_text))
-            setPadding(dpToPx(1), dpToPx(4), dpToPx(1), 0)
         })
-        addView(TextView(this@OhHellGameActivity).apply {
-            text = scoreText.ifEmpty { " " }
-            gravity = Gravity.CENTER; textSize = 10f
-            setTypeface(null, if (scoreText.isNotEmpty()) Typeface.BOLD else Typeface.NORMAL)
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            setTextColor(if (scoreText.isNotEmpty()) scoreColor
-                         else ContextCompat.getColor(this@OhHellGameActivity, R.color.score_cell_text))
-            setPadding(dpToPx(1), 0, dpToPx(1), dpToPx(4))
-        })
+
+        // Bottom-right: result emoji + contract, side by side
+        if (contract != null) {
+            addView(LinearLayout(this@OhHellGameActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                isBaselineAligned = false
+                gravity = Gravity.CENTER_VERTICAL
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM or Gravity.END
+                ).also {
+                    it.marginEnd = dpToPx(4)
+                    it.bottomMargin = dpToPx(2)
+                }
+
+                if (emojiText.isNotEmpty()) {
+                    addView(TextView(this@OhHellGameActivity).apply {
+                        text = emojiText
+                        textSize = 11f
+                        maxLines = 1
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).also { it.marginEnd = dpToPx(3) }
+                    })
+                }
+
+                addView(TextView(this@OhHellGameActivity).apply {
+                    text = contract.toString()
+                    textSize = 11f
+                    alpha = 0.45f
+                    setTextColor(ContextCompat.getColor(this@OhHellGameActivity, R.color.score_cell_text))
+                })
+            })
+        }
     }
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {

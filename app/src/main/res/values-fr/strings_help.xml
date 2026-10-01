@@ -145,9 +145,9 @@
     <string name="help_ohhell_end">La partie se termine quand toutes les manches sont jouées. Le nombre de manches dépend du nombre de joueurs : (51 ÷ joueurs) × 2. Le total le plus élevé gagne.</string>
     <string name="help_ohhell_wikipedia_url">https://fr.wikipedia.org/wiki/Ascenseur_(jeu_de_cartes)</string>
 
-    <string name="app_help_ohhell_1">À chaque manche, les joueurs annoncent leur contrat l\'un après l\'autre. Appuyez sur votre case dans la ligne contrat pour choisir. Le dernier ne peut pas choisir une valeur qui ferait égaler le total au maximum de la manche.</string>
+    <string name="app_help_ohhell_1">À chaque manche, les joueurs annoncent leur contrat l\'un après l\'autre. Appuyez sur votre case pour choisir. Le dernier ne peut pas choisir une valeur qui ferait égaler le total au maximum de la manche.</string>
     <string name="app_help_ohhell_2">Une fois tous les contrats saisis, appuyez sur votre case résultat : ✅ si vous avez réussi exactement, ou ❌ répété pour chaque pli d\'écart.</string>
-    <string name="app_help_ohhell_3">Le succès rapporte 5 + 2 × contrat points. Chaque croix rapporte −2. Les scores se mettent à jour automatiquement dans la ligne résultat.</string>
+    <string name="app_help_ohhell_3">Le succès rapporte 5 + 2 × contrat points. Chaque croix rapporte −2. Les scores se mettent à jour automatiquement.</string>
     <string name="app_help_ohhell_4">La partie se termine quand toutes les manches sont jouées. Le joueur avec le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
