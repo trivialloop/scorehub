@@ -145,9 +145,9 @@
     <string name="help_ohhell_end">The game ends after all rounds are played. The number of rounds depends on the number of players: (51 ÷ players) × 2. Highest total score wins.</string>
     <string name="help_ohhell_wikipedia_url">https://en.wikipedia.org/wiki/Oh_hell</string>
 
-    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell in the contract row to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
+    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
     <string name="app_help_ohhell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
-    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
+    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically.</string>
     <string name="app_help_ohhell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
