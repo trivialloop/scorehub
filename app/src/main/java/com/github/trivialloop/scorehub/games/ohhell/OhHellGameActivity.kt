@@ -508,6 +508,7 @@ class OhHellGameActivity : AppCompatActivity() {
             textSize = 19f
             setTypeface(null, Typeface.BOLD)
             setTextColor(scoreColor)
+            setPadding(0, 0, 0, dpToPx(10))   // ← pousse le score vers le haut
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT

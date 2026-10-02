@@ -248,6 +248,26 @@ class TarotScoreManagerTest {
         TarotRound(1, 1L, TarotContract.PRISE, 2, 50, associatedPlayerId = 3L)
             .getCellRole(3L, players5))
 
+    // ─── getCampPoints ────────────────────────────────────────────────────────
+
+    @Test fun `getCampPoints declarer gets points made`() =
+        assertEquals(50, round(2, 50).getCampPoints(1L, players4))
+
+    @Test fun `getCampPoints defender gets 91 minus points made`() =
+        assertEquals(41, round(2, 50).getCampPoints(2L, players4))
+
+    @Test fun `getCampPoints 5P partner shares declarer camp points`() {
+        val r = TarotRound(1, 1L, TarotContract.PRISE, 2, 50, associatedPlayerId = 3L)
+        assertEquals(50, r.getCampPoints(3L, players5))
+        assertEquals(41, r.getCampPoints(2L, players5))
+    }
+
+    @Test fun `getCampPoints 5P solo - everyone else is defense`() {
+        val r = TarotRound(1, 1L, TarotContract.PRISE, 2, 50, associatedPlayerId = 1L)
+        assertEquals(50, r.getCampPoints(1L, players5))
+        assertEquals(41, r.getCampPoints(3L, players5))
+    }
+
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private val players3 = listOf(1L, 2L, 3L)

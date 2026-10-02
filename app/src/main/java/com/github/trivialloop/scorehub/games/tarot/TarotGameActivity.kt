@@ -187,39 +187,47 @@ class TarotGameActivity : AppCompatActivity() {
                 TarotCellRole.DECLARER_LOSS, TarotCellRole.PARTNER_LOSS, TarotCellRole.DEFENDER_LOSS ->
                     ContextCompat.getColor(this, R.color.score_text_worst)
             }
-            row.addView(makeTwoLineCell(
-                line1      = if (score >= 0) "+$score" else "$score",
-                line1Color = scoreColor,
-                line2      = buildSymbolLine(round, player.playerId, playerIdList),
-                height     = scoreRowHeight
-            ))
+            val entries = buildSymbolEntries(round, player.playerId, playerIdList)
+
+            val cell = makeRoundCell(
+                scoreText  = if (score >= 0) "+$score" else "$score",
+                scoreColor = scoreColor,
+                campPoints = round.getCampPoints(player.playerId, playerIdList),
+                symbols    = entries.joinToString(" ") { it.symbol }
+            )
+            cell.setOnClickListener { showSymbolHint(entries) }
+            row.addView(cell)
         }
         return row
     }
 
-    private fun buildSymbolLine(round: TarotRound, playerId: Long, playerIdList: List<Long>): String {
-        val parts = mutableListOf<String>()
+    private fun buildSymbolEntries(
+        round: TarotRound, playerId: Long, playerIdList: List<Long>
+    ): List<TarotSymbolEntry> {
+        val entries = mutableListOf<TarotSymbolEntry>()
         val isSolo5 = playerIdList.size == 5 &&
                 (round.associatedPlayerId == null || round.associatedPlayerId == round.declarerId)
         val isDeclarerTeam = playerId == round.declarerId ||
                 (playerIdList.size == 5 && !isSolo5 && playerId == round.associatedPlayerId)
 
         if (playerId == round.declarerId) {
-            parts.add(round.contract.symbol()); parts.add(boutsSymbol(round.boutsCount))
+            entries.add(TarotSymbolEntry(TarotSymbolKind.CONTRACT, round.contract.symbol()))
+            entries.add(TarotSymbolEntry(TarotSymbolKind.BOUTS, boutsSymbol(round.boutsCount)))
         }
-        if (playerIdList.size == 5 && !isSolo5 && playerId == round.associatedPlayerId && playerId != round.declarerId)
-            parts.add("❤️")
+        if (playerIdList.size == 5 && !isSolo5 &&
+            playerId == round.associatedPlayerId && playerId != round.declarerId)
+            entries.add(TarotSymbolEntry(TarotSymbolKind.PARTNER, "❤️"))
         if (isDeclarerTeam && round.poignees.declarerPoignee != TarotPoigneeLevel.NONE)
-            parts.add(round.poignees.declarerPoignee.symbol())
+            entries.add(TarotSymbolEntry(TarotSymbolKind.POIGNEE, round.poignees.declarerPoignee.symbol()))
         if (!isDeclarerTeam && round.poignees.defensePoignee != TarotPoigneeLevel.NONE)
-            parts.add(round.poignees.defensePoignee.symbol())
+            entries.add(TarotSymbolEntry(TarotSymbolKind.POIGNEE, round.poignees.defensePoignee.symbol()))
         val petitIsDeclarerTeam = round.petitAuBout == TarotPetitAuBout.DECLARER
         val petitIsDefense      = round.petitAuBout == TarotPetitAuBout.DEFENSE
         if ((isDeclarerTeam && petitIsDeclarerTeam) || (!isDeclarerTeam && petitIsDefense))
-            parts.add(PETIT_AU_BOUT_SYMBOL)
+            entries.add(TarotSymbolEntry(TarotSymbolKind.PETIT, PETIT_AU_BOUT_SYMBOL))
         if (playerId == round.declarerId && round.chelem != TarotChelem.NONE)
-            parts.add(round.chelem.symbol())
-        return parts.joinToString(" ")
+            entries.add(TarotSymbolEntry(TarotSymbolKind.CHELEM, round.chelem.symbol()))
+        return entries
     }
 
     private fun buildAddRoundRow(): LinearLayout {
@@ -479,6 +487,26 @@ class TarotGameActivity : AppCompatActivity() {
         editText.requestFocus()
     }
 
+    private fun showSymbolHint(entries: List<TarotSymbolEntry>) {
+        val legend = entries.map { it.kind }.distinct().map { kind ->
+            getString(when (kind) {
+                TarotSymbolKind.CONTRACT -> R.string.tarot_hint_contract
+                TarotSymbolKind.BOUTS    -> R.string.tarot_hint_bouts
+                TarotSymbolKind.PARTNER  -> R.string.tarot_hint_partner
+                TarotSymbolKind.POIGNEE  -> R.string.tarot_hint_poignee
+                TarotSymbolKind.PETIT    -> R.string.tarot_hint_petit
+                TarotSymbolKind.CHELEM   -> R.string.tarot_hint_chelem
+            })
+        }
+        val message = (listOf(getString(R.string.tarot_hint_points)) + legend).joinToString("\n\n")
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.tarot_hint_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.ok, null)
+            .show()
+    }
+
     private fun deleteRound(round: TarotRound) {
         rounds.remove(round)
         rounds.forEachIndexed { idx, r -> rounds[idx] = r.copy(roundNumber = idx + 1) }
@@ -554,30 +582,69 @@ class TarotGameActivity : AppCompatActivity() {
             setTextColor(ContextCompat.getColor(this@TarotGameActivity, R.color.score_cell_text))
         }
 
-    private fun makeTwoLineCell(line1: String, line1Color: Int, line2: String, height: Int): LinearLayout =
-        LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(0, height, 1f)
-            background = cellDrawable(ContextCompat.getColor(this@TarotGameActivity, R.color.score_cell_background))
+    /**
+    * Merged round cell:
+    *  - center       : signed round score, green (camp won) / red (camp lost)
+    *  - bottom-right : card points of the player's camp (small, light grey) + symbols
+    */
+    private fun makeRoundCell(
+        scoreText: String,
+        scoreColor: Int,
+        campPoints: Int,
+        symbols: String
+    ): FrameLayout = FrameLayout(this).apply {
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+        background = cellDrawable(ContextCompat.getColor(this@TarotGameActivity, R.color.score_cell_background))
+
+        // Center: score
+        addView(TextView(this@TarotGameActivity).apply {
+            text = scoreText
+            gravity = Gravity.CENTER
+            textSize = cellTextSize + 4f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(scoreColor)
+            maxLines = 1
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        })
+
+        // Bottom-right: camp points, then symbols right next to them
+        addView(LinearLayout(this@TarotGameActivity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.END
+            ).also {
+                it.marginEnd = dpToPx(4)
+                it.bottomMargin = dpToPx(2)
+            }
 
             addView(TextView(this@TarotGameActivity).apply {
-                text = line1; gravity = Gravity.CENTER; textSize = cellTextSize
-                setTypeface(null, Typeface.BOLD); setTextColor(line1Color)
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-                maxLines = 1
-            })
-            addView(android.view.View(this@TarotGameActivity).apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1))
-                setBackgroundColor(ContextCompat.getColor(this@TarotGameActivity, R.color.cell_border))
-            })
-            addView(TextView(this@TarotGameActivity).apply {
-                text = line2.ifEmpty { " " }; gravity = Gravity.CENTER
-                textSize = cellTextSize - 2.5f
+                text = campPoints.toString()
+                textSize = 11f
+                alpha = 0.45f
                 setTextColor(ContextCompat.getColor(this@TarotGameActivity, R.color.score_cell_text))
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-                maxLines = 1; ellipsize = TextUtils.TruncateAt.END
             })
-        }
+
+            if (symbols.isNotEmpty()) {
+                addView(TextView(this@TarotGameActivity).apply {
+                    text = symbols
+                    textSize = 10f
+                    maxLines = 1
+                    ellipsize = TextUtils.TruncateAt.END
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.marginStart = dpToPx(3) }
+                })
+            }
+        })
+    }
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {
         setColor(bgColor)
@@ -608,3 +675,9 @@ class TarotGameActivity : AppCompatActivity() {
         }
     }
 }
+
+private enum class TarotSymbolKind {
+    CONTRACT, BOUTS, PARTNER, POIGNEE, PETIT, CHELEM
+}
+
+private data class TarotSymbolEntry(val kind: TarotSymbolKind, val symbol: String)
