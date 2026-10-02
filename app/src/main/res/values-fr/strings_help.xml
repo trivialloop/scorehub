@@ -192,6 +192,15 @@
     <string name="app_help_tarot_3">L\'application calcule les scores automatiquement selon les règles officielles de la Fédération Française de Tarot (somme nulle).</string>
     <string name="app_help_tarot_4">Quand un joueur atteint 1000 points, la partie est terminée.</string>
 
+    <string name="tarot_hint_title">ℹ️ Symboles</string>
+    <string name="tarot_hint_points">Nombre en bas à droite : points de cartes réalisés par le camp du joueur.</string>
+    <string name="tarot_hint_contract">Contrat : ∧ Prise · ∧∧ Garde · ∧∧∧ Garde Sans · ∧∧∧∧ Garde Contre</string>
+    <string name="tarot_hint_bouts">Bouts (oudlers) : ○ aucun · ☘ 1 · ☘☘ 2 · ☘☘☘ 3</string>
+    <string name="tarot_hint_partner">❤️ Joueur appelé (5 joueurs)</string>
+    <string name="tarot_hint_poignee">Poignée : 🤝 simple · 🤝🤝 double · 🤝🤝🤝 triple</string>
+    <string name="tarot_hint_petit">🃏1 Petit au Bout (dernier pli remporté avec le Petit)</string>
+    <string name="tarot_hint_chelem">Chelem : 🌿 annoncé et réalisé · 🍃 non annoncé, réalisé · 🍂 annoncé et échoué</string>
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Les Aventuriers du Rail                                 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->

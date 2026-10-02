@@ -192,6 +192,15 @@
     <string name="app_help_tarot_3">The app computes scores automatically using official French Tarot Federation rules (zero-sum).</string>
     <string name="app_help_tarot_4">When a player reaches 1000, the game is over.</string>
 
+    <string name="tarot_hint_title">ℹ️ Symbols</string>
+    <string name="tarot_hint_points">Bottom-right number: card points won by this player\'s side.</string>
+    <string name="tarot_hint_contract">Contract: ∧ Prise · ∧∧ Garde · ∧∧∧ Garde Sans · ∧∧∧∧ Garde Contre</string>
+    <string name="tarot_hint_bouts">Bouts (oudlers): ○ none · ☘ 1 · ☘☘ 2 · ☘☘☘ 3</string>
+    <string name="tarot_hint_partner">❤️ Called partner (5 players)</string>
+    <string name="tarot_hint_poignee">Poignée: 🤝 simple · 🤝🤝 double · 🤝🤝🤝 triple</string>
+    <string name="tarot_hint_petit">🃏1 Petit au Bout (last trick won with the Petit)</string>
+    <string name="tarot_hint_chelem">Chelem: 🌿 announced + achieved · 🍃 unannounced, achieved · 🍂 announced + failed</string>
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Ticket to Ride                                          -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
