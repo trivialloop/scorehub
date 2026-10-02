@@ -53,7 +53,7 @@ class OhHellGameActivity : AppCompatActivity() {
     companion object {
         const val GAME_TYPE = "oh_hell"
         private const val LABEL_COL_DP = 65
-        private const val CELL_MIN_HEIGHT_DP = 56
+        private const val CELL_MIN_HEIGHT_DP = 68
     }
 
     private val numPlayers get() = players.size
