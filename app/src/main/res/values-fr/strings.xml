@@ -2,12 +2,10 @@
 <resources>
     <!-- App -->
     <string name="app_name">ScoreHub</string>
-
     <!-- Main screen — search -->
     <string name="search_game">Rechercher un jeu…</string>
     <string name="no_games_played">Aucune partie jouée</string>
     <string name="last_played_date">Dernière partie : %1$s</string>
-
     <!-- Main screen — sort -->
     <string name="sort_games">Trier les jeux</string>
     <string name="sort_alphabetical">Ordre alphabétique</string>
@@ -16,7 +14,6 @@
     <string name="sort_label_alphabetical">Tri : A → Z</string>
     <string name="sort_label_recently_played">Tri : joué récemment</string>
     <string name="sort_label_most_played">Tri : le plus joué</string>
-
     <!-- Main screen — filter dialog -->
     <string name="filter_title">Filtres</string>
     <string name="filter_players_label">Nombre de joueurs</string>
@@ -32,7 +29,6 @@
     <string name="filter_apply">Appliquer</string>
     <string name="filter_active_players">%1$d joueurs</string>
     <string name="filter_active_summary">Filtres : %1$s</string>
-
     <!-- Player Selection -->
     <string name="player_selection_title">Sélection des joueurs</string>
     <string name="selected_players">Joueurs sélectionnés</string>
@@ -60,7 +56,6 @@
     <string name="delete_player">Supprimer le joueur</string>
     <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
     <string name="reorder">Réorganiser</string>
-
     <!-- 7 Wonders Game -->
     <string name="sevenwonders_game">7 Wonders</string>
     <string name="sevenwonders_total">Total</string>
@@ -74,7 +69,6 @@
     <string name="sevenwonders_quit_game">Quitter la partie</string>
     <string name="sevenwonders_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="sevenwonders_best_score_label">Meilleur Score</string>
-
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
     <string name="akropolis_total">Total</string>
@@ -95,7 +89,6 @@
     <string name="akropolis_quit_game">Quitter la partie</string>
     <string name="akropolis_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="akropolis_best_score_label">Meilleur Score</string>
-
     <!-- Belote -->
     <string name="belote_game">Belote</string>
     <string name="belote_total">Total</string>
@@ -112,14 +105,14 @@
     <string name="belote_team_mode_manual">✋ Choisir les équipes</string>
     <string name="belote_team_1">Équipe 1</string>
     <string name="belote_team_2">Équipe 2</string>
-    <string name="belote_drag_hint">Glissez un joueur pour le faire passer dans l\'autre équipe, ou appuyez sur « Équipes aléatoires »</string>    <string name="belote_confirm_teams">Démarrer la partie</string>
+    <string name="belote_drag_hint">Glissez un joueur pour le faire passer dans l\'autre équipe, ou appuyez sur « Équipes aléatoires »</string>
+    <string name="belote_confirm_teams">Démarrer la partie</string>
     <string name="belote_teams_error">Chaque équipe doit avoir exactement 2 joueurs</string>
     <string name="belote_game_over_title">Fin de partie ?</string>
     <string name="belote_game_over_confirm">Une équipe a atteint 501 points. Terminer la partie ?</string>
     <string name="belote_quit_game">Quitter la partie</string>
     <string name="belote_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="belote_best_score_label">Meilleur Score</string>
-
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
     <string name="cactus_round_label">#</string>
@@ -136,7 +129,6 @@
     <string name="cactus_best_score_label">Meilleur Score (le plus haut)</string>
     <string name="cactus_quit_game">Quitter la partie</string>
     <string name="cactus_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
     <!-- Cribbage Game -->
     <string name="cribbage_game">Cribbage</string>
     <string name="cribbage_round_label">#</string>
@@ -151,7 +143,6 @@
     <string name="cribbage_quit_game">Quitter la partie</string>
     <string name="cribbage_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="cribbage_best_score_label">Meilleur Score</string>
-
     <!-- Escoba Game -->
     <string name="escoba_game">Escoba</string>
     <string name="escoba_round_label">#</string>
@@ -168,7 +159,6 @@
     <string name="escoba_quit_game">Quitter la partie</string>
     <string name="escoba_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="escoba_best_score_label">Meilleur Score</string>
-
     <!-- Farkle Game -->
     <string name="farkle_game">Farkle</string>
     <string name="farkle_total">Total</string>
@@ -181,7 +171,6 @@
     <string name="farkle_best_score_label">Meilleur Score</string>
     <string name="farkle_score_hint">Score (ex: 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
-
     <!-- Flip 7 Game -->
     <string name="flip7_game">Flip 7</string>
     <string name="flip7_round_label">#</string>
@@ -197,7 +186,6 @@
     <string name="flip7_quit_game">Quitter la partie</string>
     <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="flip7_best_score_label">Meilleur Score</string>
-
     <!-- Jeu Libre -->
     <string name="freegame_game">Jeu Libre</string>
     <string name="freegame_round_label">#</string>
@@ -205,7 +193,6 @@
     <string name="freegame_current_round">Manche</string>
     <string name="freegame_quit_game">Quitter la partie</string>
     <string name="freegame_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
     <string name="harmonies_trees">Arbres 🌲</string>
@@ -227,7 +214,6 @@
     <string name="harmonies_quit_game">Quitter la partie</string>
     <string name="harmonies_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="harmonies_best_score_label">Meilleur Score</string>
-
     <!-- Jeu Ligretto -->
     <string name="ligretto_game">Ligretto</string>
     <string name="ligretto_round_label">#</string>
@@ -242,7 +228,6 @@
     <string name="ligretto_quit_game">Quitter la partie</string>
     <string name="ligretto_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="ligretto_best_score_label">Meilleur Score</string>
-
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Ascenseur</string>
     <string name="ohhell_total">Total</string>
@@ -253,7 +238,6 @@
     <string name="ohhell_best_score_label">Meilleur Score</string>
     <string name="ohhell_quit_game">Quitter la partie</string>
     <string name="ohhell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
     <!-- Qwixx -->
     <string name="qwixx_game">Qwixx</string>
     <string name="qwixx_total">Total</string>
@@ -270,7 +254,6 @@
     <string name="qwixx_phase_others">%1$s — votre tour (appuyez sur le nom pour passer)</string>
     <string name="qwixx_phase_active_second">%1$s — choisir à nouveau%2$s</string>
     <string name="qwixx_phase_active_second_mandatory"> (obligatoire ou malus)</string>
-
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_round_label">#</string>
@@ -287,7 +270,6 @@
     <string name="skyjo_best_score_label">Meilleur Score (le plus bas)</string>
     <string name="skyjo_quit_game">Quitter la partie</string>
     <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
     <!-- Tarot Game -->
     <string name="tarot_game">Tarot</string>
     <string name="tarot_total">Total</string>
@@ -331,7 +313,6 @@
     <string name="tarot_quit_game">Quitter la partie</string>
     <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="tarot_best_score_label">Meilleur Score</string>
-
     <!-- Jeu Les Aventuriers du Rail -->
     <string name="tickettoride_game">Les Aventuriers du Rail</string>
     <string name="tickettoride_route_length_label">%1$d 🚃</string>
@@ -351,7 +332,6 @@
     <string name="tickettoride_quit_game">Quitter la partie</string>
     <string name="tickettoride_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="tickettoride_best_score_label">Meilleur Score</string>
-
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
     <string name="wingspan_category_label">Catégorie</string>
@@ -373,7 +353,6 @@
     <string name="wingspan_quit_game">Quitter la partie</string>
     <string name="wingspan_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="wingspan_best_score_label">Meilleur Score</string>
-
     <!-- Yahtzee Game -->
     <string name="yahtzee_game">Yams</string>
     <string name="yahtzee_ones">Un</string>
@@ -400,7 +379,6 @@
     <string name="yahtzee_draw_message">Match nul !</string>
     <string name="yahtzee_quit_game">Quitter la partie</string>
     <string name="yahtzee_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-
     <!-- Statistics -->
     <string name="general_statistics">Statistiques générales</string>
     <string name="game_statistics">Statistiques du jeu</string>
@@ -423,7 +401,6 @@
     <string name="best_score_short">Meilleur : %1$d</string>
     <string name="worst_score_short">Pire : %1$d</string>
     <string name="wins">victoires</string>
-
     <!-- Settings -->
     <string name="settings">Paramètres</string>
     <string name="language">Langue</string>
@@ -433,14 +410,12 @@
     <string name="theme_system">Système</string>
     <string name="theme_light">Clair</string>
     <string name="theme_dark">Sombre</string>
-
     <!-- Common -->
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
-
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  ABOUT — add these entries inside the <resources> block        -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
