@@ -65,20 +65,6 @@ class GeneralStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
 
-                // ── 7 Wonders ──────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "sevenwonders",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerSevenWonders,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorSevenWonders,
-                    bestPlayerSection = binding.bestPlayerSectionSevenWonders,
-                    bestScoreView     = binding.textBestScoreSevenWonders,
-                    bestScoreColor    = binding.bestScoreColorIndicatorSevenWonders,
-                    bestScoreSection  = binding.bestScoreSectionSevenWonders,
-                    noDataView        = binding.textNoDataSevenWonders,
-                    bestScoreIsLowest = false
-                )
-
                 // ── Akropolis ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "akropolis",
@@ -177,6 +163,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreIsLowest = false
                 )
 
+                // ── Hanging Gardens ─────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "hanging_gardens",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerHangingGardens,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorHangingGardens,
+                    bestPlayerSection = binding.bestPlayerSectionHangingGardens,
+                    bestScoreView     = binding.textBestScoreHangingGardens,
+                    bestScoreColor    = binding.bestScoreColorIndicatorHangingGardens,
+                    bestScoreSection  = binding.bestScoreSectionHangingGardens,
+                    noDataView        = binding.textNoDataHangingGardens,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Harmonies ──────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "harmonies",
@@ -230,6 +230,20 @@ class GeneralStatsActivity : AppCompatActivity() {
                     bestScoreColor    = binding.bestScoreColorIndicatorQwixx,
                     bestScoreSection  = binding.bestScoreSectionQwixx,
                     noDataView        = binding.textNoDataQwixx,
+                    bestScoreIsLowest = false
+                )
+
+                // ── 7 Wonders ──────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "sevenwonders",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerSevenWonders,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorSevenWonders,
+                    bestPlayerSection = binding.bestPlayerSectionSevenWonders,
+                    bestScoreView     = binding.textBestScoreSevenWonders,
+                    bestScoreColor    = binding.bestScoreColorIndicatorSevenWonders,
+                    bestScoreSection  = binding.bestScoreSectionSevenWonders,
+                    noDataView        = binding.textNoDataSevenWonders,
                     bestScoreIsLowest = false
                 )
 
