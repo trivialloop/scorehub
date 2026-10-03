@@ -207,6 +207,34 @@
     <string name="freegame_quit_game">Quit Game</string>
     <string name="freegame_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
+    <!-- Hanging Gardens Game -->
+    <string name="hanginggardens_game">Hanging Gardens</string>
+    <string name="hanginggardens_irrigation">Irrigation 💧</string>
+    <string name="hanginggardens_flower_blue">Blue flowers 🔵</string>
+    <string name="hanginggardens_flower_red">Red flowers 🔴</string>
+    <string name="hanginggardens_flower_yellow">Yellow flowers 🟡</string>
+    <string name="hanginggardens_tree_dragon">Dragon trees 🌳</string>
+    <string name="hanginggardens_tree_cedar">Cedars 🌲</string>
+    <string name="hanginggardens_tree_palm">Date palms 🌴</string>
+    <string name="hanginggardens_trees_total">Trees total</string>
+    <string name="hanginggardens_animals">Animals 🦜</string>
+    <string name="hanginggardens_animals_total">Animals total</string>
+    <string name="hanginggardens_humans">Characters 🧑‍🌾</string>
+    <string name="hanginggardens_humans_total">Characters total</string>
+    <string name="hanginggardens_objectives">Royal objectives 👑</string>
+    <string name="hanginggardens_total">Total</string>
+    <string name="hanginggardens_add_entry_title">Add: %1$s</string>
+    <string name="hanginggardens_edit_entry">Edit (currently %1$d)</string>
+    <string name="hanginggardens_delete_entry">Delete</string>
+    <string name="hanginggardens_finish_game">Finish game</string>
+    <string name="hanginggardens_finish_game_title">Finish the game?</string>
+    <string name="hanginggardens_finish_game_message">This will lock all scores and save the results. Continue?</string>
+    <string name="hanginggardens_minimum_players">Minimum 1 player required</string>
+    <string name="hanginggardens_maximum_players">Maximum 5 players allowed</string>
+    <string name="hanginggardens_quit_game">Quit Game</string>
+    <string name="hanginggardens_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+    <string name="hanginggardens_best_score_label">Best Score</string>
+
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
     <string name="harmonies_trees">Trees 🌲</string>

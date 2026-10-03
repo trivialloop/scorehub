@@ -1,6 +1,5 @@
 package com.github.trivialloop.scorehub
 
-import com.github.trivialloop.scorehub.games.sevenwonders.SevenWondersPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.akropolis.AkropolisPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.belote.BelotePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
@@ -9,10 +8,12 @@ import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivit
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.freegame.FreeGamePlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.hanginggardens.HangingGardensPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.harmonies.HarmoniesPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ligretto.LigrettoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.sevenwonders.SevenWondersPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tickettoride.TicketToRidePlayerSelectionActivity
@@ -77,17 +78,6 @@ object GameRegistry {
      * ════════════════════════════════════════════════════
      */
     val ALL_GAMES: List<GameDefinition> = listOf(
-        GameDefinition(
-            gameType       = "sevenwonders",
-            nameEnFallback = "7 Wonders",
-            nameResId      = R.string.sevenwonders_game,
-            iconResId      = R.drawable.ic_sevenwonders_game,   // à créer (vector 64dp)
-            activityClass  = SevenWondersPlayerSelectionActivity::class.java,
-            minPlayers     = 3,
-            maxPlayers     = 7,
-            teamMode       = false,
-            equipment      = setOf(Equipment.BOARD)
-        ),
         GameDefinition(
             gameType       = "akropolis",
             nameEnFallback = "Akropolis",
@@ -177,6 +167,17 @@ object GameRegistry {
             equipment      = setOf(Equipment.CARDS, Equipment.DICE, Equipment.BOARD)
         ),
         GameDefinition(
+            gameType       = "hanging_gardens",
+            nameEnFallback = "Hanging Gardens",
+            nameResId      = R.string.hanginggardens_game,
+            iconResId      = R.drawable.ic_hanginggardens_game,
+            activityClass  = HangingGardensPlayerSelectionActivity::class.java,
+            minPlayers     = 1,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
             gameType       = "harmonies",
             nameEnFallback = "Harmonies",
             nameResId      = R.string.harmonies_game,
@@ -228,6 +229,17 @@ object GameRegistry {
             activityClass  = SkyjoPlayerSelectionActivity::class.java,
             minPlayers     = 2,
             maxPlayers     = 8,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "sevenwonders",
+            nameEnFallback = "7 Wonders",
+            nameResId      = R.string.sevenwonders_game,
+            iconResId      = R.drawable.ic_sevenwonders_game,   // à créer (vector 64dp)
+            activityClass  = SevenWondersPlayerSelectionActivity::class.java,
+            minPlayers     = 3,
+            maxPlayers     = 7,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
         ),

@@ -12,20 +12,6 @@
     <string name="help_wikipedia_link">📖 En savoir plus sur Wikipédia</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — 7 Wonders                                               -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    <string name="help_sevenwonders_players">3 à 7 joueurs.</string>
-    <string name="help_sevenwonders_objective">Dirigez l\'une des sept grandes cités du monde antique : construisez votre Merveille, développez votre cité au fil de trois Âges et devancez vos rivaux.</string>
-    <string name="help_sevenwonders_scoring">Les points viennent de : conflits militaires (jetons Victoire/Défaite), pièces (1 point pour 3 pièces), étapes de la Merveille, cartes civiles (bleues), cartes commerciales, guildes (violettes) et cartes scientifiques (vertes). Science : chaque symbole (compas, rouage, tablette) rapporte son nombre au carré, plus 7 points par série complète des trois symboles.</string>
-    <string name="help_sevenwonders_end">La partie se termine après le troisième Âge. Chacun compte ses points par catégorie ; le total le plus élevé gagne.</string>
-    <string name="help_sevenwonders_wikipedia_url">https://fr.wikipedia.org/wiki/7_Wonders</string>
-
-    <string name="app_help_sevenwonders_1">Appuyez sur la case d\'un joueur pour saisir son sous-total Militaire (peut être négatif), Merveille, Civil ou Commerce. Pour les Pièces, saisissez le nombre de pièces sur la ligne du haut — la ligne du dessous affiche automatiquement le score converti (pièces ÷ 3).</string>
-    <string name="app_help_sevenwonders_2">Pour la Science, appuyez sur l\'un des trois symboles (compas, rouage, tablette) dans la case d\'un joueur pour saisir son nombre. La ligne du dessous affiche automatiquement le score scientifique calculé.</string>
-    <string name="app_help_sevenwonders_3">Pour les Guildes, appuyez sur « + » à chaque fois qu\'un joueur complète une carte guilde et choisissez sa valeur en points — une nouvelle ligne est ajoutée. Appuyez sur une guilde déjà saisie pour la modifier ou la supprimer.</string>
-    <string name="app_help_sevenwonders_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
-
-    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Akropolis                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_akropolis_players">2 à 4 joueurs.</string>
@@ -123,6 +109,20 @@
     <string name="app_help_flip7_4">La partie se termine après une manche où quelqu\'un atteint 200 points. Appuyez sur le nom d\'un joueur dans l\'en-tête pour voir sa colonne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Les Jardins Suspendus                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_hanginggardens_players">1 à 5 joueurs.</string>
+    <string name="help_hanginggardens_objective">Construisez le plus beau jardin suspendu pour la reine Amytis en posant des tuiles jardin, arbres, fleurs, animaux et personnages pendant 4 manches, et en remplissant des objectifs royaux.</string>
+    <string name="help_hanginggardens_scoring">Irrigation : tuiles irriguées placées comme indiqué sur votre carte Irrigation. Fleurs : 1 pt par fleur dans votre plus grand groupe connecté de chaque couleur (rouge, jaune, bleu). Arbres : points pour chaque groupe d\'arbres connectés de la même essence. Animaux : points selon l\'étage où ils sont placés. Personnages : points si leurs conditions sont remplies. Objectifs royaux : points pour chaque objectif validé.</string>
+    <string name="help_hanginggardens_end">La partie se termine après la 4e manche, quand chaque joueur a posé 12 tuiles jardin. Le total le plus élevé gagne ; en cas d\'égalité, celui qui a le plus d\'outils et de pièces d\'or l\'emporte.</string>
+    <string name="help_hanginggardens_wikipedia_url">https://en.boardgamearena.com/gamepanel?game=thehanginggardens</string>
+
+    <string name="app_help_hanginggardens_1">Appuyez sur la case d\'un joueur dans les lignes Irrigation, Fleurs ou Objectifs royaux pour saisir la valeur comptée sur votre jardin.</string>
+    <string name="app_help_hanginggardens_2">Pour les Arbres, Animaux et Personnages, appuyez sur « + » à chaque groupe ou carte qui rapporte des points, puis choisissez sa valeur. Les arbres ont une section par essence. Appuyez sur une entrée pour la modifier ou la supprimer.</string>
+    <string name="app_help_hanginggardens_3">Les cases remplies restent modifiables, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
+    <string name="app_help_hanginggardens_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller les scores et voir les résultats. Le total le plus élevé gagne.</string>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Harmonies                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_harmonies_players">1 à 4 joueurs.</string>
@@ -177,6 +177,21 @@
     <string name="app_help_qwixx_2">Les joueurs non actifs ont ensuite chacun un coché optionnel (appuyez sur une case) ou passent (appuyez sur leur nom).</string>
     <string name="app_help_qwixx_3">Le joueur actif dispose ensuite d\'un second coché. S\'il a passé son premier tour, ce second coché est obligatoire (case couleur OU malus ✗). Appuyez sur son nom pour passer s\'il a déjà coché à l\'étape 1.</string>
     <string name="app_help_qwixx_4">La partie se termine automatiquement quand 4 malus sont atteints par un joueur ou que 2 couleurs sont verrouillées. Le total le plus élevé gagne.</string>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — 7 Wonders                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_sevenwonders_players">3 à 7 joueurs.</string>
+    <string name="help_sevenwonders_objective">Dirigez l\'une des sept grandes cités du monde antique : construisez votre Merveille, développez votre cité au fil de trois Âges et devancez vos rivaux.</string>
+    <string name="help_sevenwonders_scoring">Les points viennent de : conflits militaires (jetons Victoire/Défaite), pièces (1 point pour 3 pièces), étapes de la Merveille, cartes civiles (bleues), cartes commerciales, guildes (violettes) et cartes scientifiques (vertes). Science : chaque symbole (compas, rouage, tablette) rapporte son nombre au carré, plus 7 points par série complète des trois symboles.</string>
+    <string name="help_sevenwonders_end">La partie se termine après le troisième Âge. Chacun compte ses points par catégorie ; le total le plus élevé gagne.</string>
+    <string name="help_sevenwonders_wikipedia_url">https://fr.wikipedia.org/wiki/7_Wonders</string>
+
+    <string name="app_help_sevenwonders_1">Appuyez sur la case d\'un joueur pour saisir son sous-total Militaire (peut être négatif), Merveille, Civil ou Commerce. Pour les Pièces, saisissez le nombre de pièces sur la ligne du haut — la ligne du dessous affiche automatiquement le score converti (pièces ÷ 3).</string>
+    <string name="app_help_sevenwonders_2">Pour la Science, appuyez sur l\'un des trois symboles (compas, rouage, tablette) dans la case d\'un joueur pour saisir son nombre. La ligne du dessous affiche automatiquement le score scientifique calculé.</string>
+    <string name="app_help_sevenwonders_3">Pour les Guildes, appuyez sur « + » à chaque fois qu\'un joueur complète une carte guilde et choisissez sa valeur en points — une nouvelle ligne est ajoutée. Appuyez sur une guilde déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_sevenwonders_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                   -->
