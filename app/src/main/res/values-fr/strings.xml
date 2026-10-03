@@ -63,19 +63,14 @@
 
     <!-- 7 Wonders Game -->
     <string name="sevenwonders_game">7 Wonders</string>
-    <string name="sevenwonders_military">Militaire 🗡️</string>
-    <string name="sevenwonders_coins">Pièces 🪙</string>
-    <string name="sevenwonders_wonder">Merveille 🏛️</string>
-    <string name="sevenwonders_civilian">Civil 🏠</string>
-    <string name="sevenwonders_commerce">Commerce 💰</string>
-    <string name="sevenwonders_guild">Guildes ⚗️</string>
-    <string name="sevenwonders_science_compass">Compas 🧭</string>
-    <string name="sevenwonders_science_gear">Rouage ⚙️</string>
-    <string name="sevenwonders_science_tablet">Tablette 📜</string>
-    <string name="sevenwonders_science_total">Science 🔬</string>
     <string name="sevenwonders_total">Total</string>
-    <string name="sevenwonders_game_complete">Partie terminée ?</string>
-    <string name="sevenwonders_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
+    <string name="sevenwonders_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="sevenwonders_delete_entry">Supprimer</string>
+    <string name="sevenwonders_finish_game">Terminer la partie</string>
+    <string name="sevenwonders_finish_game_title">Terminer la partie ?</string>
+    <string name="sevenwonders_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="sevenwonders_minimum_players">Minimum 3 joueurs requis</string>
+    <string name="sevenwonders_maximum_players">Maximum 7 joueurs autorisés</string>
     <string name="sevenwonders_quit_game">Quitter la partie</string>
     <string name="sevenwonders_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="sevenwonders_best_score_label">Meilleur Score</string>

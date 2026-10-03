@@ -16,13 +16,14 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_sevenwonders_players">3 to 7 players.</string>
     <string name="help_sevenwonders_objective">Lead one of the seven great cities of the ancient world: build your Wonder, develop your city over three Ages and outscore your rivals.</string>
-    <string name="help_sevenwonders_scoring">Points come from: military conflicts (Victory/Defeat tokens), coins (1 point per 3 coins), Wonder stages, civilian (blue) cards, commercial (yellow) cards, guilds (purple) cards and science (green) cards. Science: each symbol (compass, gear, tablet) scores its count squared, plus 7 points per complete set of the three symbols.</string>
+    <string name="help_sevenwonders_scoring">Points come from: military conflicts (Victory/Defeat tokens), coins (1 point per 3 coins), Wonder stages, civilian (blue) cards, commercial cards, guilds (purple) cards and science (green) cards. Science: each symbol (compass, gear, tablet) scores its count squared, plus 7 points per complete set of the three symbols.</string>
     <string name="help_sevenwonders_end">The game ends after the third Age. Players then count their points in each category; the highest total wins.</string>
     <string name="help_sevenwonders_wikipedia_url">https://en.wikipedia.org/wiki/7_Wonders_(board_game)</string>
 
-    <string name="app_help_sevenwonders_1">Tap each cell of a player column to enter their subtotal for Military (can be negative), Coins (number of coins, converted automatically), Wonder, Civilian, Commerce and Guilds.</string>
-    <string name="app_help_sevenwonders_2">For Science, enter the number of Compass, Gear and Tablet symbols separately. The app computes squares + 7 points per complete set.</string>
-    <string name="app_help_sevenwonders_3">When every cell is filled, the game ends and the results are shown. Green highlights the best score per row, red the lowest.</string>
+    <string name="app_help_sevenwonders_1">Tap a player\'s cell to enter their subtotal for Military (can be negative), Wonder, Civilian or Commerce. For Coins, enter the raw coin count on the top row — the row below shows the converted score (coins ÷ 3) automatically.</string>
+    <string name="app_help_sevenwonders_2">For Science, tap any of the three symbols (compass, gear, tablet) in a player\'s cell to set that symbol\'s count. The row below shows the computed science score automatically.</string>
+    <string name="app_help_sevenwonders_3">For Guilds, tap "+" each time a player completes a guild card and pick its point value — a new row is added. Tap an entered guild to edit or delete it.</string>
+    <string name="app_help_sevenwonders_4">When the game is over, tap "Finish game" to lock all scores and see the final results. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Akropolis                                               -->

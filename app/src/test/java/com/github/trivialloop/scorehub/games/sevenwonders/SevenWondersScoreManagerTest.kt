@@ -32,6 +32,36 @@ class SevenWondersScoreManagerTest {
         assertEquals(0, SevenWondersPlayerScore(1L, "A", 0, coins = 2).getCoinPoints())
     }
 
+    // ─── getGuildsTotal ───────────────────────────────────────────────────────
+
+    @Test
+    fun `getGuildsTotal returns 0 with no entries`() {
+        val ps = SevenWondersPlayerScore(1L, "Alice", 0xFF0000)
+        assertEquals(0, ps.getGuildsTotal())
+    }
+
+    @Test
+    fun `getGuildsTotal sums all guild card entries`() {
+        val ps = SevenWondersPlayerScore(1L, "Alice", 0xFF0000)
+        ps.guildEntries.addAll(listOf(8, 5, 12))
+        assertEquals(25, ps.getGuildsTotal())
+    }
+
+    @Test
+    fun `getGuildsTotal with a single entry`() {
+        val ps = SevenWondersPlayerScore(1L, "Alice", 0xFF0000)
+        ps.guildEntries.add(10)
+        assertEquals(10, ps.getGuildsTotal())
+    }
+
+    @Test
+    fun `guild entries can include zero-point cards`() {
+        val ps = SevenWondersPlayerScore(1L, "Alice", 0xFF0000)
+        ps.guildEntries.addAll(listOf(0, 7))
+        assertEquals(7, ps.getGuildsTotal())
+        assertEquals(2, ps.guildEntries.size)
+    }
+
     // ─── getScienceScore ──────────────────────────────────────────────────────
 
     @Test
@@ -46,12 +76,11 @@ class SevenWondersScoreManagerTest {
             1L, "Alice", 0xFF0000,
             scienceCompass = 3, scienceGear = 0, scienceTablet = 0
         )
-        // 3^2 = 9, no sets
         assertEquals(9, ps.getScienceScore())
     }
 
     @Test
-    fun `getScienceScore sums all three squares`() {
+    fun `getScienceScore sums all three squares plus one set bonus`() {
         val ps = SevenWondersPlayerScore(
             1L, "Alice", 0xFF0000,
             scienceCompass = 2, scienceGear = 3, scienceTablet = 1
@@ -66,7 +95,7 @@ class SevenWondersScoreManagerTest {
             1L, "Alice", 0xFF0000,
             scienceCompass = 4, scienceGear = 4, scienceTablet = 4
         )
-        // 16+16+16=48, sets=4 -> +28 = 76 (matches official max example)
+        // 16+16+16=48, sets=4 -> +28 = 76
         assertEquals(76, ps.getScienceScore())
     }
 
@@ -80,24 +109,6 @@ class SevenWondersScoreManagerTest {
         assertEquals(47, ps.getScienceScore())
     }
 
-    @Test
-    fun `getScienceSetCount returns minimum of the three symbols`() {
-        val ps = SevenWondersPlayerScore(
-            1L, "Alice", 0xFF0000,
-            scienceCompass = 5, scienceGear = 2, scienceTablet = 3
-        )
-        assertEquals(2, ps.getScienceSetCount())
-    }
-
-    @Test
-    fun `getScienceSetCount is 0 when one symbol missing`() {
-        val ps = SevenWondersPlayerScore(
-            1L, "Alice", 0xFF0000,
-            scienceCompass = 5, scienceGear = 0, scienceTablet = 3
-        )
-        assertEquals(0, ps.getScienceSetCount())
-    }
-
     // ─── getTotal ─────────────────────────────────────────────────────────────
 
     @Test
@@ -107,7 +118,7 @@ class SevenWondersScoreManagerTest {
     }
 
     @Test
-    fun `getTotal combines all seven categories`() {
+    fun `getTotal combines all seven categories including guild entries`() {
         val ps = SevenWondersPlayerScore(
             1L, "Alice", 0xFF0000,
             militaryPoints = 5,
@@ -115,9 +126,9 @@ class SevenWondersScoreManagerTest {
             wonderPoints = 7,
             civilianPoints = 12,
             commercePoints = 4,
-            guildPoints = 8,
             scienceCompass = 2, scienceGear = 2, scienceTablet = 2 // 4+4+4+7 = 19
         )
+        ps.guildEntries.addAll(listOf(6, 2)) // 8
         // 5 + 3 + 7 + 12 + 4 + 8 + 19 = 58
         assertEquals(58, ps.getTotal())
     }
@@ -130,8 +141,7 @@ class SevenWondersScoreManagerTest {
             coins = 6,           // -> 2 pts
             wonderPoints = 0,
             civilianPoints = 0,
-            commercePoints = 0,
-            guildPoints = 0
+            commercePoints = 0
         )
         // -3 + 2 = -1
         assertEquals(-1, ps.getTotal())
@@ -141,7 +151,8 @@ class SevenWondersScoreManagerTest {
     fun `getTotal ignores other players data`() {
         val alice = SevenWondersPlayerScore(1L, "Alice", 0xFF0000, wonderPoints = 10)
         val bob = SevenWondersPlayerScore(2L, "Bob", 0x00FF00, wonderPoints = 20)
-        assertEquals(10, alice.getTotal())
+        alice.guildEntries.add(5)
+        assertEquals(15, alice.getTotal())
         assertEquals(20, bob.getTotal())
     }
 
@@ -154,35 +165,37 @@ class SevenWondersScoreManagerTest {
     }
 
     @Test
+    fun `isComplete ignores guild entries - empty guild list is valid`() {
+        val ps = SevenWondersPlayerScore(
+            1L, "Alice", 0xFF0000,
+            militaryPoints = 0, coins = 0, wonderPoints = 0,
+            civilianPoints = 0, commercePoints = 0,
+            scienceCompass = 0, scienceGear = 0, scienceTablet = 0
+        )
+        // No guild entries added, still complete
+        assertTrue(ps.isComplete())
+    }
+
+    @Test
     fun `isComplete returns false when science symbols partially filled`() {
         val ps = SevenWondersPlayerScore(
             1L, "Alice", 0xFF0000,
             militaryPoints = 0, coins = 0, wonderPoints = 0,
-            civilianPoints = 0, commercePoints = 0, guildPoints = 0,
+            civilianPoints = 0, commercePoints = 0,
             scienceCompass = 1, scienceGear = 1 // tablet missing
         )
         assertFalse(ps.isComplete())
     }
 
     @Test
-    fun `isComplete returns true when all fields filled including zeros`() {
-        val ps = SevenWondersPlayerScore(
-            1L, "Alice", 0xFF0000,
-            militaryPoints = 0, coins = 0, wonderPoints = 0,
-            civilianPoints = 0, commercePoints = 0, guildPoints = 0,
-            scienceCompass = 0, scienceGear = 0, scienceTablet = 0
-        )
-        assertTrue(ps.isComplete())
-    }
-
-    @Test
-    fun `isComplete returns true with all fields non-zero`() {
+    fun `isComplete returns true with all fixed fields filled and several guilds`() {
         val ps = SevenWondersPlayerScore(
             1L, "Alice", 0xFF0000,
             militaryPoints = 5, coins = 12, wonderPoints = 7,
-            civilianPoints = 15, commercePoints = 3, guildPoints = 6,
+            civilianPoints = 15, commercePoints = 3,
             scienceCompass = 2, scienceGear = 3, scienceTablet = 1
         )
+        ps.guildEntries.addAll(listOf(4, 6, 9))
         assertTrue(ps.isComplete())
     }
 
@@ -197,5 +210,10 @@ class SevenWondersScoreManagerTest {
     @Test
     fun `science symbol values start at 0`() {
         assertEquals(0, SevenWondersValues.SCIENCE_SYMBOL_VALUES.first())
+    }
+
+    @Test
+    fun `guild card values start at 0`() {
+        assertEquals(0, SevenWondersValues.GUILD_CARD_VALUES.first())
     }
 }

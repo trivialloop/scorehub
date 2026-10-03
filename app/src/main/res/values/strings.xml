@@ -63,19 +63,14 @@
 
     <!-- 7 Wonders Game -->
     <string name="sevenwonders_game">7 Wonders</string>
-    <string name="sevenwonders_military">Military 🗡️</string>
-    <string name="sevenwonders_coins">Coins 🪙</string>
-    <string name="sevenwonders_wonder">Wonder 🏛️</string>
-    <string name="sevenwonders_civilian">Civilian 🏠</string>
-    <string name="sevenwonders_commerce">Commerce 💰</string>
-    <string name="sevenwonders_guild">Guilds ⚗️</string>
-    <string name="sevenwonders_science_compass">Compass 🧭</string>
-    <string name="sevenwonders_science_gear">Gear ⚙️</string>
-    <string name="sevenwonders_science_tablet">Tablet 📜</string>
-    <string name="sevenwonders_science_total">Science 🔬</string>
     <string name="sevenwonders_total">Total</string>
-    <string name="sevenwonders_game_complete">Game Complete?</string>
-    <string name="sevenwonders_game_complete_message">Are all scores filled in and the game finished?</string>
+    <string name="sevenwonders_edit_entry">Edit (currently %1$d)</string>
+    <string name="sevenwonders_delete_entry">Delete</string>
+    <string name="sevenwonders_finish_game">Finish game</string>
+    <string name="sevenwonders_finish_game_title">Finish the game?</string>
+    <string name="sevenwonders_finish_game_message">This will lock all scores and save the results. Continue?</string>
+    <string name="sevenwonders_minimum_players">Minimum 3 players required</string>
+    <string name="sevenwonders_maximum_players">Maximum 7 players allowed</string>
     <string name="sevenwonders_quit_game">Quit Game</string>
     <string name="sevenwonders_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
     <string name="sevenwonders_best_score_label">Best Score</string>
