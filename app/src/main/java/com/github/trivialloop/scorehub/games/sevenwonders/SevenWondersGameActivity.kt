@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -137,8 +138,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
         binding.tableContainer.removeAllViews()
 
         binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.MILITARY, ICON_MILITARY, COLOR_MILITARY, signed = true))
-        binding.tableContainer.addView(buildCoinsInputRow())
-        binding.tableContainer.addView(buildCoinsPointsRow())
+        binding.tableContainer.addView(buildCoinsRow())
         binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.WONDER, ICON_WONDER, COLOR_WONDER))
         binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.CIVILIAN, ICON_CIVILIAN, COLOR_CIVILIAN))
         binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.COMMERCE, ICON_COMMERCE, COLOR_COMMERCE))
@@ -248,12 +248,19 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     // ─── Coins: input row + computed points row ───────────────────────────────
 
-    private fun buildCoinsInputRow(): LinearLayout {
+    private fun buildCoinsRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
         row.addView(makeIconLabelCell(ICON_COINS, COLOR_COINS, ROW_HEIGHT_DP, isCalc = false))
-        for (player in players) {
+
+        val allPts = players.map { if (it.coins != null) it.getCoinPoints() else null }
+        val allEntered = allPts.all { it != null }
+
+        for ((i, player) in players.withIndex()) {
+            val pts = allPts[i]
+            val role = if (allEntered) ScoreColorRole(pts, allPts, higherIsBetter = true) else ScoreColorRole.NEUTRAL
             val bgColor = if (!gameOver) R.color.cell_editable_bg else R.color.score_cell_background
-            val cell = makeCell(player.coins?.toString() ?: "", ROW_HEIGHT_DP, bold = false)
+
+            val cell = makeCoinsCell(pts, player.coins, role)
             cell.background = cellDrawable(ContextCompat.getColor(this, bgColor))
             if (!gameOver) cell.setOnClickListener { showCoinsPicker(player) }
             row.addView(cell)
@@ -261,22 +268,42 @@ class SevenWondersGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildCoinsPointsRow(): LinearLayout {
-        val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell("=", COLOR_COINS, ROW_HEIGHT_DP, isCalc = true))
-        val allPts = players.map { if (it.coins != null) it.getCoinPoints() else null }
-        for (player in players) {
-            val pts = if (player.coins != null) player.getCoinPoints() else null
-            val role = if (allPts.all { it != null }) ScoreColorRole(pts, allPts, higherIsBetter = true) else ScoreColorRole.NEUTRAL
-            val cell = makeCell(pts?.toString() ?: "", ROW_HEIGHT_DP, bold = true)
-            cell.background = cellDrawable(ContextCompat.getColor(this, R.color.cell_calculated_bg))
-            cell.setTextColor(
-                if (role != ScoreColorRole.NEUTRAL) role.toColor(this)
-                else ContextCompat.getColor(this, R.color.score_calculated_cell_text)
+    /** Points centered (large), raw coin count bottom-right (small, light grey) — same look as Cactus. */
+    private fun makeCoinsCell(points: Int?, coins: Int?, role: ScoreColorRole): FrameLayout = FrameLayout(this).apply {
+        layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROW_HEIGHT_DP), 1f)
+
+        addView(TextView(this@SevenWondersGameActivity).apply {
+            text = points?.toString() ?: ""
+            gravity = Gravity.CENTER
+            textSize = 16f
+            if (role != ScoreColorRole.NEUTRAL) {
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(role.toColor(this@SevenWondersGameActivity))
+            } else {
+                setTextColor(ContextCompat.getColor(this@SevenWondersGameActivity, R.color.score_cell_text))
+            }
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
             )
-            row.addView(cell)
+        })
+
+        if (coins != null) {
+            addView(TextView(this@SevenWondersGameActivity).apply {
+                text = coins.toString()
+                textSize = 11f
+                alpha = 0.45f
+                setTextColor(ContextCompat.getColor(this@SevenWondersGameActivity, R.color.score_cell_text))
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM or Gravity.END
+                ).also {
+                    it.marginEnd = dpToPx(4)
+                    it.bottomMargin = dpToPx(2)
+                }
+            })
         }
-        return row
     }
 
     private fun showCoinsPicker(ps: SevenWondersPlayerScore) {
@@ -370,16 +397,20 @@ class SevenWondersGameActivity : AppCompatActivity() {
         if (current != null) dialog.listView?.post { dialog.listView?.setSelection(current) }
     }
 
+    private fun hasAnyScienceSymbol(ps: SevenWondersPlayerScore): Boolean =
+        ps.scienceCompass != null || ps.scienceGear != null || ps.scienceTablet != null
+
     private fun buildScienceSubtotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
         row.addView(makeIconLabelCell("=", COLOR_SCIENCE, ROW_HEIGHT_DP, isCalc = true))
-        val allScience = players.map {
-            if (it.scienceCompass != null && it.scienceGear != null && it.scienceTablet != null) it.getScienceScore() else null
-        }
-        for (player in players) {
-            val value = if (player.scienceCompass != null && player.scienceGear != null && player.scienceTablet != null)
-                player.getScienceScore() else null
-            val role = if (allScience.all { it != null }) ScoreColorRole(value, allScience, higherIsBetter = true) else ScoreColorRole.NEUTRAL
+
+        // Missing symbols are treated as 0, so the score shows as soon as one symbol is entered
+        val allScience = players.map { if (hasAnyScienceSymbol(it)) it.getScienceScore() else null }
+        val allEntered = allScience.all { it != null }
+
+        for ((i, player) in players.withIndex()) {
+            val value = allScience[i]
+            val role = if (allEntered) ScoreColorRole(value, allScience, higherIsBetter = true) else ScoreColorRole.NEUTRAL
             val cell = makeCell(value?.toString() ?: "", ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(ContextCompat.getColor(this, R.color.cell_calculated_bg))
             cell.setTextColor(
@@ -409,7 +440,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildGuildSlotRow(slot: Int): LinearLayout {
         val row = makeRow(GUILD_ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell("", Color.TRANSPARENT, GUILD_ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell("", COLOR_GUILD, GUILD_ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
             val value = player.guildEntries.getOrNull(slot)
             val cell = makeCell(value?.let { "+$it" } ?: "", GUILD_ROW_HEIGHT_DP, bold = value != null, textSize = 13f)
