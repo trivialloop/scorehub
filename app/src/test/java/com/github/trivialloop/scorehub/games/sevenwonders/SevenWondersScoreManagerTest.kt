@@ -126,11 +126,11 @@ class SevenWondersScoreManagerTest {
             wonderPoints = 7,
             civilianPoints = 12,
             commercePoints = 4,
-            scienceCompass = 2, scienceGear = 2, scienceTablet = 2 // 4+4+4+7 = 19
+            scienceCompass = 2, scienceGear = 2, scienceTablet = 2 // 4+4+4 + 7*2 sets = 26
         )
         ps.guildEntries.addAll(listOf(6, 2)) // 8
-        // 5 + 3 + 7 + 12 + 4 + 8 + 19 = 58
-        assertEquals(58, ps.getTotal())
+        // 5 + 3 + 7 + 12 + 4 + 8 + 26 = 65
+        assertEquals(65, ps.getTotal())
     }
 
     @Test
