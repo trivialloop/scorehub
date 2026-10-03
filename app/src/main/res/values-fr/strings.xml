@@ -61,6 +61,20 @@
     <string name="delete_player_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera toutes ses statistiques.</string>
     <string name="reorder">Réorganiser</string>
 
+    <!-- 7 Wonders Game -->
+    <string name="sevenwonders_game">7 Wonders</string>
+    <string name="sevenwonders_total">Total</string>
+    <string name="sevenwonders_edit_entry">Modifier (actuellement %1$d)</string>
+    <string name="sevenwonders_delete_entry">Supprimer</string>
+    <string name="sevenwonders_finish_game">Terminer la partie</string>
+    <string name="sevenwonders_finish_game_title">Terminer la partie ?</string>
+    <string name="sevenwonders_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="sevenwonders_minimum_players">Minimum 3 joueurs requis</string>
+    <string name="sevenwonders_maximum_players">Maximum 7 joueurs autorisés</string>
+    <string name="sevenwonders_quit_game">Quitter la partie</string>
+    <string name="sevenwonders_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    <string name="sevenwonders_best_score_label">Meilleur Score</string>
+
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
     <string name="akropolis_total">Total</string>

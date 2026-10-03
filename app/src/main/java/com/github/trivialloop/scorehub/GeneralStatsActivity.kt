@@ -65,6 +65,20 @@ class GeneralStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             database.playerDao().getAllPlayers().collect { players ->
 
+                // ── 7 Wonders ──────────────────────────────────────────────
+                loadGameStats(
+                    gameType          = "sevenwonders",
+                    players           = players,
+                    bestPlayerView    = binding.textBestPlayerSevenWonders,
+                    bestPlayerColor   = binding.bestPlayerColorIndicatorSevenWonders,
+                    bestPlayerSection = binding.bestPlayerSectionSevenWonders,
+                    bestScoreView     = binding.textBestScoreSevenWonders,
+                    bestScoreColor    = binding.bestScoreColorIndicatorSevenWonders,
+                    bestScoreSection  = binding.bestScoreSectionSevenWonders,
+                    noDataView        = binding.textNoDataSevenWonders,
+                    bestScoreIsLowest = false
+                )
+
                 // ── Akropolis ─────────────────────────────────────────────────
                 loadGameStats(
                     gameType          = "akropolis",

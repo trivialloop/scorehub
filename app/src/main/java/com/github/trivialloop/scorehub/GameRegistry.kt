@@ -1,5 +1,6 @@
 package com.github.trivialloop.scorehub
 
+import com.github.trivialloop.scorehub.games.sevenwonders.SevenWondersPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.akropolis.AkropolisPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.belote.BelotePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.cactus.CactusPlayerSelectionActivity
@@ -76,6 +77,17 @@ object GameRegistry {
      * ════════════════════════════════════════════════════
      */
     val ALL_GAMES: List<GameDefinition> = listOf(
+        GameDefinition(
+            gameType       = "sevenwonders",
+            nameEnFallback = "7 Wonders",
+            nameResId      = R.string.sevenwonders_game,
+            iconResId      = R.drawable.ic_sevenwonders_game,   // à créer (vector 64dp)
+            activityClass  = SevenWondersPlayerSelectionActivity::class.java,
+            minPlayers     = 3,
+            maxPlayers     = 7,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
         GameDefinition(
             gameType       = "akropolis",
             nameEnFallback = "Akropolis",

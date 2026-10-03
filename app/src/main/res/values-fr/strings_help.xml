@@ -12,6 +12,20 @@
     <string name="help_wikipedia_link">📖 En savoir plus sur Wikipédia</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — 7 Wonders                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_sevenwonders_players">3 à 7 joueurs.</string>
+    <string name="help_sevenwonders_objective">Dirigez l\'une des sept grandes cités du monde antique : construisez votre Merveille, développez votre cité au fil de trois Âges et devancez vos rivaux.</string>
+    <string name="help_sevenwonders_scoring">Les points viennent de : conflits militaires (jetons Victoire/Défaite), pièces (1 point pour 3 pièces), étapes de la Merveille, cartes civiles (bleues), cartes commerciales, guildes (violettes) et cartes scientifiques (vertes). Science : chaque symbole (compas, rouage, tablette) rapporte son nombre au carré, plus 7 points par série complète des trois symboles.</string>
+    <string name="help_sevenwonders_end">La partie se termine après le troisième Âge. Chacun compte ses points par catégorie ; le total le plus élevé gagne.</string>
+    <string name="help_sevenwonders_wikipedia_url">https://fr.wikipedia.org/wiki/7_Wonders</string>
+
+    <string name="app_help_sevenwonders_1">Appuyez sur la case d\'un joueur pour saisir son sous-total Militaire (peut être négatif), Merveille, Civil ou Commerce. Pour les Pièces, saisissez le nombre de pièces sur la ligne du haut — la ligne du dessous affiche automatiquement le score converti (pièces ÷ 3).</string>
+    <string name="app_help_sevenwonders_2">Pour la Science, appuyez sur l\'un des trois symboles (compas, rouage, tablette) dans la case d\'un joueur pour saisir son nombre. La ligne du dessous affiche automatiquement le score scientifique calculé.</string>
+    <string name="app_help_sevenwonders_3">Pour les Guildes, appuyez sur « + » à chaque fois qu\'un joueur complète une carte guilde et choisissez sa valeur en points — une nouvelle ligne est ajoutée. Appuyez sur une guilde déjà saisie pour la modifier ou la supprimer.</string>
+    <string name="app_help_sevenwonders_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Akropolis                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_akropolis_players">2 à 4 joueurs.</string>
@@ -81,7 +95,7 @@
     <string name="app_help_escoba_3">Quand un joueur atteint 21, la partie est terminée.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Farkle                                                 -->
+    <!--  HELP — Farkle                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_farkle_players">2 à 8 joueurs.</string>
     <string name="help_farkle_objective">Lancez 6 dés et mettez de côté les combinaisons qui rapportent des points. Soyez le premier à atteindre 10 000 points.</string>
@@ -95,7 +109,7 @@
     <string name="app_help_farkle_4">Quand un joueur atteint 10 000 points, la partie se termine et le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — Flip 7                                                 -->
+    <!--  HELP — Flip 7                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_flip7_players">3 à 10 joueurs.</string>
     <string name="help_flip7_objective">Accumulez le plus de points en sélectionnant des valeurs de cartes (0–12) à chaque tour, jusqu\'à 7 cartes. Utilisez les cartes bonus pour multiplier ou ajouter à votre score.</string>
