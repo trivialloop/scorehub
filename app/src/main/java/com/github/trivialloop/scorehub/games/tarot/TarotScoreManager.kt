@@ -219,3 +219,17 @@ fun TarotChelem.symbol(): String = when (this) {
     TarotChelem.UNANNOUNCED_SUCCESS -> "🍃"  // neutral leaf: achieved unannounced
     TarotChelem.ANNOUNCED_FAILURE -> "🍂"    // red/dead leaf: announced + failed
 }
+
+/** Total card points in a Tarot deal (excluding the 4 "dix de der"-like adjustments). */
+const val TAROT_TOTAL_POINTS = 91
+
+/**
+ * Card points won by the camp of [playerId]:
+ *  - declarer / called partner → pointsMade
+ *  - defenders                 → 91 − pointsMade
+ */
+fun TarotRound.getCampPoints(playerId: Long, playerIds: List<Long>): Int = when (getCellRole(playerId, playerIds)) {
+    TarotCellRole.DECLARER_WIN, TarotCellRole.DECLARER_LOSS,
+    TarotCellRole.PARTNER_WIN, TarotCellRole.PARTNER_LOSS -> pointsMade
+    TarotCellRole.DEFENDER_WIN, TarotCellRole.DEFENDER_LOSS -> TAROT_TOTAL_POINTS - pointsMade
+}

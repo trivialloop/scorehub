@@ -184,9 +184,6 @@
     <string name="farkle_quit_game">Quitter la partie</string>
     <string name="farkle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
     <string name="farkle_best_score_label">Meilleur Score</string>
-    <string name="farkle_btn_add">Ajout</string>
-    <string name="farkle_btn_bank">Banque</string>
-    <string name="farkle_btn_farkle">Farkle !</string>
     <string name="farkle_score_hint">Score (ex: 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
@@ -194,8 +191,6 @@
     <string name="flip7_game">Flip 7</string>
     <string name="flip7_round_label">#</string>
     <string name="flip7_total">Total</string>
-    <string name="flip7_btn_zero">0</string>
-    <string name="flip7_btn_add">Flip !</string>
     <string name="flip7_cards_label">Cartes</string>
     <string name="flip7_bonuses_label">Bonus</string>
     <string name="flip7_score_preview">Score : %1$d  (%2$d/%3$d cartes%4$s)</string>

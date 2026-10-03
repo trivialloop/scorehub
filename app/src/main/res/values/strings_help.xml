@@ -102,9 +102,9 @@
     <string name="help_farkle_end">The first player to reach or exceed 10,000 points triggers the final round. All other players get one last turn, then the highest total wins.</string>
     <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
 
-    <string name="app_help_farkle_1">On your turn, tap Add to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
+    <string name="app_help_farkle_1">On your turn, tap + to enter the score of each set of dice you set aside. You can make multiple Add entries per turn.</string>
     <string name="app_help_farkle_2">The last Add entry is re-editable — tap it to correct a mistake before banking.</string>
-    <string name="app_help_farkle_3">Tap Bank to lock in your accumulated turn score and pass to the next player. Tap Farkle! if you rolled no scoring dice — your turn score becomes 0.</string>
+    <string name="app_help_farkle_3">Tap ✅ to lock in your accumulated turn score and pass to the next player. Tap ❌ if you rolled no scoring dice — your turn score becomes 0.</string>
     <string name="app_help_farkle_4">When a player reaches 10,000 points the game ends and the highest total wins.</string>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -158,9 +158,9 @@
     <string name="help_ohhell_end">The game ends after all rounds are played. The number of rounds depends on the number of players: (51 ÷ players) × 2. Highest total score wins.</string>
     <string name="help_ohhell_wikipedia_url">https://en.wikipedia.org/wiki/Oh_hell</string>
 
-    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell in the contract row to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
+    <string name="app_help_ohhell_1">Each round, players bid their contract one by one. Tap your cell to choose. The last bidder cannot pick a value that makes the total equal the round limit.</string>
     <string name="app_help_ohhell_2">Once all contracts are set, tap your result cell: ✅ if you made your contract exactly, or ❌ repeated for each trick over or under your bid.</string>
-    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically in the result row.</string>
+    <string name="app_help_ohhell_3">Success scores 5 + 2 × contract. Each miss scores −2 per cross. Scores update automatically.</string>
     <string name="app_help_ohhell_4">The game ends when all rounds are complete. The player with the highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -204,6 +204,15 @@
     <string name="app_help_tarot_2">Tap an existing round number to edit or delete it.</string>
     <string name="app_help_tarot_3">The app computes scores automatically using official French Tarot Federation rules (zero-sum).</string>
     <string name="app_help_tarot_4">When a player reaches 1000, the game is over.</string>
+
+    <string name="tarot_hint_title">ℹ️ Symbols</string>
+    <string name="tarot_hint_points">Bottom-right number: card points won by this player\'s side.</string>
+    <string name="tarot_hint_contract">Contract: ∧ Prise · ∧∧ Garde · ∧∧∧ Garde Sans · ∧∧∧∧ Garde Contre</string>
+    <string name="tarot_hint_bouts">Bouts (oudlers): ○ none · ☘ 1 · ☘☘ 2 · ☘☘☘ 3</string>
+    <string name="tarot_hint_partner">❤️ Called partner (5 players)</string>
+    <string name="tarot_hint_poignee">Poignée: 🤝 simple · 🤝🤝 double · 🤝🤝🤝 triple</string>
+    <string name="tarot_hint_petit">🃏1 Petit au Bout (last trick won with the Petit)</string>
+    <string name="tarot_hint_chelem">Chelem: 🌿 announced + achieved · 🍃 unannounced, achieved · 🍂 announced + failed</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Ticket to Ride                                          -->

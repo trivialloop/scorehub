@@ -16,6 +16,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -51,7 +52,7 @@ class FarkleGameActivity : AppCompatActivity() {
         private const val ROUND_ROW_DP  = 48
         private const val ENTRY_ROW_DP  = 36
         private const val SUM_ROW_DP    = 28
-        private const val BTN_ROW_DP    = 44
+        private const val BTN_ROW_DP    = 48
         private const val TOTAL_ROW_DP  = 52
         private const val LABEL_COL_DP  = 65
         
@@ -351,57 +352,74 @@ class FarkleGameActivity : AppCompatActivity() {
         minimumHeight = dpToPx(ROUND_ROW_DP)
     }
 
-    private fun makeActiveTurnCell(turn: FarkleRound, weight: Float): LinearLayout =
-        LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
-            background   = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_bg))
+    private fun makeActiveTurnCell(turn: FarkleRound, weight: Float): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
+        background   = cellDrawable(ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_bg))
 
-            for ((index, entry) in turn.rollEntries.withIndex()) {
-                val isLast = index == turn.rollEntries.lastIndex
-                addView(TextView(this@FarkleGameActivity).apply {
-                    text = entry.score.toString(); gravity = Gravity.CENTER; textSize = 14f
-                    layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ENTRY_ROW_DP))
-                    if (isLast) {
-                        background = cellDrawable(
-                            ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_filled_bg))
-                        setTypeface(null, Typeface.BOLD)
-                        setOnClickListener { showEditEntryDialog(turn, index) }
-                    } else {
-                        background = cellDrawable(
-                            ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_background))
-                    }
-                    setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_text))
-                })
-            }
-
-            if (turn.rollEntries.isNotEmpty()) {
-                addView(TextView(this@FarkleGameActivity).apply {
-                    text = "= ${turn.entrySum}"; gravity = Gravity.CENTER; textSize = 12f
-                    setTypeface(null, Typeface.BOLD)
-                    layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUM_ROW_DP))
-                    background = cellDrawable(
-                        ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_background))
-                    setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_text))
-                })
-            }
-
-            addView(LinearLayout(this@FarkleGameActivity).apply {
-                orientation  = LinearLayout.HORIZONTAL
+        for ((index, entry) in turn.rollEntries.withIndex()) {
+            val isLast = index == turn.rollEntries.lastIndex
+            addView(TextView(this@FarkleGameActivity).apply {
+                text = entry.score.toString(); gravity = Gravity.CENTER; textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
-                addView(makeActionButton(getString(R.string.farkle_btn_add),
-                    isFarkle = false, isAdd = true)  { showAddScoreDialog(turn) })
-                addView(makeActionButton(getString(R.string.farkle_btn_bank),
-                    isFarkle = false, isAdd = false) {
-                    if (turn.rollEntries.isEmpty()) performFarkle(turn) else performBank(turn)
-                })
-                addView(makeActionButton(getString(R.string.farkle_btn_farkle),
-                    isFarkle = true,  isAdd = false) { performFarkle(turn) })
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ENTRY_ROW_DP))
+                if (isLast) {
+                    background = cellDrawable(
+                        ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_filled_bg))
+                    setTypeface(null, Typeface.BOLD)
+                    setOnClickListener { showEditEntryDialog(turn, index) }
+                } else {
+                    background = cellDrawable(
+                        ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_background))
+                }
+                setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_text))
             })
         }
+
+        if (turn.rollEntries.isNotEmpty()) {
+            addView(TextView(this@FarkleGameActivity).apply {
+                text = "= ${turn.entrySum}"; gravity = Gravity.CENTER; textSize = 12f
+                setTypeface(null, Typeface.BOLD)
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUM_ROW_DP))
+                background = cellDrawable(
+                    ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_background))
+                setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.header_cell_text))
+            })
+        }
+
+        addView(LinearLayout(this@FarkleGameActivity).apply {
+            orientation  = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+            addView(makeActionButton("+", tintColorRes = null) { showAddScoreDialog(turn) })
+            addView(makeActionButton("✅", tintColorRes = R.color.score_text_best) {
+                if (turn.rollEntries.isEmpty()) performFarkle(turn) else performBank(turn)
+            })
+            addView(makeActionButton("❌", tintColorRes = R.color.score_text_worst) { performFarkle(turn) })
+        })
+    }
+    
+    private fun makeActionButton(label: String, tintColorRes: Int?, onClick: () -> Unit): TextView = TextView(this).apply {
+        text = label
+        gravity = Gravity.CENTER
+        textSize = 22f
+        setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+
+        val bgColor = if (tintColorRes != null) {
+            // Teinte à ~25 % d'opacité : le fond reste identifiable, l'emoji reste lisible
+            ColorUtils.setAlphaComponent(
+                ContextCompat.getColor(this@FarkleGameActivity, tintColorRes), 64)
+        } else {
+            ContextCompat.getColor(this@FarkleGameActivity, R.color.cell_editable_bg)
+        }
+        background = cellDrawable(bgColor)
+
+        // Ne sert qu'au "+" : les emojis ignorent la couleur du texte
+        setTextColor(ContextCompat.getColor(this@FarkleGameActivity, R.color.score_cell_text))
+        setOnClickListener { onClick() }
+    }
 
     private fun makeActionButton(label: String, isFarkle: Boolean, isAdd: Boolean, onClick: () -> Unit): TextView =
         TextView(this).apply {
@@ -442,7 +460,7 @@ class FarkleGameActivity : AppCompatActivity() {
         val available = ALL_COMBINATIONS.filter { it.usedDice <= remainingDice }
         val items = available.map { "${it.label}   ${it.score}" }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("${players[currentPlayerIndex].playerName} — ${getString(R.string.farkle_btn_add)} ($remainingDice 🎲)")
+            .setTitle("${players[currentPlayerIndex].playerName} ($remainingDice 🎲)")
             .setItems(items) { _, which ->
                 turn.rollEntries.add(available[which])
                 buildTable()
@@ -459,7 +477,7 @@ class FarkleGameActivity : AppCompatActivity() {
         }.takeIf { it >= 0 } ?: 0
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("✏️ ${getString(R.string.farkle_btn_add)}")
+            .setTitle("✏️ ${players[currentPlayerIndex].playerName}")
             .setSingleChoiceItems(items, selectedIdx) { dlg, which ->
                 turn.rollEntries[entryIndex] = ALL_COMBINATIONS[which]
                 buildTable()

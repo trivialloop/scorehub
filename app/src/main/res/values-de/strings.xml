@@ -140,7 +140,6 @@
     <string name="skyjo_round_label">#</string>
     <string name="freegame_round_label">#</string>
     <string name="qwixx_penalty_symbol">✗</string>
-    <string name="flip7_btn_zero">0</string>
     <string name="escoba_score_hint">0–20</string>
     <string name="tarot_best_score_label">Bester Score</string>
     <string name="skyjo_best_score_short">Bester: %1$d</string>
@@ -256,7 +255,6 @@
     <string name="skyjo_enter_score">Score eingeben</string>
     <string name="flip7_cards_label">Karten</string>
     <string name="escoba_enter_score">Score eingeben</string>
-    <string name="farkle_btn_add">Zufügen</string>
     <string name="cribbage_crib">Krippe</string>
     <string name="cribbage_crib_score">Krippen-Punkte</string>
     <string name="escoba_game">Escoba/Scopa/Besen</string>
@@ -272,7 +270,6 @@
     <string name="flip7_bonuses_label">Boni</string>
     <string name="flip7_score_preview">Score: %1$d (%2$d/%3$d Karten%4$s)</string>
     <string name="flip7_game">Flip 7</string>
-    <string name="flip7_btn_add">Flip!</string>
     <string name="flip7_bonus_flip7">Flip 7!</string>
     <string name="skyjo_score_hint">Bsp.: -2 oder 7</string>
     <string name="tarot_game">Tarot/Tarock</string>
