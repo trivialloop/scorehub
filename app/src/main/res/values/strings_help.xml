@@ -39,6 +39,13 @@
     <string name="app_help_belote_3">The app automatically handles litige (81-81 ties) by carrying the pending points to the next successful contract.</string>
     <string name="app_help_belote_4">The game ends automatically once a team reaches 501 points.</string>
 
+    <string name="belote_hint_title">ℹ️ Symbols</string>
+    <string name="belote_hint_points">Bottom-right number: card points won by this team\'s side (attackers: points made, defense: 162 − points made).</string>
+    <string name="belote_hint_taker">🎯 Team that took the contract</string>
+    <string name="belote_hint_capot">🃏 Capot (all 8 tricks won)</string>
+    <string name="belote_hint_belote">🤝 Belote-Rebelote (+20 points)</string>
+    <string name="belote_hint_litige">⚖️ Litige (81-81): the attackers\' 81 points are carried to the next successful contract</string>
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Cactus                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->

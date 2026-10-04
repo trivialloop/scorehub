@@ -101,3 +101,39 @@ data class BeloteTeamState(
     fun getTotal(rounds: List<BeloteRound>): Int =
         BeloteScoring.computeRoundScores(rounds).sumOf { it[teamIndex] ?: 0 }
 }
+
+enum class BeloteCellRole { WIN, LOSS, NEUTRAL }
+
+/**
+ * Whether [teamIndex] won or lost the hand from a contract point of view.
+ *  - Capot: the capot team wins, the other loses.
+ *  - Contract made (> 81): attacker wins, defense loses.
+ *  - Chute (< 81): attacker loses, defense wins.
+ *  - Litige (81-81) or incomplete: neutral for both.
+ */
+fun BeloteRound.getCellRole(teamIndex: Int): BeloteCellRole {
+    if (isCapot) {
+        return if ((capotTeam ?: attackingTeam) == teamIndex) BeloteCellRole.WIN else BeloteCellRole.LOSS
+    }
+    val made = pointsMade ?: return BeloteCellRole.NEUTRAL
+    return when {
+        made == BELOTE_CONTRACT_THRESHOLD -> BeloteCellRole.NEUTRAL
+        made > BELOTE_CONTRACT_THRESHOLD ->
+            if (teamIndex == attackingTeam) BeloteCellRole.WIN else BeloteCellRole.LOSS
+        else ->
+            if (teamIndex == attackingTeam) BeloteCellRole.LOSS else BeloteCellRole.WIN
+    }
+}
+
+/**
+ * Raw card points won by [teamIndex]'s side this hand (belote bonus and litige carry excluded).
+ *  - Attacking team: pointsMade. Defending team: 162 − pointsMade.
+ *  - Capot: the capot team gets 162, the other 0.
+ */
+fun BeloteRound.getCampPoints(teamIndex: Int): Int {
+    if (isCapot) {
+        return if ((capotTeam ?: attackingTeam) == teamIndex) BELOTE_MAX_POINTS else 0
+    }
+    val made = pointsMade ?: 0
+    return if (teamIndex == attackingTeam) made else BELOTE_MAX_POINTS - made
+}

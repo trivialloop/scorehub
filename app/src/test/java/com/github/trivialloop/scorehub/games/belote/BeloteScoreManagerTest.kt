@@ -195,4 +195,63 @@ class BeloteScoreManagerTest {
         val team = BeloteTeamState(0, "Alice", "Bob", 0xFF0000)
         assertEquals("Alice & Bob", team.displayName)
     }
+
+    // ─── getCampPoints ─────────────────────────────────────────────────────────
+
+    @Test
+    fun `getCampPoints attacker gets points made, defense gets complement`() {
+        val round = BeloteRound(1, attackingTeam = 0, pointsMade = 100)
+        assertEquals(100, round.getCampPoints(0))
+        assertEquals(62, round.getCampPoints(1))
+    }
+
+    @Test
+    fun `getCampPoints on litige is 81 for both teams`() {
+        val round = BeloteRound(1, attackingTeam = 1, pointsMade = 81)
+        assertEquals(81, round.getCampPoints(0))
+        assertEquals(81, round.getCampPoints(1))
+    }
+
+    @Test
+    fun `getCampPoints on capot gives 162 to capot team and 0 to the other`() {
+        val round = BeloteRound(1, attackingTeam = 0, isCapot = true, capotTeam = 1)
+        assertEquals(0, round.getCampPoints(0))
+        assertEquals(162, round.getCampPoints(1))
+    }
+
+    @Test
+    fun `getCampPoints ignores belote bonus`() {
+        val round = BeloteRound(1, attackingTeam = 0, pointsMade = 90, beloteTeam = 0)
+        assertEquals(90, round.getCampPoints(0))
+    }
+
+    // ─── getCellRole ───────────────────────────────────────────────────────────
+
+    @Test
+    fun `getCellRole contract made - attacker WIN, defense LOSS`() {
+        val round = BeloteRound(1, attackingTeam = 0, pointsMade = 100)
+        assertEquals(BeloteCellRole.WIN, round.getCellRole(0))
+        assertEquals(BeloteCellRole.LOSS, round.getCellRole(1))
+    }
+
+    @Test
+    fun `getCellRole chute - attacker LOSS, defense WIN`() {
+        val round = BeloteRound(1, attackingTeam = 0, pointsMade = 60)
+        assertEquals(BeloteCellRole.LOSS, round.getCellRole(0))
+        assertEquals(BeloteCellRole.WIN, round.getCellRole(1))
+    }
+
+    @Test
+    fun `getCellRole litige is NEUTRAL for both`() {
+        val round = BeloteRound(1, attackingTeam = 0, pointsMade = 81)
+        assertEquals(BeloteCellRole.NEUTRAL, round.getCellRole(0))
+        assertEquals(BeloteCellRole.NEUTRAL, round.getCellRole(1))
+    }
+
+    @Test
+    fun `getCellRole capot by defense - defense WIN, attacker LOSS`() {
+        val round = BeloteRound(1, attackingTeam = 0, isCapot = true, capotTeam = 1)
+        assertEquals(BeloteCellRole.LOSS, round.getCellRole(0))
+        assertEquals(BeloteCellRole.WIN, round.getCellRole(1))
+    }
 }
