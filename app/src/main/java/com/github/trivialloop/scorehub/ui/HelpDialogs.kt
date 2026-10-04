@@ -102,7 +102,7 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
-        "hanging_gardens" -> GameHelp(
+        "hanginggardens" -> GameHelp(
             players      = context.getString(R.string.help_hanginggardens_players),
             objective    = context.getString(R.string.help_hanginggardens_objective),
             scoring      = context.getString(R.string.help_hanginggardens_scoring),
@@ -243,7 +243,7 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_4)
         ))
 
-        "hanging_gardens" -> AppHelp(listOf(
+        "hanginggardens" -> AppHelp(listOf(
             context.getString(R.string.app_help_hanginggardens_1),
             context.getString(R.string.app_help_hanginggardens_2),
             context.getString(R.string.app_help_hanginggardens_3),

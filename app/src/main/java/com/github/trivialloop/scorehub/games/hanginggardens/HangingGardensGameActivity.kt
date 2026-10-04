@@ -49,7 +49,7 @@ class HangingGardensGameActivity : AppCompatActivity() {
     )
 
     companion object {
-        const val GAME_TYPE = "hanging_gardens"
+        const val GAME_TYPE = "hanginggardens"
         private const val LABEL_COL_DP = 65
         private const val ROW_HEIGHT_DP = 44
         private const val ENTRY_ROW_HEIGHT_DP = 38

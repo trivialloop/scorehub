@@ -1,6 +1,6 @@
 # Hanging Gardens (Les Jardins Suspendus)
 
-- **Players**: 1–5 (equipment: board box). `gameType = "hanging_gardens"`. Solo games do not count toward win/loss statistics.
+- **Players**: 1–5 (equipment: board box). `gameType = "hanginggardens"`. Solo games do not count toward win/loss statistics.
 - One-shot tally per player, saved manually via **Finish game** (same convention as Ticket to Ride / Harmonies).
 - Uses the fixed header / scrollable content pattern (`headerContainer` + `scrollView`/`tableContainer`) with `LABEL_COL_DP = 65`, `ROW_HEIGHT_DP = 44` and `ENTRY_ROW_HEIGHT_DP = 38` for entry slot rows.
 - Embellishment tiles add flowers/animals/trees, so they are already counted in those rows.

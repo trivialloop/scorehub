@@ -167,7 +167,7 @@ object GameRegistry {
             equipment      = setOf(Equipment.CARDS, Equipment.DICE, Equipment.BOARD)
         ),
         GameDefinition(
-            gameType       = "hanging_gardens",
+            gameType       = "hanginggardens",
             nameEnFallback = "Hanging Gardens",
             nameResId      = R.string.hanginggardens_game,
             iconResId      = R.drawable.ic_hanginggardens_game,

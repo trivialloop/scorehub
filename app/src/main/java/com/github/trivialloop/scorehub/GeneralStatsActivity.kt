@@ -165,7 +165,7 @@ class GeneralStatsActivity : AppCompatActivity() {
 
                 // ── Hanging Gardens ─────────────────────────────────────────
                 loadGameStats(
-                    gameType          = "hanging_gardens",
+                    gameType          = "hanginggardens",
                     players           = players,
                     bestPlayerView    = binding.textBestPlayerHangingGardens,
                     bestPlayerColor   = binding.bestPlayerColorIndicatorHangingGardens,
