@@ -208,21 +208,6 @@
     
     <!-- Les Jardins Suspendus -->
     <string name="hanginggardens_game">Les Jardins Suspendus</string>
-    <string name="hanginggardens_irrigation">Irrigation 💧</string>
-    <string name="hanginggardens_flower_blue">Fleurs bleues 🔵</string>
-    <string name="hanginggardens_flower_red">Fleurs rouges 🔴</string>
-    <string name="hanginggardens_flower_yellow">Fleurs jaunes 🟡</string>
-    <string name="hanginggardens_tree_dragon">Dragonniers 🌳</string>
-    <string name="hanginggardens_tree_cedar">Cèdres 🌲</string>
-    <string name="hanginggardens_tree_palm">Dattiers 🌴</string>
-    <string name="hanginggardens_trees_total">Total arbres</string>
-    <string name="hanginggardens_animals">Animaux 🦜</string>
-    <string name="hanginggardens_animals_total">Total animaux</string>
-    <string name="hanginggardens_humans">Personnages 🧑‍🌾</string>
-    <string name="hanginggardens_humans_total">Total personnages</string>
-    <string name="hanginggardens_objectives">Objectifs royaux 👑</string>
-    <string name="hanginggardens_total">Total</string>
-    <string name="hanginggardens_add_entry_title">Ajouter : %1$s</string>
     <string name="hanginggardens_edit_entry">Modifier (actuellement %1$d)</string>
     <string name="hanginggardens_delete_entry">Supprimer</string>
     <string name="hanginggardens_finish_game">Terminer la partie</string>

@@ -41,11 +41,36 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     private var gameOver = false
 
+    /** Icon-only row identity: an emoji on a colored background (language independent). */
+    private data class RowStyle(
+        val emoji: String,
+        val color: Int,
+        val dialogEmoji: String = emoji
+    )
+
     companion object {
         const val GAME_TYPE = "hanging_gardens"
-        private const val LABEL_COL_DP = 80
+        private const val LABEL_COL_DP = 65
         private const val ROW_HEIGHT_DP = 44
         private const val ENTRY_ROW_HEIGHT_DP = 38
+
+        private const val FLOWER_EMOJI = "🌸"
+
+        private val STYLE_IRRIGATION = RowStyle("💧", 0xFF29B6F6.toInt())
+        private val STYLE_ANIMALS    = RowStyle("🦚", 0xFFEF6C00.toInt())
+        private val STYLE_HUMANS     = RowStyle("🧑", 0xFF8D6E63.toInt())
+        private val STYLE_OBJECTIVES = RowStyle("👑", 0xFF6A1B9A.toInt())
+
+        // Flowers: the dialog title is prefixed with the matching colored square
+        private val STYLE_FLOWER_BLUE   = RowStyle(FLOWER_EMOJI, 0xFF1565C0.toInt(), "🟦$FLOWER_EMOJI")
+        private val STYLE_FLOWER_RED    = RowStyle(FLOWER_EMOJI, 0xFFC62828.toInt(), "🟥$FLOWER_EMOJI")
+        private val STYLE_FLOWER_YELLOW = RowStyle(FLOWER_EMOJI, 0xFFF9A825.toInt(), "🟨$FLOWER_EMOJI")
+
+        // All trees (3 species + subtotal) share the same green
+        private val COLOR_TREES = 0xFF1B5E20.toInt()
+        private val STYLE_TREE_DRAGON = RowStyle("🌳", COLOR_TREES)
+        private val STYLE_TREE_CEDAR  = RowStyle("🌲", COLOR_TREES)
+        private val STYLE_TREE_PALM   = RowStyle("🌴", COLOR_TREES)
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -110,40 +135,36 @@ class HangingGardensGameActivity : AppCompatActivity() {
         val c = binding.tableContainer
         c.removeAllViews()
 
-        // Irrigation (drops)
+        // Irrigation
         c.addView(buildSingleValueRow(
-            getString(R.string.hanginggardens_irrigation),
-            { it.irrigation }, HANGING_GARDENS_IRRIGATION_VALUES
+            STYLE_IRRIGATION, { it.irrigation }, HANGING_GARDENS_IRRIGATION_VALUES
         ) { p, v -> p.irrigation = v })
 
         // Flowers (one row per color)
         for (flower in HangingGardensFlower.entries) {
             c.addView(buildSingleValueRow(
-                flowerLabel(flower), { it.flowers[flower] }, flower.getPossibleValues()
+                flowerStyle(flower), { it.flowers[flower] }, flower.getPossibleValues()
             ) { p, v -> p.flowers[flower] = v })
         }
 
-        // Trees (one section per species + shared subtotal)
+        // Trees (one section per species + subtotal in its own green)
         for (tree in HangingGardensTree.entries) {
-            addEntrySection(treeLabel(tree), { it.treeEntries.getValue(tree) },
+            addEntrySection(treeStyle(tree), { it.treeEntries.getValue(tree) },
                 tree.getPossibleValues())
         }
-        c.addView(buildSubtotalRow(getString(R.string.hanginggardens_trees_total)) { it.getTreesTotal() })
+        c.addView(buildSubtotalRow(COLOR_TREES) { it.getTreesTotal() })
 
         // Animals
-        addEntrySection(getString(R.string.hanginggardens_animals), { it.animalEntries },
-            HANGING_GARDENS_ANIMAL_VALUES)
-        c.addView(buildSubtotalRow(getString(R.string.hanginggardens_animals_total)) { it.getAnimalsTotal() })
+        addEntrySection(STYLE_ANIMALS, { it.animalEntries }, HANGING_GARDENS_ANIMAL_VALUES)
+        c.addView(buildSubtotalRow(STYLE_ANIMALS.color) { it.getAnimalsTotal() })
 
         // Humans
-        addEntrySection(getString(R.string.hanginggardens_humans), { it.humanEntries },
-            HANGING_GARDENS_HUMAN_VALUES)
-        c.addView(buildSubtotalRow(getString(R.string.hanginggardens_humans_total)) { it.getHumansTotal() })
+        addEntrySection(STYLE_HUMANS, { it.humanEntries }, HANGING_GARDENS_HUMAN_VALUES)
+        c.addView(buildSubtotalRow(STYLE_HUMANS.color) { it.getHumansTotal() })
 
         // Royal objectives
         c.addView(buildSingleValueRow(
-            getString(R.string.hanginggardens_objectives),
-            { it.objectives }, HANGING_GARDENS_OBJECTIVES_VALUES
+            STYLE_OBJECTIVES, { it.objectives }, HANGING_GARDENS_OBJECTIVES_VALUES
         ) { p, v -> p.objectives = v })
 
         c.addView(buildTotalRow())
@@ -155,14 +176,14 @@ class HangingGardensGameActivity : AppCompatActivity() {
     }
 
     private fun addEntrySection(
-        label: String,
+        style: RowStyle,
         entries: (HangingGardensPlayerScore) -> MutableList<Int>,
         values: List<Int>
     ) {
-        binding.tableContainer.addView(buildEntryHeaderRow(label, entries, values))
+        binding.tableContainer.addView(buildEntryHeaderRow(style, entries, values))
         val maxSlots = players.maxOf { entries(it).size }
         for (slot in 0 until maxSlots) {
-            binding.tableContainer.addView(buildEntrySlotRow(label, slot, entries, values))
+            binding.tableContainer.addView(buildEntrySlotRow(style, slot, entries, values))
         }
     }
 
@@ -170,7 +191,8 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell("", ROW_HEIGHT_DP,
+            ContextCompat.getColor(this, R.color.header_cell_background)))
         for (player in players) {
             val cell = makeCell(player.playerName, ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(player.playerColor)
@@ -184,13 +206,13 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     /** One picker cell per player (irrigation, flowers, objectives). */
     private fun buildSingleValueRow(
-        label: String,
+        style: RowStyle,
         getter: (HangingGardensPlayerScore) -> Int?,
         values: List<Int>,
         setter: (HangingGardensPlayerScore, Int) -> Unit
     ): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(label, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(style.emoji, ROW_HEIGHT_DP, style.color))
         val allValues = players.map(getter)
         for (player in players) {
             val score = getter(player)
@@ -201,7 +223,7 @@ class HangingGardensGameActivity : AppCompatActivity() {
             cell.background = cellDrawable(ContextCompat.getColor(this, bg))
             if (role != ScoreColorRole.NEUTRAL && score != null) cell.setTextColor(role.toColor(this))
             if (!gameOver) cell.setOnClickListener {
-                showValuePicker("${player.playerName} — $label", values, score) { v ->
+                showValuePicker("${player.playerName} — ${style.dialogEmoji}", values, score) { v ->
                     setter(player, v); buildTable()
                 }
             }
@@ -212,19 +234,20 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     /** "+" header row of an entry section (trees / animals / humans). */
     private fun buildEntryHeaderRow(
-        label: String,
+        style: RowStyle,
         entries: (HangingGardensPlayerScore) -> MutableList<Int>,
         values: List<Int>
     ): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(label, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(style.emoji, ROW_HEIGHT_DP, style.color))
         for (player in players) {
             val cell = makeCell(if (gameOver) "" else "+", ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(ContextCompat.getColor(
                 this, if (!gameOver) R.color.cell_editable_bg else R.color.header_cell_background))
             if (!gameOver) cell.setOnClickListener {
-                showValuePicker("${player.playerName} — ${getString(R.string.hanginggardens_add_entry_title, label)}",
-                    values, null) { v -> entries(player).add(v); buildTable() }
+                showValuePicker("${player.playerName} — ${style.emoji} +", values, null) { v ->
+                    entries(player).add(v); buildTable()
+                }
             }
             row.addView(cell)
         }
@@ -232,29 +255,33 @@ class HangingGardensGameActivity : AppCompatActivity() {
     }
 
     private fun buildEntrySlotRow(
-        label: String,
+        style: RowStyle,
         slot: Int,
         entries: (HangingGardensPlayerScore) -> MutableList<Int>,
         values: List<Int>
     ): LinearLayout {
         val row = makeRow(ENTRY_ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", ENTRY_ROW_HEIGHT_DP, isCalc = false))
+        // Same color as the section header so the section reads as one colored block
+        row.addView(makeLabelCell("", ENTRY_ROW_HEIGHT_DP, style.color))
         for (player in players) {
             val value = entries(player).getOrNull(slot)
             val cell = makeCell(value?.let { "+$it" } ?: "", ENTRY_ROW_HEIGHT_DP,
                 bold = value != null, textSize = 13f)
             if (value != null) cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
             if (!gameOver && value != null) cell.setOnClickListener {
-                showEditEntryDialog(player, label, entries(player), slot, values)
+                showEditEntryDialog(player, style.emoji, entries(player), slot, values)
             }
             row.addView(cell)
         }
         return row
     }
 
-    private fun buildSubtotalRow(label: String, valueOf: (HangingGardensPlayerScore) -> Int): LinearLayout {
+    /** Subtotal row: "Σ" on the section's color, calculated-style value cells. */
+    private fun buildSubtotalRow(sectionColor: Int, valueOf: (HangingGardensPlayerScore) -> Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(label, ROW_HEIGHT_DP, isCalc = true))
+        val label = makeLabelCell("Σ", ROW_HEIGHT_DP, sectionColor)
+        label.setTextColor(Color.WHITE)
+        row.addView(label)
         for (player in players) {
             val cell = makeCell(valueOf(player).toString(), ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(ContextCompat.getColor(this, R.color.cell_calculated_bg))
@@ -266,7 +293,8 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.hanginggardens_total), ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeLabelCell("Σ", ROW_HEIGHT_DP,
+            ContextCompat.getColor(this, R.color.cell_calculated_bg), calc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()
@@ -297,18 +325,18 @@ class HangingGardensGameActivity : AppCompatActivity() {
     }
 
     private fun showEditEntryDialog(
-        player: HangingGardensPlayerScore, label: String,
+        player: HangingGardensPlayerScore, emoji: String,
         list: MutableList<Int>, slot: Int, values: List<Int>
     ) {
         val current = list.getOrNull(slot) ?: return
         AlertDialog.Builder(this)
-            .setTitle("✏️ ${player.playerName} — $label")
+            .setTitle("✏️ ${player.playerName} — $emoji")
             .setItems(arrayOf(
                 getString(R.string.hanginggardens_edit_entry, current),
                 getString(R.string.hanginggardens_delete_entry)
             )) { _, which ->
                 when (which) {
-                    0 -> showValuePicker("${player.playerName} — $label", values, current) { v ->
+                    0 -> showValuePicker("${player.playerName} — $emoji", values, current) { v ->
                         list[slot] = v; buildTable()
                     }
                     1 -> { list.removeAt(slot); buildTable() }
@@ -359,18 +387,18 @@ class HangingGardensGameActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Labels & cell builders ────────────────────────────────────────────────
+    // ─── Styles & cell builders ────────────────────────────────────────────────
 
-    private fun flowerLabel(f: HangingGardensFlower) = when (f) {
-        HangingGardensFlower.BLUE -> getString(R.string.hanginggardens_flower_blue)
-        HangingGardensFlower.RED -> getString(R.string.hanginggardens_flower_red)
-        HangingGardensFlower.YELLOW -> getString(R.string.hanginggardens_flower_yellow)
+    private fun flowerStyle(f: HangingGardensFlower) = when (f) {
+        HangingGardensFlower.BLUE   -> STYLE_FLOWER_BLUE
+        HangingGardensFlower.RED    -> STYLE_FLOWER_RED
+        HangingGardensFlower.YELLOW -> STYLE_FLOWER_YELLOW
     }
 
-    private fun treeLabel(t: HangingGardensTree) = when (t) {
-        HangingGardensTree.DRAGON -> getString(R.string.hanginggardens_tree_dragon)
-        HangingGardensTree.CEDAR -> getString(R.string.hanginggardens_tree_cedar)
-        HangingGardensTree.PALM -> getString(R.string.hanginggardens_tree_palm)
+    private fun treeStyle(t: HangingGardensTree) = when (t) {
+        HangingGardensTree.DRAGON -> STYLE_TREE_DRAGON
+        HangingGardensTree.CEDAR  -> STYLE_TREE_CEDAR
+        HangingGardensTree.PALM   -> STYLE_TREE_PALM
     }
 
     private fun makeRow(heightDp: Int): LinearLayout = LinearLayout(this).apply {
@@ -379,19 +407,20 @@ class HangingGardensGameActivity : AppCompatActivity() {
         isBaselineAligned = false   // mandatory for every hand-built grid row
     }
 
-    private fun makeLabelCell(text: String, heightDp: Int, isCalc: Boolean): TextView = TextView(this).apply {
-        this.text = text
-        gravity = Gravity.CENTER
-        textSize = 11f
-        setTypeface(null, Typeface.BOLD)
-        maxLines = 3
-        setPadding(dpToPx(4), 0, dpToPx(4), 0)
-        layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
-        val bg = if (isCalc) R.color.cell_calculated_bg else R.color.header_cell_background
-        val fg = if (isCalc) R.color.score_calculated_cell_text else R.color.header_cell_text
-        background = cellDrawable(ContextCompat.getColor(this@HangingGardensGameActivity, bg))
-        setTextColor(ContextCompat.getColor(this@HangingGardensGameActivity, fg))
-    }
+    /** Icon label cell: emoji (or symbol) centered on a colored background. */
+    private fun makeLabelCell(text: String, heightDp: Int, bgColor: Int, calc: Boolean = false): TextView =
+        TextView(this).apply {
+            this.text = text
+            gravity = Gravity.CENTER
+            textSize = if (calc) 16f else 22f
+            setTypeface(null, Typeface.BOLD)
+            maxLines = 1
+            layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
+            background = cellDrawable(bgColor)
+            setTextColor(ContextCompat.getColor(
+                this@HangingGardensGameActivity,
+                if (calc) R.color.score_calculated_cell_text else R.color.header_cell_text))
+        }
 
     private fun makeCell(text: String, heightDp: Int, bold: Boolean, textSize: Float = 14f): TextView =
         TextView(this).apply {

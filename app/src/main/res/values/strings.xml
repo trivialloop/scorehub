@@ -209,21 +209,6 @@
 
     <!-- Hanging Gardens Game -->
     <string name="hanginggardens_game">Hanging Gardens</string>
-    <string name="hanginggardens_irrigation">Irrigation 💧</string>
-    <string name="hanginggardens_flower_blue">Blue flowers 🔵</string>
-    <string name="hanginggardens_flower_red">Red flowers 🔴</string>
-    <string name="hanginggardens_flower_yellow">Yellow flowers 🟡</string>
-    <string name="hanginggardens_tree_dragon">Dragon trees 🌳</string>
-    <string name="hanginggardens_tree_cedar">Cedars 🌲</string>
-    <string name="hanginggardens_tree_palm">Date palms 🌴</string>
-    <string name="hanginggardens_trees_total">Trees total</string>
-    <string name="hanginggardens_animals">Animals 🦜</string>
-    <string name="hanginggardens_animals_total">Animals total</string>
-    <string name="hanginggardens_humans">Characters 🧑‍🌾</string>
-    <string name="hanginggardens_humans_total">Characters total</string>
-    <string name="hanginggardens_objectives">Royal objectives 👑</string>
-    <string name="hanginggardens_total">Total</string>
-    <string name="hanginggardens_add_entry_title">Add: %1$s</string>
     <string name="hanginggardens_edit_entry">Edit (currently %1$d)</string>
     <string name="hanginggardens_delete_entry">Delete</string>
     <string name="hanginggardens_finish_game">Finish game</string>
