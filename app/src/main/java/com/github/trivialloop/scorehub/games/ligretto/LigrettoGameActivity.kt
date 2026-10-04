@@ -9,6 +9,8 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -45,11 +47,15 @@ class LigrettoGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "ligretto"
-        private const val SCORE_LIMIT = 100
-        private const val MAX_CARDS_PLAYED = 40
-        private const val MAX_STACK_LEFT = 10
-        private const val LABEL_COL_DP = 65
-        private const val ROW_HEIGHT_DP = 48
+        private const val SCORE_LIMIT          = 100
+        private const val MAX_CARDS_PLAYED     = 40
+        private const val MAX_STACK_LEFT       = 10
+        private const val LABEL_COL_DP         = 65
+        private const val ROW_HEIGHT_DP        = 48
+        private const val SUB_HEADER_HEIGHT_DP = 28
+        private const val PENALTY_PER_CARD     = 2
+        private const val SYMBOL_PLAYED        = "🃏"
+        private const val SYMBOL_LEFT          = "📚"
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -124,71 +130,76 @@ class LigrettoGameActivity : AppCompatActivity() {
     }
 
     private fun buildHeaderRow(): LinearLayout {
-        val container = LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val row = LinearLayout(this).apply {
+            orientation       = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            layoutParams      = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(ROW_HEIGHT_DP + SUB_HEADER_HEIGHT_DP))
         }
 
-        val nameRow = makeFixedRow()
-        nameRow.addView(makeRoundLabelCell(""))
-        for (player in players) {
-            nameRow.addView(makePlayerNameHeaderCell(player.playerName, player.playerColor, weight = 2f))
-        }
-        container.addView(nameRow)
+        // One single label cell spanning both header lines
+        row.addView(makeRoundLabelCell(""))
 
-        val subRow = makeFixedRow()
-        subRow.addView(makeRoundLabelCell("#"))
-        repeat(players.size) {
-            subRow.addView(makeSubHeaderCell(getString(R.string.ligretto_played), weight = 1f))
-            subRow.addView(makeSubHeaderCell(getString(R.string.ligretto_left), weight = 1f))
+        players.forEachIndexed { index, player ->
+            if (index > 0) row.addView(makeVerticalDivider())
+            row.addView(buildPlayerHeaderBlock(player))
         }
-        container.addView(subRow)
-        return container
+        return row
     }
 
-    private fun buildRoundRow(round: LigrettoRound, isLast: Boolean, isPrev: Boolean): LinearLayout {
-        val row = makeFixedRow()
-        val playerIdList = players.map { it.playerId }
-        val currentRound = rounds.last()
-        val prevEditable = isPrev && !gameOver && !currentRound.allScoresEntered(playerIdList).let {
-            // Previous round stays editable until the current round has any entry at all
-            currentRound.cardsPlayed.values.any { v -> v != null } ||
-                    currentRound.stackLeft.values.any { v -> v != null }
+    /** Name on top, then the two symbols below, in the player's color. */
+    private fun buildPlayerHeaderBlock(player: LigrettoPlayerState): LinearLayout =
+        LinearLayout(this).apply {
+            orientation  = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
+
+            addView(makePlayerNameHeaderCell(player.playerName, player.playerColor))
+
+            addView(LinearLayout(this@LigrettoGameActivity).apply {
+                orientation       = LinearLayout.HORIZONTAL
+                isBaselineAligned = false
+                layoutParams      = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUB_HEADER_HEIGHT_DP))
+                addView(makeSubHeaderCell(SYMBOL_PLAYED, player.playerColor))
+                addView(makeVerticalDivider())
+                addView(makeSubHeaderCell(SYMBOL_LEFT, player.playerColor))
+            })
         }
 
-        val labelCell = makeRoundLabelCell(round.roundNumber.toString())
+    private fun buildRoundRow(round: LigrettoRound, isLast: Boolean, isPrev: Boolean): LinearLayout {
+        val row = makeRow()
+        val currentRound = rounds.last()
+        // Previous round stays editable until the current round has any entry at all
+        val prevEditable = isPrev && !gameOver && !currentRound.hasAnyEntry()
+        val editable = (isLast && !gameOver) || prevEditable
+
+        // Label cell tinted with the color of whoever called "Ligretto!"
         val finisher = players.find { it.playerId == round.finisherId }
-        if (finisher != null) {
-            labelCell.background = cellDrawable(finisher.playerColor)
-            labelCell.setTextColor(Color.WHITE)
-        }
-        if (isLast && !gameOver) {
-            labelCell.setOnClickListener { showFinisherPicker(round) }
-        }
+        val labelCell = makeRoundLabelCell(round.roundNumber.toString(), tint = finisher?.playerColor)
+        if (isLast && !gameOver) labelCell.setOnClickListener { showFinisherPicker(round) }
         row.addView(labelCell)
 
-        // Per-column coloring: compare all players' raw values for this round,
-        // independently for "Played" and "Left" (see docs/games/ligretto.md).
-        val allPlayed = players.map { round.cardsPlayed[it.playerId] }
-        val allLeft   = players.map { round.stackLeft[it.playerId] }
+        // Colors are computed on the points each column gives, per round
+        val allPlayedPts = players.map { round.cardsPlayed[it.playerId] }
+        val allLeftPts   = players.map { p -> round.stackLeft[p.playerId]?.let { -PENALTY_PER_CARD * it } }
 
-        for (player in players) {
+        players.forEachIndexed { index, player ->
+            if (index > 0) row.addView(makeVerticalDivider())
+
             val played = round.cardsPlayed[player.playerId]
             val left   = round.stackLeft[player.playerId]
+            val leftPts = left?.let { -PENALTY_PER_CARD * it }
 
-            val canEnter    = isLast && !gameOver
-            val canEditPrev = isPrev && !gameOver && prevEditable
+            val playedRole = ScoreColorRole(played, allPlayedPts, higherIsBetter = true)
+            val leftRole   = ScoreColorRole(leftPts, allLeftPts, higherIsBetter = true)
 
-            val editable = canEnter || canEditPrev
-
-            val playedRole = ScoreColorRole(played, allPlayed, higherIsBetter = true)
-            val leftRole   = ScoreColorRole(left, allLeft, higherIsBetter = false)
-
-            row.addView(makeSubScoreCell(
-                text      = played?.toString() ?: "",
+            // ── Played cards: +1 point each ──────────────────────────────────
+            row.addView(makeScoreCell(
+                points    = played,
+                count     = played,
+                showCount = false,   // same number as the points, would be redundant
                 canEdit   = editable,
-                filled    = played != null,
                 colorRole = playedRole
             ) {
                 showNumberPicker(
@@ -201,10 +212,14 @@ class LigrettoGameActivity : AppCompatActivity() {
                 }
             })
 
-            row.addView(makeSubScoreCell(
-                text      = left?.toString() ?: "",
+            row.addView(makeVerticalDivider())
+
+            // ── Cards left in the Ligretto stack: −2 points each ─────────────
+            row.addView(makeScoreCell(
+                points    = leftPts,
+                count     = left,
+                showCount = true,
                 canEdit   = editable,
-                filled    = left != null,
                 colorRole = leftRole
             ) {
                 showNumberPicker(
@@ -221,26 +236,24 @@ class LigrettoGameActivity : AppCompatActivity() {
     }
 
     private fun buildTotalRow(): LinearLayout {
-        val row = makeFixedRow()
+        val row         = makeRow()
         val totalValues = players.map { it.getTotal(rounds) }
         row.addView(makeRoundLabelCell(getString(R.string.ligretto_total)))
 
-        for (player in players) {
+        players.forEachIndexed { index, player ->
+            if (index > 0) row.addView(makeVerticalDivider())
+
             val total = player.getTotal(rounds)
             val role  = ScoreColorRole(total, totalValues, higherIsBetter = true)
-            val group = LinearLayout(this).apply {
-                orientation  = LinearLayout.HORIZONTAL
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
-            }
-            val cell = makeTotalCell(total.toString())
-            if (gameOver && role != ScoreColorRole.NEUTRAL) {
-                cell.setTextColor(role.toColor(this))
-            }
-            group.addView(cell)
-            row.addView(group)
+            val cell  = makeTotalCell(total.toString())
+            if (gameOver && role != ScoreColorRole.NEUTRAL) cell.setTextColor(role.toColor(this))
+            row.addView(cell)
         }
         return row
     }
+
+    private fun LigrettoRound.hasAnyEntry(): Boolean =
+        cardsPlayed.values.any { it != null } || stackLeft.values.any { it != null }
 
     // ─── Dialogs ───────────────────────────────────────────────────────────────
 
@@ -324,57 +337,99 @@ class LigrettoGameActivity : AppCompatActivity() {
 
     // ─── Cell builders ─────────────────────────────────────────────────────────
 
-    private fun makeFixedRow(): LinearLayout = LinearLayout(this).apply {
-        orientation  = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROW_HEIGHT_DP))
+    private fun makeRow(heightDp: Int = ROW_HEIGHT_DP): LinearLayout = LinearLayout(this).apply {
+        orientation       = LinearLayout.HORIZONTAL
+        isBaselineAligned = false
+        layoutParams      = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
     }
 
-    private fun makeRoundLabelCell(text: String): TextView = TextView(this).apply {
+    /** Label cell; [tint] (player color) marks who called "Ligretto!" first. */
+    private fun makeRoundLabelCell(text: String, tint: Int? = null): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
         layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
-        background = cellDrawable(ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_background))
-        setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_text))
+        background = cellDrawable(
+            tint ?: ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_background))
+        setTextColor(
+            if (tint != null) Color.WHITE
+            else ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_text))
     }
 
-    private fun makePlayerNameHeaderCell(name: String, color: Int, weight: Float): TextView = TextView(this).apply {
+    private fun makePlayerNameHeaderCell(name: String, color: Int): TextView = TextView(this).apply {
         text = name; gravity = Gravity.CENTER; textSize = 13f; setTypeface(null, Typeface.BOLD)
         maxLines = 1; ellipsize = TextUtils.TruncateAt.END
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROW_HEIGHT_DP))
         background = cellDrawable(color); setTextColor(Color.WHITE)
     }
 
-    private fun makeSubHeaderCell(label: String, weight: Float): TextView = TextView(this).apply {
-        text = label; gravity = Gravity.CENTER; textSize = 9f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-        background = cellDrawable(ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_background))
-        setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.header_cell_text))
+    private fun makeSubHeaderCell(symbol: String, color: Int): TextView = TextView(this).apply {
+        text = symbol; gravity = Gravity.CENTER; textSize = 14f
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+        background = GradientDrawable().apply { setColor(color) }
+        setTextColor(Color.WHITE)
     }
 
-    private fun makeSubScoreCell(
-        text: String,
+    /** 1dp vertical line, same color as the cell borders. */
+    private fun makeVerticalDivider(): View = View(this).apply {
+        layoutParams = LinearLayout.LayoutParams(dpToPx(1), LinearLayout.LayoutParams.MATCH_PARENT)
+        setBackgroundColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.cell_border))
+    }
+
+    /**
+    * Score cell, same look as Cactus:
+    *  - center       : points given by the entry (large, colored by [colorRole])
+    *  - bottom-right : number of cards selected (tiny, light grey), if [showCount]
+    */
+    private fun makeScoreCell(
+        points: Int?,
+        count: Int?,
+        showCount: Boolean,
         canEdit: Boolean,
-        filled: Boolean,
-        colorRole: ScoreColorRole = ScoreColorRole.NEUTRAL,
+        colorRole: ScoreColorRole,
         onClick: () -> Unit
-    ): TextView =
-        TextView(this).apply {
-            this.text = text; gravity = Gravity.CENTER; textSize = 13f
+    ): FrameLayout {
+        val filled = points != null
+        val bgColor = ContextCompat.getColor(this, when {
+            canEdit && !filled -> R.color.cell_editable_bg
+            canEdit && filled  -> R.color.cell_editable_filled_bg
+            else               -> R.color.score_cell_background
+        })
+
+        return FrameLayout(this).apply {
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            val bgColor = when {
-                canEdit && !filled -> ContextCompat.getColor(this@LigrettoGameActivity, R.color.cell_editable_bg)
-                canEdit && filled  -> ContextCompat.getColor(this@LigrettoGameActivity, R.color.cell_editable_filled_bg)
-                else               -> ContextCompat.getColor(this@LigrettoGameActivity, R.color.score_cell_background)
-            }
             background = cellDrawable(bgColor)
-            setTextColor(colorRole.toColor(this@LigrettoGameActivity))
-            if (colorRole != ScoreColorRole.NEUTRAL && filled) setTypeface(null, Typeface.BOLD)
-            if (canEdit) setOnClickListener { onClick() } else alpha = if (filled) 0.75f else 1f
+
+            // Center: points
+            addView(TextView(this@LigrettoGameActivity).apply {
+                text = points?.let { if (it > 0) "+$it" else it.toString() } ?: ""
+                gravity = Gravity.CENTER; textSize = 16f
+                setTextColor(colorRole.toColor(this@LigrettoGameActivity))
+                if (colorRole != ScoreColorRole.NEUTRAL && filled) setTypeface(null, Typeface.BOLD)
+                if (!canEdit && filled) alpha = 0.75f
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            })
+
+            // Bottom-right: number of cards (tiny, light grey)
+            if (showCount && count != null) {
+                addView(TextView(this@LigrettoGameActivity).apply {
+                    text = count.toString(); textSize = 11f; alpha = 0.45f
+                    setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.score_cell_text))
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.BOTTOM or Gravity.END
+                    ).also { it.marginEnd = dpToPx(4); it.bottomMargin = dpToPx(2) }
+                })
+            }
+
+            if (canEdit) setOnClickListener { onClick() }
         }
+    }
 
     private fun makeTotalCell(text: String): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 15f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+        this.text = text; gravity = Gravity.CENTER; textSize = 18f; setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
         background = cellDrawable(ContextCompat.getColor(this@LigrettoGameActivity, R.color.cell_calculated_bg))
         setTextColor(ContextCompat.getColor(this@LigrettoGameActivity, R.color.score_calculated_cell_text))
     }
