@@ -3,22 +3,45 @@ package com.github.trivialloop.scorehub
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.trivialloop.scorehub.data.AppDatabase
-import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityGeneralStatsBinding
+import com.github.trivialloop.scorehub.utils.GeneralStatsCalculator
+import com.github.trivialloop.scorehub.utils.GeneralStatsCalculator.GameStatsCard
+import com.github.trivialloop.scorehub.utils.GeneralStatsCalculator.PlayerStatsCard
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class GeneralStatsActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityGeneralStatsBinding
     private lateinit var database: AppDatabase
+
+    private var gameCards: List<GameStatsCard> = emptyList()
+    private var playerCards: List<PlayerStatsCard> = emptyList()
+
+    companion object {
+        private const val TAB_GAMES = 0
+        private const val TAB_PLAYERS = 1
+    }
 
     override fun attachBaseContext(newBase: Context) {
         val language = LocaleHelper.getPersistedLocale(newBase)
@@ -58,362 +81,43 @@ class GeneralStatsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.general_statistics)
 
-        loadGeneralStats()
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.general_stats_tab_games))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.general_stats_tab_players))
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) = showTab(tab.position)
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        loadStats()
     }
 
-    private fun loadGeneralStats() {
+    private fun loadStats() {
         lifecycleScope.launch {
-            database.playerDao().getAllPlayers().collect { players ->
+            val players   = database.playerDao().getAllPlayers().first()
+            val dao       = database.gameResultDao()
+            val stats     = dao.getAllPlayerGameStats()
+            val summaries = dao.getGameSummaries()
 
-                // ── Akropolis ─────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "akropolis",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerAkropolis,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorAkropolis,
-                    bestPlayerSection = binding.bestPlayerSectionAkropolis,
-                    bestScoreView     = binding.textBestScoreAkropolis,
-                    bestScoreColor    = binding.bestScoreColorIndicatorAkropolis,
-                    bestScoreSection  = binding.bestScoreSectionAkropolis,
-                    noDataView        = binding.textNoDataAkropolis,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Belote ────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "belote",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerBelote,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorBelote,
-                    bestPlayerSection = binding.bestPlayerSectionBelote,
-                    bestScoreView     = binding.textBestScoreBelote,
-                    bestScoreColor    = binding.bestScoreColorIndicatorBelote,
-                    bestScoreSection  = binding.bestScoreSectionBelote,
-                    noDataView        = binding.textNoDataBelote,
-                    bestScoreIsLowest = false   // highest score wins in Belote
-                )
-
-                // ── Cactus ────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "cactus",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerCactus,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorCactus,
-                    bestPlayerSection = binding.bestPlayerSectionCactus,
-                    bestScoreView     = binding.textBestScoreCactus,
-                    bestScoreColor    = binding.bestScoreColorIndicatorCactus,
-                    bestScoreSection  = binding.bestScoreSectionCactus,
-                    noDataView        = binding.textNoDataCactus,
-                    bestScoreIsLowest = false   // highest score wins in Cactus
-                )
-
-                // ── Cribbage ──────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "cribbage",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerCribbage,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorCribbage,
-                    bestPlayerSection = binding.bestPlayerSectionCribbage,
-                    bestScoreView     = binding.textBestScoreCribbage,
-                    bestScoreColor    = binding.bestScoreColorIndicatorCribbage,
-                    bestScoreSection  = binding.bestScoreSectionCribbage,
-                    noDataView        = binding.textNoDataCribbage,
-                    bestScoreIsLowest = false   // highest score wins in Cribbage
-                )
-
-                // ── Escoba ────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "escoba",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerEscoba,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorEscoba,
-                    bestPlayerSection = binding.bestPlayerSectionEscoba,
-                    bestScoreView     = binding.textBestScoreEscoba,
-                    bestScoreColor    = binding.bestScoreColorIndicatorEscoba,
-                    bestScoreSection  = binding.bestScoreSectionEscoba,
-                    noDataView        = binding.textNoDataEscoba,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Farkle ────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "farkle",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerFarkle,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorFarkle,
-                    bestPlayerSection = binding.bestPlayerSectionFarkle,
-                    bestScoreView     = binding.textBestScoreFarkle,
-                    bestScoreColor    = binding.bestScoreColorIndicatorFarkle,
-                    bestScoreSection  = binding.bestScoreSectionFarkle,
-                    noDataView        = binding.textNoDataFarkle,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Flip 7 ─────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "flip7",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerFlip7,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorFlip7,
-                    bestPlayerSection = binding.bestPlayerSectionFlip7,
-                    bestScoreView     = binding.textBestScoreFlip7,
-                    bestScoreColor    = binding.bestScoreColorIndicatorFlip7,
-                    bestScoreSection  = binding.bestScoreSectionFlip7,
-                    noDataView        = binding.textNoDataFlip7,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Hanging Gardens ─────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "hanginggardens",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerHangingGardens,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorHangingGardens,
-                    bestPlayerSection = binding.bestPlayerSectionHangingGardens,
-                    bestScoreView     = binding.textBestScoreHangingGardens,
-                    bestScoreColor    = binding.bestScoreColorIndicatorHangingGardens,
-                    bestScoreSection  = binding.bestScoreSectionHangingGardens,
-                    noDataView        = binding.textNoDataHangingGardens,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Harmonies ──────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "harmonies",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerHarmonies,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorHarmonies,
-                    bestPlayerSection = binding.bestPlayerSectionHarmonies,
-                    bestScoreView     = binding.textBestScoreHarmonies,
-                    bestScoreColor    = binding.bestScoreColorIndicatorHarmonies,
-                    bestScoreSection  = binding.bestScoreSectionHarmonies,
-                    noDataView        = binding.textNoDataHarmonies,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Ligretto ─────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "ligretto",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerLigretto,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorLigretto,
-                    bestPlayerSection = binding.bestPlayerSectionLigretto,
-                    bestScoreView     = binding.textBestScoreLigretto,
-                    bestScoreColor    = binding.bestScoreColorIndicatorLigretto,
-                    bestScoreSection  = binding.bestScoreSectionLigretto,
-                    noDataView        = binding.textNoDataLigretto,
-                    bestScoreIsLowest = false   // highest total wins in Ligretto
-                )
-
-                // ── Oh Hell ─────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "oh_hell",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerOhHell,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorOhHell,
-                    bestPlayerSection = binding.bestPlayerSectionOhHell,
-                    bestScoreView     = binding.textBestScoreOhHell,
-                    bestScoreColor    = binding.bestScoreColorIndicatorOhHell,
-                    bestScoreSection  = binding.bestScoreSectionOhHell,
-                    noDataView        = binding.textNoDataOhHell,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Qwixx ─────────────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "qwixx",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerQwixx,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorQwixx,
-                    bestPlayerSection = binding.bestPlayerSectionQwixx,
-                    bestScoreView     = binding.textBestScoreQwixx,
-                    bestScoreColor    = binding.bestScoreColorIndicatorQwixx,
-                    bestScoreSection  = binding.bestScoreSectionQwixx,
-                    noDataView        = binding.textNoDataQwixx,
-                    bestScoreIsLowest = false
-                )
-
-                // ── 7 Wonders ──────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "sevenwonders",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerSevenWonders,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorSevenWonders,
-                    bestPlayerSection = binding.bestPlayerSectionSevenWonders,
-                    bestScoreView     = binding.textBestScoreSevenWonders,
-                    bestScoreColor    = binding.bestScoreColorIndicatorSevenWonders,
-                    bestScoreSection  = binding.bestScoreSectionSevenWonders,
-                    noDataView        = binding.textNoDataSevenWonders,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Skyjo ─────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "skyjo",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerSkyjo,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorSkyjo,
-                    bestPlayerSection = binding.bestPlayerSectionSkyjo,
-                    bestScoreView     = binding.textBestScoreSkyjo,
-                    bestScoreColor    = binding.bestScoreColorIndicatorSkyjo,
-                    bestScoreSection  = binding.bestScoreSectionSkyjo,
-                    noDataView        = binding.textNoDataSkyjo,
-                    bestScoreIsLowest = true
-                )
-
-                // ── Tarot ─────────────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "tarot",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerTarot,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorTarot,
-                    bestPlayerSection = binding.bestPlayerSectionTarot,
-                    bestScoreView     = binding.textBestScoreTarot,
-                    bestScoreColor    = binding.bestScoreColorIndicatorTarot,
-                    bestScoreSection  = binding.bestScoreSectionTarot,
-                    noDataView        = binding.textNoDataTarot,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Ticket to Ride ──────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "ticket_to_ride",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerTicketToRide,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorTicketToRide,
-                    bestPlayerSection = binding.bestPlayerSectionTicketToRide,
-                    bestScoreView     = binding.textBestScoreTicketToRide,
-                    bestScoreColor    = binding.bestScoreColorIndicatorTicketToRide,
-                    bestScoreSection  = binding.bestScoreSectionTicketToRide,
-                    noDataView        = binding.textNoDataTicketToRide,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Wingspan ──────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "wingspan",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerWingspan,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorWingspan,
-                    bestPlayerSection = binding.bestPlayerSectionWingspan,
-                    bestScoreView     = binding.textBestScoreWingspan,
-                    bestScoreColor    = binding.bestScoreColorIndicatorWingspan,
-                    bestScoreSection  = binding.bestScoreSectionWingspan,
-                    noDataView        = binding.textNoDataWingspan,
-                    bestScoreIsLowest = false
-                )
-
-                // ── Yahtzee ───────────────────────────────────────────────
-                loadGameStats(
-                    gameType          = "yahtzee",
-                    players           = players,
-                    bestPlayerView    = binding.textBestPlayerYahtzee,
-                    bestPlayerColor   = binding.bestPlayerColorIndicatorYahtzee,
-                    bestPlayerSection = binding.bestPlayerSectionYahtzee,
-                    bestScoreView     = binding.textBestScoreYahtzee,
-                    bestScoreColor    = binding.bestScoreColorIndicatorYahtzee,
-                    bestScoreSection  = binding.bestScoreSectionYahtzee,
-                    noDataView        = binding.textNoDataYahtzee,
-                    bestScoreIsLowest = false
-                )
-            }
+            gameCards   = GeneralStatsCalculator.buildGameCards(GameRegistry.ALL_GAMES, players, stats, summaries)
+            playerCards = GeneralStatsCalculator.buildPlayerCards(players, stats)
+            showTab(binding.tabLayout.selectedTabPosition)
         }
     }
 
-    private suspend fun loadGameStats(
-        gameType: String,
-        players: List<Player>,
-        bestPlayerView: android.widget.TextView,
-        bestPlayerColor: View,
-        bestPlayerSection: View,
-        bestScoreView: android.widget.TextView,
-        bestScoreColor: View,
-        bestScoreSection: View,
-        noDataView: android.widget.TextView,
-        bestScoreIsLowest: Boolean
-    ) {
-        data class PlayerRanking(
-            val player: Player,
-            val wins: Int,
-            val countedGames: Int,
-            val winPercentage: Float,
-            val drawPercentage: Float,
-            val bestScore: Int,
-            val worstScore: Int
-        )
-
-        val rankings = mutableListOf<PlayerRanking>()
-
-        for (player in players) {
-            val countedGames = database.gameResultDao()
-                .getCountedGamesPlayedByPlayer(player.id, gameType)
-            if (countedGames > 0) {
-                val wins  = database.gameResultDao().getWinsByPlayer(player.id, gameType)
-                val draws = database.gameResultDao().getDrawsByPlayer(player.id, gameType)
-                val best  = database.gameResultDao().getBestScoreByPlayer(player.id, gameType) ?: 0
-                val worst = database.gameResultDao().getWorstScoreByPlayer(player.id, gameType) ?: 0
-                rankings.add(
-                    PlayerRanking(
-                        player         = player,
-                        wins           = wins,
-                        countedGames   = countedGames,
-                        winPercentage  = wins * 100f / countedGames,
-                        drawPercentage = draws * 100f / countedGames,
-                        bestScore      = best,
-                        worstScore     = worst
-                    )
-                )
+    private fun showTab(position: Int) {
+        when (position) {
+            TAB_PLAYERS -> {
+                binding.recyclerView.adapter = GeneralPlayerAdapter(playerCards)
+                binding.textEmpty.visibility = if (playerCards.isEmpty()) View.VISIBLE else View.GONE
+            }
+            else -> {
+                binding.recyclerView.adapter = GeneralGameAdapter(gameCards)
+                binding.textEmpty.visibility = if (gameCards.isEmpty()) View.VISIBLE else View.GONE
             }
         }
-
-        // Same ranking logic as stats screens
-        rankings.sortWith(
-            compareByDescending<PlayerRanking> { it.winPercentage }
-                .thenByDescending { it.drawPercentage }
-                .thenByDescending { it.wins }
-                .thenBy { (it.countedGames - it.wins - (it.drawPercentage / 100f * it.countedGames).toInt()) }
-                .thenByDescending { it.bestScore }
-                .thenByDescending { it.worstScore }
-                .thenBy { it.player.id }
-        )
-
-        val hasData = rankings.isNotEmpty()
-
-        if (hasData) {
-            // Best player (most wins / best ratio)
-            val best = rankings.first()
-            bestPlayerView.text = "${best.player.name}: ${best.wins} ${getString(R.string.wins)} (${"%.1f".format(best.winPercentage)}%)"
-            bestPlayerColor.background = ovalDrawable(best.player.color)
-            bestPlayerColor.visibility = View.VISIBLE
-            bestPlayerSection.visibility = View.VISIBLE
-
-            // Best score
-            val top20 = database.gameResultDao().getTop20ByGameType(gameType)
-            if (top20.isNotEmpty()) {
-                // Yahtzee → first entry is highest; Skyjo → last entry is lowest (sorted DESC)
-                val bestResult = if (bestScoreIsLowest) top20.minByOrNull { it.score }!! else top20.first()
-                bestScoreView.text = "${bestResult.playerName}: ${bestResult.score} pts"
-                val scorePlayer = players.find { it.id == bestResult.playerId }
-                if (scorePlayer != null) {
-                    bestScoreColor.background = ovalDrawable(scorePlayer.color)
-                    bestScoreColor.visibility = View.VISIBLE
-                }
-                bestScoreSection.visibility = View.VISIBLE
-            } else {
-                bestScoreSection.visibility = View.GONE
-            }
-
-            noDataView.visibility = View.GONE
-        } else {
-            bestPlayerSection.visibility = View.GONE
-            bestScoreSection.visibility  = View.GONE
-            noDataView.visibility        = View.VISIBLE
-        }
-    }
-
-    private fun ovalDrawable(color: Int): GradientDrawable = GradientDrawable().apply {
-        shape = GradientDrawable.OVAL
-        setColor(color)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -422,4 +126,125 @@ class GeneralStatsActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+}
+
+private fun View.tintCircle(color: Int) {
+    (background?.mutate() as? GradientDrawable)?.setColor(color)
+}
+
+// ─── "By game" adapter ───────────────────────────────────────────────────────
+
+class GeneralGameAdapter(private val cards: List<GameStatsCard>) :
+    RecyclerView.Adapter<GeneralGameAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val icon: ImageView = view.findViewById(R.id.imageGameIcon)
+        val name: TextView = view.findViewById(R.id.textGameName)
+        val meta: TextView = view.findViewById(R.id.textGameMeta)
+        val rowBestPlayer: View = view.findViewById(R.id.rowBestPlayer)
+        val dotBestPlayer: View = view.findViewById(R.id.dotBestPlayer)
+        val textBestPlayer: TextView = view.findViewById(R.id.textBestPlayer)
+        val rowBestScore: View = view.findViewById(R.id.rowBestScore)
+        val dotBestScore: View = view.findViewById(R.id.dotBestScore)
+        val textBestScore: TextView = view.findViewById(R.id.textBestScore)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_general_game, parent, false)
+    )
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val card = cards[position]
+        val ctx = holder.itemView.context
+
+        holder.icon.setImageResource(card.definition.iconResId)
+        holder.name.text = ctx.getString(card.definition.nameResId)
+
+        val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(card.lastPlayedAt))
+        holder.meta.text = listOf(
+            ctx.resources.getQuantityString(R.plurals.games_count, card.sessions, card.sessions),
+            ctx.getString(R.string.last_played_date, date)
+        ).joinToString("  •  ")
+
+        val best = card.bestPlayer
+        holder.rowBestPlayer.visibility = if (best != null) View.VISIBLE else View.GONE
+        if (best != null) {
+            holder.dotBestPlayer.tintCircle(best.player.color)
+            holder.textBestPlayer.text = "${best.player.name}: ${best.wins} ${ctx.getString(R.string.wins)} " +
+                    "(${"%.1f".format(best.winPercentage)}%)"
+        }
+
+        val score = card.bestScore
+        holder.rowBestScore.visibility = if (score != null) View.VISIBLE else View.GONE
+        if (score != null) {
+            holder.dotBestScore.tintCircle(score.player.color)
+            holder.textBestScore.text = "${score.player.name}: ${score.score} pts"
+        }
+    }
+
+    override fun getItemCount() = cards.size
+}
+
+// ─── "By player" adapter ─────────────────────────────────────────────────────
+
+class GeneralPlayerAdapter(private val cards: List<PlayerStatsCard>) :
+    RecyclerView.Adapter<GeneralPlayerAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val position: TextView = view.findViewById(R.id.textPosition)
+        val color: View = view.findViewById(R.id.colorIndicator)
+        val name: TextView = view.findViewById(R.id.textPlayerName)
+        val summary: TextView = view.findViewById(R.id.textSummary)
+        val barWin: View = view.findViewById(R.id.barWin)
+        val barDraw: View = view.findViewById(R.id.barDraw)
+        val barLoss: View = view.findViewById(R.id.barLoss)
+        val winRate: TextView = view.findViewById(R.id.textWinRate)
+        val gamesContainer: LinearLayout = view.findViewById(R.id.gamesContainer)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_general_player, parent, false)
+    )
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val card = cards[position]
+        val ctx = holder.itemView.context
+
+        holder.position.text = when (position) {
+            0 -> "🥇"; 1 -> "🥈"; 2 -> "🥉"; else -> "${position + 1}"
+        }
+        holder.color.tintCircle(card.player.color)
+        holder.name.text = card.player.name
+        holder.summary.text = listOf(
+            ctx.resources.getQuantityString(R.plurals.games_count, card.totalGames, card.totalGames),
+            "${card.wins} ${ctx.getString(R.string.wins)}"
+        ).joinToString("  •  ")
+
+        fun setWeight(view: View, w: Float) {
+            (view.layoutParams as LinearLayout.LayoutParams).weight = w
+            view.layoutParams = view.layoutParams
+        }
+        val counted = card.countedGames.coerceAtLeast(1).toFloat()
+        setWeight(holder.barWin, card.wins / counted)
+        setWeight(holder.barDraw, card.draws / counted)
+        setWeight(holder.barLoss, card.losses / counted)
+        holder.winRate.text = ctx.getString(R.string.win_percentage_short, card.winPercentage)
+
+        // One row per game played
+        holder.gamesContainer.removeAllViews()
+        val inflater = LayoutInflater.from(ctx)
+        for (line in card.lines) {
+            val row = inflater.inflate(R.layout.item_general_player_game_row, holder.gamesContainer, false)
+            row.findViewById<ImageView>(R.id.imageGameIcon).setImageResource(line.definition.iconResId)
+            row.findViewById<TextView>(R.id.textGameName).text = ctx.getString(line.definition.nameResId)
+            row.findViewById<TextView>(R.id.textRatio).text =
+                if (line.countedGames > 0) "${line.wins}/${line.countedGames}"
+                else ctx.resources.getQuantityString(R.plurals.games_count, line.totalGames, line.totalGames)
+            row.findViewById<TextView>(R.id.textPercentage).text =
+                if (line.countedGames > 0) "%.0f%%".format(line.winPercentage) else ""
+            holder.gamesContainer.addView(row)
+        }
+    }
+
+    override fun getItemCount() = cards.size
 }

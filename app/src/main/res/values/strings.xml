@@ -417,6 +417,8 @@
 
     <!-- Statistics -->
     <string name="general_statistics">General Statistics</string>
+    <string name="general_stats_tab_games">By game</string>
+    <string name="general_stats_tab_players">By player</string>
     <string name="game_statistics">Game Statistics</string>
     <string name="top_20">Top 20</string>
     <string name="most_wins_player">Player with most wins: %1$s</string>

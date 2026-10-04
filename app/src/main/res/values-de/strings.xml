@@ -170,8 +170,8 @@
     <string name="about_description">ScoreHub ist eine einfache und intuitive App, um Spielergebnisse von Brettspielen mit mehreren Personen nachverfolgen zu können.\n\nFeatures:\n• Unterstützt mehrere Spiele\n• Spieler-Management mit benutzerdefinierten Farben\n• Umfassende Statistiken und Ranglisten\n• Rangliste der Top 20 Highscores\n• Sieg/Niederlage/Unentschieden nachverfolgen\n• Mehrsprachig (wachsende Anzahl an Sprachen durch die Community)\n• Vollständig offline\n\nPerfekt für Brettspiel-Enthusiasten, die detaillierte Aufzeichnungen ihrer Spiele behalten wollen!</string>
     <string name="yes">Ja</string>
     <string name="language">Sprache</string>
-    <string name="english">Englisch</string>
-    <string name="french">Französisch</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
     <string name="theme">Thema</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Hell</string>

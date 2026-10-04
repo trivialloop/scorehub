@@ -415,6 +415,8 @@
     <string name="yahtzee_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
     <!-- Statistics -->
+    <string name="general_stats_tab_games">Par jeu</string>
+    <string name="general_stats_tab_players">Par joueur</string>
     <string name="general_statistics">Statistiques générales</string>
     <string name="game_statistics">Statistiques du jeu</string>
     <string name="top_20">Top 20</string>
@@ -442,6 +444,7 @@
     <string name="language">Langue</string>
     <string name="english">English</string>
     <string name="french">Français</string>
+    <string name="german">Deutsch</string>
     <string name="theme">Thème</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Clair</string>
