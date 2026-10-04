@@ -12,20 +12,6 @@
     <string name="help_wikipedia_link">📖 Read more on Wikipedia</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HELP — 7 Wonders                                               -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    <string name="help_sevenwonders_players">3 to 7 players.</string>
-    <string name="help_sevenwonders_objective">Lead one of the seven great cities of the ancient world: build your Wonder, develop your city over three Ages and outscore your rivals.</string>
-    <string name="help_sevenwonders_scoring">Points come from: military conflicts (Victory/Defeat tokens), coins (1 point per 3 coins), Wonder stages, civilian (blue) cards, commercial cards, guilds (purple) cards and science (green) cards. Science: each symbol (compass, gear, tablet) scores its count squared, plus 7 points per complete set of the three symbols.</string>
-    <string name="help_sevenwonders_end">The game ends after the third Age. Players then count their points in each category; the highest total wins.</string>
-    <string name="help_sevenwonders_wikipedia_url">https://en.wikipedia.org/wiki/7_Wonders_(board_game)</string>
-
-    <string name="app_help_sevenwonders_1">Tap a player\'s cell to enter their subtotal for Military (can be negative), Wonder, Civilian or Commerce. For Coins, enter the raw coin count on the top row — the row below shows the converted score (coins ÷ 3) automatically.</string>
-    <string name="app_help_sevenwonders_2">For Science, tap any of the three symbols (compass, gear, tablet) in a player\'s cell to set that symbol\'s count. The row below shows the computed science score automatically.</string>
-    <string name="app_help_sevenwonders_3">For Guilds, tap "+" each time a player completes a guild card and pick its point value — a new row is added. Tap an entered guild to edit or delete it.</string>
-    <string name="app_help_sevenwonders_4">When the game is over, tap "Finish game" to lock all scores and see the final results. Highest total wins.</string>
-
-    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Akropolis                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_akropolis_players">2 to 4 players.</string>
@@ -123,6 +109,20 @@
     <string name="app_help_flip7_4">The game ends after a round where someone hits 200 points. Tap a player name in the header to view their column.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Hanging Gardens                                           -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_hanginggardens_players">1 to 5 players.</string>
+    <string name="help_hanginggardens_objective">Build the most beautiful hanging garden for Queen Amytis by placing garden tiles, trees, flowers, animals and characters over 4 rounds, and by fulfilling royal objectives.</string>
+    <string name="help_hanginggardens_scoring">Irrigation: irrigated tiles placed as shown on your Irrigation card. Flowers: 1 pt per flower in your largest connected group of each color (red, yellow, blue). Trees: points for each group of connected trees of the same species. Animals: points depending on the level where they are placed. Characters: points if their conditions are met. Royal objectives: points for each validated objective.</string>
+    <string name="help_hanginggardens_end">The game ends after the 4th round, once each player has placed 12 garden tiles. The highest total wins; ties are broken by the most tools and gold coins.</string>
+    <string name="help_hanginggardens_wikipedia_url">https://en.boardgamearena.com/gamepanel?game=thehanginggardens</string>
+    
+    <string name="app_help_hanginggardens_1">Tap the cell of a player in the Irrigation, Flowers or Royal objectives rows to enter the value you counted on your garden.</string>
+    <string name="app_help_hanginggardens_2">For Trees, Animals and Characters, tap "+" each time a group or card scores, then pick its points. Trees have one section per species. Tap an entry to edit or delete it.</string>
+    <string name="app_help_hanginggardens_3">Filled cells stay editable, shown with a ✏️ in the dialog title.</string>
+    <string name="app_help_hanginggardens_4">When the game is over, tap "Finish game" to lock all scores and see the results. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Harmonies                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_harmonies_players">1 to 4 players.</string>
@@ -177,6 +177,20 @@
     <string name="app_help_qwixx_2">Non-active players then each get one optional check (tap a checkbox) or pass (tap their name).</string>
     <string name="app_help_qwixx_3">The active player then gets a second check. If they skipped their first check, this second one is mandatory (color box OR penalty ✗). Tap their name to pass if they already checked in step 1.</string>
     <string name="app_help_qwixx_4">The game ends automatically when 4 penalties are reached by any player or 2 colors are locked. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — 7 Wonders                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_sevenwonders_players">3 to 7 players.</string>
+    <string name="help_sevenwonders_objective">Lead one of the seven great cities of the ancient world: build your Wonder, develop your city over three Ages and outscore your rivals.</string>
+    <string name="help_sevenwonders_scoring">Points come from: military conflicts (Victory/Defeat tokens), coins (1 point per 3 coins), Wonder stages, civilian (blue) cards, commercial cards, guilds (purple) cards and science (green) cards. Science: each symbol (compass, gear, tablet) scores its count squared, plus 7 points per complete set of the three symbols.</string>
+    <string name="help_sevenwonders_end">The game ends after the third Age. Players then count their points in each category; the highest total wins.</string>
+    <string name="help_sevenwonders_wikipedia_url">https://en.wikipedia.org/wiki/7_Wonders_(board_game)</string>
+
+    <string name="app_help_sevenwonders_1">Tap a player\'s cell to enter their subtotal for Military (can be negative), Wonder, Civilian or Commerce. For Coins, enter the raw coin count on the top row — the row below shows the converted score (coins ÷ 3) automatically.</string>
+    <string name="app_help_sevenwonders_2">For Science, tap any of the three symbols (compass, gear, tablet) in a player\'s cell to set that symbol\'s count. The row below shows the computed science score automatically.</string>
+    <string name="app_help_sevenwonders_3">For Guilds, tap "+" each time a player completes a guild card and pick its point value — a new row is added. Tap an entered guild to edit or delete it.</string>
+    <string name="app_help_sevenwonders_4">When the game is over, tap "Finish game" to lock all scores and see the final results. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Skyjo                                                   -->

@@ -32,23 +32,6 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
-            android:parentActivityName=".MainActivity" />
-            
-        <activity
-            android:name=".games.sevenwonders.SevenWondersGameActivity"
-            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
-
-        <activity
-            android:name=".games.sevenwonders.SevenWondersStatsActivity"
-            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
-
-        <activity
-            android:name=".games.sevenwonders.SevenWondersTop20Activity"
-            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
-
-        <activity
             android:name=".games.akropolis.AkropolisPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
@@ -181,6 +164,23 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <activity
+            android:name=".games.hanginggardens.HangingGardensPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".games.hanginggardens.HangingGardensGameActivity"
+            android:parentActivityName=".games.hanginggardens.HangingGardensPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.hanginggardens.HangingGardensStatsActivity"
+            android:parentActivityName=".games.hanginggardens.HangingGardensPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.hanginggardens.HangingGardensTop20Activity"
+            android:parentActivityName=".games.hanginggardens.HangingGardensPlayerSelectionActivity" />
+
+        <activity
             android:name=".games.harmonies.HarmoniesPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
 
@@ -247,6 +247,23 @@
         <activity
             android:name=".games.qwixx.QwixxTop20Activity"
             android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+            
+        <activity
+            android:name=".games.sevenwonders.SevenWondersGameActivity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
+            android:name=".games.sevenwonders.SevenWondersStatsActivity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
+
+        <activity
+            android:name=".games.sevenwonders.SevenWondersTop20Activity"
+            android:parentActivityName=".games.sevenwonders.SevenWondersPlayerSelectionActivity" />
 
         <activity
             android:name=".games.skyjo.SkyjoPlayerSelectionActivity"

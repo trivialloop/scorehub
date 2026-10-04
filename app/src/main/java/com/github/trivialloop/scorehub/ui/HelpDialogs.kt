@@ -46,14 +46,6 @@ object HelpDialogs {
 
     private fun getGameHelp(gameType: String, context: Context): GameHelp? = when (gameType) {
 
-        "sevenwonders" -> GameHelp(
-            players      = context.getString(R.string.help_sevenwonders_players),
-            objective    = context.getString(R.string.help_sevenwonders_objective),
-            scoring      = context.getString(R.string.help_sevenwonders_scoring),
-            endCondition = context.getString(R.string.help_sevenwonders_end),
-            wikipediaUrl = context.getString(R.string.help_sevenwonders_wikipedia_url)
-        )
-
         "akropolis" -> GameHelp(
             players      = context.getString(R.string.help_akropolis_players),
             objective    = context.getString(R.string.help_akropolis_objective),
@@ -110,6 +102,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_flip7_wikipedia_url)
         )
 
+        "hanginggardens" -> GameHelp(
+            players      = context.getString(R.string.help_hanginggardens_players),
+            objective    = context.getString(R.string.help_hanginggardens_objective),
+            scoring      = context.getString(R.string.help_hanginggardens_scoring),
+            endCondition = context.getString(R.string.help_hanginggardens_end),
+            wikipediaUrl = context.getString(R.string.help_hanginggardens_wikipedia_url)
+        )
+
         "harmonies" -> GameHelp(
             players      = context.getString(R.string.help_harmonies_players),
             objective    = context.getString(R.string.help_harmonies_objective),
@@ -140,6 +140,14 @@ object HelpDialogs {
             scoring      = context.getString(R.string.help_qwixx_scoring),
             endCondition = context.getString(R.string.help_qwixx_end),
             wikipediaUrl = context.getString(R.string.help_qwixx_wikipedia_url)
+        )
+
+        "sevenwonders" -> GameHelp(
+            players      = context.getString(R.string.help_sevenwonders_players),
+            objective    = context.getString(R.string.help_sevenwonders_objective),
+            scoring      = context.getString(R.string.help_sevenwonders_scoring),
+            endCondition = context.getString(R.string.help_sevenwonders_end),
+            wikipediaUrl = context.getString(R.string.help_sevenwonders_wikipedia_url)
         )
 
         "skyjo" -> GameHelp(
@@ -186,12 +194,6 @@ object HelpDialogs {
     }
 
     private fun getAppHelp(gameType: String, context: Context): AppHelp? = when (gameType) {
-
-        "sevenwonders" -> AppHelp(listOf(
-            context.getString(R.string.app_help_sevenwonders_1),
-            context.getString(R.string.app_help_sevenwonders_2),
-            context.getString(R.string.app_help_sevenwonders_3)
-        ))
 
         "akropolis" -> AppHelp(listOf(
             context.getString(R.string.app_help_akropolis_1),
@@ -241,6 +243,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_flip7_4)
         ))
 
+        "hanginggardens" -> AppHelp(listOf(
+            context.getString(R.string.app_help_hanginggardens_1),
+            context.getString(R.string.app_help_hanginggardens_2),
+            context.getString(R.string.app_help_hanginggardens_3),
+            context.getString(R.string.app_help_hanginggardens_4)
+        ))
+
         "harmonies" -> AppHelp(listOf(
             context.getString(R.string.app_help_harmonies_1),
             context.getString(R.string.app_help_harmonies_2),
@@ -267,6 +276,12 @@ object HelpDialogs {
             context.getString(R.string.app_help_qwixx_2),
             context.getString(R.string.app_help_qwixx_3),
             context.getString(R.string.app_help_qwixx_4)
+        ))
+
+        "sevenwonders" -> AppHelp(listOf(
+            context.getString(R.string.app_help_sevenwonders_1),
+            context.getString(R.string.app_help_sevenwonders_2),
+            context.getString(R.string.app_help_sevenwonders_3)
         ))
 
         "skyjo" -> AppHelp(listOf(
