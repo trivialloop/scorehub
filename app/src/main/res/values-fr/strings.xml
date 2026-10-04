@@ -73,7 +73,6 @@
     <string name="sevenwonders_maximum_players">Maximum 7 joueurs autorisés</string>
     <string name="sevenwonders_quit_game">Quitter la partie</string>
     <string name="sevenwonders_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="sevenwonders_best_score_label">Meilleur Score</string>
 
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
@@ -94,7 +93,6 @@
     <string name="akropolis_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="akropolis_quit_game">Quitter la partie</string>
     <string name="akropolis_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="akropolis_best_score_label">Meilleur Score</string>
 
     <!-- Belote -->
     <string name="belote_game">Belote</string>
@@ -118,7 +116,6 @@
     <string name="belote_game_over_confirm">Une équipe a atteint 501 points. Terminer la partie ?</string>
     <string name="belote_quit_game">Quitter la partie</string>
     <string name="belote_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="belote_best_score_label">Meilleur Score</string>
 
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
@@ -133,7 +130,6 @@
     <string name="cactus_game_over_confirm">Un joueur a atteint 10 points. Terminer la partie ?</string>
     <string name="cactus_best_score_short">Meilleur : %1$d</string>
     <string name="cactus_worst_score_short">Pire : %1$d</string>
-    <string name="cactus_best_score_label">Meilleur Score (le plus haut)</string>
     <string name="cactus_quit_game">Quitter la partie</string>
     <string name="cactus_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
@@ -150,7 +146,6 @@
     <string name="cribbage_maximum_players">Exactement 2 joueurs requis</string>
     <string name="cribbage_quit_game">Quitter la partie</string>
     <string name="cribbage_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="cribbage_best_score_label">Meilleur Score</string>
 
     <!-- Escoba Game -->
     <string name="escoba_game">Escoba</string>
@@ -167,7 +162,6 @@
     <string name="escoba_game_over_confirm">Un joueur a atteint 21 points. Terminer la partie ?</string>
     <string name="escoba_quit_game">Quitter la partie</string>
     <string name="escoba_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="escoba_best_score_label">Meilleur Score</string>
 
     <!-- Farkle Game -->
     <string name="farkle_game">Farkle</string>
@@ -178,7 +172,6 @@
     <string name="farkle_game_over_confirm">Un joueur a atteint 10 000 points. Terminer la partie ?</string>
     <string name="farkle_quit_game">Quitter la partie</string>
     <string name="farkle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="farkle_best_score_label">Meilleur Score</string>
     <string name="farkle_score_hint">Score (ex: 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
@@ -196,7 +189,6 @@
     <string name="flip7_game_over_confirm">Un joueur a atteint 200 points. Terminer la partie ?</string>
     <string name="flip7_quit_game">Quitter la partie</string>
     <string name="flip7_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="flip7_best_score_label">Meilleur Score</string>
 
     <!-- Jeu Libre -->
     <string name="freegame_game">Jeu Libre</string>
@@ -217,7 +209,6 @@
     <string name="hanginggardens_maximum_players">Maximum 5 joueurs autorisés</string>
     <string name="hanginggardens_quit_game">Quitter la partie</string>
     <string name="hanginggardens_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="hanginggardens_best_score_label">Meilleur Score</string>
 
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
@@ -239,7 +230,6 @@
     <string name="harmonies_maximum_players">Maximum 4 joueurs autorisés</string>
     <string name="harmonies_quit_game">Quitter la partie</string>
     <string name="harmonies_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="harmonies_best_score_label">Meilleur Score</string>
 
     <!-- Jeu Ligretto -->
     <string name="ligretto_game">Ligretto</string>
@@ -254,7 +244,6 @@
     <string name="ligretto_game_over_confirm">Un joueur a atteint 99 points. Terminer la partie ?</string>
     <string name="ligretto_quit_game">Quitter la partie</string>
     <string name="ligretto_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="ligretto_best_score_label">Meilleur Score</string>
 
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Ascenseur</string>
@@ -263,7 +252,6 @@
     <string name="ohhell_max_cards">max %1$d</string>
     <string name="ohhell_choose_contract">Choisir le contrat</string>
     <string name="ohhell_choose_result">Résultat</string>
-    <string name="ohhell_best_score_label">Meilleur Score</string>
     <string name="ohhell_quit_game">Quitter la partie</string>
     <string name="ohhell_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
@@ -278,7 +266,6 @@
     <string name="qwixx_game_over_locks">2 couleurs sont verrouillées. Fin de partie !</string>
     <string name="qwixx_quit_game">Quitter la partie</string>
     <string name="qwixx_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="qwixx_best_score_label">Meilleur Score</string>
     <string name="qwixx_phase_active_first">%1$s — choisir une couleur (optionnel)</string>
     <string name="qwixx_phase_others">%1$s — votre tour (appuyez sur le nom pour passer)</string>
     <string name="qwixx_phase_active_second">%1$s — choisir à nouveau%2$s</string>
@@ -297,7 +284,6 @@
     <string name="skyjo_best_score_short">Meilleur : %1$d</string>
     <string name="skyjo_worst_score_short">Pire : %1$d</string>
     <string name="skyjo_score_hint">ex: -2 or 7</string>
-    <string name="skyjo_best_score_label">Meilleur Score (le plus bas)</string>
     <string name="skyjo_quit_game">Quitter la partie</string>
     <string name="skyjo_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
@@ -343,7 +329,6 @@
     <string name="tarot_game_over_confirm">Un joueur a atteint 1000 points. Terminer la partie ?</string>
     <string name="tarot_quit_game">Quitter la partie</string>
     <string name="tarot_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="tarot_best_score_label">Meilleur Score</string>
 
     <!-- Jeu Les Aventuriers du Rail -->
     <string name="tickettoride_game">Les Aventuriers du Rail</string>
@@ -363,7 +348,6 @@
     <string name="tickettoride_maximum_players">Maximum 5 joueurs autorisés</string>
     <string name="tickettoride_quit_game">Quitter la partie</string>
     <string name="tickettoride_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="tickettoride_best_score_label">Meilleur Score</string>
 
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
@@ -385,7 +369,6 @@
     <string name="wingspan_game_complete_message">Tous les scores sont-ils remplis et la partie est-elle terminée ?</string>
     <string name="wingspan_quit_game">Quitter la partie</string>
     <string name="wingspan_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    <string name="wingspan_best_score_label">Meilleur Score</string>
 
     <!-- Yahtzee Game -->
     <string name="yahtzee_game">Yams</string>

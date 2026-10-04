@@ -73,7 +73,6 @@
     <string name="sevenwonders_maximum_players">Maximum 7 players allowed</string>
     <string name="sevenwonders_quit_game">Quit Game</string>
     <string name="sevenwonders_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="sevenwonders_best_score_label">Best Score</string>
 
     <!-- Akropolis Game -->
     <string name="akropolis_game">Akropolis</string>
@@ -94,7 +93,6 @@
     <string name="akropolis_game_complete_message">Are all scores filled and is the game complete?</string>
     <string name="akropolis_quit_game">Quit Game</string>
     <string name="akropolis_quit_game_message">Are you sure you want to quit? The game will not be saved.</string>
-    <string name="akropolis_best_score_label">Best Score</string>
 
     <!-- Belote Game -->
     <string name="belote_game">Belote</string>
@@ -119,7 +117,6 @@
     <string name="belote_game_over_confirm">A team reached 501 points. End the game?</string>
     <string name="belote_quit_game">Quit Game</string>
     <string name="belote_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="belote_best_score_label">Best Score</string>
 
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
@@ -134,7 +131,6 @@
     <string name="cactus_game_over_confirm">A player reached 10 points. End the game?</string>
     <string name="cactus_best_score_short">Best: %1$d</string>
     <string name="cactus_worst_score_short">Worst: %1$d</string>
-    <string name="cactus_best_score_label">Best Score (highest)</string>
     <string name="cactus_quit_game">Quit Game</string>
     <string name="cactus_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
@@ -151,7 +147,6 @@
     <string name="cribbage_maximum_players">Exactly 2 players required</string>
     <string name="cribbage_quit_game">Quit Game</string>
     <string name="cribbage_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="cribbage_best_score_label">Best Score</string>
 
     <!-- Escoba Game -->
     <string name="escoba_game">Escoba</string>
@@ -168,7 +163,6 @@
     <string name="escoba_game_over_confirm">A player reached 21 points. End the game?</string>
     <string name="escoba_quit_game">Quit Game</string>
     <string name="escoba_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="escoba_best_score_label">Best Score</string>
 
     <!-- Farkle Game -->
     <string name="farkle_game">Farkle</string>
@@ -179,7 +173,6 @@
     <string name="farkle_game_over_confirm">A player reached 10,000 points. End the game?</string>
     <string name="farkle_quit_game">Quit Game</string>
     <string name="farkle_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="farkle_best_score_label">Best Score</string>
     <string name="farkle_score_hint">Score (e.g. 300)</string>
     <string name="farkle_farkle_label">Farkle</string>
 
@@ -197,7 +190,6 @@
     <string name="flip7_game_over_confirm">A player reached 200 points. End the game?</string>
     <string name="flip7_quit_game">Quit Game</string>
     <string name="flip7_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="flip7_best_score_label">Best Score</string>
 
     <!-- Free Game -->
     <string name="freegame_game">Free Game</string>
@@ -218,7 +210,6 @@
     <string name="hanginggardens_maximum_players">Maximum 5 players allowed</string>
     <string name="hanginggardens_quit_game">Quit Game</string>
     <string name="hanginggardens_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="hanginggardens_best_score_label">Best Score</string>
 
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
@@ -240,7 +231,6 @@
     <string name="harmonies_maximum_players">Maximum 4 players allowed</string>
     <string name="harmonies_quit_game">Quit Game</string>
     <string name="harmonies_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="harmonies_best_score_label">Best Score</string>
 
     <!-- Ligretto Game -->
     <string name="ligretto_game">Ligretto</string>
@@ -255,7 +245,6 @@
     <string name="ligretto_game_over_confirm">A player reached 99 points. End the game?</string>
     <string name="ligretto_quit_game">Quit Game</string>
     <string name="ligretto_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="ligretto_best_score_label">Best Score</string>
     
     <!-- Oh Hell Game -->
     <string name="ohhell_game">Oh Hell</string>
@@ -264,7 +253,6 @@
     <string name="ohhell_max_cards">max %1$d</string>
     <string name="ohhell_choose_contract">Choose contract</string>
     <string name="ohhell_choose_result">Result</string>
-    <string name="ohhell_best_score_label">Best Score</string>
     <string name="ohhell_quit_game">Quit Game</string>
     <string name="ohhell_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
@@ -279,7 +267,6 @@
     <string name="qwixx_game_over_locks">2 colors are locked. Game over!</string>
     <string name="qwixx_quit_game">Quit Game</string>
     <string name="qwixx_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="qwixx_best_score_label">Best Score</string>
     <string name="qwixx_phase_active_first">%1$s — choose a color (optional)</string>
     <string name="qwixx_phase_others">%1$s — your turn (tap name to pass)</string>
     <string name="qwixx_phase_active_second">%1$s — choose again%2$s</string>
@@ -298,7 +285,6 @@
     <string name="skyjo_best_score_short">Best: %1$d</string>
     <string name="skyjo_worst_score_short">Worst: %1$d</string>
     <string name="skyjo_score_hint">ex: -2 or 7</string>
-    <string name="skyjo_best_score_label">Best Score (lowest)</string>
     <string name="skyjo_quit_game">Quit Game</string>
     <string name="skyjo_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
@@ -344,7 +330,6 @@
     <string name="tarot_game_over_confirm">A player has reached 1000 points. End the game?</string>
     <string name="tarot_quit_game">Quit Game</string>
     <string name="tarot_quit_game_message">Are you sure you want to quit? The game will not be saved.</string>
-    <string name="tarot_best_score_label">Best Score</string>
 
     <!-- Ticket to Ride Game -->
     <string name="tickettoride_game">Ticket to Ride</string>
@@ -364,7 +349,6 @@
     <string name="tickettoride_maximum_players">Maximum 5 players allowed</string>
     <string name="tickettoride_quit_game">Quit Game</string>
     <string name="tickettoride_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="tickettoride_best_score_label">Best Score</string>
 
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
@@ -386,7 +370,6 @@
     <string name="wingspan_game_complete_message">Are all scores filled in and the game finished?</string>
     <string name="wingspan_quit_game">Quit Game</string>
     <string name="wingspan_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
-    <string name="wingspan_best_score_label">Best Score</string>
 
     <!-- Yahtzee Game -->
     <string name="yahtzee_game">Yahtzee</string>
