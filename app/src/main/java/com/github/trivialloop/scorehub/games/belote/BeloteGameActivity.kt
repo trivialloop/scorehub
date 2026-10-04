@@ -48,6 +48,7 @@ class BeloteGameActivity : AppCompatActivity() {
         const val GAME_TYPE = "belote"
         private const val LABEL_COL_DP = 65
         private const val ROW_HEIGHT_DP = 48
+        private const val ROUND_ROW_HEIGHT_DP = 56
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -104,9 +105,7 @@ class BeloteGameActivity : AppCompatActivity() {
         binding.tableContainer.removeAllViews()
         val roundScores = BeloteScoring.computeRoundScores(rounds)
         rounds.forEachIndexed { index, round ->
-            binding.tableContainer.addView(
-                buildRoundRow(round, roundScores[index], isLast = index == rounds.lastIndex)
-            )
+            binding.tableContainer.addView(buildRoundRow(round, roundScores[index]))
         }
         binding.tableContainer.addView(buildAddRoundRow())
         binding.tableContainer.addView(buildTotalRow())
@@ -126,8 +125,8 @@ class BeloteGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildRoundRow(round: BeloteRound, scores: Map<Int, Int>, isLast: Boolean): LinearLayout {
-        val row = makeRow()
+    private fun buildRoundRow(round: BeloteRound, scores: Map<Int, Int>): LinearLayout {
+        val row = makeRow(ROUND_ROW_HEIGHT_DP)
         val attackingColor = teams[round.attackingTeam].teamColor
 
         val labelCell = makeLabelCell(round.roundNumber.toString())
@@ -138,19 +137,56 @@ class BeloteGameActivity : AppCompatActivity() {
 
         for (team in teams) {
             val score = scores[team.teamIndex] ?: 0
-            val cell = makeTeamCell(scoreLabel(round, team.teamIndex, score))
-            if (!gameOver && isLast) cell.setOnClickListener { showRoundDialog(existingRound = round) }
+            val entries = buildSymbolEntries(round, team.teamIndex)
+            val scoreColor = ContextCompat.getColor(
+                this,
+                when (round.getCellRole(team.teamIndex)) {
+                    BeloteCellRole.WIN     -> R.color.score_text_best
+                    BeloteCellRole.LOSS    -> R.color.score_text_worst
+                    BeloteCellRole.NEUTRAL -> R.color.score_cell_text
+                }
+            )
+            val cell = makeRoundCell(
+                scoreText  = score.toString(),
+                scoreColor = scoreColor,
+                campPoints = round.getCampPoints(team.teamIndex),
+                symbols    = entries.joinToString(" ") { it.symbol }
+            )
+            cell.setOnClickListener { showSymbolHint(entries) }
             row.addView(cell)
         }
         return row
     }
 
-    /** Small annotation next to the raw score: 🃏 for capot, 🤝 for belote. */
-    private fun scoreLabel(round: BeloteRound, teamIndex: Int, score: Int): String {
-        val tags = mutableListOf<String>()
-        if (round.isCapot && round.capotTeam == teamIndex) tags.add("🃏")
-        if (round.beloteTeam == teamIndex) tags.add("🤝")
-        return if (tags.isEmpty()) "$score" else "$score ${tags.joinToString(" ")}"
+    private fun buildSymbolEntries(round: BeloteRound, teamIndex: Int): List<BeloteSymbolEntry> {
+        val entries = mutableListOf<BeloteSymbolEntry>()
+        if (teamIndex == round.attackingTeam)
+            entries.add(BeloteSymbolEntry(BeloteSymbolKind.TAKER, "🎯"))
+        if (round.isCapot && round.capotTeam == teamIndex)
+            entries.add(BeloteSymbolEntry(BeloteSymbolKind.CAPOT, "🃏"))
+        if (round.beloteTeam == teamIndex)
+            entries.add(BeloteSymbolEntry(BeloteSymbolKind.BELOTE, "🤝"))
+        if (!round.isCapot && round.pointsMade == BELOTE_CONTRACT_THRESHOLD)
+            entries.add(BeloteSymbolEntry(BeloteSymbolKind.LITIGE, "⚖️"))
+        return entries
+    }
+
+    private fun showSymbolHint(entries: List<BeloteSymbolEntry>) {
+        val legend = entries.map { it.kind }.distinct().map { kind ->
+            getString(when (kind) {
+                BeloteSymbolKind.TAKER  -> R.string.belote_hint_taker
+                BeloteSymbolKind.CAPOT  -> R.string.belote_hint_capot
+                BeloteSymbolKind.BELOTE -> R.string.belote_hint_belote
+                BeloteSymbolKind.LITIGE -> R.string.belote_hint_litige
+            })
+        }
+        val message = (listOf(getString(R.string.belote_hint_points)) + legend).joinToString("\n\n")
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.belote_hint_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.ok, null)
+            .show()
     }
 
     private fun buildAddRoundRow(): LinearLayout {
@@ -365,10 +401,72 @@ class BeloteGameActivity : AppCompatActivity() {
 
     // ─── Cell builders ─────────────────────────────────────────────────────────
 
-    private fun makeRow(): LinearLayout = LinearLayout(this).apply {
+    private fun makeRow(heightDp: Int = ROW_HEIGHT_DP): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(ROW_HEIGHT_DP))
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
         isBaselineAligned = false
+    }
+
+    /**
+    * Merged round cell:
+    *  - center       : round score (green = camp won, red = camp lost)
+    *  - bottom-right : card points of the team's side (small, light grey) + symbols
+    */
+    private fun makeRoundCell(
+        scoreText: String,
+        scoreColor: Int,
+        campPoints: Int,
+        symbols: String
+    ): FrameLayout = FrameLayout(this).apply {
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+        background = cellDrawable(ContextCompat.getColor(this@BeloteGameActivity, R.color.score_cell_background))
+
+        addView(TextView(this@BeloteGameActivity).apply {
+            text = scoreText
+            gravity = Gravity.CENTER
+            textSize = 20f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(scoreColor)
+            maxLines = 1
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        })
+
+        addView(LinearLayout(this@BeloteGameActivity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.END
+            ).also {
+                it.marginEnd = dpToPx(4)
+                it.bottomMargin = dpToPx(2)
+            }
+
+            addView(TextView(this@BeloteGameActivity).apply {
+                text = campPoints.toString()
+                textSize = 11f
+                alpha = 0.45f
+                setTextColor(ContextCompat.getColor(this@BeloteGameActivity, R.color.score_cell_text))
+            })
+
+            if (symbols.isNotEmpty()) {
+                addView(TextView(this@BeloteGameActivity).apply {
+                    text = symbols
+                    textSize = 10f
+                    maxLines = 1
+                    ellipsize = TextUtils.TruncateAt.END
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.marginStart = dpToPx(3) }
+                })
+            }
+        })
     }
 
     private fun makeLabelCell(text: String): TextView = TextView(this).apply {
@@ -415,4 +513,8 @@ class BeloteGameActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private enum class BeloteSymbolKind { TAKER, CAPOT, BELOTE, LITIGE }
+
+    private data class BeloteSymbolEntry(val kind: BeloteSymbolKind, val symbol: String)
 }
