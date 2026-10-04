@@ -65,7 +65,6 @@
     <string name="akropolis_game_complete_message">Sind alle Punkte eingetragen und ist die Partie beendet?</string>
     <string name="akropolis_quit_game">Partie beenden</string>
     <string name="akropolis_quit_game_message">Sind Sie sicher, dass Sie das Spiel beenden möchten? Das Spiel wird nicht gespeichert.</string>
-    <string name="akropolis_best_score_label">Bester Score</string>
     <string name="cactus_game">Dutch/Cabo/Cactus/Tamalou/Cambio</string>
     <string name="cactus_round_label">#</string>
     <string name="cactus_total">Summe</string>
@@ -78,7 +77,6 @@
     <string name="cactus_game_over_confirm">Ein Spieler hat 10 Punkte erreicht. Spiel beenden?</string>
     <string name="cactus_best_score_short">Bester: %1$d</string>
     <string name="cactus_worst_score_short">Schlechtester: %1$d</string>
-    <string name="cactus_best_score_label">Bester Score (höchster)</string>
     <string name="cactus_quit_game">Spiel beenden</string>
     <string name="cactus_quit_game_message">Sind Sie sicher, dass Sie das Spiel beenden möchten? Das Spiel wird nicht gespeichert.</string>
     <string name="cribbage_game">Cribbage</string>
@@ -141,20 +139,11 @@
     <string name="freegame_round_label">#</string>
     <string name="qwixx_penalty_symbol">✗</string>
     <string name="escoba_score_hint">0–20</string>
-    <string name="tarot_best_score_label">Bester Score</string>
     <string name="skyjo_best_score_short">Bester: %1$d</string>
     <string name="best_score_short">Bester: %1$d</string>
     <string name="best_score">Bester Score</string>
-    <string name="cribbage_best_score_label">Bester Score</string>
-    <string name="escoba_best_score_label">Bester Score</string>
-    <string name="farkle_best_score_label">Bester Score</string>
-    <string name="flip7_best_score_label">Bester Score</string>
-    <string name="ohhell_best_score_label">Bester Score</string>
-    <string name="qwixx_best_score_label">Bester Score</string>
-    <string name="wingspan_best_score_label">Bester Score</string>
     <string name="best_score_label">Bester Score</string>
     <string name="best_score_player">Bester Score: %1$s (%2$d Pkt.)</string>
-    <string name="skyjo_best_score_label">Bester Score (niedrigster)</string>
     <string name="skyjo_game">Skyjo</string>
     <string name="qwixx_minimum_players">Mindestens 2 Spieler benötigt</string>
     <string name="escoba_minimum_players">Genau 2 Spieler benötigt</string>
@@ -170,8 +159,8 @@
     <string name="about_description">ScoreHub ist eine einfache und intuitive App, um Spielergebnisse von Brettspielen mit mehreren Personen nachverfolgen zu können.\n\nFeatures:\n• Unterstützt mehrere Spiele\n• Spieler-Management mit benutzerdefinierten Farben\n• Umfassende Statistiken und Ranglisten\n• Rangliste der Top 20 Highscores\n• Sieg/Niederlage/Unentschieden nachverfolgen\n• Mehrsprachig (wachsende Anzahl an Sprachen durch die Community)\n• Vollständig offline\n\nPerfekt für Brettspiel-Enthusiasten, die detaillierte Aufzeichnungen ihrer Spiele behalten wollen!</string>
     <string name="yes">Ja</string>
     <string name="language">Sprache</string>
-    <string name="english">Englisch</string>
-    <string name="french">Französisch</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
     <string name="theme">Thema</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Hell</string>

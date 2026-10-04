@@ -64,6 +64,8 @@ object GameRegistry {
          * False (the default) means every player plays for themselves.
          */
         val teamMode: Boolean = false,
+        /** True when the lowest score wins (e.g. Skyjo). */
+        val lowerIsBetter: Boolean = false,
         /** Physical equipment required to play. */
         val equipment: Set<Equipment>
     ) {
@@ -222,17 +224,6 @@ object GameRegistry {
             equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(
-            gameType       = "skyjo",
-            nameEnFallback = "Skyjo",
-            nameResId      = R.string.skyjo_game,
-            iconResId      = R.drawable.ic_skyjo_game,
-            activityClass  = SkyjoPlayerSelectionActivity::class.java,
-            minPlayers     = 2,
-            maxPlayers     = 8,
-            teamMode       = false,
-            equipment      = setOf(Equipment.BOARD)
-        ),
-        GameDefinition(
             gameType       = "sevenwonders",
             nameEnFallback = "7 Wonders",
             nameResId      = R.string.sevenwonders_game,
@@ -241,6 +232,18 @@ object GameRegistry {
             minPlayers     = 3,
             maxPlayers     = 7,
             teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "skyjo",
+            nameEnFallback = "Skyjo",
+            nameResId      = R.string.skyjo_game,
+            iconResId      = R.drawable.ic_skyjo_game,
+            activityClass  = SkyjoPlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 8,
+            teamMode       = false,
+            lowerIsBetter  = true,
             equipment      = setOf(Equipment.BOARD)
         ),
         GameDefinition(

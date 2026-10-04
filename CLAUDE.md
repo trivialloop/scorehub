@@ -40,6 +40,7 @@ app/src/main/java/com/github/trivialloop/scorehub/
 │   ├── freegame/    ligretto/  oh_hell/  qwixx/  skyjo/  tarot/
 │   └── wingspan/  yahtzee/
 └── utils/
+    ├── GeneralStatsCalculator.kt
     ├── LocaleHelper.kt              # Runtime language switching
     ├── ScoreColorHelper.kt          # Shared utility: ScoreColorRole
     └── ThemeHelper.kt               # Light / Dark / System
@@ -386,7 +387,7 @@ The main screen reads its game list from a **central registry** — no change to
    - `menu_<game>_game.xml` — contains only the help item.
 6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`.
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
-8. **Add a section** in `activity_general_stats.xml` and `GeneralStatsActivity.kt`.
+8. Set lowerIsBetter = true in the GameDefinition if the lowest score wins — general stats pick the game up automatically.
 9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. Mandatory — cover scoring logic, state helpers, and edge cases.
 10. **Add help content** in `ui/HelpDialogs.kt` (see below).
 11. **Write `docs/games/<game>.md`** — a short doc following the template of the existing per-game files, covering scoring rules, player counts, and any UI quirks specific to that game.

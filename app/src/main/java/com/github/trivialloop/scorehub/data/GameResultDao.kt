@@ -45,9 +45,52 @@ interface GameResultDao {
 
     @Query("SELECT COUNT(DISTINCT playedAt) FROM game_results WHERE gameType = :gameType")
     suspend fun getTotalSessionCount(gameType: String): Int
+
+    // ── General statistics (aggregates, no schema change) ─────────────────────
+
+    /** One row per (player, game). "Counted" = sessions shared with at least one other player. */
+    @Query("""
+        SELECT r.playerId AS playerId, r.gameType AS gameType,
+               COUNT(*) AS totalGames,
+               COUNT(s.playedAt) AS countedGames,
+               SUM(r.isWinner) AS wins,
+               SUM(r.isDraw) AS draws,
+               MAX(r.score) AS maxScore,
+               MIN(r.score) AS minScore
+        FROM game_results r
+        LEFT JOIN (
+            SELECT gameType, playedAt FROM game_results
+            GROUP BY gameType, playedAt HAVING COUNT(*) > 1
+        ) s ON s.gameType = r.gameType AND s.playedAt = r.playedAt
+        GROUP BY r.playerId, r.gameType
+    """)
+    suspend fun getAllPlayerGameStats(): List<PlayerGameStats>
+
+    @Query("""
+        SELECT gameType, MAX(playedAt) AS lastPlayedAt, COUNT(DISTINCT playedAt) AS sessions
+        FROM game_results GROUP BY gameType
+    """)
+    suspend fun getGameSummaries(): List<GameSummary>
 }
 
 data class PlayerWins(
     val playerId: Long,
     val wins: Int
+)
+
+data class PlayerGameStats(
+    val playerId: Long,
+    val gameType: String,
+    val totalGames: Int,
+    val countedGames: Int,
+    val wins: Int,
+    val draws: Int,
+    val maxScore: Int,
+    val minScore: Int
+)
+
+data class GameSummary(
+    val gameType: String,
+    val lastPlayedAt: Long,
+    val sessions: Int
 )
