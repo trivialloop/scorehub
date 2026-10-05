@@ -190,7 +190,7 @@ class Flip7GameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(visible: List<Pair<Int, Flip7PlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)
-        row.addView(makeLabelCell(getString(R.string.flip7_round_label), HEADER_ROW_DP))
+        row.addView(makeLabelCell("", HEADER_ROW_DP))
         for ((idx, player) in visible) {
             val cell = makePlayerNameCell(player, idx == currentPlayerIndex, columnWeight(idx == currentPlayerIndex))
             // Allow switching active player by tapping their name

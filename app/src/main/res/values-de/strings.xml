@@ -66,7 +66,6 @@
     <string name="akropolis_quit_game">Partie beenden</string>
     <string name="akropolis_quit_game_message">Sind Sie sicher, dass Sie das Spiel beenden möchten? Das Spiel wird nicht gespeichert.</string>
     <string name="cactus_game">Dutch/Cabo/Cactus/Tamalou/Cambio</string>
-    <string name="cactus_round_label">#</string>
     <string name="cactus_total">Summe</string>
     <string name="cactus_who_finished">Wer hat die Runde beendet?</string>
     <string name="cactus_enter_score">Rundenscore eingeben</string>
@@ -134,8 +133,6 @@
     <string name="tarot_maximum_players">Maximal 5 Spieler erlaubt</string>
     <string name="wingspan_maximum_players">Maximal 5 Spieler erlaubt</string>
     <string name="escoba_round_label">#</string>
-    <string name="flip7_round_label">#</string>
-    <string name="skyjo_round_label">#</string>
     <string name="freegame_round_label">#</string>
     <string name="qwixx_penalty_symbol">✗</string>
     <string name="escoba_score_hint">0–20</string>
@@ -219,7 +216,6 @@
     <string name="most_wins_player">Spieler mit den meisten Gewinnen: %1$s</string>
     <string name="wingspan_game_complete">Spiel vollständig?</string>
     <string name="wingspan_game_complete_message">Sind alle Scores eingetragen und ist das Spiel beendet?</string>
-    <string name="wingspan_total">Summe</string>
     <string name="escoba_total">Summe</string>
     <string name="farkle_total">Summe</string>
     <string name="flip7_total">Summe</string>
@@ -228,18 +224,7 @@
     <string name="qwixx_total">Summe</string>
     <string name="skyjo_total">Summe</string>
     <string name="tarot_total">Summe</string>
-    <string name="wingspan_category_label">Kategorie</string>
     <string name="wingspan_game">Flügelschlag</string>
-    <string name="wingspan_birds">Vögel</string>
-    <string name="wingspan_birds_total">Vögel Summe</string>
-    <string name="wingspan_bonus_cards">Bonuskarten</string>
-    <string name="wingspan_end_of_round">Rundenziel</string>
-    <string name="wingspan_eggs">Eier</string>
-    <string name="wingspan_food_on_cards">Nektar</string>
-    <string name="wingspan_tucked_cards">Karten unter Vögeln</string>
-    <string name="wingspan_birds_forest">Wald 🌲</string>
-    <string name="wingspan_birds_grassland">Grasland 🌾</string>
-    <string name="wingspan_birds_wetland">Feuchtland 💧</string>
     <string name="skyjo_who_finished">Wer hat die Runde beendet?</string>
     <string name="skyjo_enter_score">Score eingeben</string>
     <string name="flip7_cards_label">Karten</string>

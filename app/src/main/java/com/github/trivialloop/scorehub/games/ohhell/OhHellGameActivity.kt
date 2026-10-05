@@ -427,8 +427,9 @@ class OhHellGameActivity : AppCompatActivity() {
         maxCards: Int,
         tintColor: Int
     ): TextView = TextView(this).apply {
-        text = "$roundNumber\n($maxCards)"
-        gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
+        text = "$roundNumber ($maxCards)"
+        maxLines = 1
+        gravity = Gravity.CENTER; textSize = 12f; setTypeface(null, Typeface.BOLD)
         setPadding(dpToPx(2), dpToPx(6), dpToPx(2), dpToPx(6))
         layoutParams = LinearLayout.LayoutParams(
             dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT

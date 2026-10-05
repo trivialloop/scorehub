@@ -192,6 +192,16 @@ The label cell layout params must reference this constant:
 layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
 ```
 
+### Language-independent labels
+- Row labels are emoji (+ colored background) taken from `utils/GameSymbols.kt`. Same concept = same emoji in every game; never hardcode a new emoji in a game when `GameSymbols` has one.
+- No `#` in round-based headers (empty label cell). Round-based games keep the written "Total" and `LABEL_COL_DP = 65`.
+- One-shot games (Akropolis, Wingspan, Harmonies, Hanging Gardens, Ticket to Ride, 7 Wonders) use `LABEL_COL_DP_ONE_SHOT = 56`, `=` for subtotals and `Σ` for the final total.
+
+### Shared icons (`utils/GameSymbols.kt`)
+- Every row-label emoji lives in `GameSymbols`, named after the emoji (`DEER`, `DROPLET`, `HOUSE`), never after a game concept.
+- Before adding an icon, check whether the emoji already exists; reuse it with its default background.
+- If the default background clashes inside one game, override locally with `.copy(color = …)`.
+
 ### Row baseline alignment (mandatory for every hand-built grid row)
 
 Every `LinearLayout` row built in code (via a `makeRow()`-style helper) **must** set

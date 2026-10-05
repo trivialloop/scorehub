@@ -25,6 +25,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityWingspanGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -41,12 +42,7 @@ class WingspanGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE    = "wingspan"
-        private const val LABEL_COL_DP = 100
-
-        // Habitat accent colours (background of the sub-row label cell)
-        private val COLOR_FOREST    = 0xFF2E7D32.toInt()  // dark green
-        private val COLOR_GRASSLAND = 0xFFF9A825.toInt()  // amber/yellow
-        private val COLOR_WETLAND   = 0xFF1565C0.toInt()  // dark blue
+        private const val LABEL_COL_DP = GameSymbols.LABEL_COL_DP_ONE_SHOT
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -102,6 +98,17 @@ class WingspanGameActivity : AppCompatActivity() {
         }
     }
 
+    private fun iconStyle(c: WingspanCategory) = when (c) {
+        WingspanCategory.BIRDS_FOREST    -> GameSymbols.EVERGREEN_TREE
+        WingspanCategory.BIRDS_GRASSLAND -> GameSymbols.SHEAF_OF_RICE
+        WingspanCategory.BIRDS_WETLAND   -> GameSymbols.DROPLET
+        WingspanCategory.BONUS_CARDS     -> GameSymbols.FLOWER_CARDS
+        WingspanCategory.END_OF_ROUND    -> GameSymbols.CHEQUERED_FLAG
+        WingspanCategory.EGGS            -> GameSymbols.EGG
+        WingspanCategory.FOOD_ON_CARDS   -> GameSymbols.BUG
+        WingspanCategory.TUCKED_CARDS    -> GameSymbols.INBOX_TRAY
+    }
+
     // ─── Table ────────────────────────────────────────────────────────────────
 
     private fun buildScoreTable() {
@@ -127,47 +134,16 @@ class WingspanGameActivity : AppCompatActivity() {
         return col
     }
 
-    /** The birds label column: a 4-row block (forest / grassland / wetland / birds total). */
     private fun makeBirdsGroupLabel(): LinearLayout {
         val group = LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 4f)
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 4f)
         }
-        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_forest),    COLOR_FOREST))
-        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_grassland), COLOR_GRASSLAND))
-        group.addView(makeHabitatLabelCell(getString(R.string.wingspan_birds_wetland),   COLOR_WETLAND))
-        group.addView(makeBirdsTotalLabelCell())
+        for (c in listOf(WingspanCategory.BIRDS_FOREST, WingspanCategory.BIRDS_GRASSLAND, WingspanCategory.BIRDS_WETLAND)) {
+            val s = iconStyle(c); group.addView(makeIconLabelCell(s.emoji, s.color, 18f))
+        }
+        group.addView(makeIconLabelCell(GameSymbols.SUBTOTAL, GameSymbols.SUBTOTAL_ACCENT, 18f))
         return group
-    }
-
-    private fun makeHabitatLabelCell(label: String, habitatColor: Int): LinearLayout {
-        val container = LinearLayout(this).apply {
-            orientation  = LinearLayout.HORIZONTAL
-            gravity      = Gravity.CENTER_VERTICAL
-            setPadding(dpToPx(4), dpToPx(2), dpToPx(4), dpToPx(2))
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-            background = borderDrawable(habitatColor)
-        }
-        val tv = TextView(this).apply {
-            text      = label
-            textSize  = 10f
-            setTypeface(null, Typeface.BOLD)
-            setTextColor(Color.WHITE)
-            maxLines  = 2
-            gravity   = Gravity.CENTER_VERTICAL
-        }
-        container.addView(tv)
-        return container
-    }
-
-    private fun makeBirdsTotalLabelCell(): TextView = TextView(this).apply {
-        text = getString(R.string.wingspan_birds_total)
-        gravity = Gravity.CENTER; textSize = 11f; setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-        background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
-        setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
     }
 
     private fun makeLabelHeaderCell(): TextView = TextView(this).apply {
@@ -175,28 +151,11 @@ class WingspanGameActivity : AppCompatActivity() {
         background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_background))
     }
 
-    private fun makeCategoryCell(category: WingspanCategory): LinearLayout {
-        val container = LinearLayout(this).apply {
-            orientation  = LinearLayout.HORIZONTAL
-            gravity      = Gravity.CENTER_VERTICAL
-            setPadding(dpToPx(6), dpToPx(4), dpToPx(6), dpToPx(4))
-            layoutParams = cellLayoutParams()
-            background   = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_background))
-        }
-        val label = TextView(this).apply {
-            text      = categoryLabel(category)
-            textSize  = 11f
-            setTypeface(null, Typeface.BOLD)
-            setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.header_cell_text))
-            maxLines  = 2
-            gravity   = Gravity.CENTER_VERTICAL
-        }
-        container.addView(label)
-        return container
-    }
+    private fun makeCategoryCell(category: WingspanCategory) =
+        iconStyle(category).let { makeIconLabelCell(it.emoji, it.color, 22f) }
 
-    private fun makeLabelTotalCell(): TextView = TextView(this).apply {
-        text = getString(R.string.wingspan_total); gravity = Gravity.CENTER; textSize = 13f
+    private fun makeLabelTotalCell() = TextView(this).apply {
+        text = GameSymbols.TOTAL; gravity = Gravity.CENTER; textSize = 18f
         setTypeface(null, Typeface.BOLD); layoutParams = cellLayoutParams()
         background = borderDrawable(ContextCompat.getColor(this@WingspanGameActivity, R.color.cell_calculated_bg))
         setTextColor(ContextCompat.getColor(this@WingspanGameActivity, R.color.score_calculated_cell_text))
@@ -375,15 +334,24 @@ class WingspanGameActivity : AppCompatActivity() {
         WingspanCategory.TUCKED_CARDS
     )
 
-    private fun categoryLabel(category: WingspanCategory): String = when (category) {
-        WingspanCategory.BIRDS_FOREST    -> getString(R.string.wingspan_birds_forest)
-        WingspanCategory.BIRDS_GRASSLAND -> getString(R.string.wingspan_birds_grassland)
-        WingspanCategory.BIRDS_WETLAND   -> getString(R.string.wingspan_birds_wetland)
-        WingspanCategory.BONUS_CARDS     -> getString(R.string.wingspan_bonus_cards)
-        WingspanCategory.END_OF_ROUND    -> getString(R.string.wingspan_end_of_round)
-        WingspanCategory.EGGS            -> getString(R.string.wingspan_eggs)
-        WingspanCategory.FOOD_ON_CARDS   -> getString(R.string.wingspan_food_on_cards)
-        WingspanCategory.TUCKED_CARDS    -> getString(R.string.wingspan_tucked_cards)
+    private fun iconStyle(c: WingspanCategory) = when (c) {
+        WingspanCategory.BIRDS_FOREST    -> GameSymbols.FOREST
+        WingspanCategory.BIRDS_GRASSLAND -> GameSymbols.GRASSLAND
+        WingspanCategory.BIRDS_WETLAND   -> GameSymbols.WETLAND
+        WingspanCategory.BONUS_CARDS     -> GameSymbols.BONUS_CARDS
+        WingspanCategory.END_OF_ROUND    -> GameSymbols.END_ROUND
+        WingspanCategory.EGGS            -> GameSymbols.EGGS
+        WingspanCategory.FOOD_ON_CARDS   -> GameSymbols.FOOD
+        WingspanCategory.TUCKED_CARDS    -> GameSymbols.TUCKED
+    }
+
+    private fun categoryLabel(category: WingspanCategory) = iconStyle(category).emoji
+
+    private fun makeIconLabelCell(icon: String, bgColor: Int, size: Float = 20f, weight: Float = 1f) = TextView(this).apply {
+        text = icon; gravity = Gravity.CENTER; textSize = size
+        setTypeface(null, Typeface.BOLD); setTextColor(Color.WHITE)
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, weight)
+        background = borderDrawable(bgColor)
     }
 
     private fun cellLayoutParams() =

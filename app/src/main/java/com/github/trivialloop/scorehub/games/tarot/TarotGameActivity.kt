@@ -154,7 +154,7 @@ class TarotGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow(headerRowHeight)
-        row.addView(makeRoundLabelCell("#", headerRowHeight))
+        row.addView(makeRoundLabelCell("", headerRowHeight))
         for (player in players) {
             val cell = makeSingleLineCell(player.playerName, bold = true, height = headerRowHeight)
             cell.background = cellDrawable(player.playerColor)

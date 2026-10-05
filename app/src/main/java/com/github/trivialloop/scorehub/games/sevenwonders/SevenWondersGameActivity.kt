@@ -27,6 +27,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivitySevenwondersGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -62,27 +63,16 @@ class SevenWondersGameActivity : AppCompatActivity() {
         private const val ROW_HEIGHT_DP = 44
         private const val GUILD_ROW_HEIGHT_DP = 38
 
-        private const val ICON_MILITARY = "⚔️"
-        private const val ICON_COINS = "🪙"
-        private const val ICON_WONDER = "🗼"
-        private const val ICON_CIVILIAN = "🏠"
-        private const val ICON_COMMERCE = "⚖️"
-        private const val ICON_GUILD = "⚗️"
-        private const val ICON_SCIENCE = "🔬"
-        private const val ICON_COMPASS = "🧭"
-        private const val ICON_GEAR = "⚙️"
-        private const val ICON_TABLET = "📜"
-
-        private val COLOR_MILITARY = 0xFFC62828.toInt()
-        private val COLOR_COINS = 0xFFC9A227.toInt()
-        private val COLOR_WONDER = 0xFF6D4C41.toInt()
-        private val COLOR_CIVILIAN = 0xFF1565C0.toInt()
-        private val COLOR_COMMERCE = 0xFFFBC02D.toInt()
-        private val COLOR_GUILD = 0xFF6A1B9A.toInt()
-        private val COLOR_SCIENCE = 0xFF2E7D32.toInt()
-        private val COLOR_COMPASS = 0xFF1565C0.toInt()
-        private val COLOR_GEAR = 0xFF757575.toInt()
-        private val COLOR_TABLET = 0xFF2E7D32.toInt()
+        private val MILITARY   = GameSymbols.CROSSED_SWORDS
+        private val COINS      = GameSymbols.COIN
+        private val WONDER     = GameSymbols.TOKYO_TOWER
+        private val CIVILIAN   = GameSymbols.HOUSE.copy(color = 0xFF1565C0.toInt())
+        private val COMMERCE   = GameSymbols.BALANCE_SCALE
+        private val GUILD      = GameSymbols.ALEMBIC
+        private val SCIENCE    = GameSymbols.MICROSCOPE
+        private val COMPASS_S  = GameSymbols.COMPASS
+        private val GEAR_S     = GameSymbols.GEAR
+        private val TABLET_S   = GameSymbols.SCROLL
     }
 
     private enum class FlatCategory { MILITARY, WONDER, CIVILIAN, COMMERCE }
@@ -513,7 +503,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(getString(R.string.sevenwonders_total), Color.TRANSPARENT, ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeIconLabelCell(GameSymbols.TOTAL, Color.TRANSPARENT, ROW_HEIGHT_DP, isCalc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()

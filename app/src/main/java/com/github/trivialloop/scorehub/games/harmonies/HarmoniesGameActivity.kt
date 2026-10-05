@@ -26,6 +26,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityHarmoniesGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -43,7 +44,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "harmonies"
-        private const val LABEL_COL_DP = 80
+        private const val LABEL_COL_DP = GameSymbols.LABEL_COL_DP_ONE_SHOT
         private const val ROW_HEIGHT_DP = 44
         private const val ANIMAL_ROW_HEIGHT_DP = 38
     }
@@ -103,6 +104,14 @@ class HarmoniesGameActivity : AppCompatActivity() {
         }
     }
 
+    private fun categoryStyle(c: HarmoniesCategory) = when (c) {
+        HarmoniesCategory.TREES     -> GameSymbols.DECIDUOUS_TREE
+        HarmoniesCategory.MOUNTAINS -> GameSymbols.MOUNTAIN
+        HarmoniesCategory.FIELDS    -> GameSymbols.SHEAF_OF_RICE
+        HarmoniesCategory.BUILDINGS -> GameSymbols.HOUSE
+        HarmoniesCategory.RIVER     -> GameSymbols.WATER_WAVE
+    }
+
     // ─── Table construction ────────────────────────────────────────────────────
 
     private fun buildTable() {
@@ -120,7 +129,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
         for (slot in 0 until maxAnimals) {
             binding.tableContainer.addView(buildAnimalSlotRow(slot))
         }
-        binding.tableContainer.addView(buildSubtotalRow(getString(R.string.harmonies_total_animals)) { it.getAnimalsTotal() })
+        binding.tableContainer.addView(buildSubtotalRow(GameSymbols.DEER.color) { it.getAnimalsTotal() })
 
         binding.tableContainer.addView(buildTotalRow())
 
@@ -134,7 +143,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell("", ROW_HEIGHT_DP, ContextCompat.getColor(this, R.color.header_cell_background)))
         for (player in players) {
             val cell = makeCell(player.playerName, ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(player.playerColor)
@@ -147,8 +156,9 @@ class HarmoniesGameActivity : AppCompatActivity() {
     }
 
     private fun buildCategoryRow(category: HarmoniesCategory): LinearLayout {
+        val style = categoryStyle(category)
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(categoryLabel(category), ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(style.emoji, ROW_HEIGHT_DP, style.color))
 
         val allValues = players.map { it.scores[category] }
         for (player in players) {
@@ -166,7 +176,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     private fun buildAnimalsSectionHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.harmonies_animals), ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(GameSymbols.DEER.emoji, ROW_HEIGHT_DP, GameSymbols.DEER.color))
         for (player in players) {
             val cell = makeCell(if (gameOver) "" else "+", ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(
@@ -180,7 +190,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     private fun buildAnimalSlotRow(slot: Int): LinearLayout {
         val row = makeRow(ANIMAL_ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", ANIMAL_ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell("", ANIMAL_ROW_HEIGHT_DP, GameSymbols.DEER.color))
         for (player in players) {
             val value = player.animalEntries.getOrNull(slot)
             val text = value?.let { "+$it" } ?: ""
@@ -195,9 +205,11 @@ class HarmoniesGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildSubtotalRow(label: String, valueOf: (HarmoniesPlayerScore) -> Int): LinearLayout {
+    private fun buildSubtotalRow(accent: Int, valueOf: (HarmoniesPlayerScore) -> Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(label, ROW_HEIGHT_DP, isCalc = true))
+        val label = makeLabelCell(GameSymbols.SUBTOTAL, ROW_HEIGHT_DP, accent)
+        label.setTextColor(Color.WHITE)
+        row.addView(label)
         for (player in players) {
             val value = valueOf(player)
             val cell = makeCell(value.toString(), ROW_HEIGHT_DP, bold = true)
@@ -210,7 +222,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.harmonies_total), ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeLabelCell(GameSymbols.TOTAL, ROW_HEIGHT_DP, ContextCompat.getColor(this, R.color.cell_calculated_bg), calc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()
@@ -231,8 +243,8 @@ class HarmoniesGameActivity : AppCompatActivity() {
 
     private fun showCategoryPicker(player: HarmoniesPlayerScore, category: HarmoniesCategory) {
         val current = player.scores[category]
-        val title = if (current != null) "✏️ ${player.playerName} — ${categoryLabel(category)}"
-                    else "${player.playerName} — ${categoryLabel(category)}"
+        val label = categoryStyle(category).emoji
+        val title = if (current != null) "✏️ ${player.playerName} — $label" else "${player.playerName} — $label"
         val values = category.getPossibleValues()
         val items = values.map { it.toString() }.toTypedArray()
 
@@ -251,7 +263,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
     private fun showAddAnimalDialog(player: HarmoniesPlayerScore) {
         val values = HARMONIES_ANIMAL_CARD_VALUES
         val items = values.map { it.toString() }.toTypedArray()
-        val title = "${player.playerName} — ${getString(R.string.harmonies_add_animal_title)}"
+        val title = "${player.playerName} — ${GameSymbols.DEER.emoji} +"
 
         AlertDialog.Builder(this)
             .setTitle(title)
@@ -284,7 +296,7 @@ class HarmoniesGameActivity : AppCompatActivity() {
         val items = values.map { it.toString() }.toTypedArray()
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("✏️ ${player.playerName} — ${getString(R.string.harmonies_add_animal_title)}")
+            .setTitle("✏️ ${player.playerName} — ${GameSymbols.DEER.emoji}")
             .setItems(items) { _, which ->
                 player.animalEntries[slot] = values[which]
                 buildTable()
@@ -348,37 +360,26 @@ class HarmoniesGameActivity : AppCompatActivity() {
         isBaselineAligned = false
     }
 
-    private fun makeLabelCell(text: String, heightDp: Int, isCalc: Boolean): TextView = TextView(this).apply {
+    private fun makeLabelCell(text: String, heightDp: Int, bgColor: Int, calc: Boolean = false): TextView = TextView(this).apply {
         this.text = text
         gravity = Gravity.CENTER
-        textSize = 11f
+        textSize = if (calc) 16f else 22f
         setTypeface(null, Typeface.BOLD)
-        maxLines = 3
-        setPadding(dpToPx(4), 0, dpToPx(4), 0)
+        maxLines = 1
         layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
-        val bg = if (isCalc) R.color.cell_calculated_bg else R.color.header_cell_background
-        val fg = if (isCalc) R.color.score_calculated_cell_text else R.color.header_cell_text
-        background = cellDrawable(ContextCompat.getColor(this@HarmoniesGameActivity, bg))
-        setTextColor(ContextCompat.getColor(this@HarmoniesGameActivity, fg))
+        background = cellDrawable(bgColor)
+        setTextColor(ContextCompat.getColor(this@HarmoniesGameActivity,
+            if (calc) R.color.score_calculated_cell_text else R.color.header_cell_text))
     }
 
-    private fun makeCell(text: String, heightDp: Int, bold: Boolean, textSize: Float = 14f): TextView =
-        TextView(this).apply {
-            this.text = text
-            gravity = Gravity.CENTER
-            this.textSize = textSize
-            if (bold) setTypeface(null, Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, dpToPx(heightDp), 1f)
-            background = cellDrawable(ContextCompat.getColor(this@HarmoniesGameActivity, R.color.score_cell_background))
-            setTextColor(ContextCompat.getColor(this@HarmoniesGameActivity, R.color.score_cell_text))
-        }
-
-    private fun categoryLabel(category: HarmoniesCategory): String = when (category) {
-        HarmoniesCategory.TREES -> getString(R.string.harmonies_trees)
-        HarmoniesCategory.MOUNTAINS -> getString(R.string.harmonies_mountains)
-        HarmoniesCategory.FIELDS -> getString(R.string.harmonies_fields)
-        HarmoniesCategory.BUILDINGS -> getString(R.string.harmonies_buildings)
-        HarmoniesCategory.RIVER -> getString(R.string.harmonies_river)
+    private fun makeCell(text: String, heightDp: Int, bold: Boolean, textSize: Float = 14f): TextView = TextView(this).apply {
+        this.text = text
+        gravity = Gravity.CENTER
+        this.textSize = textSize
+        if (bold) setTypeface(null, Typeface.BOLD)
+        layoutParams = LinearLayout.LayoutParams(0, dpToPx(heightDp), 1f)
+        background = cellDrawable(ContextCompat.getColor(this@HarmoniesGameActivity, R.color.score_cell_background))
+        setTextColor(ContextCompat.getColor(this@HarmoniesGameActivity, R.color.score_cell_text))
     }
 
     private fun cellDrawable(bgColor: Int): GradientDrawable = GradientDrawable().apply {

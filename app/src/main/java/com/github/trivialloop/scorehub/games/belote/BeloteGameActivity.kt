@@ -115,7 +115,7 @@ class BeloteGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow()
-        row.addView(makeLabelCell("#"))
+        row.addView(makeLabelCell(""))
         for (team in teams) {
             val cell = makeTeamCell(team.displayName, bold = true)
             cell.background = cellDrawable(team.teamColor)

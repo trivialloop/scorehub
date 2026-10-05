@@ -27,6 +27,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityAkropolisGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -42,8 +43,8 @@ class AkropolisGameActivity : AppCompatActivity() {
     private var gameOver = false
 
     companion object {
-        const val GAME_TYPE    = "akropolis"
-        private const val ICON_COL_DP = 65   // row-type icon column
+        const val GAME_TYPE           = "akropolis"
+        private const val ICON_COL_DP = GameSymbols.LABEL_COL_DP_ONE_SHOT
     }
 
     // ─── Possible picker values ───────────────────────────────────────────────
@@ -143,16 +144,14 @@ class AkropolisGameActivity : AppCompatActivity() {
 
             val group = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
                 background = borderDrawable(bgColor)
             }
 
             group.addView(TextView(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
                 gravity = Gravity.CENTER
-                text = "⭐"
+                text = GameSymbols.STAR.emoji
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
                 setBackgroundColor(Color.TRANSPARENT)
@@ -160,10 +159,9 @@ class AkropolisGameActivity : AppCompatActivity() {
             group.addView(makeThinDivider())
 
             group.addView(TextView(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
                 gravity = Gravity.CENTER
-                text = "🏘️"
+                text = GameSymbols.HOUSES.emoji
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
                 setBackgroundColor(Color.TRANSPARENT)
@@ -171,12 +169,12 @@ class AkropolisGameActivity : AppCompatActivity() {
             group.addView(makeThinDivider())
 
             group.addView(TextView(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
                 gravity = Gravity.CENTER
-                text = "🟰"
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
+                text = GameSymbols.SUBTOTAL
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(Color.WHITE)
                 setBackgroundColor(Color.TRANSPARENT)
             })
 
@@ -185,10 +183,9 @@ class AkropolisGameActivity : AppCompatActivity() {
 
         // Stones icon (single row)
         col.addView(TextView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
             gravity = Gravity.CENTER
-            text = "🪨"
+            text = GameSymbols.ROCK.emoji
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
             setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
             background = borderDrawable(
@@ -197,10 +194,9 @@ class AkropolisGameActivity : AppCompatActivity() {
 
         // Total
         col.addView(TextView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
             gravity = Gravity.CENTER
-            text = getString(R.string.akropolis_total)
+            text = GameSymbols.TOTAL
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             setTextColor(ContextCompat.getColor(this@AkropolisGameActivity, android.R.color.black))
             background = borderDrawable(

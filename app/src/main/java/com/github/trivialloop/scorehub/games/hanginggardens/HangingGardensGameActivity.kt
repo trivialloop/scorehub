@@ -26,6 +26,8 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityHanginggardensGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
+import com.github.trivialloop.scorehub.utils.GameSymbols.RowStyle
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -41,36 +43,29 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     private var gameOver = false
 
-    /** Icon-only row identity: an emoji on a colored background (language independent). */
-    private data class RowStyle(
-        val emoji: String,
-        val color: Int,
-        val dialogEmoji: String = emoji
-    )
-
     companion object {
         const val GAME_TYPE = "hanginggardens"
-        private const val LABEL_COL_DP = 65
+        private const val LABEL_COL_DP = GameSymbols.LABEL_COL_DP_ONE_SHOT
         private const val ROW_HEIGHT_DP = 44
         private const val ENTRY_ROW_HEIGHT_DP = 38
 
-        private const val FLOWER_EMOJI = "🌸"
+        private val FLOWER_EMOJI = GameSymbols.BLOSSOM.emoji
 
-        private val STYLE_IRRIGATION = RowStyle("💧", 0xFF29B6F6.toInt())
-        private val STYLE_ANIMALS    = RowStyle("🦚", 0xFFEF6C00.toInt())
-        private val STYLE_HUMANS     = RowStyle("🧑", 0xFF8D6E63.toInt())
-        private val STYLE_OBJECTIVES = RowStyle("👑", 0xFF6A1B9A.toInt())
+        private val STYLE_IRRIGATION = GameSymbols.DROPLET
+        private val STYLE_ANIMALS    = GameSymbols.PEACOCK
+        private val STYLE_HUMANS     = GameSymbols.PERSON
+        private val STYLE_OBJECTIVES = GameSymbols.CROWN
 
         // Flowers: the dialog title is prefixed with the matching colored square
-        private val STYLE_FLOWER_BLUE   = RowStyle(FLOWER_EMOJI, 0xFF1565C0.toInt(), "🟦$FLOWER_EMOJI")
-        private val STYLE_FLOWER_RED    = RowStyle(FLOWER_EMOJI, 0xFFC62828.toInt(), "🟥$FLOWER_EMOJI")
-        private val STYLE_FLOWER_YELLOW = RowStyle(FLOWER_EMOJI, 0xFFF9A825.toInt(), "🟨$FLOWER_EMOJI")
+        private val STYLE_FLOWER_BLUE   = GameSymbols.BLOSSOM.copy(color = 0xFF1565C0.toInt(), dialogEmoji = "🟦🌸")
+        private val STYLE_FLOWER_RED    = GameSymbols.BLOSSOM.copy(color = 0xFFC62828.toInt(), dialogEmoji = "🟥🌸")
+        private val STYLE_FLOWER_YELLOW = GameSymbols.BLOSSOM.copy(color = 0xFFF9A825.toInt(), dialogEmoji = "🟨🌸")
 
         // All trees (3 species + subtotal) share the same green
-        private val COLOR_TREES = 0xFF1B5E20.toInt()
-        private val STYLE_TREE_DRAGON = RowStyle("🌳", COLOR_TREES)
-        private val STYLE_TREE_CEDAR  = RowStyle("🌲", COLOR_TREES)
-        private val STYLE_TREE_PALM   = RowStyle("🌴", COLOR_TREES)
+        private val COLOR_TREES       = GameSymbols.DECIDUOUS_TREE.color
+        private val STYLE_TREE_DRAGON = GameSymbols.DECIDUOUS_TREE
+        private val STYLE_TREE_CEDAR  = GameSymbols.EVERGREEN_TREE
+        private val STYLE_TREE_PALM   = GameSymbols.PALM_TREE
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -276,10 +271,10 @@ class HangingGardensGameActivity : AppCompatActivity() {
         return row
     }
 
-    /** Subtotal row: "Σ" on the section's color, calculated-style value cells. */
+    /** Subtotal row: calculated-style value cells. */
     private fun buildSubtotalRow(sectionColor: Int, valueOf: (HangingGardensPlayerScore) -> Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        val label = makeLabelCell("Σ", ROW_HEIGHT_DP, sectionColor)
+        val label = makeLabelCell(GameSymbols.SUBTOTAL, ROW_HEIGHT_DP, sectionColor)
         label.setTextColor(Color.WHITE)
         row.addView(label)
         for (player in players) {
@@ -293,8 +288,7 @@ class HangingGardensGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("Σ", ROW_HEIGHT_DP,
-            ContextCompat.getColor(this, R.color.cell_calculated_bg), calc = true))
+        row.addView(makeLabelCell(GameSymbols.TOTAL, ROW_HEIGHT_DP, ContextCompat.getColor(this, R.color.cell_calculated_bg), calc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()

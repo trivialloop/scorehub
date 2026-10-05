@@ -27,6 +27,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityTickettorideGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -44,7 +45,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "ticket_to_ride"
-        private const val LABEL_COL_DP = 65
+        private const val LABEL_COL_DP = GameSymbols.LABEL_COL_DP_ONE_SHOT
         private const val ROW_HEIGHT_DP = 44
         private const val TICKET_ROW_HEIGHT_DP = 38
     }
@@ -115,9 +116,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         for (length in TicketToRidePlayerScore.ROUTE_LENGTHS) {
             binding.tableContainer.addView(buildRouteRow(length))
         }
-        binding.tableContainer.addView(buildSubtotalRow(
-            getString(R.string.tickettoride_route_points)
-        ) { it.getRoutePoints() })
+        binding.tableContainer.addView(buildSubtotalRow(GameSymbols.TRAIN.color) { it.getRoutePoints() })
 
         // ── Section objectifs unifiée ──────────────────────────────────────
         binding.tableContainer.addView(buildTicketSectionHeaderRow())
@@ -125,9 +124,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         for (slot in 0 until maxTickets) {
             binding.tableContainer.addView(buildTicketSlotRow(slot))
         }
-        binding.tableContainer.addView(buildSubtotalRow(
-            getString(R.string.tickettoride_subtotal)
-        ) { it.getTicketsTotal() })
+        binding.tableContainer.addView(buildSubtotalRow(GameSymbols.TICKET.color) { it.getTicketsTotal() })
 
         binding.tableContainer.addView(buildLongestPathRow())
         binding.tableContainer.addView(buildTotalRow())
@@ -142,7 +139,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell("", ROW_HEIGHT_DP, ContextCompat.getColor(this, R.color.header_cell_background)))
         for (player in players) {
             val cell = makeCell(player.playerName, ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(player.playerColor)
@@ -156,9 +153,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildRouteRow(length: Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(
-            getString(R.string.tickettoride_route_length_label, length), ROW_HEIGHT_DP, isCalc = false
-        ))
+        row.addView(makeLabelCell("$length${GameSymbols.TRAIN.emoji}", ROW_HEIGHT_DP, GameSymbols.TRAIN.color))
         for (player in players) {
             row.addView(makeRouteCell(player, length))
         }
@@ -213,12 +208,11 @@ class TicketToRideGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun buildSubtotalRow(label: String, valueOf: (TicketToRidePlayerScore) -> Int): LinearLayout {
+    private fun buildSubtotalRow(accent: Int, valueOf: (TicketToRidePlayerScore) -> Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(label, ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeLabelCell(GameSymbols.SUBTOTAL, ROW_HEIGHT_DP, accent).also { it.setTextColor(Color.WHITE) })
         for (player in players) {
-            val value = valueOf(player)
-            val cell = makeCell(if (value >= 0) value.toString() else value.toString(), ROW_HEIGHT_DP, bold = true)
+            val cell = makeCell(valueOf(player).toString(), ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(ContextCompat.getColor(this, R.color.cell_calculated_bg))
             cell.setTextColor(ContextCompat.getColor(this, R.color.score_calculated_cell_text))
             row.addView(cell)
@@ -226,10 +220,10 @@ class TicketToRideGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ── Ligne d'en-tête : deux boutons ✅ / ❌ par joueur ─────────────────────
+    // ── Header ✅ / ❌ per player ─────────────────────
     private fun buildTicketSectionHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.tickettoride_tickets), ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(GameSymbols.TICKET.emoji, ROW_HEIGHT_DP, GameSymbols.TICKET.color))
         for (player in players) {
             row.addView(makeTicketAddCell(player))
         }
@@ -266,10 +260,9 @@ class TicketToRideGameActivity : AppCompatActivity() {
         return container
     }
 
-    // ── Ligne d'entrée : icône (tap = inverse le signe) + score (tap = modifie la valeur) ──
     private fun buildTicketSlotRow(slot: Int): LinearLayout {
         val row = makeRow(TICKET_ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("", TICKET_ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell("", TICKET_ROW_HEIGHT_DP, GameSymbols.TICKET.color))
         for (player in players) {
             row.addView(makeTicketSlotCell(player, slot))
         }
@@ -317,7 +310,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildLongestPathRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.tickettoride_longest_path), ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeLabelCell(GameSymbols.TROPHY.emoji, ROW_HEIGHT_DP, GameSymbols.TROPHY.color))
         for (player in players) {
             val text = if (player.hasLongestPath) "🏆 +${TicketToRidePlayerScore.LONGEST_PATH_BONUS}" else ""
             val cell = makeCell(text, ROW_HEIGHT_DP, bold = player.hasLongestPath)
@@ -341,7 +334,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(getString(R.string.tickettoride_total), ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeLabelCell(GameSymbols.TOTAL, ROW_HEIGHT_DP, ContextCompat.getColor(this, R.color.cell_calculated_bg), calc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()
@@ -365,7 +358,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         val maxCount = TicketToRidePlayerScore.MAX_ROUTE_COUNT[length] ?: 20
         val values = (0..maxCount).toList()
         val items = values.map { it.toString() }.toTypedArray()
-        val title = "${player.playerName} — ${getString(R.string.tickettoride_route_length_label, length)}"
+        val title = "${player.playerName} — $length${GameSymbols.TRAIN.emoji}"
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)
@@ -382,7 +375,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         val values = TicketToRidePlayerScore.TICKET_VALUES
         val items = values.map { it.toString() }.toTypedArray()
         val icon = if (isFailed) "❌" else "✅"
-        val title = "${player.playerName} — $icon ${getString(R.string.tickettoride_add_ticket_title)}"
+        val title = "${player.playerName} — $icon ${GameSymbols.TICKET.emoji} +"
 
         AlertDialog.Builder(this)
             .setTitle(title)
@@ -418,7 +411,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         val icon = if (isFailed) "❌" else "✅"
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("✏️ ${player.playerName} — $icon ${getString(R.string.tickettoride_add_ticket_title)}")
+            .setTitle("✏️ ${player.playerName} — $icon ${GameSymbols.TICKET.emoji}")
             .setItems(items) { _, which ->
                 val magnitude = values[which]
                 player.ticketEntries[slot] = if (isFailed) -magnitude else magnitude
@@ -484,15 +477,16 @@ class TicketToRideGameActivity : AppCompatActivity() {
         isBaselineAligned = false
     }
 
-    private fun makeLabelCell(text: String, heightDp: Int, isCalc: Boolean): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 9f; setTypeface(null, Typeface.BOLD)
-        maxLines = 3
-        setPadding(dpToPx(2), 0, dpToPx(2), 0)
+    private fun makeLabelCell(text: String, heightDp: Int, bgColor: Int, calc: Boolean = false): TextView = TextView(this).apply {
+        this.text = text
+        gravity = Gravity.CENTER
+        textSize = if (calc) 16f else 18f
+        setTypeface(null, Typeface.BOLD)
+        maxLines = 1
         layoutParams = LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(heightDp))
-        val bg = if (isCalc) R.color.cell_calculated_bg else R.color.header_cell_background
-        val fg = if (isCalc) R.color.score_calculated_cell_text else R.color.header_cell_text
-        background = cellDrawable(ContextCompat.getColor(this@TicketToRideGameActivity, bg))
-        setTextColor(ContextCompat.getColor(this@TicketToRideGameActivity, fg))
+        background = cellDrawable(bgColor)
+        setTextColor(ContextCompat.getColor(this@TicketToRideGameActivity,
+            if (calc) R.color.score_calculated_cell_text else R.color.header_cell_text))
     }
 
     private fun makeCell(text: String, heightDp: Int, bold: Boolean, textSize: Float = 14f): TextView =
