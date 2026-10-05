@@ -334,17 +334,6 @@ class WingspanGameActivity : AppCompatActivity() {
         WingspanCategory.TUCKED_CARDS
     )
 
-    private fun iconStyle(c: WingspanCategory) = when (c) {
-        WingspanCategory.BIRDS_FOREST    -> GameSymbols.FOREST
-        WingspanCategory.BIRDS_GRASSLAND -> GameSymbols.GRASSLAND
-        WingspanCategory.BIRDS_WETLAND   -> GameSymbols.WETLAND
-        WingspanCategory.BONUS_CARDS     -> GameSymbols.BONUS_CARDS
-        WingspanCategory.END_OF_ROUND    -> GameSymbols.END_ROUND
-        WingspanCategory.EGGS            -> GameSymbols.EGGS
-        WingspanCategory.FOOD_ON_CARDS   -> GameSymbols.FOOD
-        WingspanCategory.TUCKED_CARDS    -> GameSymbols.TUCKED
-    }
-
     private fun categoryLabel(category: WingspanCategory) = iconStyle(category).emoji
 
     private fun makeIconLabelCell(icon: String, bgColor: Int, size: Float = 20f, weight: Float = 1f) = TextView(this).apply {
