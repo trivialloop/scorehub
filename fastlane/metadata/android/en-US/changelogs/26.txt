@@ -1,0 +1,21 @@
+### Added
+- Add 7 Wonders game
+- Add Hanging Gardens game
+
+### Changed
+- UI changes for Akropolis
+- UI changes for Belote
+- UI changes for Cactus
+- UI changes for Cribbage
+- UI changes for Escoba
+- UI changes for Farkle
+- UI changes for Flip 7
+- UI changes for Harmonies
+- UI changes for Ligretto
+- UI changes for Oh Hell
+- UI changes for Qwixx
+- UI changes for Skyjo
+- UI changes for Tarot
+- UI changes for Ticket to ride
+- UI changes for Wingspan
+- UI changes for general stats
