@@ -117,6 +117,7 @@ class LigrettoGameActivity : AppCompatActivity() {
     private fun buildTable() {
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(buildHeaderRow())
+        binding.headerContainer.addView(buildProgressRow())
 
         binding.tableContainer.removeAllViews()
         rounds.forEachIndexed { index, round ->
@@ -149,23 +150,31 @@ class LigrettoGameActivity : AppCompatActivity() {
     }
 
     /** Name on top, then the two symbols below, in the player's color. */
-    private fun buildPlayerHeaderBlock(player: LigrettoPlayerState): LinearLayout =
-        LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
+    private fun buildPlayerHeaderBlock(player: LigrettoPlayerState): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
 
-            addView(makePlayerNameHeaderCell(player.playerName, player.playerColor))
+        addView(makePlayerNameHeaderCell(player.playerName, player.playerColor))
 
-            addView(LinearLayout(this@LigrettoGameActivity).apply {
-                orientation       = LinearLayout.HORIZONTAL
-                isBaselineAligned = false
-                layoutParams      = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUB_HEADER_HEIGHT_DP))
-                addView(makeSubHeaderCell(SYMBOL_PLAYED, player.playerColor))
-                addView(makeVerticalDivider())
-                addView(makeSubHeaderCell(SYMBOL_LEFT, player.playerColor))
-            })
-        }
+        addView(LinearLayout(this@LigrettoGameActivity).apply {
+            orientation       = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            layoutParams      = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUB_HEADER_HEIGHT_DP))
+            addView(makeSubHeaderCell(SYMBOL_PLAYED, player.playerColor))
+            addView(makeVerticalDivider())
+            addView(makeSubHeaderCell(SYMBOL_LEFT, player.playerColor))
+        })
+    }
+
+    private fun buildProgressRow() = ScoreProgressHelper.buildRow(
+        context      = this,
+        labelColDp   = LABEL_COL_DP,
+        limit        = SCORE_LIMIT,
+        entries      = players.map { ScoreProgressHelper.Entry(it.getTotal(rounds), it.playerColor) },
+        columnWeight = 2f,
+        withDividers = true
+    )
 
     private fun buildRoundRow(round: LigrettoRound, isLast: Boolean, isPrev: Boolean): LinearLayout {
         val row = makeRow()

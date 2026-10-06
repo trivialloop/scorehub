@@ -130,6 +130,7 @@ class TarotGameActivity : AppCompatActivity() {
             // Split: fixed header, scrollable rounds + add row, fixed total
             binding.headerContainer.removeAllViews()
             binding.headerContainer.addView(headerRow)
+            binding.headerContainer.addView(buildProgressRow())
 
             binding.tableContainer.removeAllViews()
             roundRows.forEach { binding.tableContainer.addView(it) }
@@ -146,6 +147,7 @@ class TarotGameActivity : AppCompatActivity() {
 
             binding.tableContainer.removeAllViews()
             binding.tableContainer.addView(headerRow)
+            binding.tableContainer.addView(buildProgressRow())
             roundRows.forEach { binding.tableContainer.addView(it) }
             addRow?.let { binding.tableContainer.addView(it) }
             binding.tableContainer.addView(totalRow)
@@ -162,6 +164,16 @@ class TarotGameActivity : AppCompatActivity() {
             row.addView(cell)
         }
         return row
+    }
+
+    private fun buildProgressRow(): LinearLayout {
+        val ids = players.map { it.playerId }
+        return ScoreProgressHelper.buildRow(
+            context    = this,
+            labelColDp = LABEL_COL_DP,
+            limit      = SCORE_LIMIT,
+            entries    = players.map { ScoreProgressHelper.Entry(it.getTotal(rounds, ids), it.playerColor) }
+        )
     }
 
     private fun buildRoundRow(round: TarotRound): LinearLayout {
