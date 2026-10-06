@@ -153,7 +153,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildRouteRow(length: Int): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell("$length${GameSymbols.TRAIN.emoji}", ROW_HEIGHT_DP, GameSymbols.TRAIN.color))
+        row.addView(makeLabelCell("$length ${GameSymbols.TRAIN.emoji}", ROW_HEIGHT_DP, GameSymbols.TRAIN.color))
         for (player in players) {
             row.addView(makeRouteCell(player, length))
         }
@@ -310,9 +310,9 @@ class TicketToRideGameActivity : AppCompatActivity() {
 
     private fun buildLongestPathRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeLabelCell(GameSymbols.TROPHY.emoji, ROW_HEIGHT_DP, GameSymbols.TROPHY.color))
+        row.addView(makeLabelCell(GameSymbols.FLAG_IN_HOLE.emoji, ROW_HEIGHT_DP, GameSymbols.FLAG_IN_HOLE.color))
         for (player in players) {
-            val text = if (player.hasLongestPath) "🏆 +${TicketToRidePlayerScore.LONGEST_PATH_BONUS}" else ""
+            val text = if (player.hasLongestPath) "+${TicketToRidePlayerScore.LONGEST_PATH_BONUS}" else ""
             val cell = makeCell(text, ROW_HEIGHT_DP, bold = player.hasLongestPath)
             if (player.hasLongestPath) {
                 cell.setTextColor(ContextCompat.getColor(this, R.color.score_text_best))
@@ -358,7 +358,7 @@ class TicketToRideGameActivity : AppCompatActivity() {
         val maxCount = TicketToRidePlayerScore.MAX_ROUTE_COUNT[length] ?: 20
         val values = (0..maxCount).toList()
         val items = values.map { it.toString() }.toTypedArray()
-        val title = "${player.playerName} — $length${GameSymbols.TRAIN.emoji}"
+        val title = "${player.playerName} — $length ${GameSymbols.TRAIN.emoji}"
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)

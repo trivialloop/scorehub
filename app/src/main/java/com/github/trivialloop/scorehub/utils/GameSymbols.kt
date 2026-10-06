@@ -28,15 +28,23 @@ object GameSymbols {
     val WATER_WAVE     = s("🌊", 0xFF0277BD)
     val BLOSSOM        = s("🌸", 0xFFC2185B)
 
-    // ── Animals / food ────────────────────────────────────────────────────────
-    val DEER    = s("🦌", 0xFFEF6C00)
+    // ── Animals / food ──
+    val DEER    = s("🦌", 0xFF4E342E)
     val PEACOCK = s("🦚", 0xFFEF6C00)
     val EGG     = s("🥚", 0xFF8D6E63)
     val BUG     = s("🐛", 0xFFEF6C00)
+    val FEATHER = s("🪶", 0xFF37474F)
+    val BIRD    = s("🐦", 0xFF0277BD)
+
+    // ── Objects ──
+    val DIRECT_HIT     = s("🎯", 0xFFC62828)
+    val FLAG_IN_HOLE   = s("⛳", 0xFF2E7D32)
+    val TOTEM_SPARKLES = s("✨", 0xFF6A1B9A)
 
     // ── People / buildings ────────────────────────────────────────────────────
     val PERSON         = s("🧑", 0xFF8D6E63)
     val HOUSE          = s("🏠", 0xFFC62828)
+    val HOUSES         = s("🏘️", 0xFF455A64)
     val CROWN          = s("👑", 0xFF6A1B9A)
     val TOKYO_TOWER    = s("🗼", 0xFF6D4C41)
 
@@ -54,12 +62,9 @@ object GameSymbols {
     val FLOWER_CARDS    = s("🎴", 0xFF6A1B9A)
     val INBOX_TRAY      = s("📥", 0xFF00796B)
     val CHEQUERED_FLAG  = s("🏁", 0xFF455A64)
+    val STAR            = s("⭐", 0xFF455A64)
+    val ROCK            = s("🪨", 0xFF757575)
     val TROPHY          = s("🏆", 0xFFC9A227)
-
-    // ── Akropolis (emoji only, colored blocks stay local to the game) ─────────
-    val STAR   = s("⭐", 0xFF455A64)
-    val HOUSES = s("🏘️", 0xFF455A64)
-    val ROCK   = s("🪨", 0xFF757575)
 
     // Dark grey used for the "birds subtotal" style rows
     val SUBTOTAL_ACCENT = 0xFF37474F.toInt()

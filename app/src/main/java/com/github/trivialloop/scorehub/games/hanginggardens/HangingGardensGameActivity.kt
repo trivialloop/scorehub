@@ -54,7 +54,7 @@ class HangingGardensGameActivity : AppCompatActivity() {
         private val STYLE_IRRIGATION = GameSymbols.DROPLET
         private val STYLE_ANIMALS    = GameSymbols.PEACOCK
         private val STYLE_HUMANS     = GameSymbols.PERSON
-        private val STYLE_OBJECTIVES = GameSymbols.CROWN
+        private val STYLE_OBJECTIVES = GameSymbols.DIRECT_HIT
 
         // Flowers: the dialog title is prefixed with the matching colored square
         private val STYLE_FLOWER_BLUE   = GameSymbols.BLOSSOM.copy(color = 0xFF1565C0.toInt(), dialogEmoji = "🟦🌸")

@@ -99,11 +99,11 @@ class WingspanGameActivity : AppCompatActivity() {
     }
 
     private fun iconStyle(c: WingspanCategory) = when (c) {
-        WingspanCategory.BIRDS_FOREST    -> GameSymbols.EVERGREEN_TREE
-        WingspanCategory.BIRDS_GRASSLAND -> GameSymbols.SHEAF_OF_RICE
-        WingspanCategory.BIRDS_WETLAND   -> GameSymbols.DROPLET
-        WingspanCategory.BONUS_CARDS     -> GameSymbols.FLOWER_CARDS
-        WingspanCategory.END_OF_ROUND    -> GameSymbols.CHEQUERED_FLAG
+        WingspanCategory.BIRDS_FOREST    -> GameSymbols.FEATHER.copy(color = 0xFF2E7D32.toInt())  // green
+        WingspanCategory.BIRDS_GRASSLAND -> GameSymbols.FEATHER.copy(color = 0xFFF9A825.toInt())  // yellow
+        WingspanCategory.BIRDS_WETLAND   -> GameSymbols.FEATHER.copy(color = 0xFF1565C0.toInt())  // blue
+        WingspanCategory.BONUS_CARDS     -> GameSymbols.TOTEM_SPARKLES
+        WingspanCategory.END_OF_ROUND    -> GameSymbols.DIRECT_HIT
         WingspanCategory.EGGS            -> GameSymbols.EGG
         WingspanCategory.FOOD_ON_CARDS   -> GameSymbols.BUG
         WingspanCategory.TUCKED_CARDS    -> GameSymbols.INBOX_TRAY
@@ -334,7 +334,12 @@ class WingspanGameActivity : AppCompatActivity() {
         WingspanCategory.TUCKED_CARDS
     )
 
-    private fun categoryLabel(category: WingspanCategory) = iconStyle(category).emoji
+    private fun categoryLabel(category: WingspanCategory) = when (category) {
+        WingspanCategory.BIRDS_FOREST    -> "🪶🌲"
+        WingspanCategory.BIRDS_GRASSLAND -> "🪶🌾"
+        WingspanCategory.BIRDS_WETLAND   -> "🪶💧"
+        else -> iconStyle(category).emoji
+    }
 
     private fun makeIconLabelCell(icon: String, bgColor: Int, size: Float = 20f, weight: Float = 1f) = TextView(this).apply {
         text = icon; gravity = Gravity.CENTER; textSize = size
