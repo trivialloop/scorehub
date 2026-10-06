@@ -152,7 +152,7 @@ class CactusGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow()
-        row.addView(makeLabelCell(getString(R.string.cactus_round_label)))
+        row.addView(makeLabelCell(""))
         for (player in players) {
             val cell = makePlayerCell(player.playerName, bold = true)
             cell.background = cellDrawable(player.playerColor)

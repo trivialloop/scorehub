@@ -148,7 +148,7 @@ class SkyjoGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow()
-        row.addView(makeLabelCell(getString(R.string.skyjo_round_label)))
+        row.addView(makeLabelCell(""))
         for (player in players) {
             val cell = makePlayerCell(player.playerName, bold = true)
             cell.background = cellDrawable(player.playerColor)

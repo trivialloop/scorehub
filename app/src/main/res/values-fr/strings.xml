@@ -63,7 +63,6 @@
 
     <!-- 7 Wonders Game -->
     <string name="sevenwonders_game">7 Wonders</string>
-    <string name="sevenwonders_total">Total</string>
     <string name="sevenwonders_edit_entry">Modifier (actuellement %1$d)</string>
     <string name="sevenwonders_delete_entry">Supprimer</string>
     <string name="sevenwonders_finish_game">Terminer la partie</string>
@@ -119,7 +118,6 @@
 
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
-    <string name="cactus_round_label">#</string>
     <string name="cactus_total">Total</string>
     <string name="cactus_who_finished">Qui a terminé la manche ?</string>
     <string name="cactus_enter_score">Entrer le score de la manche</string>
@@ -177,7 +175,6 @@
 
     <!-- Flip 7 Game -->
     <string name="flip7_game">Flip 7</string>
-    <string name="flip7_round_label">#</string>
     <string name="flip7_total">Total</string>
     <string name="flip7_cards_label">Cartes</string>
     <string name="flip7_bonuses_label">Bonus</string>
@@ -212,15 +209,6 @@
 
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
-    <string name="harmonies_trees">Arbres 🌲</string>
-    <string name="harmonies_mountains">Montagnes ⛰️</string>
-    <string name="harmonies_fields">Champs 🌾</string>
-    <string name="harmonies_buildings">Bâtiments 🏠</string>
-    <string name="harmonies_river">Rivière 🌊</string>
-    <string name="harmonies_animals">Animaux 🦌</string>
-    <string name="harmonies_total">Total</string>
-    <string name="harmonies_total_animals">Total Animaux 🦌</string>
-    <string name="harmonies_add_animal_title">Ajouter le score d\'une carte Animal</string>
     <string name="harmonies_edit_entry">Modifier (actuellement %1$d)</string>
     <string name="harmonies_delete_entry">Supprimer</string>
     <string name="harmonies_finish_game">Terminer la partie</string>
@@ -273,7 +261,6 @@
 
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
-    <string name="skyjo_round_label">#</string>
     <string name="skyjo_total">Total</string>
     <string name="skyjo_who_finished">Qui a terminé la manche ?</string>
     <string name="skyjo_enter_score">Entrer le score</string>
@@ -332,13 +319,6 @@
 
     <!-- Jeu Les Aventuriers du Rail -->
     <string name="tickettoride_game">Les Aventuriers du Rail</string>
-    <string name="tickettoride_route_length_label">%1$d 🚃</string>
-    <string name="tickettoride_route_points">Points tronçons</string>
-    <string name="tickettoride_tickets">🎫 Objectifs</string>
-    <string name="tickettoride_subtotal">Sous-total</string>
-    <string name="tickettoride_longest_path">🏆 Plus long chemin</string>
-    <string name="tickettoride_total">Total</string>
-    <string name="tickettoride_add_ticket_title">Ajouter une carte destination</string>
     <string name="tickettoride_edit_entry">Modifier (actuellement %1$d)</string>
     <string name="tickettoride_delete_entry">Supprimer</string>
     <string name="tickettoride_finish_game">Terminer la partie</string>
@@ -351,18 +331,6 @@
 
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
-    <string name="wingspan_category_label">Catégorie</string>
-    <string name="wingspan_birds">Oiseaux</string>
-    <string name="wingspan_birds_forest">Forêt 🌲</string>
-    <string name="wingspan_birds_grassland">Prairie 🌾</string>
-    <string name="wingspan_birds_wetland">Marais 💧</string>
-    <string name="wingspan_birds_total">Total oiseaux</string>
-    <string name="wingspan_bonus_cards">Cartes bonus</string>
-    <string name="wingspan_end_of_round">Fin de manche</string>
-    <string name="wingspan_eggs">Œufs</string>
-    <string name="wingspan_food_on_cards">Nourriture</string>
-    <string name="wingspan_tucked_cards">Cartes glissées</string>
-    <string name="wingspan_total">Total</string>
     <string name="wingspan_minimum_players">Minimum 2 joueurs requis</string>
     <string name="wingspan_maximum_players">Maximum 5 joueurs autorisés</string>
     <string name="wingspan_game_complete">Partie terminée ?</string>

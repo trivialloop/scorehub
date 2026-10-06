@@ -27,6 +27,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivitySevenwondersGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -62,27 +63,16 @@ class SevenWondersGameActivity : AppCompatActivity() {
         private const val ROW_HEIGHT_DP = 44
         private const val GUILD_ROW_HEIGHT_DP = 38
 
-        private const val ICON_MILITARY = "⚔️"
-        private const val ICON_COINS = "🪙"
-        private const val ICON_WONDER = "🗼"
-        private const val ICON_CIVILIAN = "🏠"
-        private const val ICON_COMMERCE = "⚖️"
-        private const val ICON_GUILD = "⚗️"
-        private const val ICON_SCIENCE = "🔬"
-        private const val ICON_COMPASS = "🧭"
-        private const val ICON_GEAR = "⚙️"
-        private const val ICON_TABLET = "📜"
-
-        private val COLOR_MILITARY = 0xFFC62828.toInt()
-        private val COLOR_COINS = 0xFFC9A227.toInt()
-        private val COLOR_WONDER = 0xFF6D4C41.toInt()
-        private val COLOR_CIVILIAN = 0xFF1565C0.toInt()
-        private val COLOR_COMMERCE = 0xFFFBC02D.toInt()
-        private val COLOR_GUILD = 0xFF6A1B9A.toInt()
-        private val COLOR_SCIENCE = 0xFF2E7D32.toInt()
-        private val COLOR_COMPASS = 0xFF1565C0.toInt()
-        private val COLOR_GEAR = 0xFF757575.toInt()
-        private val COLOR_TABLET = 0xFF2E7D32.toInt()
+        private val MILITARY   = GameSymbols.CROSSED_SWORDS
+        private val COINS      = GameSymbols.COIN
+        private val WONDER     = GameSymbols.TOKYO_TOWER
+        private val CIVILIAN   = GameSymbols.HOUSE.copy(color = 0xFF1565C0.toInt())
+        private val COMMERCE   = GameSymbols.BALANCE_SCALE
+        private val GUILD      = GameSymbols.ALEMBIC
+        private val SCIENCE    = GameSymbols.MICROSCOPE
+        private val COMPASS_S  = GameSymbols.COMPASS
+        private val GEAR_S     = GameSymbols.GEAR
+        private val TABLET_S   = GameSymbols.SCROLL
     }
 
     private enum class FlatCategory { MILITARY, WONDER, CIVILIAN, COMMERCE }
@@ -137,11 +127,11 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
         binding.tableContainer.removeAllViews()
 
-        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.MILITARY, ICON_MILITARY, COLOR_MILITARY, signed = true))
+        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.MILITARY, MILITARY, signed = true))
         binding.tableContainer.addView(buildCoinsRow())
-        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.WONDER, ICON_WONDER, COLOR_WONDER))
-        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.CIVILIAN, ICON_CIVILIAN, COLOR_CIVILIAN))
-        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.COMMERCE, ICON_COMMERCE, COLOR_COMMERCE))
+        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.WONDER, WONDER))
+        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.CIVILIAN, CIVILIAN))
+        binding.tableContainer.addView(buildFlatCategoryRow(FlatCategory.COMMERCE, COMMERCE))
 
         binding.tableContainer.addView(buildScienceInputRow())
         binding.tableContainer.addView(buildScienceSubtotalRow())
@@ -179,9 +169,9 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     // ─── Flat categories (Military / Wonder / Civilian / Commerce) ───────────────
 
-    private fun buildFlatCategoryRow(category: FlatCategory, icon: String, accent: Int, signed: Boolean = false): LinearLayout {
+    private fun buildFlatCategoryRow(category: FlatCategory, style: GameSymbols.RowStyle, signed: Boolean = false): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(icon, accent, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell(style.emoji, style.color, ROW_HEIGHT_DP, isCalc = false))
 
         val allValues = players.map { flatValue(it, category) }
         for (player in players) {
@@ -221,18 +211,19 @@ class SevenWondersGameActivity : AppCompatActivity() {
         FlatCategory.COMMERCE -> SevenWondersValues.COMMERCE_VALUES
     }
 
-    private fun flatIcon(category: FlatCategory): String = when (category) {
-        FlatCategory.MILITARY -> ICON_MILITARY
-        FlatCategory.WONDER -> ICON_WONDER
-        FlatCategory.CIVILIAN -> ICON_CIVILIAN
-        FlatCategory.COMMERCE -> ICON_COMMERCE
+    private fun flatStyle(category: FlatCategory): GameSymbols.RowStyle = when (category) {
+        FlatCategory.MILITARY -> MILITARY
+        FlatCategory.WONDER   -> WONDER
+        FlatCategory.CIVILIAN -> CIVILIAN
+        FlatCategory.COMMERCE -> COMMERCE
     }
 
     private fun showFlatCategoryPicker(ps: SevenWondersPlayerScore, category: FlatCategory) {
         val current = flatValue(ps, category)
         val values = flatValues(category)
         val items = values.map { it.toString() }.toTypedArray()
-        val title = if (current != null) "✏️ ${ps.playerName} — ${flatIcon(category)}" else "${ps.playerName} — ${flatIcon(category)}"
+        val icon = flatStyle(category).emoji
+        val title = if (current != null) "✏️ ${ps.playerName} — $icon" else "${ps.playerName} — $icon"
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)
@@ -250,7 +241,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildCoinsRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(ICON_COINS, COLOR_COINS, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell(COINS.emoji, COINS.color, ROW_HEIGHT_DP, isCalc = false))
 
         val allPts = players.map { if (it.coins != null) it.getCoinPoints() else null }
         val allEntered = allPts.all { it != null }
@@ -310,7 +301,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
         val current = ps.coins
         val values = SevenWondersValues.COINS_VALUES
         val items = values.map { it.toString() }.toTypedArray()
-        val title = if (current != null) "✏️ ${ps.playerName} — $ICON_COINS" else "${ps.playerName} — $ICON_COINS"
+        val title = if (current != null) "✏️ ${ps.playerName} — ${COINS.emoji}" else "${ps.playerName} — ${COINS.emoji}"
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)
@@ -328,7 +319,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildScienceInputRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(ICON_SCIENCE, COLOR_SCIENCE, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell(SCIENCE.emoji, SCIENCE.color, ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
             row.addView(makeScienceTripleCell(player))
         }
@@ -342,13 +333,13 @@ class SevenWondersGameActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(0, dpToPx(ROW_HEIGHT_DP), 1f)
             background = cellDrawable(ContextCompat.getColor(this@SevenWondersGameActivity, R.color.header_cell_background))
         }
-        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.COMPASS, ICON_COMPASS, COLOR_COMPASS))
-        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.GEAR, ICON_GEAR, COLOR_GEAR))
-        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.TABLET, ICON_TABLET, COLOR_TABLET))
+        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.COMPASS, COMPASS_S.emoji))
+        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.GEAR, GEAR_S.emoji))
+        container.addView(makeScienceSymbolButton(ps, ScienceSymbol.TABLET, TABLET_S.emoji))
         return container
     }
 
-    private fun makeScienceSymbolButton(ps: SevenWondersPlayerScore, symbol: ScienceSymbol, icon: String, accent: Int): LinearLayout {
+    private fun makeScienceSymbolButton(ps: SevenWondersPlayerScore, symbol: ScienceSymbol, icon: String): LinearLayout {
         val value = getScienceSymbolValue(ps, symbol)
         return LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -402,7 +393,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildScienceSubtotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell("=", COLOR_SCIENCE, ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeIconLabelCell("=", SCIENCE.color, ROW_HEIGHT_DP, isCalc = true))
 
         // Missing symbols are treated as 0, so the score shows as soon as one symbol is entered
         val allScience = players.map { if (hasAnyScienceSymbol(it)) it.getScienceScore() else null }
@@ -426,7 +417,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildGuildHeaderRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(ICON_GUILD, COLOR_GUILD, ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell(GUILD.emoji, GUILD.color, ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
             val cell = makeCell(if (gameOver) "" else "+", ROW_HEIGHT_DP, bold = true)
             cell.background = cellDrawable(
@@ -440,7 +431,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildGuildSlotRow(slot: Int): LinearLayout {
         val row = makeRow(GUILD_ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell("", COLOR_GUILD, GUILD_ROW_HEIGHT_DP, isCalc = false))
+        row.addView(makeIconLabelCell("", GUILD.color, GUILD_ROW_HEIGHT_DP, isCalc = false))
         for (player in players) {
             val value = player.guildEntries.getOrNull(slot)
             val cell = makeCell(value?.let { "+$it" } ?: "", GUILD_ROW_HEIGHT_DP, bold = value != null, textSize = 13f)
@@ -454,8 +445,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildGuildSubtotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell("=", COLOR_GUILD, ROW_HEIGHT_DP, isCalc = true))
-        val allTotals = players.map { it.getGuildsTotal() }
+        row.addView(makeIconLabelCell("=", GUILD.color, ROW_HEIGHT_DP, isCalc = true))
         for (player in players) {
             val total = player.getGuildsTotal()
             val cell = makeCell(total.toString(), ROW_HEIGHT_DP, bold = true)
@@ -470,7 +460,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
         val values = SevenWondersValues.GUILD_CARD_VALUES
         val items = values.map { it.toString() }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("${ps.playerName} — $ICON_GUILD")
+            .setTitle("${ps.playerName} — ${GUILD.emoji}")
             .setItems(items) { _, which ->
                 ps.guildEntries.add(values[which])
                 buildTable()
@@ -498,7 +488,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
         val values = SevenWondersValues.GUILD_CARD_VALUES
         val items = values.map { it.toString() }.toTypedArray()
         val dialog = AlertDialog.Builder(this)
-            .setTitle("✏️ ${ps.playerName} — $ICON_GUILD")
+            .setTitle("✏️ ${ps.playerName} — ${GUILD.emoji}")
             .setItems(items) { _, which ->
                 ps.guildEntries[slot] = values[which]
                 buildTable()
@@ -513,7 +503,7 @@ class SevenWondersGameActivity : AppCompatActivity() {
 
     private fun buildTotalRow(): LinearLayout {
         val row = makeRow(ROW_HEIGHT_DP)
-        row.addView(makeIconLabelCell(getString(R.string.sevenwonders_total), Color.TRANSPARENT, ROW_HEIGHT_DP, isCalc = true))
+        row.addView(makeIconLabelCell(GameSymbols.TOTAL, Color.TRANSPARENT, ROW_HEIGHT_DP, isCalc = true))
         val allTotals = players.map { it.getTotal() }
         for (player in players) {
             val total = player.getTotal()

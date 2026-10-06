@@ -63,7 +63,6 @@
 
     <!-- 7 Wonders Game -->
     <string name="sevenwonders_game">7 Wonders</string>
-    <string name="sevenwonders_total">Total</string>
     <string name="sevenwonders_edit_entry">Edit (currently %1$d)</string>
     <string name="sevenwonders_delete_entry">Delete</string>
     <string name="sevenwonders_finish_game">Finish game</string>
@@ -120,7 +119,6 @@
 
     <!-- Cactus Game -->
     <string name="cactus_game">Cactus</string>
-    <string name="cactus_round_label">#</string>
     <string name="cactus_total">Total</string>
     <string name="cactus_who_finished">Who finished the round?</string>
     <string name="cactus_enter_score">Enter round score</string>
@@ -178,7 +176,6 @@
 
     <!-- Flip 7 Game -->
     <string name="flip7_game">Flip 7</string>
-    <string name="flip7_round_label">#</string>
     <string name="flip7_total">Total</string>
     <string name="flip7_cards_label">Cards</string>
     <string name="flip7_bonuses_label">Bonuses</string>
@@ -213,15 +210,6 @@
 
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
-    <string name="harmonies_trees">Trees 🌲</string>
-    <string name="harmonies_mountains">Mountains ⛰️</string>
-    <string name="harmonies_fields">Fields 🌾</string>
-    <string name="harmonies_buildings">Buildings 🏠</string>
-    <string name="harmonies_river">River 🌊</string>
-    <string name="harmonies_animals">Animals 🦌</string>
-    <string name="harmonies_total">Total</string>
-    <string name="harmonies_total_animals">Animals Total 🦌</string>
-    <string name="harmonies_add_animal_title">Add an Animal card score</string>
     <string name="harmonies_edit_entry">Edit (currently %1$d)</string>
     <string name="harmonies_delete_entry">Delete</string>
     <string name="harmonies_finish_game">Finish game</string>
@@ -274,7 +262,6 @@
 
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
-    <string name="skyjo_round_label">#</string>
     <string name="skyjo_total">Total</string>
     <string name="skyjo_who_finished">Who finished the round?</string>
     <string name="skyjo_enter_score">Enter score</string>
@@ -333,13 +320,6 @@
 
     <!-- Ticket to Ride Game -->
     <string name="tickettoride_game">Ticket to Ride</string>
-    <string name="tickettoride_route_length_label">%1$d 🚃</string>
-    <string name="tickettoride_route_points">Route points</string>
-    <string name="tickettoride_tickets">🎫 Destination tickets</string>
-    <string name="tickettoride_subtotal">Subtotal</string>
-    <string name="tickettoride_longest_path">🏆 Longest path</string>
-    <string name="tickettoride_total">Total</string>
-    <string name="tickettoride_add_ticket_title">Add a destination ticket</string>
     <string name="tickettoride_edit_entry">Edit (currently %1$d)</string>
     <string name="tickettoride_delete_entry">Delete</string>
     <string name="tickettoride_finish_game">Finish game</string>
@@ -352,18 +332,6 @@
 
     <!-- Wingspan Game -->
     <string name="wingspan_game">Wingspan</string>
-    <string name="wingspan_category_label">Category</string>
-    <string name="wingspan_birds">Birds</string>
-    <string name="wingspan_birds_forest">Forest 🌲</string>
-    <string name="wingspan_birds_grassland">Grassland 🌾</string>
-    <string name="wingspan_birds_wetland">Wetland 💧</string>
-    <string name="wingspan_birds_total">Birds total</string>
-    <string name="wingspan_bonus_cards">Bonus cards</string>
-    <string name="wingspan_end_of_round">End of round</string>
-    <string name="wingspan_eggs">Eggs</string>
-    <string name="wingspan_food_on_cards">Food on cards</string>
-    <string name="wingspan_tucked_cards">Tucked cards</string>
-    <string name="wingspan_total">Total</string>
     <string name="wingspan_minimum_players">Minimum 2 players required</string>
     <string name="wingspan_maximum_players">Maximum 5 players allowed</string>
     <string name="wingspan_game_complete">Game Complete?</string>
