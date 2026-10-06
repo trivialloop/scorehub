@@ -32,3 +32,4 @@
   games that share info without a dedicated team table.
 - Uses the fixed header / scrollable content pattern with **2 team columns** instead of one
   column per player (`LABEL_COL_DP = 65`).
+- **Litige display**: the round following a litige shows the carry in the cells — ⚖️+81 on the team that receives it (when resolved), or ⏳81 on both teams while it is still pending (chute, defender capot, or another litige). Driven by BeloteScoring.computeRoundResults (carryIn / carryOut).

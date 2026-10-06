@@ -45,6 +45,8 @@
     <string name="belote_hint_capot">🃏 Capot (les 8 plis remportés)</string>
     <string name="belote_hint_belote">🤝 Belote-Rebelote (+20 points)</string>
     <string name="belote_hint_litige">⚖️ Litige (81-81) : les 81 points des preneurs sont reportés sur le prochain contrat réussi</string>
+    <string name="belote_hint_carry_resolved">⚖️ Litige reporté : cette équipe récupère les %1$d points laissés en attente par un précédent 81-81</string>
+    <string name="belote_hint_carry_pending">⏳ %1$d points d\'un litige précédent sont toujours en attente, pour le prochain contrat réussi</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Cactus                                                  -->

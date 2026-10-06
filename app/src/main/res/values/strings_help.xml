@@ -45,6 +45,8 @@
     <string name="belote_hint_capot">🃏 Capot (all 8 tricks won)</string>
     <string name="belote_hint_belote">🤝 Belote-Rebelote (+20 points)</string>
     <string name="belote_hint_litige">⚖️ Litige (81-81): the attackers\' 81 points are carried to the next successful contract</string>
+    <string name="belote_hint_carry_resolved">⚖️ Litige carried over: this team receives the %1$d points left pending from a previous 81-81</string>
+    <string name="belote_hint_carry_pending">⏳ %1$d points from a previous litige are still pending, for the next successful contract</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Cactus                                                  -->

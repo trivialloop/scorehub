@@ -254,4 +254,17 @@ class BeloteScoreManagerTest {
         assertEquals(BeloteCellRole.LOSS, round.getCellRole(0))
         assertEquals(BeloteCellRole.WIN, round.getCellRole(1))
     }
+
+    @Test
+    fun `computeRoundResults exposes carry in and out for each hand`() {
+        val rounds = listOf(
+            BeloteRound(1, attackingTeam = 0, pointsMade = 81),   // litige → carryOut 81
+            BeloteRound(2, attackingTeam = 1, pointsMade = 60),   // chute → carry still pending
+            BeloteRound(3, attackingTeam = 0, pointsMade = 90)    // success → carry resolved
+        )
+        val r = BeloteScoring.computeRoundResults(rounds)
+        assertEquals(0 to 81, r[0].carryIn to r[0].carryOut)
+        assertEquals(81 to 81, r[1].carryIn to r[1].carryOut)
+        assertEquals(81 to 0, r[2].carryIn to r[2].carryOut)
+    }
 }
