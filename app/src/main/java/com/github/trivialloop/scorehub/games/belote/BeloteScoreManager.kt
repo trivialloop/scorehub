@@ -72,22 +72,30 @@ data class BeloteRound(
     }
 }
 
+/** Result of one hand, including the litige carry entering and leaving it. */
+data class BeloteRoundResult(
+    val scores: Map<Int, Int>,
+    val carryIn: Int,
+    val carryOut: Int
+)
+
 /** Threads the litige carry through a list of hands. */
 object BeloteScoring {
-    fun computeRoundScores(rounds: List<BeloteRound>): List<Map<Int, Int>> {
+
+    fun computeRoundResults(rounds: List<BeloteRound>): List<BeloteRoundResult> {
         var carry = 0
-        val results = mutableListOf<Map<Int, Int>>()
-        for (round in rounds) {
+        return rounds.map { round ->
             if (!round.isComplete()) {
-                results.add(mapOf(0 to 0, 1 to 0))
-                continue
+                BeloteRoundResult(mapOf(0 to 0, 1 to 0), carryIn = carry, carryOut = carry)
+            } else {
+                val (scores, newCarry) = round.computeScores(carry)
+                BeloteRoundResult(scores, carryIn = carry, carryOut = newCarry).also { carry = newCarry }
             }
-            val (scores, newCarry) = round.computeScores(carry)
-            results.add(scores)
-            carry = newCarry
         }
-        return results
     }
+
+    fun computeRoundScores(rounds: List<BeloteRound>): List<Map<Int, Int>> =
+        computeRoundResults(rounds).map { it.scores }
 }
 
 data class BeloteTeamState(

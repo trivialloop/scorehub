@@ -103,9 +103,9 @@ class BeloteGameActivity : AppCompatActivity() {
         binding.headerContainer.addView(buildHeaderRow())
 
         binding.tableContainer.removeAllViews()
-        val roundScores = BeloteScoring.computeRoundScores(rounds)
+        val roundResults = BeloteScoring.computeRoundResults(rounds)
         rounds.forEachIndexed { index, round ->
-            binding.tableContainer.addView(buildRoundRow(round, roundScores[index]))
+            binding.tableContainer.addView(buildRoundRow(round, roundResults[index]))
         }
         binding.tableContainer.addView(buildAddRoundRow())
         binding.tableContainer.addView(buildTotalRow())
@@ -125,7 +125,7 @@ class BeloteGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildRoundRow(round: BeloteRound, scores: Map<Int, Int>): LinearLayout {
+    private fun buildRoundRow(round: BeloteRound, result: BeloteRoundResult): LinearLayout {
         val row = makeRow(ROUND_ROW_HEIGHT_DP)
         val attackingColor = teams[round.attackingTeam].teamColor
 
@@ -136,8 +136,8 @@ class BeloteGameActivity : AppCompatActivity() {
         row.addView(labelCell)
 
         for (team in teams) {
-            val score = scores[team.teamIndex] ?: 0
-            val entries = buildSymbolEntries(round, team.teamIndex)
+            val score = result.scores[team.teamIndex] ?: 0
+            val entries = buildSymbolEntries(round, team.teamIndex, result)
             val scoreColor = ContextCompat.getColor(
                 this,
                 when (round.getCellRole(team.teamIndex)) {
@@ -158,7 +158,7 @@ class BeloteGameActivity : AppCompatActivity() {
         return row
     }
 
-    private fun buildSymbolEntries(round: BeloteRound, teamIndex: Int): List<BeloteSymbolEntry> {
+    private fun buildSymbolEntries(round: BeloteRound, teamIndex: Int, result: BeloteRoundResult): List<BeloteSymbolEntry> {
         val entries = mutableListOf<BeloteSymbolEntry>()
         if (teamIndex == round.attackingTeam)
             entries.add(BeloteSymbolEntry(BeloteSymbolKind.TAKER, "🎯"))
@@ -168,20 +168,32 @@ class BeloteGameActivity : AppCompatActivity() {
             entries.add(BeloteSymbolEntry(BeloteSymbolKind.BELOTE, "🤝"))
         if (!round.isCapot && round.pointsMade == BELOTE_CONTRACT_THRESHOLD)
             entries.add(BeloteSymbolEntry(BeloteSymbolKind.LITIGE, "⚖️"))
+
+        // Carry from a previous litige
+        if (round.isComplete() && result.carryIn > 0) {
+            val resolved = result.carryOut == 0
+            when {
+                resolved && teamIndex == round.attackingTeam ->
+                    entries.add(BeloteSymbolEntry(BeloteSymbolKind.CARRY_RESOLVED, "⚖️+${result.carryIn}", result.carryIn))
+                !resolved ->
+                    entries.add(BeloteSymbolEntry(BeloteSymbolKind.CARRY_PENDING, "⏳${result.carryIn}", result.carryIn))
+            }
+        }
         return entries
     }
 
     private fun showSymbolHint(entries: List<BeloteSymbolEntry>) {
-        val legend = entries.map { it.kind }.distinct().map { kind ->
-            getString(when (kind) {
-                BeloteSymbolKind.TAKER  -> R.string.belote_hint_taker
-                BeloteSymbolKind.CAPOT  -> R.string.belote_hint_capot
-                BeloteSymbolKind.BELOTE -> R.string.belote_hint_belote
-                BeloteSymbolKind.LITIGE -> R.string.belote_hint_litige
-            })
+        val legend = entries.distinctBy { it.kind }.map { entry ->
+            when (entry.kind) {
+                BeloteSymbolKind.TAKER          -> getString(R.string.belote_hint_taker)
+                BeloteSymbolKind.CAPOT          -> getString(R.string.belote_hint_capot)
+                BeloteSymbolKind.BELOTE         -> getString(R.string.belote_hint_belote)
+                BeloteSymbolKind.LITIGE         -> getString(R.string.belote_hint_litige)
+                BeloteSymbolKind.CARRY_RESOLVED -> getString(R.string.belote_hint_carry_resolved, entry.amount)
+                BeloteSymbolKind.CARRY_PENDING  -> getString(R.string.belote_hint_carry_pending, entry.amount)
+            }
         }
         val message = (listOf(getString(R.string.belote_hint_points)) + legend).joinToString("\n\n")
-
         AlertDialog.Builder(this)
             .setTitle(R.string.belote_hint_title)
             .setMessage(message)
@@ -514,7 +526,7 @@ class BeloteGameActivity : AppCompatActivity() {
         }
     }
 
-    private enum class BeloteSymbolKind { TAKER, CAPOT, BELOTE, LITIGE }
+    private enum class BeloteSymbolKind { TAKER, CAPOT, BELOTE, LITIGE, CARRY_RESOLVED, CARRY_PENDING }
 
-    private data class BeloteSymbolEntry(val kind: BeloteSymbolKind, val symbol: String)
+    private data class BeloteSymbolEntry(val kind: BeloteSymbolKind, val symbol: String, val amount: Int = 0)
 }
