@@ -41,11 +41,4 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <!-- Fixed total row — always visible at the bottom -->
-    <LinearLayout
-        android:id="@+id/totalContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
 </LinearLayout>

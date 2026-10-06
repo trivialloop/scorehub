@@ -18,7 +18,7 @@ object ScoreProgressHelper {
     private const val BAR_HEIGHT_DP = 6
 
     /** [current] is the running total; [color] is the player/team color. */
-    data class Entry(val current: Int, val color: Int)
+    data class Entry(val current: Int, val color: Int, val weight: Float? = null)
 
     /** Progress in 0..1. Negative totals (e.g. Tarot) are clamped to 0. */
     fun ratio(current: Int, limit: Int): Float =
@@ -78,7 +78,7 @@ object ScoreProgressHelper {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(dp(4), 0, dp(4), 0)
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, columnWeight)
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, entry.weight ?: columnWeight)
             }
 
             val track = LinearLayout(context).apply {

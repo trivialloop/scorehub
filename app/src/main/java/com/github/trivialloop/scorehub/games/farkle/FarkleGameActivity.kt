@@ -29,6 +29,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class FarkleGameActivity : AppCompatActivity() {
@@ -196,45 +197,38 @@ class FarkleGameActivity : AppCompatActivity() {
         val totalSlots   = maxOf(maxCompleted, activeSlot + 1)
         val allTotals    = visible.map { (_, p) -> p.getTotal(rounds) }
 
-        val headerRow = buildHeaderRow(visible)
-        val slotRows  = (0 until totalSlots).map { slotIdx ->
+        // Fixed header + progress bars
+        binding.headerContainer.removeAllViews()
+        binding.headerContainer.addView(buildHeaderRow(visible))
+        binding.headerContainer.addView(buildProgressRow(visible, allTotals))
+
+        // Scrollable: slots + total
+        binding.tableContainer.removeAllViews()
+        for (slotIdx in 0 until totalSlots) {
             val isActiveSlot = slotIdx == activeSlot
             val slotScores: List<Int?> = visible.map { (_, p) ->
                 completedByPlayer[p.playerId]?.getOrNull(slotIdx)?.score
             }
-            buildSlotRow(visible, completedByPlayer, slotIdx, isActiveSlot, activeTurn, slotScores)
+            binding.tableContainer.addView(
+                buildSlotRow(visible, completedByPlayer, slotIdx, isActiveSlot, activeTurn, slotScores)
+            )
         }
-        val totalRow = buildTotalRow(visible, allTotals)
+        binding.tableContainer.addView(buildTotalRow(visible, allTotals))
 
-        val screenHeight       = resources.displayMetrics.heightPixels
-        val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val totalNaturalHeight = dpToPx(HEADER_ROW_DP) +
-                slotRows.size * dpToPx(ROUND_ROW_DP) +
-                dpToPx(TOTAL_ROW_DP)
-
-        if (totalNaturalHeight > screenHeight - appBarHeight) {
-            // Split: fixed header, scrollable slots, fixed total
-            binding.headerContainer.removeAllViews()
-            binding.headerContainer.addView(headerRow)
-
-            binding.tableContainer.removeAllViews()
-            slotRows.forEach { binding.tableContainer.addView(it) }
-
-            binding.totalContainer.removeAllViews()
-            binding.totalContainer.addView(totalRow)
-
-            binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-        } else {
-            // Compact: everything in tableContainer
-            binding.headerContainer.removeAllViews()
-            binding.totalContainer.removeAllViews()
-
-            binding.tableContainer.removeAllViews()
-            binding.tableContainer.addView(headerRow)
-            slotRows.forEach { binding.tableContainer.addView(it) }
-            binding.tableContainer.addView(totalRow)
-        }
+        binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
+
+    private fun buildProgressRow(
+        visible: List<Pair<Int, FarklePlayerState>>,
+        allTotals: List<Int>
+    ): LinearLayout = ScoreProgressHelper.buildRow(
+        context    = this,
+        labelColDp = LABEL_COL_DP,
+        limit      = SCORE_LIMIT,
+        entries    = visible.mapIndexed { i, (idx, p) ->
+            ScoreProgressHelper.Entry(allTotals[i], p.playerColor, columnWeight(idx == currentPlayerIndex))
+        }
+    )
 
     private fun buildHeaderRow(visible: List<Pair<Int, FarklePlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)

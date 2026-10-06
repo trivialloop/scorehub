@@ -29,6 +29,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class CribbageGameActivity : AppCompatActivity() {
@@ -174,7 +175,7 @@ class CribbageGameActivity : AppCompatActivity() {
     private fun buildProgressRow() = ScoreProgressHelper.buildRow(
         context      = this,
         labelColDp   = LABEL_COL_DP,
-        limit        = SCORE_LIMIT,
+        limit        = WIN_SCORE,
         entries      = players.map { ScoreProgressHelper.Entry(it.getTotal(rounds), it.playerColor) },
         columnWeight = 2f,
         withDividers = true

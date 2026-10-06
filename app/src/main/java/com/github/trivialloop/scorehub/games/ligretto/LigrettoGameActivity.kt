@@ -30,6 +30,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class LigrettoGameActivity : AppCompatActivity() {
@@ -47,7 +48,7 @@ class LigrettoGameActivity : AppCompatActivity() {
 
     companion object {
         const val GAME_TYPE = "ligretto"
-        private const val SCORE_LIMIT          = 100
+        private const val SCORE_LIMIT          = 99
         private const val MAX_CARDS_PLAYED     = 40
         private const val MAX_STACK_LEFT       = 10
         private const val LABEL_COL_DP         = 65
