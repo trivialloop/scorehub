@@ -1,0 +1,21 @@
+### Ajout
+- Ajout du jeu 7 Wonders
+- Ajout du jeu Les Jardins Suspendus
+
+### Changement
+- Changement UI pour Akropolis
+- Changement UI pour Belote
+- Changement UI pour Cactus
+- Changement UI pour Cribbage
+- Changement UI pour Escoba
+- Changement UI pour Farkle
+- Changement UI pour Flip 7
+- Changement UI pour Harmonies
+- Changement UI pour Ligretto
+- Changement UI pour Ascenceur
+- Changement UI pour Qwixx
+- Changement UI pour Skyjo
+- Changement UI pour Tarot
+- Changement UI pour Ticket to ride
+- Changement UI pour Wingspan
+- Changement UI pour general stats

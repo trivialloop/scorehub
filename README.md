@@ -25,6 +25,7 @@ alt="Get it on F-Droid" height="100"/>](https://f-droid.org/en/packages/com.gith
 
 ## 🎮 Supported Games
 
+- 7 Wonders
 - Akropolis
 - Belote
 - Cactus
@@ -32,6 +33,7 @@ alt="Get it on F-Droid" height="100"/>](https://f-droid.org/en/packages/com.gith
 - Escoba
 - Farkle
 - Flip7
+- Hanging Gardens
 - Harmonies
 - Ligretto
 - Oh Hell
