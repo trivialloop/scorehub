@@ -28,6 +28,7 @@ import com.github.trivialloop.scorehub.databinding.ActivityBeloteGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class BeloteGameActivity : AppCompatActivity() {
@@ -101,6 +102,7 @@ class BeloteGameActivity : AppCompatActivity() {
     private fun buildTable() {
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(buildHeaderRow())
+        binding.headerContainer.addView(buildProgressRow())
 
         binding.tableContainer.removeAllViews()
         val roundResults = BeloteScoring.computeRoundResults(rounds)
@@ -112,6 +114,13 @@ class BeloteGameActivity : AppCompatActivity() {
 
         binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
+
+    private fun buildProgressRow(): LinearLayout = ScoreProgressHelper.buildRow(
+        context    = this,
+        labelColDp = LABEL_COL_DP,
+        limit      = BELOTE_SCORE_LIMIT,
+        entries    = teams.map { ScoreProgressHelper.Entry(it.getTotal(rounds), it.teamColor) }
+    )
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow()

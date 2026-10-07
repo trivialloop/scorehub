@@ -29,6 +29,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class Flip7GameActivity : AppCompatActivity() {
@@ -179,6 +180,7 @@ class Flip7GameActivity : AppCompatActivity() {
         // Fixed header
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(headerRow)
+        binding.headerContainer.addView(buildProgressRow(visible, allTotals))
 
         // Scrollable: slot rows + total
         binding.tableContainer.removeAllViews()
@@ -187,6 +189,18 @@ class Flip7GameActivity : AppCompatActivity() {
 
         binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
+
+    private fun buildProgressRow(
+        visible: List<Pair<Int, Flip7PlayerState>>,
+        allTotals: List<Int>
+    ): LinearLayout = ScoreProgressHelper.buildRow(
+        context    = this,
+        labelColDp = LABEL_COL_DP,
+        limit      = SCORE_LIMIT,
+        entries    = visible.mapIndexed { i, (idx, p) ->
+            ScoreProgressHelper.Entry(allTotals[i], p.playerColor, columnWeight(idx == currentPlayerIndex))
+        }
+    )
 
     private fun buildHeaderRow(visible: List<Pair<Int, Flip7PlayerState>>): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)

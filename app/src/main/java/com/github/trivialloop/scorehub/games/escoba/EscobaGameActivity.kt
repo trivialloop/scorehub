@@ -33,6 +33,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class EscobaGameActivity : AppCompatActivity() {
@@ -121,6 +122,7 @@ class EscobaGameActivity : AppCompatActivity() {
     private fun buildTable() {
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(buildHeaderRow())
+        binding.headerContainer.addView(buildProgressRow())
 
         binding.tableContainer.removeAllViews()
         rounds.forEachIndexed { index, round ->
@@ -153,23 +155,31 @@ class EscobaGameActivity : AppCompatActivity() {
     }
 
     /** Name on top, then the two symbols below, in the player's color. */
-    private fun buildPlayerHeaderBlock(player: EscobaPlayerState): LinearLayout =
-        LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
+    private fun buildPlayerHeaderBlock(player: EscobaPlayerState): LinearLayout = LinearLayout(this).apply {
+        orientation  = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2f)
 
-            addView(makePlayerNameHeaderCell(player.playerName, player.playerColor))
+        addView(makePlayerNameHeaderCell(player.playerName, player.playerColor))
 
-            addView(LinearLayout(this@EscobaGameActivity).apply {
-                orientation       = LinearLayout.HORIZONTAL
-                isBaselineAligned = false
-                layoutParams      = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUB_HEADER_HEIGHT_DP))
-                addView(makeSubHeaderCell(SYMBOL_IN_PLAY, player.playerColor))
-                addView(makeVerticalDivider())
-                addView(makeSubHeaderCell(SYMBOL_HAND, player.playerColor))
-            })
-        }
+        addView(LinearLayout(this@EscobaGameActivity).apply {
+            orientation       = LinearLayout.HORIZONTAL
+            isBaselineAligned = false
+            layoutParams      = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUB_HEADER_HEIGHT_DP))
+            addView(makeSubHeaderCell(SYMBOL_IN_PLAY, player.playerColor))
+            addView(makeVerticalDivider())
+            addView(makeSubHeaderCell(SYMBOL_HAND, player.playerColor))
+        })
+    }
+
+    private fun buildProgressRow() = ScoreProgressHelper.buildRow(
+        context      = this,
+        labelColDp   = LABEL_COL_DP,
+        limit        = SCORE_LIMIT,
+        entries      = players.map { ScoreProgressHelper.Entry(it.getTotal(rounds), it.playerColor) },
+        columnWeight = 2f,
+        withDividers = true
+    )
 
     private fun makePlayerNameHeaderCell(name: String, color: Int): TextView = TextView(this).apply {
         text = name; gravity = Gravity.CENTER; textSize = 13f; setTypeface(null, Typeface.BOLD)

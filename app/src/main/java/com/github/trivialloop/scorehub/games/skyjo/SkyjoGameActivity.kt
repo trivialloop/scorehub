@@ -29,6 +29,7 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
 class SkyjoGameActivity : AppCompatActivity() {
@@ -121,30 +122,28 @@ class SkyjoGameActivity : AppCompatActivity() {
     // ─── Table construction ────────────────────────────────────────────────────
 
     private fun buildTable() {
-        val headerRow = buildHeaderRow()
-        val roundRows = rounds.mapIndexed { index, round ->
-            buildRoundRow(round, isLast = index == rounds.lastIndex, isPrev = index == rounds.lastIndex - 1)
-        }
-        val totalRow = buildTotalRow()
+        binding.headerContainer.removeAllViews()
+        binding.headerContainer.addView(buildHeaderRow())
+        binding.headerContainer.addView(buildProgressRow())
 
-        val screenHeight       = resources.displayMetrics.heightPixels
-        val appBarHeight       = binding.toolbar.layoutParams?.height?.takeIf { it > 0 } ?: dpToPx(56)
-        val rowHeight          = cellPaddingV * 2 + dpToPx((cellTextSize + 4).toInt())
-        val totalNaturalHeight = rowHeight * (roundRows.size + 3)
-
-        if (totalNaturalHeight > screenHeight - appBarHeight) {
-            binding.headerContainer.removeAllViews(); binding.headerContainer.addView(headerRow)
-            binding.tableContainer.removeAllViews(); roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.totalContainer.removeAllViews(); binding.totalContainer.addView(totalRow)
-            binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-        } else {
-            binding.headerContainer.removeAllViews()
-            binding.tableContainer.removeAllViews(); binding.totalContainer.removeAllViews()
-            binding.tableContainer.addView(headerRow)
-            roundRows.forEach { binding.tableContainer.addView(it) }
-            binding.tableContainer.addView(totalRow)
+        binding.tableContainer.removeAllViews()
+        rounds.forEachIndexed { index, round ->
+            binding.tableContainer.addView(
+                buildRoundRow(round, isLast = index == rounds.lastIndex, isPrev = index == rounds.lastIndex - 1)
+            )
         }
+        binding.tableContainer.addView(buildTotalRow())
+
+        binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
+
+    private fun buildProgressRow(): LinearLayout = ScoreProgressHelper.buildRow(
+        context    = this,
+        labelColDp = LABEL_COL_DP,
+        limit      = SCORE_LIMIT,
+        entries    = players.map { ScoreProgressHelper.Entry(it.getTotal(rounds), it.playerColor) },
+        dangerMode = true
+    )
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow()
