@@ -57,7 +57,7 @@ docs/games/                          # One markdown file per game (rules, UI not
 
 ### Database
 - **Never modify** `AppDatabase` without creating a **Room migration** (`addMigrations(...)` in the builder).
-- Current version is **`version = 1`** — any column or table addition must increment this number and provide the SQL migration script.
+- Current version is **`version = 2`** — any column or table addition must increment this number and provide the SQL migration script.
 - `GameResult.gameType` is a plain string (`"yahtzee"`, `"skyjo"`, `"ligretto"`, etc., not an enum).
 
 ---
