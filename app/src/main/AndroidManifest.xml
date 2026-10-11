@@ -36,6 +36,11 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".BackupImportActivity"
+            android:parentActivityName=".SettingsActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity
             android:name=".games.akropolis.AkropolisGameActivity"
             android:parentActivityName=".games.akropolis.AkropolisPlayerSelectionActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />

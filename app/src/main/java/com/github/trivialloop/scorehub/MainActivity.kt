@@ -150,9 +150,15 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         )
-
         applyFilterAndSort()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        refreshGameStats()
+    }
+
+    private fun refreshGameStats() {
         lifecycleScope.launch {
             for (game in allGames) {
                 game.lastPlayedAt = database.gameResultDao().getLastPlayedAt(game.definition.gameType)
