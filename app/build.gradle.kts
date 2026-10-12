@@ -12,6 +12,10 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 android {
     namespace = "com.github.trivialloop.scorehub"
     compileSdk = 37
@@ -134,6 +138,7 @@ dependencies {
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+    testImplementation("org.json:json:20240303")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
     // Instrumented Testing

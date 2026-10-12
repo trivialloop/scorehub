@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="backup_section_title">Sauvegarde (bêta)</string>
+    <string name="backup_beta_notice">Cette fonctionnalité est en bêta. Avant chaque import, exportez une sauvegarde pour pouvoir revenir en arrière en cas de problème.</string>
+    <string name="backup_export">Exporter les données</string>
+    <string name="backup_import">Importer des données</string>
+    <string name="backup_export_success">Sauvegarde exportée</string>
+    <string name="backup_export_error">Échec de l\'export : %1$s</string>
+
+    <string name="backup_error_not_backup">Ce fichier n\'est pas une sauvegarde ScoreHub.</string>
+    <string name="backup_error_newer_version">Cette sauvegarde a été créée par une version plus récente de ScoreHub. Mettez l\'application à jour pour l\'importer.</string>
+    <string name="backup_error_unknown_games">Cette sauvegarde contient des jeux inconnus de cette version (%1$s). Mettez l\'application à jour pour l\'importer.</string>
+    <string name="backup_error_malformed">Le fichier de sauvegarde est endommagé ou incomplet.</string>
+    <string name="backup_error_read">Le fichier ne peut pas être lu.</string>
+    <string name="backup_error_generic">Échec de l\'import : %1$s</string>
+
+    <string name="backup_import_choice_title">Importer une sauvegarde</string>
+    <string name="backup_import_choice_message">Votre appareil contient déjà des données. Comment importer ?\n\n• Fusionner : ajoute les nouvelles parties de la sauvegarde et permet de lier les joueurs.\n• Écraser : remplace tout par la sauvegarde.\n\nBêta : exportez d\'abord une sauvegarde pour pouvoir revenir en arrière si besoin.</string>
+    <string name="backup_merge">Fusionner</string>
+    <string name="backup_overwrite">Écraser</string>
+    <string name="backup_overwrite_confirm_title">Écraser toutes les données ?</string>
+    <string name="backup_overwrite_confirm_message">Tous les joueurs et parties actuels seront définitivement remplacés par le contenu de la sauvegarde. Cette action est irréversible.\n\nEn cas de doute, annulez et exportez d\'abord une sauvegarde.</string>
+    <string name="backup_import_done">Sauvegarde importée : %1$d joueurs, %2$d parties</string>
+
+    <string name="backup_merge_title">Fusionner la sauvegarde</string>
+    <string name="backup_section_players">Joueurs</string>
+    <string name="backup_section_new_games">Nouvelles parties (%1$d)</string>
+    <string name="backup_section_present_games">Déjà présentes, ignorées (%1$d)</string>
+    <string name="backup_no_games">Aucune</string>
+    <string name="backup_match_same_uuid">Même identité (UUID identique)</string>
+    <string name="backup_match_linked_uuid">Identité liée (lien précédent)</string>
+    <string name="backup_ambiguous">Ce joueur partage une identité avec plusieurs joueurs, ou entre en concurrence avec un autre joueur importé. Choisissez manuellement.</string>
+    <string name="backup_choice_undecided">— Choisir —</string>
+    <string name="backup_choice_new">Nouveau joueur</string>
+    <string name="backup_choice_link">Lier à %1$s</string>
+    <string name="backup_choice_link_same_name">Lier à %1$s (même nom)</string>
+    <string name="backup_name_hint">Nom du joueur</string>
+    <string name="backup_players_left">Joueurs restant à configurer : %1$d</string>
+    <string name="backup_import_button">Importer</string>
+    <string name="backup_merge_done">Fusion terminée : %1$d nouvelles parties, %2$d nouveaux joueurs</string>
+
+    <string name="backup_issue_unknown_local">Ce joueur n\'existe plus</string>
+    <string name="backup_issue_local_used">Ce joueur est déjà lié à un autre joueur importé</string>
+    <string name="backup_issue_name_too_long">Nom trop long (20 caractères max)</string>
+    <string name="backup_issue_name_taken">Ce nom est déjà utilisé</string>
+</resources>

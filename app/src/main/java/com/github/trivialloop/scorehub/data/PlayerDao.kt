@@ -22,4 +22,20 @@ interface PlayerDao {
     
     @Query("SELECT * FROM players WHERE name = :name LIMIT 1")
     suspend fun getPlayerByName(name: String): Player?
+
+    @Query("SELECT * FROM players ORDER BY id ASC")
+    suspend fun getAllPlayersOnce(): List<Player>
+
+    @Query("UPDATE players SET extraUuids = :extraUuids WHERE id = :id")
+    suspend fun updateExtraUuids(id: Long, extraUuids: List<String>)
+
+    /** ABORT (not REPLACE): a uuid clash must fail the whole import, never delete a player. */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertImported(player: Player): Long
+
+    @Query("DELETE FROM players")
+    suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM players")
+    suspend fun count(): Int
 }

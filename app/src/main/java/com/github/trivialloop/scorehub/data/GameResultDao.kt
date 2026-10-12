@@ -71,6 +71,18 @@ interface GameResultDao {
         FROM game_results GROUP BY gameType
     """)
     suspend fun getGameSummaries(): List<GameSummary>
+
+    @Query("SELECT * FROM game_results ORDER BY id ASC")
+    suspend fun getAllResults(): List<GameResult>
+
+    @Query("SELECT DISTINCT gameType, playedAt FROM game_results")
+    suspend fun getAllGameKeys(): List<com.github.trivialloop.scorehub.data.backup.GameKey>
+
+    @Query("DELETE FROM game_results")
+    suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM game_results")
+    suspend fun count(): Int
 }
 
 data class PlayerWins(

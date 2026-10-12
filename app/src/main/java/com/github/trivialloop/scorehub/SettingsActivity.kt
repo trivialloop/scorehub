@@ -15,9 +15,35 @@ import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.SupportedLanguages
 import com.github.trivialloop.scorehub.utils.ThemeHelper
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import com.github.trivialloop.scorehub.data.AppDatabase
+import com.github.trivialloop.scorehub.data.backup.BackupFile
+import com.github.trivialloop.scorehub.data.backup.BackupFiles
+import com.github.trivialloop.scorehub.data.backup.BackupPrefs
+import com.github.trivialloop.scorehub.data.backup.BackupRepository
+import com.github.trivialloop.scorehub.ui.BackupMessages
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var backupRepo: BackupRepository
+    private val exportLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+            uri?.let { exportTo(it) }
+        }
+    private val importLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let { importFrom(it) }
+        }
     
     override fun attachBaseContext(newBase: Context) {
         val language = LocaleHelper.getPersistedLocale(newBase)
@@ -58,6 +84,13 @@ class SettingsActivity : AppCompatActivity() {
         
         setupLanguageSpinner()
         setupThemeSpinner()
+
+        backupRepo = BackupRepository(AppDatabase.getDatabase(this))
+        binding.btnExportBackup.setOnClickListener {
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            exportLauncher.launch("scorehub-backup-$date.json")
+        }
+        binding.btnImportBackup.setOnClickListener { importLauncher.launch(arrayOf("*/*")) }
     }
     
     private fun setupLanguageSpinner() {
@@ -120,6 +153,82 @@ class SettingsActivity : AppCompatActivity() {
                 
                 override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
             }
+    }
+
+        // ─── Backup ───────────────────────────────────────────────────────────────
+
+    private fun exportTo(uri: Uri) {
+        lifecycleScope.launch {
+            try {
+                val version = packageManager.getPackageInfo(packageName, 0).versionName ?: ""
+                BackupFiles.write(contentResolver, uri, backupRepo.exportToJson(version))
+                Toast.makeText(this@SettingsActivity, R.string.backup_export_success, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.backup_export_error, e.message ?: e.javaClass.simpleName),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun importFrom(uri: Uri) {
+        lifecycleScope.launch {
+            try {
+                val text = BackupFiles.read(contentResolver, uri)
+                val backup = withContext(Dispatchers.Default) { backupRepo.parseAndCheck(text) }
+                if (backupRepo.isDatabaseEmpty()) {
+                    // Nothing to lose: import directly, uuids are kept
+                    overwriteWith(backup)
+                } else {
+                    showImportChoice(uri, backup)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@SettingsActivity, BackupMessages.of(this@SettingsActivity, e), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showImportChoice(uri: Uri, backup: BackupFile) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.backup_import_choice_title)
+            .setMessage(R.string.backup_import_choice_message)
+            .setPositiveButton(R.string.backup_merge) { _, _ ->
+                startActivity(Intent(this, BackupImportActivity::class.java).apply {
+                    data = uri
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                })
+            }
+            .setNegativeButton(R.string.backup_overwrite) { _, _ -> confirmOverwrite(backup) }
+            .setNeutralButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun confirmOverwrite(backup: BackupFile) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.backup_overwrite_confirm_title)
+            .setMessage(R.string.backup_overwrite_confirm_message)
+            .setPositiveButton(R.string.backup_overwrite) { _, _ -> overwriteWith(backup) }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun overwriteWith(backup: BackupFile) {
+        lifecycleScope.launch {
+            try {
+                backupRepo.overwrite(backup)
+                BackupPrefs.resetPlayerOrders(this@SettingsActivity)
+                val games = backup.games.distinctBy { it.gameType to it.playedAt }.size
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.backup_import_done, backup.players.size, games),
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: Exception) {
+                Toast.makeText(this@SettingsActivity, BackupMessages.of(this@SettingsActivity, e), Toast.LENGTH_LONG).show()
+            }
+        }
     }
     
     private fun restartApp() {

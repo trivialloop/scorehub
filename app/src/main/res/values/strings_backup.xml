@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings -->
+    <string name="backup_section_title">Backup (beta)</string>
+    <string name="backup_beta_notice">This feature is in beta. Before every import, export a backup so you can go back if something goes wrong.</string>
+    <string name="backup_export">Export data</string>
+    <string name="backup_import">Import data</string>
+    <string name="backup_export_success">Backup exported</string>
+    <string name="backup_export_error">Export failed: %1$s</string>
+
+    <!-- Errors -->
+    <string name="backup_error_not_backup">This file is not a ScoreHub backup.</string>
+    <string name="backup_error_newer_version">This backup was created by a newer version of ScoreHub. Update the app to import it.</string>
+    <string name="backup_error_unknown_games">This backup contains games unknown to this version (%1$s). Update the app to import it.</string>
+    <string name="backup_error_malformed">The backup file is damaged or incomplete.</string>
+    <string name="backup_error_read">The file cannot be read.</string>
+    <string name="backup_error_generic">Import failed: %1$s</string>
+
+    <!-- Import choice -->
+    <string name="backup_import_choice_title">Import backup</string>
+    <string name="backup_import_choice_message">Your device already contains data. How do you want to import?\n\n• Merge: adds the new games of the backup and lets you link players.\n• Overwrite: replaces everything with the backup.\n\nBeta: export a backup first so you can go back if needed.</string>
+    <string name="backup_merge">Merge</string>
+    <string name="backup_overwrite">Overwrite</string>
+    <string name="backup_overwrite_confirm_title">Overwrite all data?</string>
+    <string name="backup_overwrite_confirm_message">All current players and games will be permanently replaced by the content of the backup. This cannot be undone.\n\nIf you are not sure, cancel and export a backup first.</string>
+    <string name="backup_import_done">Backup imported: %1$d players, %2$d games</string>
+
+    <!-- Merge screen -->
+    <string name="backup_merge_title">Merge backup</string>
+    <string name="backup_section_players">Players</string>
+    <string name="backup_section_new_games">New games (%1$d)</string>
+    <string name="backup_section_present_games">Already present, ignored (%1$d)</string>
+    <string name="backup_no_games">None</string>
+    <string name="backup_match_same_uuid">Same identity (matching UUID)</string>
+    <string name="backup_match_linked_uuid">Linked identity (previous link)</string>
+    <string name="backup_ambiguous">This player shares an identity with several players, or competes with another imported player. Choose manually.</string>
+    <string name="backup_choice_undecided">— Choose —</string>
+    <string name="backup_choice_new">New player</string>
+    <string name="backup_choice_link">Link to %1$s</string>
+    <string name="backup_choice_link_same_name">Link to %1$s (same name)</string>
+    <string name="backup_name_hint">Player name</string>
+    <string name="backup_players_left">Players left to configure: %1$d</string>
+    <string name="backup_import_button">Import</string>
+    <string name="backup_merge_done">Merge done: %1$d new games, %2$d new players</string>
+
+    <!-- Validation issues -->
+    <string name="backup_issue_unknown_local">This player no longer exists</string>
+    <string name="backup_issue_local_used">This player is already linked to another imported player</string>
+    <string name="backup_issue_name_too_long">Name too long (20 characters max)</string>
+    <string name="backup_issue_name_taken">This name is already used</string>
+</resources>
