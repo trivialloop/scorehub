@@ -1,0 +1,6 @@
+### Added
+- Add import/export scores
+
+### Changed
+- Add progression bar during the games
+- Add litige information in Belote game
