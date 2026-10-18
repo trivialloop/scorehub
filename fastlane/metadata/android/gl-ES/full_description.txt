@@ -1,0 +1,32 @@
+ScoreHub é unha aplicación sinxela e intuitiva para levar a conta das puntuacións das partidas de varios xogadores.
+
+Características:
+• Compatibilidade con múltiples xogos
+• Xestión de xogadores con cores personalizadas
+• Estatísticas completas e clasificacións
+• Táboa dos 20 mellores resultados
+• Seguimento de vitorias, derrotas e empates
+• Compatibilidade con varios idiomas
+• Funcionamento sen conexión
+
+Ideal para os amantes dos xogos de mesa que queiran levar un rexistro detallado das súas partidas.
+
+Xogos compatibles actualmente:
+- Akropolis
+- Belote
+- Cactus
+- Cribbage
+- Escoba
+- Farkle
+- Flip7
+- Harmonies
+- Ligretto
+- Oh Hell
+- Qwixx
+- Skyjo
+- Tarot
+- Ticket to Ride
+- Wingspan
+- Yahtzee
+
+- Partida libre

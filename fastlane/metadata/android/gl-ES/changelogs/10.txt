@@ -1,0 +1,6 @@
+### Trocos
+- Actualización de Gradle e das bibliotecas
+
+### Correccións
+- Corrixido o inicio dunha nova rolda ao editar a derradeira rolda en Cribbage
+- Corrixido o inicio dunha nova rolda ao editar a derradeira rolda en Escoba

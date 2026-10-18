@@ -1,0 +1,3 @@
+### Correccións
+- Corrixida a visualización de bordo a bordo na modalidade de partida libre
+- Corrixida a navegación ao voltar á pantalla anterior

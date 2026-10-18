@@ -1,0 +1,6 @@
+### Engadido
+- Engadida a opción de personalizar a cor de cada xogador
+
+### trocos
+- Mellorada a lexibilidade dos xogos
+- Mellorada a xanela emerxente ao rematar as partidas

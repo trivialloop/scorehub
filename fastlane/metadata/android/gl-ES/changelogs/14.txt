@@ -1,0 +1,6 @@
+### Engadido
+- Engadido o xogo Akropolis
+
+### Trocos
+- Actualización das bibliotecas
+- Mellorada a función auxiliar para a xestión das cores

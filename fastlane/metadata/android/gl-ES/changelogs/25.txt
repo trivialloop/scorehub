@@ -1,0 +1,5 @@
+### Engadido
+- Engadido o xogo Belote
+
+### Correccións
+- Corrixido un erro polo que non sempre se contabilizaban correctamente as partidas

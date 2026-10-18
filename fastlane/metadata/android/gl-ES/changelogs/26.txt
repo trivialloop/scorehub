@@ -1,0 +1,21 @@
+### Engadido
+- Novo xogo 7 Wonders
+- Novo xogo Hanging Gardens
+
+### Trocos
+- Melloras na IU de Akropolis
+- Melloras na IU de Belote
+- Melloras na IU de Cactus
+- Melloras na IU de Cribbage
+- Melloras na IU de Escoba
+- Melloras na IU de Farkle
+- Melloras na IU de Flip 7
+- Melloras na IU de Harmonies
+- Melloras na IU de Ligretto
+- Melloras na IU de Oh Hell
+- Melloras na IU de Qwixx
+- Melloras na IU de Skyjo
+- Melloras na IU de Tarot
+- Melloras na IU de Ticket to Ride
+- Melloras na IU de Wingspan
+- Melloras nas estatísticas xerais

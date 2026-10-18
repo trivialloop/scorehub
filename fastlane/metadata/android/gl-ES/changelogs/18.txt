@@ -1,0 +1,2 @@
+### Correccións
+- Corrixido un erro que reiniciaba as partidas ao xirar o dispositivo

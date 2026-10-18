@@ -1,0 +1,2 @@
+### Correccións
+- Corrixida a selección do idioma alemán

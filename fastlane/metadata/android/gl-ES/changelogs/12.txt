@@ -1,0 +1,6 @@
+### Trocos
+- Mellorada a lexibilidade do xogo Skyjo
+
+### Correccións
+- Corrixida a visualización de bordo a bordo en Android 15 e versións posteriores
+- Engadidos textos de axuda para facilitar o uso da aplicación

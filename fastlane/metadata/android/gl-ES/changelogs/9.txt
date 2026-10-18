@@ -1,0 +1,2 @@
+### Correccións
+- Corrixida a cor das puntuacións en Yahtzee

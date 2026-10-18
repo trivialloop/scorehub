@@ -1,0 +1,6 @@
+### Engadido
+- Engadido o xogo Tarot
+
+### Trocos
+- Mellorado o filtro de xogos
+- Unificadas as cores dos xogos
