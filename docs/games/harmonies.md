@@ -22,6 +22,6 @@ Total = the 5 fixed-category subtotals + the sum of all Animal card entries. Hig
 
 - `HarmoniesPlayerScore` splits the model in two: `scores: MutableMap<HarmoniesCategory, Int?>` for the 5 fixed categories (`getCategoryTotal()`), and `animalEntries: MutableList<Int>` for the variable-length Animal card list (`getAnimalsTotal()`). `getTotal()` combines both.
 - `HarmoniesCategory.getPossibleValues()`: Trees/Mountains/River use `0..100`; Fields/Buildings are restricted to multiples of 5 (`0, 5, 10, … 100`) since each Field/Building is worth exactly 5 pts. All ranges share `HARMONIES_MAX_SCORE = 100`.
-- The 100 ceiling is higher than the base game alone needs, to allow for the official extensions and alternative boards, which can produce subtotals well above base-game values.
+- The 100 ceiling is higher than the base game alone needs, because the alternative boards can be larger than the base-game board and produce subtotals well above base-game values.
 - `HARMONIES_ANIMAL_CARD_VALUES` (`0..100`) is the picker range for a single Animal card's score, added via "+".
 - The Animals section follows the exact same 3-part layout as Ticket to Ride's ticket lists: a "+" header row, one slot row per entry (aligned across players), and a "Subtotal" row.
