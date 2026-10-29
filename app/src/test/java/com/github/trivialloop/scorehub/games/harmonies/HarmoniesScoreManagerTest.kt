@@ -108,39 +108,39 @@ class HarmoniesScoreManagerTest {
     // ─── getPossibleValues ──────────────────────────────────────────────────────
 
     @Test
-    fun `trees possible values range 0 to 50`() {
+    fun `trees possible values range 0 to 100`() {
         val values = HarmoniesCategory.TREES.getPossibleValues()
         assertEquals(0, values.first())
-        assertEquals(50, values.last())
-        assertEquals(51, values.size)
+        assertEquals(100, values.last())
+        assertEquals(101, values.size)
     }
 
     @Test
-    fun `mountains possible values range 0 to 50`() {
+    fun `mountains possible values range 0 to 100`() {
         val values = HarmoniesCategory.MOUNTAINS.getPossibleValues()
         assertEquals(0, values.first())
-        assertEquals(50, values.last())
+        assertEquals(100, values.last())
     }
 
     @Test
-    fun `fields possible values are multiples of 5 up to 50`() {
+    fun `fields possible values are multiples of 5 up to 100`() {
         val values = HarmoniesCategory.FIELDS.getPossibleValues()
-        assertEquals(listOf(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50), values)
+        assertEquals(listOf(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100), values)
     }
 
     @Test
-    fun `buildings possible values are multiples of 5 up to 50`() {
+    fun `buildings possible values are multiples of 5 up to 100`() {
         val values = HarmoniesCategory.BUILDINGS.getPossibleValues()
         assertTrue(values.all { it % 5 == 0 })
         assertEquals(0, values.first())
-        assertEquals(50, values.last())
+        assertEquals(100, values.last())
     }
 
     @Test
-    fun `river possible values range 0 to 40`() {
+    fun `river possible values range 0 to 100`() {
         val values = HarmoniesCategory.RIVER.getPossibleValues()
         assertEquals(0, values.first())
-        assertEquals(40, values.last())
+        assertEquals(100, values.last())
     }
 
     @Test
@@ -151,10 +151,10 @@ class HarmoniesScoreManagerTest {
     // ─── HARMONIES_ANIMAL_CARD_VALUES ────────────────────────────────────────
 
     @Test
-    fun `animal card values range 0 to 30`() {
+    fun `animal card values range 0 to 100`() {
         assertEquals(0, HARMONIES_ANIMAL_CARD_VALUES.first())
-        assertEquals(30, HARMONIES_ANIMAL_CARD_VALUES.last())
-        assertEquals(31, HARMONIES_ANIMAL_CARD_VALUES.size)
+        assertEquals(100, HARMONIES_ANIMAL_CARD_VALUES.last())
+        assertEquals(101, HARMONIES_ANIMAL_CARD_VALUES.size)
     }
 
     // ─── Multi-player independence ─────────────────────────────────────────────

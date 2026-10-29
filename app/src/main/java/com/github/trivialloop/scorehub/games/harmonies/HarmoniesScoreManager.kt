@@ -38,11 +38,13 @@ enum class HarmoniesCategory {
 
     /** Selectable values for the picker dialog for this category. */
     fun getPossibleValues(): List<Int> = when (this) {
-        TREES, MOUNTAINS -> (0..50).toList()
-        FIELDS, BUILDINGS -> (0..50 step 5).toList()
-        RIVER -> (0..40).toList()
+        TREES, MOUNTAINS, RIVER -> (0..HARMONIES_MAX_SCORE).toList()
+        FIELDS, BUILDINGS -> (0..HARMONIES_MAX_SCORE step 5).toList()
     }
 }
 
+/** Upper bound of every score picker (categories and animal cards). */
+const val HARMONIES_MAX_SCORE = 100
+
 /** Selectable point values when adding a single Animal card score. */
-val HARMONIES_ANIMAL_CARD_VALUES: List<Int> = (0..30).toList()
+val HARMONIES_ANIMAL_CARD_VALUES: List<Int> = (0..HARMONIES_MAX_SCORE).toList()
