@@ -138,7 +138,7 @@ dependencies {
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
-    testImplementation("org.json:json:20240303")
+    testImplementation("org.json:json:20260814")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
     // Instrumented Testing
