@@ -142,6 +142,14 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_qwixx_wikipedia_url)
         )
 
+        "scrabble" -> GameHelp(
+            players      = context.getString(R.string.help_scrabble_players),
+            objective    = context.getString(R.string.help_scrabble_objective),
+            scoring      = context.getString(R.string.help_scrabble_scoring),
+            endCondition = context.getString(R.string.help_scrabble_end),
+            wikipediaUrl = context.getString(R.string.help_scrabble_wikipedia_url)
+        )
+
         "sevenwonders" -> GameHelp(
             players      = context.getString(R.string.help_sevenwonders_players),
             objective    = context.getString(R.string.help_sevenwonders_objective),
@@ -276,6 +284,13 @@ object HelpDialogs {
             context.getString(R.string.app_help_qwixx_2),
             context.getString(R.string.app_help_qwixx_3),
             context.getString(R.string.app_help_qwixx_4)
+        ))
+
+        "scrabble" -> AppHelp(listOf(
+            context.getString(R.string.app_help_scrabble_1),
+            context.getString(R.string.app_help_scrabble_2),
+            context.getString(R.string.app_help_scrabble_3),
+            context.getString(R.string.app_help_scrabble_4)
         ))
 
         "sevenwonders" -> AppHelp(listOf(

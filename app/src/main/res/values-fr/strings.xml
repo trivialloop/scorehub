@@ -259,6 +259,21 @@
     <string name="qwixx_phase_active_second">%1$s — choisir à nouveau%2$s</string>
     <string name="qwixx_phase_active_second_mandatory"> (obligatoire ou malus)</string>
 
+    <!-- Jeu Scrabble -->
+    <string name="scrabble_game">Scrabble</string>
+    <string name="scrabble_total">Total</string>
+    <string name="scrabble_enter_score">Entrer le score</string>
+    <string name="scrabble_score_hint">ex : 24 ou -7</string>
+    <string name="scrabble_score_invalid">Entrez un nombre entre -999 et 999</string>
+    <string name="scrabble_delete_entry">Supprimer</string>
+    <string name="scrabble_finish_game">Terminer la partie</string>
+    <string name="scrabble_finish_game_title">Terminer la partie ?</string>
+    <string name="scrabble_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="scrabble_minimum_players">Minimum 2 joueurs requis</string>
+    <string name="scrabble_maximum_players">Maximum 4 joueurs autorisés</string>
+    <string name="scrabble_quit_game">Quitter la partie</string>
+    <string name="scrabble_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+    
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_total">Total</string>

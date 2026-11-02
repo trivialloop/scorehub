@@ -13,6 +13,7 @@ import com.github.trivialloop.scorehub.games.harmonies.HarmoniesPlayerSelectionA
 import com.github.trivialloop.scorehub.games.ligretto.LigrettoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.ohhell.OhHellPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.qwixx.QwixxPlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.scrabble.ScrabblePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.sevenwonders.SevenWondersPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.skyjo.SkyjoPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.tarot.TarotPlayerSelectionActivity
@@ -220,6 +221,17 @@ object GameRegistry {
             activityClass  = QwixxPlayerSelectionActivity::class.java,
             minPlayers     = 2,
             maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "scrabble",
+            nameEnFallback = "Scrabble",
+            nameResId      = R.string.scrabble_game,
+            iconResId      = R.drawable.ic_scrabble_game,
+            activityClass  = ScrabblePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
+            maxPlayers     = 4,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)
         ),

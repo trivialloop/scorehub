@@ -188,6 +188,20 @@
     <string name="app_help_qwixx_4">The game ends automatically when 4 penalties are reached by any player or 2 colors are locked. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Scrabble                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_scrabble_players">2 to 4 players.</string>
+    <string name="help_scrabble_objective">Score the most points by placing letter tiles on the board to form words that connect to the ones already played.</string>
+    <string name="help_scrabble_scoring">A word is worth the sum of its letter values, multiplied by any premium squares it covers. Using all 7 tiles of your rack in one turn adds a 50-point bonus. At the end, each player subtracts the value of the tiles left on their rack, and the player who went out adds that sum.</string>
+    <string name="help_scrabble_end">The game ends when the bag is empty and one player has played all their tiles, or when no player can play any more.</string>
+    <string name="help_scrabble_wikipedia_url">https://en.wikipedia.org/wiki/Scrabble</string>
+
+    <string name="app_help_scrabble_1">On your turn, tap + and enter the score of the word you played. You can add several scores in the same turn (several words, bonus…). Tap an entry to edit or delete it.</string>
+    <string name="app_help_scrabble_2">Tap ✅ to end your turn and pass to the next player. Tap ✅ without any score to pass your turn.</string>
+    <string name="app_help_scrabble_3">At the end of the game, add the remaining-tiles adjustments as entries: a negative number for your leftover tiles, a positive one if you went out.</string>
+    <string name="app_help_scrabble_4">When the game is over, tap "Finish game" to lock all scores and see the results. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — 7 Wonders                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_sevenwonders_players">3 to 7 players.</string>

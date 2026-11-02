@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Placeholder: wooden letter tile. Replace with a custom asset if desired. -->
+    <path
+        android:fillColor="#D9B27C"
+        android:pathData="M10,4h44a6,6 0,0 1,6 6v44a6,6 0,0 1,-6 6H10a6,6 0,0 1,-6 -6V10a6,6 0,0 1,6 -6z" />
+    <path
+        android:fillColor="#4E342E"
+        android:fillType="evenOdd"
+        android:pathData="M32,14L46,50L40,50L37.2,42L26.8,42L24,50L18,50L32,14zM29,36.5L35,36.5L32,26.5L29,36.5z" />
+    <path
+        android:fillColor="#4E342E"
+        android:pathData="M45,44h7v4h-7z" />
+</vector>

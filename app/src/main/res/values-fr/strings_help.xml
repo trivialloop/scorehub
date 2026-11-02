@@ -187,6 +187,19 @@
     <string name="app_help_qwixx_3">Le joueur actif dispose ensuite d\'un second coché. S\'il a passé son premier tour, ce second coché est obligatoire (case couleur OU malus ✗). Appuyez sur son nom pour passer s\'il a déjà coché à l\'étape 1.</string>
     <string name="app_help_qwixx_4">La partie se termine automatiquement quand 4 malus sont atteints par un joueur ou que 2 couleurs sont verrouillées. Le total le plus élevé gagne.</string>
 
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Scrabble                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_scrabble_players">2 à 4 joueurs.</string>
+    <string name="help_scrabble_objective">Marquez le plus de points en posant des lettres sur le plateau pour former des mots qui se rattachent à ceux déjà posés.</string>
+    <string name="help_scrabble_scoring">Un mot vaut la somme de la valeur de ses lettres, multipliée par les cases bonus recouvertes. Poser les 7 lettres de son chevalet en un tour rapporte 50 points de bonus. En fin de partie, chaque joueur retranche la valeur des lettres restant sur son chevalet, et celui qui a terminé ajoute cette somme.</string>
+    <string name="help_scrabble_end">La partie se termine quand le sac est vide et qu\'un joueur a posé toutes ses lettres, ou quand plus personne ne peut jouer.</string>
+    <string name="help_scrabble_wikipedia_url">https://fr.wikipedia.org/wiki/Scrabble</string>
+
+    <string name="app_help_scrabble_1">À votre tour, appuyez sur + et entrez le score du mot posé. Vous pouvez ajouter plusieurs scores dans le même tour (plusieurs mots, bonus…). Appuyez sur une entrée pour la modifier ou la supprimer.</string>
+    <string name="app_help_scrabble_2">Appuyez sur ✅ pour terminer votre tour et passer au joueur suivant. Appuyez sur ✅ sans score pour passer votre tour.</string>
+    <string name="app_help_scrabble_3">En fin de partie, ajoutez les ajustements des lettres restantes comme des entrées : un nombre négatif pour vos lettres non posées, un nombre positif si vous avez terminé.</string>
+    <string name="app_help_scrabble_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — 7 Wonders                                               -->
