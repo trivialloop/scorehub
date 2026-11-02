@@ -11,10 +11,13 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -33,6 +36,7 @@ import com.github.trivialloop.scorehub.data.GameResult
 import com.github.trivialloop.scorehub.databinding.ActivityScrabbleGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
+import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
@@ -48,6 +52,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
     private lateinit var players: List<ScrabblePlayerState>
 
     private val turns = mutableListOf<ScrabbleTurn>()
+    private var adjustments: Map<Long, Int> = emptyMap()   // end-of-game rack adjustments
     private var currentPlayerIndex = 0
     private var gameOver = false
 
@@ -130,8 +135,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
     }
 
     private fun endTurn() {
-        val player = players[currentPlayerIndex]
-        player.currentTurn(turns)?.isComplete = true
+        players[currentPlayerIndex].currentTurn(turns)?.isComplete = true
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size
         startTurnFor(currentPlayerIndex)
         buildTable()
@@ -142,7 +146,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
     private fun buildTable() {
         val turnsByPlayer = players.map { p -> turns.filter { it.playerId == p.playerId } }
         val totalSlots = turnsByPlayer.maxOfOrNull { it.size } ?: 0
-        val totals = players.map { it.getTotal(turns) }
+        val totals = players.map { it.getTotal(turns, adjustments) }
 
         binding.headerContainer.removeAllViews()
         binding.headerContainer.addView(buildHeaderRow())
@@ -151,6 +155,9 @@ class ScrabbleGameActivity : AppCompatActivity() {
         for (slot in 0 until totalSlots) {
             binding.tableContainer.addView(buildSlotRow(turnsByPlayer.map { it.getOrNull(slot) }, slot))
         }
+        if (gameOver && adjustments.values.any { it != 0 }) {
+            binding.tableContainer.addView(buildAdjustmentRow())
+        }
         binding.tableContainer.addView(buildTotalRow(totals))
 
         binding.scrollView.post { binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
@@ -158,13 +165,13 @@ class ScrabbleGameActivity : AppCompatActivity() {
 
     private fun buildHeaderRow(): LinearLayout {
         val row = makeRow(HEADER_ROW_DP)
-        row.addView(makeLabelCell("", LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(HEADER_ROW_DP))))
+        row.addView(makeLabelCell("", LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)))
         players.forEachIndexed { idx, p ->
             row.addView(TextView(this).apply {
                 text = p.playerName; gravity = Gravity.CENTER; textSize = 13f
                 setTypeface(null, Typeface.BOLD)
                 maxLines = 1; ellipsize = TextUtils.TruncateAt.END
-                layoutParams = LinearLayout.LayoutParams(0, dpToPx(HEADER_ROW_DP), columnWeight(idx == currentPlayerIndex))
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, columnWeight(idx == currentPlayerIndex))
                 background = cellDrawable(p.playerColor)
                 setTextColor(Color.WHITE)
             })
@@ -172,13 +179,23 @@ class ScrabbleGameActivity : AppCompatActivity() {
         return row
     }
 
+    /**
+     * Height of a cell, computed by hand. A horizontal LinearLayout with a WRAP_CONTENT height
+     * ignores its MATCH_PARENT children as soon as one sibling has a fixed/wrap height, so the row
+     * height must be explicit: the tallest cell wins and every cell then fills the row.
+     */
+    private fun cellHeightDp(turn: ScrabbleTurn?): Int {
+        if (turn == null) return MIN_CELL_DP
+        val active = !turn.isComplete && !gameOver
+        val n = turn.entries.size
+        val content = n * ENTRY_ROW_DP +
+                (if (n > 1) SUM_ROW_DP else 0) +
+                (if (active) BTN_ROW_DP else 0)
+        return maxOf(MIN_CELL_DP, content)
+    }
+
     private fun buildSlotRow(slotTurns: List<ScrabbleTurn?>, slot: Int): LinearLayout {
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            isBaselineAligned = false
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
+        val row = makeRow(slotTurns.maxOf { cellHeightDp(it) })
         row.addView(makeLabelCell(
             (slot + 1).toString(),
             LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
@@ -190,15 +207,34 @@ class ScrabbleGameActivity : AppCompatActivity() {
 
         slotTurns.forEachIndexed { i, turn ->
             val w = columnWeight(i == currentPlayerIndex)
-            val cell = when {
+            row.addView(when {
                 turn == null -> makePlaceholderCell(w)
                 !turn.isComplete && !gameOver -> makeActiveTurnCell(turn, w)
                 else -> {
                     val role = if (roundDone) ScoreColorRole(turn.score, sums) else ScoreColorRole.NEUTRAL
                     makeCompletedTurnCell(turn, role, w)
                 }
-            }
-            row.addView(cell)
+            })
+        }
+        return row
+    }
+
+    /** End-of-game rack adjustment (leftover tiles / bonus for the player who went out). */
+    private fun buildAdjustmentRow(): LinearLayout {
+        val row = makeRow(MIN_CELL_DP)
+        row.addView(makeLabelCell(
+            GameSymbols.INPUT_LATIN_LETTERS.emoji,
+            LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT)
+        ).apply { textSize = 20f })
+        players.forEach { p ->
+            val v = adjustments[p.playerId] ?: 0
+            row.addView(TextView(this).apply {
+                text = if (v > 0) "+$v" else v.toString()
+                gravity = Gravity.CENTER; textSize = 14f
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+                background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_background))
+                setTextColor(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text))
+            })
         }
         return row
     }
@@ -207,7 +243,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
         val row = makeRow(TOTAL_ROW_DP)
         row.addView(makeLabelCell(
             getString(R.string.scrabble_total),
-            LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), dpToPx(TOTAL_ROW_DP)),
+            LinearLayout.LayoutParams(dpToPx(LABEL_COL_DP), LinearLayout.LayoutParams.MATCH_PARENT),
             isTotal = true
         ))
         totals.forEachIndexed { idx, total ->
@@ -215,7 +251,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
             row.addView(TextView(this).apply {
                 text = total.toString(); gravity = Gravity.CENTER; textSize = 16f
                 setTypeface(null, Typeface.BOLD)
-                layoutParams = LinearLayout.LayoutParams(0, dpToPx(TOTAL_ROW_DP), columnWeight(idx == currentPlayerIndex))
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, columnWeight(idx == currentPlayerIndex))
                 background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.cell_calculated_bg))
                 setTextColor(
                     if (role == ScoreColorRole.NEUTRAL)
@@ -227,19 +263,20 @@ class ScrabbleGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ─── Cells ────────────────────────────────────────────────────────────────
+    // ─── Cells (all MATCH_PARENT inside a row whose height is explicit) ───────
 
     /** Turn in progress: tappable entries, running sum, then [+] and [✅] buttons. */
     private fun makeActiveTurnCell(turn: ScrabbleTurn, weight: Float): LinearLayout =
         LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weight)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
             background   = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.cell_editable_bg))
 
             turn.entries.forEachIndexed { index, value ->
                 addView(makeEntryText(
                     value.toString(), R.color.cell_editable_filled_bg,
-                    ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text), bold = false
+                    ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text),
+                    bold = false
                 ) { showScoreDialog(turn, index) })
             }
             if (turn.entries.size > 1) addView(makeSumText(turn.score, null))
@@ -247,8 +284,11 @@ class ScrabbleGameActivity : AppCompatActivity() {
             addView(LinearLayout(this@ScrabbleGameActivity).apply {
                 orientation = LinearLayout.HORIZONTAL
                 isBaselineAligned = false
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+                // With no entry yet, the buttons take the whole cell (bigger tap targets)
+                layoutParams = if (turn.entries.isEmpty())
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                else
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
                 addView(makeActionButton("+", null) { showScoreDialog(turn, null) })
                 addView(makeActionButton("✅", R.color.score_text_best) { endTurn() })
             })
@@ -259,26 +299,24 @@ class ScrabbleGameActivity : AppCompatActivity() {
         LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-            minimumHeight = dpToPx(MIN_CELL_DP)
             background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_background))
-            gravity = Gravity.CENTER_VERTICAL
 
             val neutral = ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text)
             val roleColor = role.toColor(this@ScrabbleGameActivity)
             val colored = role != ScoreColorRole.NEUTRAL
+            val editable = !gameOver
 
             when (turn.entries.size) {
-                0 -> addView(makeEntryText("–", R.color.score_cell_background, neutral, false, MIN_CELL_DP, null))
+                0 -> addView(makeEntryText("–", R.color.score_cell_background, neutral, false, null))
                 1 -> addView(makeEntryText(
-                    turn.entries[0].toString(), R.color.score_cell_background,
-                    roleColor, colored, MIN_CELL_DP,
-                    if (gameOver) null else ({ showScoreDialog(turn, 0) })
+                    turn.entries[0].toString(), R.color.score_cell_background, roleColor, colored,
+                    if (editable) ({ showScoreDialog(turn, 0) }) else null
                 ))
                 else -> {
                     turn.entries.forEachIndexed { index, value ->
                         addView(makeEntryText(
-                            value.toString(), R.color.score_cell_background, neutral, false, ENTRY_ROW_DP,
-                            if (gameOver) null else ({ showScoreDialog(turn, index) })
+                            value.toString(), R.color.score_cell_background, neutral, false,
+                            if (editable) ({ showScoreDialog(turn, index) }) else null
                         ))
                     }
                     addView(makeSumText(turn.score, if (colored) roleColor else null))
@@ -289,17 +327,16 @@ class ScrabbleGameActivity : AppCompatActivity() {
     private fun makePlaceholderCell(weight: Float): TextView = TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_background))
-        minimumHeight = dpToPx(MIN_CELL_DP)
     }
 
+    /** Entry line: shares the free height of its cell equally with its sibling entries. */
     private fun makeEntryText(
-        text: String, bgRes: Int, textColor: Int, bold: Boolean,
-        heightDp: Int = ENTRY_ROW_DP, onClick: (() -> Unit)?
+        text: String, bgRes: Int, textColor: Int, bold: Boolean, onClick: (() -> Unit)?
     ): TextView = TextView(this).apply {
         this.text = text; gravity = Gravity.CENTER; textSize = 14f
         if (bold) setTypeface(null, Typeface.BOLD)
         setTextColor(textColor)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(heightDp))
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
         background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, bgRes))
         if (onClick != null) setOnClickListener { onClick() }
     }
@@ -347,7 +384,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
         setStroke(1, ContextCompat.getColor(this@ScrabbleGameActivity, R.color.cell_border))
     }
 
-    // ─── Dialogs ──────────────────────────────────────────────────────────────
+    // ─── Score dialog ─────────────────────────────────────────────────────────
 
     /** Adds a score ([entryIndex] = null) or edits / deletes an existing one. */
     private fun showScoreDialog(turn: ScrabbleTurn, entryIndex: Int?) {
@@ -400,13 +437,88 @@ class ScrabbleGameActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    // ─── End of game ──────────────────────────────────────────────────────────
+
+    /**
+     * Single end-of-game step: who went out first + the value of the tiles left on each rack.
+     * The adjustment (−rack for everyone, +sum of the other racks for the player who went out)
+     * is computed by [ScrabbleEndGame].
+     */
     private fun showFinishGameDialog() {
         if (gameOver) return
+
+        fun sectionLabel(text: String) = TextView(this).apply {
+            this.text = text; textSize = 13f; setTypeface(null, Typeface.BOLD)
+            setPadding(0, dpToPx(12), 0, dpToPx(4))
+        }
+
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), dpToPx(8))
+        }
+        content.addView(TextView(this).apply {
+            text = getString(R.string.scrabble_finish_game_message); textSize = 13f
+        })
+
+        // Who went out first
+        content.addView(sectionLabel(getString(R.string.scrabble_end_went_out)))
+        val group = RadioGroup(this)
+        val nobodyId = View.generateViewId()
+        group.addView(RadioButton(this).apply { id = nobodyId; text = getString(R.string.scrabble_end_nobody) })
+        val playerByRadioId = mutableMapOf<Int, Long>()
+        players.forEach { p ->
+            val rb = RadioButton(this).apply { id = View.generateViewId(); text = p.playerName }
+            playerByRadioId[rb.id] = p.playerId
+            group.addView(rb)
+        }
+        content.addView(group)
+
+        // Tiles left on each rack
+        content.addView(sectionLabel(getString(R.string.scrabble_end_rack)))
+        val rackInputs = LinkedHashMap<Long, EditText>()
+        players.forEach { p ->
+            val input = EditText(this).apply {
+                inputType = InputType.TYPE_CLASS_NUMBER
+                filters = arrayOf(InputFilter.LengthFilter(3))
+                hint = "0"; gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(dpToPx(90), LinearLayout.LayoutParams.WRAP_CONTENT)
+            }
+            rackInputs[p.playerId] = input
+            content.addView(LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(TextView(this@ScrabbleGameActivity).apply {
+                    text = p.playerName; textSize = 15f
+                    maxLines = 1; ellipsize = TextUtils.TruncateAt.END
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                })
+                addView(input)
+            })
+        }
+
+        // The player who went out has no tile left
+        group.setOnCheckedChangeListener { _, checkedId ->
+            val outId = playerByRadioId[checkedId]
+            players.forEach { p ->
+                rackInputs.getValue(p.playerId).apply {
+                    isEnabled = p.playerId != outId
+                    if (p.playerId == outId) setText("0")
+                }
+            }
+        }
+        group.check(nobodyId)
+
         AlertDialog.Builder(this)
             .setTitle(R.string.scrabble_finish_game_title)
-            .setMessage(R.string.scrabble_finish_game_message)
-            .setPositiveButton(R.string.yes) { _, _ -> finishGame() }
-            .setNegativeButton(R.string.no, null)
+            .setView(ScrollView(this).apply { addView(content) })
+            .setPositiveButton(R.string.ok) { _, _ ->
+                val racks = players.associate {
+                    it.playerId to (rackInputs.getValue(it.playerId).text.toString().toIntOrNull() ?: 0)
+                }
+                adjustments = ScrabbleEndGame.computeAdjustments(racks, playerByRadioId[group.checkedRadioButtonId])
+                finishGame()
+            }
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -419,8 +531,6 @@ class ScrabbleGameActivity : AppCompatActivity() {
             .show()
     }
 
-    // ─── End of game ──────────────────────────────────────────────────────────
-
     private fun finishGame() {
         // Drop the untouched in-progress turn, close the one that has entries
         turns.removeAll { !it.isComplete && it.entries.isEmpty() }
@@ -432,7 +542,7 @@ class ScrabbleGameActivity : AppCompatActivity() {
     }
 
     private fun saveResultsAndShowSummary() {
-        val totals    = players.associate { it.playerId to it.getTotal(turns) }
+        val totals    = players.associate { it.playerId to it.getTotal(turns, adjustments) }
         val maxScore  = totals.values.maxOrNull() ?: 0
         val winnerIds = totals.filter { it.value == maxScore }.keys
         val isDraw    = winnerIds.size > 1

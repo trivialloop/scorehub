@@ -3,8 +3,8 @@ package com.github.trivialloop.scorehub.games.scrabble
 /**
  * One turn of one player.
  *
- * During a turn the player can add several scores (several words, bonus, end-of-game
- * tile penalty...). Entries are signed: a negative entry subtracts points.
+ * During a turn the player can add several scores (several words, bonus, manual correction...).
+ * Entries are signed: a negative entry subtracts points.
  * The turn is closed when the player passes the hand ([isComplete] = true).
  */
 data class ScrabbleTurn(
@@ -22,11 +22,31 @@ data class ScrabblePlayerState(
     val playerName: String,
     val playerColor: Int
 ) {
-    /** Running total, including the entries of a turn still in progress. */
-    fun getTotal(turns: List<ScrabbleTurn>): Int =
-        turns.filter { it.playerId == playerId }.sumOf { it.score }
+    /**
+     * Running total, including the entries of a turn still in progress.
+     * [adjustments] = end-of-game rack adjustments (see [ScrabbleEndGame]), empty during the game.
+     */
+    fun getTotal(turns: List<ScrabbleTurn>, adjustments: Map<Long, Int> = emptyMap()): Int =
+        turns.filter { it.playerId == playerId }.sumOf { it.score } + (adjustments[playerId] ?: 0)
 
     /** The in-progress turn of this player, or null. */
     fun currentTurn(turns: List<ScrabbleTurn>): ScrabbleTurn? =
         turns.lastOrNull { it.playerId == playerId && !it.isComplete }
+}
+
+/** Official end-of-game rule: leftover tiles are subtracted, the player who went out gets their sum. */
+object ScrabbleEndGame {
+
+    /**
+     * @param racks      value of the tiles left on each player's rack (negative values are treated as 0)
+     * @param wentOutId  player who played all their tiles, or null when nobody did (blocked game)
+     * @return the signed adjustment to add to each player's total
+     */
+    fun computeAdjustments(racks: Map<Long, Int>, wentOutId: Long?): Map<Long, Int> {
+        val result = racks.mapValues { (_, v) -> -v.coerceAtLeast(0) }.toMutableMap()
+        if (wentOutId != null && wentOutId in racks) {
+            result[wentOutId] = racks.filterKeys { it != wentOutId }.values.sumOf { it.coerceAtLeast(0) }
+        }
+        return result
+    }
 }

@@ -269,7 +269,10 @@
     <string name="scrabble_delete_entry">Delete</string>
     <string name="scrabble_finish_game">Finish game</string>
     <string name="scrabble_finish_game_title">Finish the game?</string>
-    <string name="scrabble_finish_game_message">This will lock all scores and save the results. Continue?</string>
+    <string name="scrabble_finish_game_message">Select who went out first and the value of the tiles left on each rack. The end-of-game adjustment is computed automatically, then all scores are locked and the results saved.</string>
+    <string name="scrabble_end_went_out">Went out first</string>
+    <string name="scrabble_end_nobody">Nobody (blocked game)</string>
+    <string name="scrabble_end_rack">Points of the tiles left on each rack</string>
     <string name="scrabble_minimum_players">Minimum 2 players required</string>
     <string name="scrabble_maximum_players">Maximum 4 players allowed</string>
     <string name="scrabble_quit_game">Quit Game</string>

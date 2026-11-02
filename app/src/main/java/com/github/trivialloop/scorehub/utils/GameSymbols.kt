@@ -37,9 +37,10 @@ object GameSymbols {
     val BIRD    = s("🐦", 0xFF0277BD)
 
     // ── Objects ──
-    val DIRECT_HIT     = s("🎯", 0xFFC62828)
-    val FLAG_IN_HOLE   = s("⛳", 0xFF2E7D32)
-    val TOTEM_SPARKLES = s("✨", 0xFF6A1B9A)
+    val DIRECT_HIT          = s("🎯", 0xFFC62828)
+    val FLAG_IN_HOLE        = s("⛳", 0xFF2E7D32)
+    val TOTEM_SPARKLES      = s("✨", 0xFF6A1B9A)
+    val INPUT_LATIN_LETTERS = s("🔤", 0xFF8D6E63)
 
     // ── People / buildings ────────────────────────────────────────────────────
     val PERSON         = s("🧑", 0xFF8D6E63)

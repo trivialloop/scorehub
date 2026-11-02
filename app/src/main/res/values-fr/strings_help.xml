@@ -198,8 +198,8 @@
 
     <string name="app_help_scrabble_1">À votre tour, appuyez sur + et entrez le score du mot posé. Vous pouvez ajouter plusieurs scores dans le même tour (plusieurs mots, bonus…). Appuyez sur une entrée pour la modifier ou la supprimer.</string>
     <string name="app_help_scrabble_2">Appuyez sur ✅ pour terminer votre tour et passer au joueur suivant. Appuyez sur ✅ sans score pour passer votre tour.</string>
-    <string name="app_help_scrabble_3">En fin de partie, ajoutez les ajustements des lettres restantes comme des entrées : un nombre négatif pour vos lettres non posées, un nombre positif si vous avez terminé.</string>
-    <string name="app_help_scrabble_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats. Le total le plus élevé gagne.</string>
+    <string name="app_help_scrabble_3">Les entrées peuvent aussi servir à une correction manuelle, par exemple une pénalité de contestation : entrez un nombre négatif.</string>
+    <string name="app_help_scrabble_4">Quand la partie est terminée, appuyez sur « Terminer la partie », choisissez qui a fini en premier et saisissez la valeur des lettres restant sur chaque chevalet. L\'application les retranche et donne à celui qui a fini la somme des autres. Le total le plus élevé gagne.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — 7 Wonders                                               -->

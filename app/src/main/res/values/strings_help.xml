@@ -198,8 +198,8 @@
 
     <string name="app_help_scrabble_1">On your turn, tap + and enter the score of the word you played. You can add several scores in the same turn (several words, bonus…). Tap an entry to edit or delete it.</string>
     <string name="app_help_scrabble_2">Tap ✅ to end your turn and pass to the next player. Tap ✅ without any score to pass your turn.</string>
-    <string name="app_help_scrabble_3">At the end of the game, add the remaining-tiles adjustments as entries: a negative number for your leftover tiles, a positive one if you went out.</string>
-    <string name="app_help_scrabble_4">When the game is over, tap "Finish game" to lock all scores and see the results. Highest total wins.</string>
+    <string name="app_help_scrabble_3">Entries can also hold a manual correction, for example a challenge penalty: enter a negative number.</string>
+    <string name="app_help_scrabble_4">When the game is over, tap "Finish game", pick who went out first and enter the value of the tiles left on each rack. The app subtracts them and gives the player who went out the sum of the others. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — 7 Wonders                                               -->

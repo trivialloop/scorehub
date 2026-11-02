@@ -268,12 +268,15 @@
     <string name="scrabble_delete_entry">Supprimer</string>
     <string name="scrabble_finish_game">Terminer la partie</string>
     <string name="scrabble_finish_game_title">Terminer la partie ?</string>
-    <string name="scrabble_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="scrabble_finish_game_message">Indiquez qui a posé toutes ses lettres en premier et la valeur des lettres restant sur chaque chevalet. L\'ajustement de fin de partie est calculé automatiquement, puis les scores sont verrouillés et les résultats enregistrés.</string>
+    <string name="scrabble_end_went_out">A terminé en premier</string>
+    <string name="scrabble_end_nobody">Personne (partie bloquée)</string>
+    <string name="scrabble_end_rack">Points des lettres restant sur chaque chevalet</string>
     <string name="scrabble_minimum_players">Minimum 2 joueurs requis</string>
     <string name="scrabble_maximum_players">Maximum 4 joueurs autorisés</string>
     <string name="scrabble_quit_game">Quitter la partie</string>
     <string name="scrabble_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
-    
+
     <!-- Skyjo Game -->
     <string name="skyjo_game">Skyjo</string>
     <string name="skyjo_total">Total</string>
