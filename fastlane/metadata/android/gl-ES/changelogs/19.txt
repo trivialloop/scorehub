@@ -1,0 +1,6 @@
+### Engadido
+- Engadida a opción de partida libre
+- Engadido o idioma alemán
+
+### Trocos
+- Actualización das dependencias

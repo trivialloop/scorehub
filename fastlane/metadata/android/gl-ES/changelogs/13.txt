@@ -1,0 +1,8 @@
+### Engadido
+- Engadido o xogo Farkle
+
+### Trocos
+- Modificada a lóxica de selección da orde de clasificación
+
+### Correccións
+- Corrixida a solución provisional para a visualización de bordo a bordo

@@ -1,0 +1,2 @@
+### Correccións
+- Corrixidas as celas na modalidade de partida libre

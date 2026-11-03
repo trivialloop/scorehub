@@ -1,0 +1,5 @@
+### Engadido
+
+- Engadido o xogo Harmonies
+### Trocos
+- Modificada a selección de obxectivos en Ticket to Ride

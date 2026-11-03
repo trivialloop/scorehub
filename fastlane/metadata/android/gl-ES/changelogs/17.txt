@@ -1,0 +1,9 @@
+### Engadido
+- Engadido o xogo Qwixx
+
+### Trocos
+- Actualización das dependencias
+
+### Correccións
+- Corrixida a puntuación en Yahtzee
+- Corrixida a interface para a navegación mediante botóns

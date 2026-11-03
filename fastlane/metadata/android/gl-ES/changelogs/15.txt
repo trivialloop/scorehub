@@ -1,0 +1,10 @@
+### Engadido
+- Engadido o menú Acerca de
+
+### Trocos
+- Mellorada a experiencia de usuario no xogo Cactus
+- Mellorada a experiencia de usuario no xogo Farkle
+- Mellorada a experiencia de usuario no xogo Skyjo
+
+### Correccións
+- Corrixido un erro que provocaba o peche inesperado da aplicación ao seleccionar os xogadores

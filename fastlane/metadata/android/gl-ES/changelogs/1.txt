@@ -1,0 +1,11 @@
+Engadido
+- Lanzamento inicial
+- Compatibilidade co xogo Yahtzee, coa folla de puntuación completa
+- Sistema de xestión de xogadores con cores personalizadas
+- Seguimento completo de estatísticas:
+  - Porcentaxes de vitorias, derrotas e empates
+  - Mellores e peores puntuacións de cada xogador
+  - Clasificacións de xogadores
+- Táboa dos 20 mellores resultados
+- Compatibilidade con varios idiomas (inglés e francés)
+- Gardado do historial de partidas

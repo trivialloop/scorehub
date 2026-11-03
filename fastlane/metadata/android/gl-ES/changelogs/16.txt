@@ -1,0 +1,9 @@
+### Engadido
+- Engadido o xogo Oh Hell
+- Engadido o xogo Flip7
+
+### Trocos
+- Aumentado o número máximo de xogadores en Yahtzee e Farkle
+
+### Correccións
+- Corrixido o desprazamento entre roldas

@@ -1,0 +1,6 @@
+### Engadido
+- Engadida a opción de importar e exportar puntuacións
+
+### Trocos
+- Engadida unha barra de progreso durante as partidas
+- Engadida información sobre as controversias no xogo Belote

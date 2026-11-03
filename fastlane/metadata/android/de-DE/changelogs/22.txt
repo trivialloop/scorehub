@@ -1,0 +1,3 @@
+### Behoben
+- Edge to Edge behoben in „Freies Spiel“
+- Zurück-Navigation korrigiert

@@ -1,0 +1,2 @@
+### Corrixido
+- Corrixida a visualización de bordo a bordo
