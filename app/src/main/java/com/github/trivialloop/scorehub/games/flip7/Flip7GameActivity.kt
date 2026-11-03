@@ -260,7 +260,10 @@ class Flip7GameActivity : AppCompatActivity() {
                         ScoreColorRole.WORST -> ContextCompat.getColor(this, R.color.score_text_worst)
                         else                 -> ContextCompat.getColor(this, R.color.score_cell_text)
                     }
-                    row.addView(makeCompletedTurnCell(turn, textColor, isActive, w))
+                    val last      = lastEnteredTurn()
+                    val isLastEntered = last != null &&
+                            turn.playerId == last.playerId && turn.roundNumber == last.roundNumber
+                    row.addView(makeCompletedTurnCell(turn, textColor, isActive, w, isLastEntered))
                 }
 
                 else -> row.addView(makePlaceholderCell(w))
@@ -317,14 +320,24 @@ class Flip7GameActivity : AppCompatActivity() {
             background = cellDrawable(player.playerColor); setTextColor(Color.WHITE)
         }
 
-    private fun makeCompletedTurnCell(turn: Flip7Turn, textColor: Int, isActive: Boolean, weight: Float): TextView =
+    private fun makeCompletedTurnCell(
+        turn: Flip7Turn,
+        textColor: Int,
+        isActive: Boolean,
+        weight: Float,
+        isEditable: Boolean = false
+    ): TextView =
         TextView(this).apply {
             text = turn.score.toString(); gravity = Gravity.CENTER; textSize = 14f
             setTypeface(null, Typeface.BOLD)
             layoutParams = colLp(weight)
-            background = cellDrawable(ContextCompat.getColor(this@Flip7GameActivity, R.color.score_cell_background))
-            setTextColor(textColor); alpha = if (isActive) 1f else 0.65f
+            background = cellDrawable(ContextCompat.getColor(
+                this@Flip7GameActivity,
+                if (isEditable) R.color.cell_editable_filled_bg else R.color.score_cell_background))
+            setTextColor(textColor)
+            alpha = if (isActive || isEditable) 1f else 0.65f
             minimumHeight = dpToPx(ROUND_ROW_DP)
+            if (isEditable) setOnClickListener { showCardSelectionDialog(turn, isEdit = true) }
         }
 
     private fun makePlaceholderCell(weight: Float): TextView = TextView(this).apply {
@@ -386,7 +399,11 @@ class Flip7GameActivity : AppCompatActivity() {
 
     // ─── Card selection dialog ─────────────────────────────────────────────────
 
-    private fun showCardSelectionDialog(turn: Flip7Turn) {
+    /**
+     * @param isEdit true when editing the last entered turn (dialog is pre-filled,
+     *               title is prefixed with ✏ and the game does not advance to the next player).
+     */
+    private fun showCardSelectionDialog(turn: Flip7Turn, isEdit: Boolean = false) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_flip7_card_selection, null)
 
         // Card checkboxes (0–6 left column, 7–12 right column)
@@ -440,14 +457,23 @@ class Flip7GameActivity : AppCompatActivity() {
             }
         }
 
+        // Pre-fill with the existing turn (no-op for a new turn: all lists are empty)
+        cardCheckboxes.forEach { (value, cb) -> cb.isChecked = value in turn.selectedCards }
+        val remainingBonus = turn.bonusPlus.toMutableList()   // handles the two "+8" cards
+        bonusPlusCheckboxes.zip(bonusPlusValues).forEach { (cb, v) ->
+            if (remainingBonus.remove(v)) cb.isChecked = true
+        }
+        cbX2?.isChecked = turn.bonusX2
+
         // Attach listeners
         cardCheckboxes.values.forEach { cb -> cb.setOnCheckedChangeListener { _, _ -> updatePreview() } }
         bonusPlusCheckboxes.forEach { cb -> cb.setOnCheckedChangeListener { _, _ -> updatePreview() } }
         cbX2?.setOnCheckedChangeListener { _, _ -> updatePreview() }
         updatePreview()
 
+        val owner = players.first { it.playerId == turn.playerId }
         AlertDialog.Builder(this)
-            .setTitle("${players[currentPlayerIndex].playerName}")
+            .setTitle((if (isEdit) "✏ " else "") + owner.playerName)
             .setView(dialogView)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val selectedCards = cardCheckboxes.filter { it.value.isChecked }.keys.sorted()
@@ -459,10 +485,11 @@ class Flip7GameActivity : AppCompatActivity() {
                     selectedCards = selectedCards,
                     bonusPlus = selectedBonusPlus,
                     bonusX2 = x2,
+                    choseZero = false,   // a pre-filled "0" turn must not stay forced to 0
                     isComplete = true
                 )
                 replaceTurn(turn, completedTurn)
-                advanceToNextPlayer()
+                if (isEdit) onLastTurnEdited(completedTurn) else advanceToNextPlayer()
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
@@ -474,6 +501,30 @@ class Flip7GameActivity : AppCompatActivity() {
         val completedTurn = turn.copy(choseZero = true, isComplete = true)
         replaceTurn(turn, completedTurn)
         advanceToNextPlayer()
+    }
+
+    /** The most recently completed turn (= last player entered), or null once the game is over. */
+    private fun lastEnteredTurn(): Flip7Turn? =
+        if (gameOver) null else turns.lastOrNull { it.isComplete }
+
+    /**
+     * Called after the last entered turn was edited. If that turn had closed a round,
+     * the 200-point check was already done with the old score, so it is redone here.
+     */
+    private fun onLastTurnEdited(edited: Flip7Turn) {
+        // currentPlayerIndex must NOT change here: the pending turn still belongs to the
+        // current player (or to the first player of the next round).
+        val roundWasClosed = edited.roundNumber < currentRound
+        if (roundWasClosed && players.maxOf { it.getTotal(turns) } >= SCORE_LIMIT) {
+            turns.removeAll { !it.isComplete }   // drop the pending turn of the next round
+            currentRound = edited.roundNumber
+            currentPlayerIndex = players.indexOfFirst { it.playerId == edited.playerId }
+            gameOver = true
+            buildTable()
+            saveResultsAndShowSummary()
+            return
+        }
+        buildTable()
     }
 
     private fun replaceTurn(old: Flip7Turn, new: Flip7Turn) {
