@@ -263,9 +263,10 @@
     <string name="scrabble_game">Scrabble</string>
     <string name="scrabble_total">Total</string>
     <string name="scrabble_enter_score">Entrer le score</string>
-    <string name="scrabble_score_hint">ex : 24 ou -7</string>
-    <string name="scrabble_score_invalid">Entrez un nombre entre -999 et 999</string>
-    <string name="scrabble_delete_entry">Supprimer</string>
+    <string name="scrabble_score_hint">ex : 24</string>
+    <string name="scrabble_score_invalid">Entrez un nombre entre 1 et 999</string>
+    <string name="scrabble_edit_scores">Modifier les scores</string>
+    <string name="scrabble_edit_scores_hint">Videz un champ pour supprimer ce score</string>
     <string name="scrabble_finish_game">Terminer la partie</string>
     <string name="scrabble_finish_game_title">Terminer la partie ?</string>
     <string name="scrabble_finish_game_message">Indiquez qui a posé toutes ses lettres en premier et la valeur des lettres restant sur chaque chevalet. L\'ajustement de fin de partie est calculé automatiquement, puis les scores sont verrouillés et les résultats enregistrés.</string>

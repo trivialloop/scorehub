@@ -40,7 +40,6 @@ import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 class ScrabbleGameActivity : AppCompatActivity() {
 
@@ -60,12 +59,9 @@ class ScrabbleGameActivity : AppCompatActivity() {
         const val GAME_TYPE = "scrabble"
         private const val HEADER_ROW_DP = 52
         private const val MIN_CELL_DP   = 48
-        private const val ENTRY_ROW_DP  = 36
-        private const val SUM_ROW_DP    = 30
         private const val BTN_ROW_DP    = 48
         private const val TOTAL_ROW_DP  = 52
         private const val LABEL_COL_DP  = 65
-        private const val MAX_ABS_SCORE = 999
     }
 
     private fun columnWeight(isActive: Boolean): Float = if (isActive && !gameOver) 1.4f else 1f
@@ -184,15 +180,8 @@ class ScrabbleGameActivity : AppCompatActivity() {
      * ignores its MATCH_PARENT children as soon as one sibling has a fixed/wrap height, so the row
      * height must be explicit: the tallest cell wins and every cell then fills the row.
      */
-    private fun cellHeightDp(turn: ScrabbleTurn?): Int {
-        if (turn == null) return MIN_CELL_DP
-        val active = !turn.isComplete && !gameOver
-        val n = turn.entries.size
-        val content = n * ENTRY_ROW_DP +
-                (if (n > 1) SUM_ROW_DP else 0) +
-                (if (active) BTN_ROW_DP else 0)
-        return maxOf(MIN_CELL_DP, content)
-    }
+    private fun cellHeightDp(turn: ScrabbleTurn?): Int =
+        if (turn != null && !turn.isComplete && !gameOver) MIN_CELL_DP + BTN_ROW_DP else MIN_CELL_DP
 
     private fun buildSlotRow(slotTurns: List<ScrabbleTurn?>, slot: Int): LinearLayout {
         val row = makeRow(slotTurns.maxOf { cellHeightDp(it) })
@@ -263,90 +252,84 @@ class ScrabbleGameActivity : AppCompatActivity() {
         return row
     }
 
-    // ─── Cells (all MATCH_PARENT inside a row whose height is explicit) ───────
+    // ─── Cells ────────────────────────────────────────────────────────────────
 
-    /** Turn in progress: tappable entries, running sum, then [+] and [✅] buttons. */
+    /**
+     * Score display, same look as the Cactus / Farkle cells: the turn total centered,
+     * the individual scores ("12+4") tiny in the bottom-right corner.
+     * An empty turn shows nothing, unless [zeroWhenEmpty] (closed turn = pass = 0).
+     */
+    private fun makeScoreDisplay(
+        turn: ScrabbleTurn, bgRes: Int, totalColor: Int, bold: Boolean,
+        zeroWhenEmpty: Boolean, onClick: (() -> Unit)?
+    ): FrameLayout = FrameLayout(this).apply {
+        background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, bgRes))
+
+        if (turn.entries.isNotEmpty() || zeroWhenEmpty) {
+            addView(TextView(this@ScrabbleGameActivity).apply {
+                text = turn.score.toString()
+                gravity = Gravity.CENTER; textSize = 18f
+                if (bold) setTypeface(null, Typeface.BOLD)
+                setTextColor(totalColor)
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            })
+        }
+        if (turn.entries.isNotEmpty()) {
+            addView(TextView(this@ScrabbleGameActivity).apply {
+                text = turn.expression
+                textSize = 11f; alpha = 0.45f
+                maxLines = 1; ellipsize = TextUtils.TruncateAt.START
+                setTextColor(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text))
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM or Gravity.END
+                ).also { it.marginEnd = dpToPx(4); it.bottomMargin = dpToPx(2) }
+            })
+        }
+        if (onClick != null) setOnClickListener { onClick() }
+    }
+
+    /** Turn in progress: score display (tap to edit) above the [+] and [✅] buttons. */
     private fun makeActiveTurnCell(turn: ScrabbleTurn, weight: Float): LinearLayout =
         LinearLayout(this).apply {
             orientation  = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-            background   = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.cell_editable_bg))
 
-            turn.entries.forEachIndexed { index, value ->
-                addView(makeEntryText(
-                    value.toString(), R.color.cell_editable_filled_bg,
-                    ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text),
-                    bold = false
-                ) { showScoreDialog(turn, index) })
-            }
-            if (turn.entries.size > 1) addView(makeSumText(turn.score, null))
+            val hasEntries = turn.entries.isNotEmpty()
+            addView(makeScoreDisplay(
+                turn,
+                if (hasEntries) R.color.cell_editable_filled_bg else R.color.cell_editable_bg,
+                ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text),
+                bold = false, zeroWhenEmpty = false,
+                onClick = if (hasEntries) ({ showEditScoresDialog(turn) }) else null
+            ).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f) })
 
             addView(LinearLayout(this@ScrabbleGameActivity).apply {
                 orientation = LinearLayout.HORIZONTAL
                 isBaselineAligned = false
-                // With no entry yet, the buttons take the whole cell (bigger tap targets)
-                layoutParams = if (turn.entries.isEmpty())
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-                else
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
-                addView(makeActionButton("+", null) { showScoreDialog(turn, null) })
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(BTN_ROW_DP))
+                addView(makeActionButton("+", null) { showAddScoreDialog(turn) })
                 addView(makeActionButton("✅", R.color.score_text_best) { endTurn() })
             })
         }
 
-    /** Closed turn. Entries stay editable until the game is over. */
-    private fun makeCompletedTurnCell(turn: ScrabbleTurn, role: ScoreColorRole, weight: Float): LinearLayout =
-        LinearLayout(this).apply {
-            orientation  = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
-            background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_background))
-
-            val neutral = ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_text)
-            val roleColor = role.toColor(this@ScrabbleGameActivity)
-            val colored = role != ScoreColorRole.NEUTRAL
-            val editable = !gameOver
-
-            when (turn.entries.size) {
-                0 -> addView(makeEntryText("–", R.color.score_cell_background, neutral, false, null))
-                1 -> addView(makeEntryText(
-                    turn.entries[0].toString(), R.color.score_cell_background, roleColor, colored,
-                    if (editable) ({ showScoreDialog(turn, 0) }) else null
-                ))
-                else -> {
-                    turn.entries.forEachIndexed { index, value ->
-                        addView(makeEntryText(
-                            value.toString(), R.color.score_cell_background, neutral, false,
-                            if (editable) ({ showScoreDialog(turn, index) }) else null
-                        ))
-                    }
-                    addView(makeSumText(turn.score, if (colored) roleColor else null))
-                }
-            }
-        }
+    /** Closed turn. Tap the total to edit its scores until the game is over. */
+    private fun makeCompletedTurnCell(turn: ScrabbleTurn, role: ScoreColorRole, weight: Float): FrameLayout {
+        val colored = role != ScoreColorRole.NEUTRAL
+        val canEdit = !gameOver && turn.entries.isNotEmpty()
+        return makeScoreDisplay(
+            turn, R.color.score_cell_background,
+            if (colored) role.toColor(this) else ContextCompat.getColor(this, R.color.score_cell_text),
+            bold = colored, zeroWhenEmpty = true,
+            onClick = if (canEdit) ({ showEditScoresDialog(turn) }) else null
+        ).apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight) }
+    }
 
     private fun makePlaceholderCell(weight: Float): TextView = TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, weight)
         background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.score_cell_background))
-    }
-
-    /** Entry line: shares the free height of its cell equally with its sibling entries. */
-    private fun makeEntryText(
-        text: String, bgRes: Int, textColor: Int, bold: Boolean, onClick: (() -> Unit)?
-    ): TextView = TextView(this).apply {
-        this.text = text; gravity = Gravity.CENTER; textSize = 14f
-        if (bold) setTypeface(null, Typeface.BOLD)
-        setTextColor(textColor)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
-        background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, bgRes))
-        if (onClick != null) setOnClickListener { onClick() }
-    }
-
-    private fun makeSumText(sum: Int, color: Int?): TextView = TextView(this).apply {
-        text = "= $sum"; gravity = Gravity.CENTER; textSize = 12f
-        setTypeface(null, Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(SUM_ROW_DP))
-        background = cellDrawable(ContextCompat.getColor(this@ScrabbleGameActivity, R.color.header_cell_background))
-        setTextColor(color ?: ContextCompat.getColor(this@ScrabbleGameActivity, R.color.header_cell_text))
     }
 
     private fun makeActionButton(label: String, tintColorRes: Int?, onClick: () -> Unit): TextView =
@@ -384,52 +367,90 @@ class ScrabbleGameActivity : AppCompatActivity() {
         setStroke(1, ContextCompat.getColor(this@ScrabbleGameActivity, R.color.cell_border))
     }
 
-    // ─── Score dialog ─────────────────────────────────────────────────────────
+    // ─── Score dialogs ────────────────────────────────────────────────────────
 
-    /** Adds a score ([entryIndex] = null) or edits / deletes an existing one. */
-    private fun showScoreDialog(turn: ScrabbleTurn, entryIndex: Int?) {
-        val player = players.first { it.playerId == turn.playerId }
-        val isEdit = entryIndex != null
-        val baseTitle = "${player.playerName} — ${getString(R.string.scrabble_enter_score)}"
+    private fun scoreField(initial: Int?): EditText = EditText(this).apply {
+        inputType = InputType.TYPE_CLASS_NUMBER          // positive numbers only
+        filters = arrayOf(InputFilter.LengthFilter(3))
+        hint = getString(R.string.scrabble_score_hint)
+        gravity = Gravity.CENTER
+        textSize = 20f
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        if (initial != null) setText(initial.toString())
+    }
 
-        val input = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-            filters = arrayOf(InputFilter.LengthFilter(4))
-            hint = getString(R.string.scrabble_score_hint)
-            gravity = Gravity.CENTER
-            textSize = 20f
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-            if (isEdit) { setText(turn.entries[entryIndex!!].toString()); selectAll() }
-        }
+    private fun dialogTitle(turn: ScrabbleTurn, isEdit: Boolean): String {
+        val name = players.first { it.playerId == turn.playerId }.playerName
+        val base = "$name — ${getString(if (isEdit) R.string.scrabble_edit_scores else R.string.scrabble_enter_score)}"
+        return if (isEdit) "✏️ $base" else base
+    }
+
+    /** [+]: adds one score (1..999) to the turn. */
+    private fun showAddScoreDialog(turn: ScrabbleTurn) {
+        val input = scoreField(null)
         val container = FrameLayout(this).apply {
             setPadding(dpToPx(24), dpToPx(8), dpToPx(24), 0)
             addView(input)
         }
-
-        val builder = AlertDialog.Builder(this)
-            .setTitle(if (isEdit) "✏️ $baseTitle" else baseTitle)
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(dialogTitle(turn, isEdit = false))
             .setView(container)
             .setPositiveButton(getString(R.string.ok), null)   // overridden below to validate
             .setNegativeButton(getString(R.string.cancel), null)
-        if (isEdit) {
-            builder.setNeutralButton(getString(R.string.scrabble_delete_entry)) { _, _ ->
-                turn.entries.removeAt(entryIndex!!)
-                buildTable()
-            }
-        }
-
-        val dialog = builder.create()
+            .create()
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.setOnShowListener {
             input.requestFocus()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val value = input.text.toString().trim().toIntOrNull()
-                if (value == null || abs(value) > MAX_ABS_SCORE) {
+                if (!isValidScrabbleScore(value)) {
                     Toast.makeText(this, R.string.scrabble_score_invalid, Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                if (isEdit) turn.entries[entryIndex!!] = value else turn.entries.add(value)
+                turn.entries.add(value!!)
+                dialog.dismiss()
+                buildTable()
+            }
+        }
+        dialog.show()
+    }
+
+    /** Tap on the total: one field per score of the turn, any of them can be edited. */
+    private fun showEditScoresDialog(turn: ScrabbleTurn) {
+        val fields = turn.entries.map { scoreField(it) }
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(24), dpToPx(8), dpToPx(24), 0)
+            addView(TextView(this@ScrabbleGameActivity).apply {
+                text = getString(R.string.scrabble_edit_scores_hint)
+                textSize = 12f; alpha = 0.65f
+            })
+            fields.forEach { addView(it) }
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(dialogTitle(turn, isEdit = true))
+            .setView(ScrollView(this).apply { addView(container) })
+            .setPositiveButton(getString(R.string.ok), null)   // overridden below to validate
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.setOnShowListener {
+            fields.firstOrNull()?.apply { requestFocus(); setSelection(text.length) }
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val newValues = mutableListOf<Int>()
+                for (field in fields) {
+                    val text = field.text.toString().trim()
+                    if (text.isEmpty()) continue            // cleared field = score deleted
+                    val value = text.toIntOrNull()
+                    if (!isValidScrabbleScore(value)) {
+                        Toast.makeText(this, R.string.scrabble_score_invalid, Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    newValues.add(value!!)
+                }
+                turn.entries.clear()
+                turn.entries.addAll(newValues)
                 dialog.dismiss()
                 buildTable()
             }

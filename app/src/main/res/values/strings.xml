@@ -264,9 +264,10 @@
     <string name="scrabble_game">Scrabble</string>
     <string name="scrabble_total">Total</string>
     <string name="scrabble_enter_score">Enter score</string>
-    <string name="scrabble_score_hint">ex: 24 or -7</string>
-    <string name="scrabble_score_invalid">Enter a number between -999 and 999</string>
-    <string name="scrabble_delete_entry">Delete</string>
+    <string name="scrabble_score_hint">ex: 24</string>
+    <string name="scrabble_score_invalid">Enter a number between 1 and 999</string>
+    <string name="scrabble_edit_scores">Edit scores</string>
+    <string name="scrabble_edit_scores_hint">Clear a field to delete that score</string>
     <string name="scrabble_finish_game">Finish game</string>
     <string name="scrabble_finish_game_title">Finish the game?</string>
     <string name="scrabble_finish_game_message">Select who went out first and the value of the tiles left on each rack. The end-of-game adjustment is computed automatically, then all scores are locked and the results saved.</string>

@@ -1,11 +1,18 @@
 package com.github.trivialloop.scorehub.games.scrabble
 
+const val SCRABBLE_MIN_SCORE = 1
+const val SCRABBLE_MAX_SCORE = 999
+
+/** A single score entry must be a whole number between [SCRABBLE_MIN_SCORE] and [SCRABBLE_MAX_SCORE]. */
+fun isValidScrabbleScore(value: Int?): Boolean =
+    value != null && value in SCRABBLE_MIN_SCORE..SCRABBLE_MAX_SCORE
+
 /**
  * One turn of one player.
  *
- * During a turn the player can add several scores (several words, bonus, manual correction...).
- * Entries are signed: a negative entry subtracts points.
+ * During a turn the player can add several positive scores (several words, bonus...).
  * The turn is closed when the player passes the hand ([isComplete] = true).
+ * A closed turn with no entry is a pass and scores 0.
  */
 data class ScrabbleTurn(
     val roundNumber: Int,
@@ -15,6 +22,9 @@ data class ScrabbleTurn(
 ) {
     /** Sum of every entry of this turn (in-progress turns included). */
     val score: Int get() = entries.sum()
+
+    /** Small text shown in the cell, e.g. "12+4". Empty when there is no entry. */
+    val expression: String get() = entries.joinToString("+")
 }
 
 data class ScrabblePlayerState(
