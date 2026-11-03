@@ -254,6 +254,23 @@
             android:parentActivityName=".games.qwixx.QwixxPlayerSelectionActivity" />
 
         <activity
+            android:name=".games.scrabble.ScrabblePlayerSelectionActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity 
+            android:name=".games.scrabble.ScrabbleGameActivity"
+            android:parentActivityName=".games.scrabble.ScrabblePlayerSelectionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <activity 
+            android:name=".games.scrabble.ScrabbleStatsActivity"
+            android:parentActivityName=".games.scrabble.ScrabblePlayerSelectionActivity" />
+
+        <activity 
+            android:name=".games.scrabble.ScrabbleTop20Activity"
+            android:parentActivityName=".games.scrabble.ScrabblePlayerSelectionActivity" />
+            
+        <activity
             android:name=".games.sevenwonders.SevenWondersPlayerSelectionActivity"
             android:parentActivityName=".MainActivity" />
             

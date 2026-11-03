@@ -188,6 +188,20 @@
     <string name="app_help_qwixx_4">The game ends automatically when 4 penalties are reached by any player or 2 colors are locked. Highest total wins.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HELP — Scrabble                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <string name="help_scrabble_players">2 to 4 players.</string>
+    <string name="help_scrabble_objective">Score the most points by placing letter tiles on the board to form words that connect to the ones already played.</string>
+    <string name="help_scrabble_scoring">A word is worth the sum of its letter values, multiplied by any premium squares it covers. Using all 7 tiles of your rack in one turn adds a 50-point bonus. At the end, each player subtracts the value of the tiles left on their rack, and the player who went out adds that sum.</string>
+    <string name="help_scrabble_end">The game ends when the bag is empty and one player has played all their tiles, or when no player can play any more.</string>
+    <string name="help_scrabble_wikipedia_url">https://en.wikipedia.org/wiki/Scrabble</string>
+
+    <string name="app_help_scrabble_1">On your turn, tap + and enter the score of the word you played (1 to 999). You can add several scores in the same turn: the turn total is shown in the center of the cell and each score in small at the bottom right.</string>
+    <string name="app_help_scrabble_2">Tap ✅ to end your turn and pass to the next player. Tapping ✅ without any score records 0.</string>
+    <string name="app_help_scrabble_3">To correct a turn, tap the cell showing its total: each score appears in its own field and can be edited. Clear a field to delete that score.</string>
+    <string name="app_help_scrabble_4">When the game is over, tap "Finish game", pick who went out first and enter the value of the tiles left on each rack. The app subtracts them and gives the player who went out the sum of the others. Highest total wins.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — 7 Wonders                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <string name="help_sevenwonders_players">3 to 7 players.</string>

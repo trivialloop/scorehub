@@ -152,7 +152,7 @@ object BackupPrefs {
     private val PREFS = listOf(
         "akropolis_prefs", "belote_prefs", "cactus_prefs", "cribbage_prefs", "escoba_prefs",
         "farkle_prefs", "flip7_prefs", "freegame_prefs", "hanginggardens_prefs", "harmonies_prefs",
-        "ligretto_prefs", "ohhell_prefs", "qwixx_prefs", "sevenwonders_prefs", "skyjo_prefs",
+        "ligretto_prefs", "ohhell_prefs", "qwixx_prefs", "scrabble_prefs", "sevenwonders_prefs", "skyjo_prefs",
         "tarot_prefs", "tickettoride_prefs", "wingspan_prefs", "yahtzee_prefs"
     )
 
