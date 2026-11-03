@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.19.0]
+
+### Added
+- Add Scrabble game
+
+### Changed
+- Increase Harmonies score picker maximum to 100
+- Allow edit previous score in Flip7
+- Bump dependencies
+
+
 ## [1.18.0]
 
 ### Added
@@ -250,7 +261,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics screen with detailed player performance
 - General statistics with best player and score highlights
 
-[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.18.0...HEAD
+[Unreleased]: https://github.com/trivialloop/scorehub/compare/v1.19.0...HEAD
+[1.19.0]:https://github.com/trivialloop/scorehub/compare/v1.18.0...v1.19.0
 [1.18.0]:https://github.com/trivialloop/scorehub/compare/v1.17.0...v1.18.0
 [1.17.0]:https://github.com/trivialloop/scorehub/compare/v1.16.0...v1.17.0
 [1.16.0]:https://github.com/trivialloop/scorehub/compare/v1.15.0...v1.16.0

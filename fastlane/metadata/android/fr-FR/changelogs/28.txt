@@ -1,0 +1,7 @@
+### Ajout
+- Ajout du jeu Scrabble
+
+### Changement
+- Augmente à 100 la valeur maximale du sélecteur de score Harmonies
+- Permet l'édition du précédent scrore dans Flip7
+- Mise a jour des dépendences

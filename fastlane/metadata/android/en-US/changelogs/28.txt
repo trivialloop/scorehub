@@ -1,0 +1,7 @@
+### Added
+- Add Scrabble game
+
+### Changed
+- Increase Harmonies score picker maximum to 100
+- Allow edit previous score in Flip7
+- Bump dependencies
