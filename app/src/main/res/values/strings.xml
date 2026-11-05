@@ -420,6 +420,8 @@
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="keep_screen_on">Keep screen on</string>
+    <string name="keep_screen_on_hint">Prevents the screen from turning off and locking while ScoreHub is open.</string>
 
     <!-- Common -->
     <string name="yes">Yes</string>

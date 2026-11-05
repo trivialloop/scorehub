@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ import com.github.trivialloop.scorehub.data.backup.BackupFiles
 import com.github.trivialloop.scorehub.data.backup.BackupPrefs
 import com.github.trivialloop.scorehub.data.backup.BackupRepository
 import com.github.trivialloop.scorehub.ui.BackupMessages
+import com.github.trivialloop.scorehub.utils.ScreenHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -84,6 +86,7 @@ class SettingsActivity : AppCompatActivity() {
         
         setupLanguageSpinner()
         setupThemeSpinner()
+        setupKeepScreenOnSwitch()
 
         backupRepo = BackupRepository(AppDatabase.getDatabase(this))
         binding.btnExportBackup.setOnClickListener {
@@ -155,7 +158,17 @@ class SettingsActivity : AppCompatActivity() {
             }
     }
 
-        // ─── Backup ───────────────────────────────────────────────────────────────
+    private fun setupKeepScreenOnSwitch() {
+        binding.switchKeepScreenOn.isChecked = ScreenHelper.isKeepScreenOn(this)
+        binding.switchKeepScreenOn.setOnCheckedChangeListener { _, isChecked ->
+            ScreenHelper.setKeepScreenOn(this, isChecked)
+            // Apply immediately on this screen
+            if (isChecked) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    // ─── Backup ───────────────────────────────────────────────────────────────
 
     private fun exportTo(uri: Uri) {
         lifecycleScope.launch {
