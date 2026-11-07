@@ -131,6 +131,19 @@
     <string name="app_help_hanginggardens_3">Les cases remplies restent modifiables, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
     <string name="app_help_hanginggardens_4">Quand la partie est terminée, appuyez sur « Terminer la partie » pour verrouiller les scores et voir les résultats. Le total le plus élevé gagne.</string>
     
+    <!-- ============================================================ -->
+    <!--  HELP — Forêt Mixte                                           -->
+    <!-- ============================================================ -->
+    <string name="help_forestshuffle_players">2 à 5 joueurs.</string>
+    <string name="help_forestshuffle_objective">Construisez la forêt la plus riche en plantant des arbres et en y accolant des cartes (plantes, champignons, insectes et animaux) sur leurs côtés haut, bas, gauche et droit, afin de marquer le plus de points.</string>
+    <string name="help_forestshuffle_scoring">À la fin de la partie, le décompte se fait dans cet ordre : points de vos Arbres, puis des cartes en haut et en bas des arbres, puis des cartes à gauche et à droite des arbres, et enfin 1 point par carte sous votre Grotte.</string>
+    <string name="help_forestshuffle_end">La partie se termine dès que la troisième carte Hiver est révélée. Le total le plus élevé gagne.</string>
+    <string name="help_forestshuffle_wikipedia_url">https://fr.wikipedia.org/wiki/For%C3%AAt_mixte_(jeu_de_soci%C3%A9t%C3%A9)</string>
+
+    <string name="app_help_forestshuffle_1">À la fin de la partie, appuyez sur la case d\'un joueur dans la ligne Arbres, Haut/Bas, Gauche/Droite ou Grotte pour saisir le sous-total calculé sur votre forêt pour cette catégorie.</string>
+    <string name="app_help_forestshuffle_2">Les cases restent modifiables — appuyez à nouveau sur une case remplie pour la corriger, indiqué par un ✏️ dans le titre de la boîte de dialogue.</string>
+    <string name="app_help_forestshuffle_3">Une fois tous les sous-totaux saisis, appuyez sur « Terminer la partie » pour verrouiller tous les scores et voir les résultats finaux. Le total le plus élevé gagne.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HELP — Harmonies                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Background -->
+    <path
+        android:fillColor="#E8F5E9"
+        android:pathData="M0,0h64v64h-64z" />
+    <!-- Trunk -->
+    <path
+        android:fillColor="#6D4C41"
+        android:pathData="M29,42h6v14h-6z" />
+    <!-- Foliage (three stacked layers) -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M32,6L46,24L18,24Z" />
+    <path
+        android:fillColor="#388E3C"
+        android:pathData="M32,16L50,36L14,36Z" />
+    <path
+        android:fillColor="#43A047"
+        android:pathData="M32,26L54,48L10,48Z" />
+    <!-- Ground -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M6,56h52v4h-52z" />
+</vector>

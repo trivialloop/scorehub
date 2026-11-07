@@ -208,6 +208,14 @@
     <string name="hanginggardens_quit_game">Quit Game</string>
     <string name="hanginggardens_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
 
+    <!-- Forest Shuffle Game -->
+    <string name="forestshuffle_game">Forest Shuffle</string>
+    <string name="forestshuffle_finish_game">Finish game</string>
+    <string name="forestshuffle_finish_game_title">Finish the game?</string>
+    <string name="forestshuffle_finish_game_message">This will lock all scores and save the results. Continue?</string>
+    <string name="forestshuffle_quit_game">Quit Game</string>
+    <string name="forestshuffle_quit_game_message">Are you sure you want to quit? Game will not be saved.</string>
+
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
     <string name="harmonies_edit_entry">Edit (currently %1$d)</string>

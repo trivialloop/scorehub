@@ -7,6 +7,7 @@ import com.github.trivialloop.scorehub.games.cribbage.CribbagePlayerSelectionAct
 import com.github.trivialloop.scorehub.games.escoba.EscobaPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.farkle.FarklePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.flip7.Flip7PlayerSelectionActivity
+import com.github.trivialloop.scorehub.games.forestshuffle.ForestShufflePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.freegame.FreeGamePlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.hanginggardens.HangingGardensPlayerSelectionActivity
 import com.github.trivialloop.scorehub.games.harmonies.HarmoniesPlayerSelectionActivity
@@ -176,6 +177,17 @@ object GameRegistry {
             iconResId      = R.drawable.ic_hanginggardens_game,
             activityClass  = HangingGardensPlayerSelectionActivity::class.java,
             minPlayers     = 1,
+            maxPlayers     = 5,
+            teamMode       = false,
+            equipment      = setOf(Equipment.BOARD)
+        ),
+        GameDefinition(
+            gameType       = "forestshuffle",
+            nameEnFallback = "Forest Shuffle",
+            nameResId      = R.string.forestshuffle_game,
+            iconResId      = R.drawable.ic_forestshuffle_game,
+            activityClass  = ForestShufflePlayerSelectionActivity::class.java,
+            minPlayers     = 2,
             maxPlayers     = 5,
             teamMode       = false,
             equipment      = setOf(Equipment.BOARD)

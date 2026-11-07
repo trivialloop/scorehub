@@ -207,6 +207,14 @@
     <string name="hanginggardens_quit_game">Quitter la partie</string>
     <string name="hanginggardens_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
 
+    <!-- Forest Shuffle Game -->
+    <string name="forestshuffle_game">Forêt Mixte</string>
+    <string name="forestshuffle_finish_game">Terminer la partie</string>
+    <string name="forestshuffle_finish_game_title">Terminer la partie ?</string>
+    <string name="forestshuffle_finish_game_message">Ceci verrouille tous les scores et enregistre les résultats. Continuer ?</string>
+    <string name="forestshuffle_quit_game">Quitter la partie</string>
+    <string name="forestshuffle_quit_game_message">Êtes-vous sûr de vouloir quitter ? La partie ne sera pas sauvegardée.</string>
+
     <!-- Harmonies Game -->
     <string name="harmonies_game">Harmonies</string>
     <string name="harmonies_edit_entry">Modifier (actuellement %1$d)</string>

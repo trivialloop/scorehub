@@ -110,6 +110,13 @@ object HelpDialogs {
             wikipediaUrl = context.getString(R.string.help_hanginggardens_wikipedia_url)
         )
 
+        "forestshuffle" -> GameHelp(
+            players      = context.getString(R.string.help_forestshuffle_players),
+            objective    = context.getString(R.string.help_forestshuffle_objective),
+            scoring      = context.getString(R.string.help_forestshuffle_scoring),
+            endCondition = context.getString(R.string.help_forestshuffle_end),
+            wikipediaUrl = context.getString(R.string.help_forestshuffle_wikipedia_url)
+        ),
         "harmonies" -> GameHelp(
             players      = context.getString(R.string.help_harmonies_players),
             objective    = context.getString(R.string.help_harmonies_objective),
@@ -258,6 +265,11 @@ object HelpDialogs {
             context.getString(R.string.app_help_hanginggardens_4)
         ))
 
+        "forestshuffle" -> AppHelp(listOf(
+            context.getString(R.string.app_help_forestshuffle_1),
+            context.getString(R.string.app_help_forestshuffle_2),
+            context.getString(R.string.app_help_forestshuffle_3)
+        )),
         "harmonies" -> AppHelp(listOf(
             context.getString(R.string.app_help_harmonies_1),
             context.getString(R.string.app_help_harmonies_2),
