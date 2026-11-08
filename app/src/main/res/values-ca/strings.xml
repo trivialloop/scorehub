@@ -315,4 +315,13 @@
     <string name="game_statistics">Estadístiques del joc</string>
     <string name="most_wins_player">Jugador amb més victòries: %1$s</string>
     <string name="best_score_player">Millor puntuació: %1$s (%2$d pts)</string>
+    <string name="akropolis_game_complete">La partida ha acabat?</string>
+    <string name="wingspan_game_complete">La partida ha acabat?</string>
+    <string name="yahtzee_game_complete">La partida ha acabat?</string>
+    <string name="about_description">ScoreHub és una aplicació senzilla i intuïtiva per al seguiment de les puntuacions dels jocs de taula de múltiples jugadors.\n\nCaracterístiques:\n• Suport multijoc\n• Gestió de jugadors amb colors personalitzats\n• Estadístiques i rànquings integrals\n• Classificació de les millors 20 puntuacions màximes\n• Seguiment de victòries, empats i derrotes\n• Suport multiidioma\n• Sense connexió\n\nPerfecte per a entusiastes dels jocs de taula que volen mantenir registres detallats de les seves sessions!</string>
+    <plurals name="filter_players_hint">
+        <item quantity="one">%d joc compatible</item>
+        <item quantity="many">%d jocs compatibles</item>
+        <item quantity="other">%d jocs compatibles</item>
+    </plurals>
 </resources>
