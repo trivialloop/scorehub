@@ -329,4 +329,10 @@
     <string name="tarot_quit_game_message">Esteu segur que voleu sortir? No es desarà la partida.</string>
     <string name="tickettoride_finish_game_title">Voleu finalitzar la partida?</string>
     <string name="tickettoride_finish_game_message">Això bloquejarà totes les puntuacions i desarà els resultats. Voleu continuar?</string>
+    <string name="belote_team_mode_manual">✋ Trieu equips manualment</string>
+    <string name="ohhell_game">Oh Hell</string>
+    <string name="ohhell_choose_contract">Trieu el contracte</string>
+    <string name="tarot_chelem_announced_success">🌿 Anunciat + aconseguit</string>
+    <string name="tarot_chelem_announced_failure">🍂 Anunciat + no aconseguit</string>
+    <string name="tarot_threshold_info">Calen ≥ %1$d pts per a guanyar</string>
 </resources>
