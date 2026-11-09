@@ -34,4 +34,5 @@
     <string name="app_help_cribbage_1">"Useu els botons  -/+ per a enregistrar els punts marcats durant la partida (en joc) per a cada jugador."</string>
     <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
     <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+    <string name="help_yahtzee_wikipedia_url">https://ca.wikipedia.org/wiki/Carrera_de_daus</string>
 </resources>
