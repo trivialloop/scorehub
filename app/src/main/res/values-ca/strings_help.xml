@@ -25,4 +25,13 @@
     <string name="help_tickettoride_players">De 2 a 5 jugadors.</string>
     <string name="help_wingspan_players">De 2 a 5 jugadors.</string>
     <string name="help_yahtzee_players">D\'1 a 8 jugadors.</string>
+    <string name="help_game_title">ℹ️ Regles de joc</string>
+    <string name="help_app_title">ℹ️ Com usar l\'aplicació</string>
+    <string name="help_label_end">🏁 Final de la partida</string>
+    <string name="help_belote_wikipedia_url">https://en.wikipedia.org/wiki/Belote</string>
+    <string name="belote_hint_title">ℹ️ Símbols</string>
+    <string name="help_cribbage_wikipedia_url">https://en.wikipedia.org/wiki/Cribbage</string>
+    <string name="app_help_cribbage_1">"Useu els botons  -/+ per a enregistrar els punts marcats durant la partida (en joc) per a cada jugador."</string>
+    <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
 </resources>
