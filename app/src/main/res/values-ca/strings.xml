@@ -303,8 +303,8 @@
     <string name="wingspan_maximum_players">Màxim 5 jugadors permesos</string>
     <string name="wingspan_quit_game">Surt de la partida</string>
     <string name="wingspan_quit_game_message">Esteu segur que voleu sortir? La partida no es desarà.</string>
-    <string name="yahtzee_game">Yahtzee</string>
-    <string name="yahtzee_yahtzee">Yahtzee</string>
+    <string name="yahtzee_game">Carrera de daus</string>
+    <string name="yahtzee_yahtzee">Cursa de daus</string>
     <string name="yahtzee_game_results">Resultats de la partida</string>
     <string name="yahtzee_winner_message">Guanyador: %1$s!</string>
     <string name="yahtzee_draw_message">És un empat!</string>
