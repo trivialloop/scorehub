@@ -335,4 +335,10 @@
     <string name="tarot_chelem_announced_success">🌿 Anunciat + aconseguit</string>
     <string name="tarot_chelem_announced_failure">🍂 Anunciat + no aconseguit</string>
     <string name="tarot_threshold_info">Calen ≥ %1$d pts per a guanyar</string>
+    <string name="yahtzee_ones">Un</string>
+    <string name="yahtzee_twos">Dos</string>
+    <string name="yahtzee_threes">Tres</string>
+    <string name="yahtzee_fours">Quatre</string>
+    <string name="yahtzee_fives">Cinc</string>
+    <string name="yahtzee_sixes">Sis</string>
 </resources>
