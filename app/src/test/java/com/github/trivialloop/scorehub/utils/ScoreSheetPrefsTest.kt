@@ -25,4 +25,7 @@ class ScoreSheetPrefsTest {
 
     @Test fun `unknown stored value falls back to the default index`() =
         assertEquals(ScoreSheetPrefs.LIMITS.indexOf(ScoreSheetPrefs.DEFAULT_LIMIT), ScoreSheetPrefs.indexOf(7))
+
+    @Test fun `feature is disabled by default`() = 
+        assertEquals(0, ScoreSheetPrefs.DEFAULT_LIMIT)
 }

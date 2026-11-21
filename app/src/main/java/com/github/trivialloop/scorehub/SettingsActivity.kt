@@ -14,6 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
 import com.github.trivialloop.scorehub.utils.SupportedLanguages
 import com.github.trivialloop.scorehub.utils.ThemeHelper
 import android.net.Uri
@@ -88,6 +89,7 @@ class SettingsActivity : AppCompatActivity() {
         setupThemeSpinner()
         setupKeepScreenOnSwitch()
         setupSheetLimitSpinner()
+        setupSheetsStorage()
 
         backupRepo = BackupRepository(AppDatabase.getDatabase(this))
         binding.btnExportBackup.setOnClickListener {
@@ -184,6 +186,31 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupSheetsStorage() {
+        refreshSheetsSize()
+        binding.btnDeleteAllSheets.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.score_sheets_delete_all)
+                .setMessage(R.string.score_sheets_delete_all_message)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) { ScoreSheetManager.deleteAll(applicationContext) }
+                        refreshSheetsSize()
+                    }
+                }
+                .setNegativeButton(R.string.no, null)
+                .show()
+        }
+    }
+
+    private fun refreshSheetsSize() {
+        lifecycleScope.launch {
+            val bytes = withContext(Dispatchers.IO) { ScoreSheetManager.totalBytes(applicationContext) }
+            binding.textSheetsSize.text = getString(
+                R.string.score_sheets_size, android.text.format.Formatter.formatShortFileSize(this@SettingsActivity, bytes))
         }
     }
 
