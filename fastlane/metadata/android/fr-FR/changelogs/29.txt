@@ -1,0 +1,3 @@
+### Ajout
+- Ajout d'un paramètre pour conserver l'écran allumé
+- Ajout de la sauvegarde de feuille de score
