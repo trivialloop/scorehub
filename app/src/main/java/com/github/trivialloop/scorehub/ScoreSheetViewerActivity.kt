@@ -71,7 +71,7 @@ class ScoreSheetViewerActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val byId = AppDatabase.getDatabase(this@ScoreSheetViewerActivity)
                 .scoreSheetDao().getAll().associateBy { it.id }
-            sheets = ids.mapNotNull { byId[it] }
+            sheets = ids.toList().mapNotNull { byId[it] }
             if (sheets.isEmpty()) { finish(); return@launch }
             index = sheets.indexOfFirst { it.id == currentId }.coerceAtLeast(0)
             show()

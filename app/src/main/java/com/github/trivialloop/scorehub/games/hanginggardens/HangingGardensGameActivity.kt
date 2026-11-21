@@ -30,6 +30,8 @@ import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.GameSymbols.RowStyle
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class HangingGardensGameActivity : AppCompatActivity() {

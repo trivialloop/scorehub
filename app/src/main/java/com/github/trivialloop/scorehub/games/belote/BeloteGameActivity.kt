@@ -29,6 +29,8 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class BeloteGameActivity : AppCompatActivity() {

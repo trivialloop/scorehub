@@ -34,6 +34,8 @@ import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
 import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class EscobaGameActivity : AppCompatActivity() {

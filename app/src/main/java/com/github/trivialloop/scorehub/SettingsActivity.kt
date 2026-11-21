@@ -2,39 +2,40 @@ package com.github.trivialloop.scorehub
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
-import com.github.trivialloop.scorehub.utils.LocaleHelper
-import com.github.trivialloop.scorehub.utils.ScoreSheetManager
-import com.github.trivialloop.scorehub.utils.SupportedLanguages
-import com.github.trivialloop.scorehub.utils.ThemeHelper
-import android.net.Uri
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.backup.BackupFile
 import com.github.trivialloop.scorehub.data.backup.BackupFiles
 import com.github.trivialloop.scorehub.data.backup.BackupPrefs
 import com.github.trivialloop.scorehub.data.backup.BackupRepository
+import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.ui.BackupMessages
+import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import com.github.trivialloop.scorehub.utils.ScreenHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.github.trivialloop.scorehub.utils.SupportedLanguages
+import com.github.trivialloop.scorehub.utils.ThemeHelper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding

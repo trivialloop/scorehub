@@ -27,6 +27,8 @@ import com.github.trivialloop.scorehub.databinding.ActivityQwixxGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class QwixxGameActivity : AppCompatActivity() {
