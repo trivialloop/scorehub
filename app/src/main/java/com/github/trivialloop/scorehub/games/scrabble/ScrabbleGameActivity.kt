@@ -39,6 +39,8 @@ import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class ScrabbleGameActivity : AppCompatActivity() {
@@ -567,7 +569,8 @@ class ScrabbleGameActivity : AppCompatActivity() {
         val maxScore  = totals.values.maxOrNull() ?: 0
         val winnerIds = totals.filter { it.value == maxScore }.keys
         val isDraw    = winnerIds.size > 1
-        val playedAt  = System.currentTimeMillis()   // computed ONCE for the whole session
+        val playedAt  = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(

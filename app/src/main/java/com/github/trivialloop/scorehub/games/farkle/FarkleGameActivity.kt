@@ -29,6 +29,8 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
 import kotlinx.coroutines.launch
 
@@ -96,9 +98,10 @@ class FarkleGameActivity : AppCompatActivity() {
     }
 
     private val totalPlayers get() = players.size
+    private var captureAll = false
 
     private fun getVisiblePlayers(): List<Pair<Int, FarklePlayerState>> = when {
-        totalPlayers <= 5 -> players.indices.map { it to players[it] }
+        totalPlayers <= 5 || captureAll -> players.indices.map { it to players[it] }
         else -> {
             val prev2 = (currentPlayerIndex - 2 + totalPlayers) % totalPlayers
             val prev1 = (currentPlayerIndex - 1 + totalPlayers) % totalPlayers
@@ -115,6 +118,7 @@ class FarkleGameActivity : AppCompatActivity() {
     }
 
     private fun columnWeight(isActive: Boolean): Float = when {
+        captureAll -> 1f
         totalPlayers == 1 -> 1f
         totalPlayers == 2 -> if (isActive) 0.8f else 0.2f
         totalPlayers <= 5 -> if (isActive) 0.6f else 0.2f
@@ -540,6 +544,12 @@ class FarkleGameActivity : AppCompatActivity() {
         val winnerIds = totals.filter { it.value == maxScore }.keys
         val isDraw    = winnerIds.size > 1
         val playedAt  = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(
+            this, GAME_TYPE, playedAt,
+            views   = listOf(binding.headerContainer, binding.tableContainer),
+            prepare = { captureAll = true;  buildTable() },
+            restore = { captureAll = false; buildTable() }
+        )
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(

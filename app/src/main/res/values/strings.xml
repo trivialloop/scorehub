@@ -423,6 +423,27 @@
     <string name="keep_screen_on">Keep screen on</string>
     <string name="keep_screen_on_hint">Prevents the screen from turning off and locking while ScoreHub is open.</string>
 
+    <!-- Score sheets -->
+    <string name="score_sheets_title">Score sheets</string>
+    <string name="score_sheets_empty">No score sheets saved.\nFinished games are kept here.</string>
+    <string name="score_sheets_empty_game">No score sheets saved for this game.\nFinished games are kept here.</string>
+    <string name="score_sheets_setting_title">Score sheets kept per game</string>
+    <string name="score_sheets_setting_hint">Keeps a picture of the final grid of finished games (about 15–40 KB each). When the limit is reached, the oldest sheet of that game is deleted. Lowering the limit takes effect when the next game is saved.</string>
+    <string name="score_sheets_limit_none">Disabled</string>
+    <string name="score_sheets_limit_unlimited">Unlimited</string>
+    <string name="score_sheet_delete">Delete this sheet</string>
+    <string name="score_sheet_delete_message">This sheet will be permanently deleted. Game statistics are not affected.</string>
+    <string name="score_sheet_deleted">Score sheet deleted</string>
+    <string name="score_sheets_disabled">Score sheets are disabled.\nEnable them in Settings.</string>
+    <string name="score_sheets_size">Space used: %1$s</string>
+    <string name="score_sheets_delete_all">Delete all score sheets</string>
+    <string name="score_sheets_delete_all_message">All saved score sheets will be permanently deleted. Game statistics are not affected.</string>
+    <string name="score_sheet_position">%1$d / %2$d</string>
+    <string name="score_sheet_previous">Previous</string>
+    <string name="score_sheet_next">Next</string>
+    <string name="filter_all_games">All games</string>
+    <string name="filter_all_players">All players</string>
+
     <!-- Common -->
     <string name="yes">Yes</string>
     <string name="no">No</string>

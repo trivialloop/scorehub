@@ -422,6 +422,27 @@
     <string name="keep_screen_on">Garder l\'écran allumé</string>
     <string name="keep_screen_on_hint">Empêche l\'écran de s\'éteindre et de se verrouiller tant que ScoreHub est ouvert.</string>
 
+    <!-- Feuilles de score -->
+    <string name="score_sheets_title">Feuilles de score</string>
+    <string name="score_sheets_empty">Aucune feuille de score enregistrée.\nLes parties terminées sont conservées ici.</string>
+    <string name="score_sheets_empty_game">Aucune feuille de score enregistrée pour ce jeu.\nLes parties terminées sont conservées ici.</string>
+    <string name="score_sheets_setting_title">Feuilles de score conservées par jeu</string>
+    <string name="score_sheets_setting_hint">Conserve une image de la grille finale des parties terminées (environ 15 à 40 Ko chacune). Quand la limite est atteinte, la plus ancienne feuille de ce jeu est supprimée. Une limite réduite s\'applique à l\'enregistrement de la prochaine partie.</string>
+    <string name="score_sheets_limit_none">Désactivé</string>
+    <string name="score_sheets_limit_unlimited">Illimité</string>
+    <string name="score_sheet_delete">Supprimer cette feuille</string>
+    <string name="score_sheet_delete_message">Cette feuille sera définitivement supprimée. Les statistiques ne sont pas affectées.</string>
+    <string name="score_sheet_deleted">Feuille supprimée</string>
+    <string name="score_sheets_disabled">Les feuilles de score sont désactivées.\nActivez-les dans les paramètres.</string>
+    <string name="score_sheets_size">Espace utilisé : %1$s</string>
+    <string name="score_sheets_delete_all">Supprimer toutes les feuilles</string>
+    <string name="score_sheets_delete_all_message">Toutes les feuilles de score enregistrées seront définitivement supprimées. Les statistiques ne sont pas affectées.</string>
+    <string name="score_sheet_position">%1$d / %2$d</string>
+    <string name="score_sheet_previous">Précédente</string>
+    <string name="score_sheet_next">Suivante</string>
+    <string name="filter_all_games">Tous les jeux</string>
+    <string name="filter_all_players">Tous les joueurs</string>
+
     <!-- Common -->
     <string name="yes">Oui</string>
     <string name="no">Non</string>

@@ -6,13 +6,19 @@
         android:id="@+id/action_sevenwonders_game_stats"
         android:title="@string/game_statistics"
         android:icon="@drawable/ic_leaderboard"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_sevenwonders_top20"
         android:title="@string/top_20"
         android:icon="@drawable/ic_trophy"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_score_sheets"
+        android:title="@string/score_sheets_title"
+        android:icon="@drawable/ic_sheet"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_help"

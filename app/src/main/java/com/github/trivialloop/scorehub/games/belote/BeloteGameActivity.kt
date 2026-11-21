@@ -29,6 +29,8 @@ import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreProgressHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class BeloteGameActivity : AppCompatActivity() {
@@ -392,6 +394,7 @@ class BeloteGameActivity : AppCompatActivity() {
         val winningTeams = totals.filter { it.value == maxScore }.keys
         val isDraw = winningTeams.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
 
         lifecycleScope.launch {
             val results = playerIds.indices.map { i ->

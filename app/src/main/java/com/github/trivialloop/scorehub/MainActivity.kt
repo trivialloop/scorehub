@@ -454,6 +454,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, GeneralStatsActivity::class.java))
                 true
             }
+            R.id.action_score_sheets -> {
+                startActivity(Intent(this, ScoreSheetsActivity::class.java))
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true

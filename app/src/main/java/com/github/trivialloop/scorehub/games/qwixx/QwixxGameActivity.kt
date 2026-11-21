@@ -27,6 +27,8 @@ import com.github.trivialloop.scorehub.databinding.ActivityQwixxGameBinding
 import com.github.trivialloop.scorehub.ui.GameResultsDialog
 import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class QwixxGameActivity : AppCompatActivity() {
@@ -587,6 +589,7 @@ class QwixxGameActivity : AppCompatActivity() {
         val winners  = totals.filter { it.value == maxScore }.keys
         val isDraw   = winners.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.scoreTableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(gameState.players.map { player ->
                 GameResult(

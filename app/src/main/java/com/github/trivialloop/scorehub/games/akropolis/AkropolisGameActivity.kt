@@ -30,6 +30,8 @@ import com.github.trivialloop.scorehub.ui.HelpDialogs
 import com.github.trivialloop.scorehub.utils.GameSymbols
 import com.github.trivialloop.scorehub.utils.LocaleHelper
 import com.github.trivialloop.scorehub.utils.ScoreColorRole
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import kotlinx.coroutines.launch
 
 class AkropolisGameActivity : AppCompatActivity() {
@@ -463,6 +465,7 @@ class AkropolisGameActivity : AppCompatActivity() {
         val winners  = totals.filter { it.value == maxScore }.keys
         val isDraw   = winners.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.scoreTableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(playerScores.map { ps ->
                 GameResult(

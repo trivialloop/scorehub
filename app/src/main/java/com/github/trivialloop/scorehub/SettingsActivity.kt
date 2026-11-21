@@ -2,38 +2,40 @@ package com.github.trivialloop.scorehub
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
-import com.github.trivialloop.scorehub.utils.LocaleHelper
-import com.github.trivialloop.scorehub.utils.SupportedLanguages
-import com.github.trivialloop.scorehub.utils.ThemeHelper
-import android.net.Uri
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.backup.BackupFile
 import com.github.trivialloop.scorehub.data.backup.BackupFiles
 import com.github.trivialloop.scorehub.data.backup.BackupPrefs
 import com.github.trivialloop.scorehub.data.backup.BackupRepository
+import com.github.trivialloop.scorehub.databinding.ActivitySettingsBinding
 import com.github.trivialloop.scorehub.ui.BackupMessages
+import com.github.trivialloop.scorehub.utils.LocaleHelper
+import com.github.trivialloop.scorehub.utils.ScoreSheetManager
+import com.github.trivialloop.scorehub.utils.ScoreSheetPrefs
 import com.github.trivialloop.scorehub.utils.ScreenHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.github.trivialloop.scorehub.utils.SupportedLanguages
+import com.github.trivialloop.scorehub.utils.ThemeHelper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -87,6 +89,8 @@ class SettingsActivity : AppCompatActivity() {
         setupLanguageSpinner()
         setupThemeSpinner()
         setupKeepScreenOnSwitch()
+        setupSheetLimitSpinner()
+        setupSheetsStorage()
 
         backupRepo = BackupRepository(AppDatabase.getDatabase(this))
         binding.btnExportBackup.setOnClickListener {
@@ -165,6 +169,49 @@ class SettingsActivity : AppCompatActivity() {
             // Apply immediately on this screen
             if (isChecked) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    private fun setupSheetLimitSpinner() {
+        val labels = ScoreSheetPrefs.LIMITS.map { ScoreSheetPrefs.label(this, it) }.toTypedArray()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSheetLimit.adapter = adapter
+        binding.spinnerSheetLimit.setSelection(ScoreSheetPrefs.indexOf(ScoreSheetPrefs.getLimit(this)))
+
+        binding.spinnerSheetLimit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val newLimit = ScoreSheetPrefs.LIMITS[position]
+                if (newLimit != ScoreSheetPrefs.getLimit(this@SettingsActivity)) {
+                    ScoreSheetPrefs.setLimit(this@SettingsActivity, newLimit)
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupSheetsStorage() {
+        refreshSheetsSize()
+        binding.btnDeleteAllSheets.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.score_sheets_delete_all)
+                .setMessage(R.string.score_sheets_delete_all_message)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) { ScoreSheetManager.deleteAll(applicationContext) }
+                        refreshSheetsSize()
+                    }
+                }
+                .setNegativeButton(R.string.no, null)
+                .show()
+        }
+    }
+
+    private fun refreshSheetsSize() {
+        lifecycleScope.launch {
+            val bytes = withContext(Dispatchers.IO) { ScoreSheetManager.totalBytes(applicationContext) }
+            binding.textSheetsSize.text = getString(
+                R.string.score_sheets_size, android.text.format.Formatter.formatShortFileSize(this@SettingsActivity, bytes))
         }
     }
 
