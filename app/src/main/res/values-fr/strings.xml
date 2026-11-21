@@ -419,6 +419,8 @@
     <string name="theme_system">Système</string>
     <string name="theme_light">Clair</string>
     <string name="theme_dark">Sombre</string>
+    <string name="keep_screen_on">Garder l\'écran allumé</string>
+    <string name="keep_screen_on_hint">Empêche l\'écran de s\'éteindre et de se verrouiller tant que ScoreHub est ouvert.</string>
 
     <!-- Common -->
     <string name="yes">Oui</string>
