@@ -107,10 +107,12 @@ class YahtzeeGameActivity : AppCompatActivity() {
         }
     }
 
+    private var captureAll = false
+
     private fun getVisiblePlayers(): List<Pair<Int, YahtzeePlayerScore>> {
         val total = playerScores.size
         return when {
-            total <= 5 -> playerScores.indices.map { it to playerScores[it] }
+            total <= 5 || captureAll -> playerScores.indices.map { it to playerScores[it] }
             else -> {
                 val prev2 = (currentPlayerIndex - 2 + total) % total
                 val prev1 = (currentPlayerIndex - 1 + total) % total
@@ -176,6 +178,7 @@ class YahtzeeGameActivity : AppCompatActivity() {
         val column = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             val weight = when {
+                captureAll -> 1f
                 playerScores.size == 1 -> 1f
                 playerScores.size == 2 -> if (isActive) 0.8f else 0.2f
                 playerScores.size <= 5 -> if (isActive) 0.6f else 0.2f
@@ -393,7 +396,12 @@ class YahtzeeGameActivity : AppCompatActivity() {
         val isDraw     = winners.size > 1
         val isSoloGame = playerScores.size == 1
         val playedAt   = System.currentTimeMillis()
-        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.scoreTableContainer)
+        ScoreSheetManager.captureAndSave(
+            this, GAME_TYPE, playedAt,
+            views   = listOf(binding.scoreTableContainer),
+            prepare = { captureAll = true;  buildScoreTable() },
+            restore = { captureAll = false; buildScoreTable() }
+        )
 
         lifecycleScope.launch {
             val results = playerScores.map { ps ->

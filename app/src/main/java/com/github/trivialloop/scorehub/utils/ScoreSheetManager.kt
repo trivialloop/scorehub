@@ -100,6 +100,9 @@ object ScoreSheetManager {
         }
     }
 
+    fun captureAndSave(activity: Activity, gameType: String, playedAt: Long, vararg views: View) =
+        captureAndSave(activity, gameType, playedAt, views.toList())
+
     /** Waits for the last view that still has a pending layout; runs now if everything is laid out. */
     private fun runAfterLayout(views: List<View>, action: () -> Unit) {
         val pending = views.lastOrNull { it.isLayoutRequested || !it.isLaidOut }

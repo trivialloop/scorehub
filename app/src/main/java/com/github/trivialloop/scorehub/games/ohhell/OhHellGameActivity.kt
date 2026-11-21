@@ -57,11 +57,12 @@ class OhHellGameActivity : AppCompatActivity() {
     }
 
     private val numPlayers get() = players.size
+    private var captureAll = false
 
     // ── Visible players window (active player centred, slightly wider) ────────
 
     private fun getVisiblePlayers(): List<Pair<Int, OhHellPlayerState>> = when {
-        numPlayers <= 5 -> players.indices.map { it to players[it] }
+        numPlayers <= 5 || captureAll -> players.indices.map { it to players[it] }
         else -> {
             val prev2 = (currentPlayerIndex - 2 + numPlayers) % numPlayers
             val prev1 = (currentPlayerIndex - 1 + numPlayers) % numPlayers
@@ -78,6 +79,7 @@ class OhHellGameActivity : AppCompatActivity() {
     }
 
     private fun columnWeight(isActive: Boolean): Float = when {
+        captureAll -> 1f
         numPlayers == 1 -> 1f
         numPlayers == 2 -> if (isActive) 0.8f else 0.2f
         numPlayers <= 5 -> if (isActive) 0.5f else 0.15f
@@ -385,7 +387,12 @@ class OhHellGameActivity : AppCompatActivity() {
         val winners = totals.filter { it.value == maxScore }.keys
         val isDraw = winners.size > 1
         val playedAt = System.currentTimeMillis()
-        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
+        ScoreSheetManager.captureAndSave(
+            this, GAME_TYPE, playedAt,
+            views   = listOf(binding.headerContainer, binding.tableContainer),
+            prepare = { captureAll = true;  buildTable() },
+            restore = { captureAll = false; buildTable() }
+        )
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(
