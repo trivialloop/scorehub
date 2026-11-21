@@ -19,3 +19,6 @@
 - `playedAt` is never regenerated (stats "Counted" group by it).
 - Files with an unknown `gameType` or a newer `formatVersion` are refused ("update the app").
 - Not handled: the same physical game typed separately on two devices (different `playedAt`).
+- Score sheets (`score_sheets` table + WebP files) are **not** exported, and an "Overwrite" import does
+  not touch them. They are local only (see `score_sheets.md`); sheets stay linked to their session by
+  `(gameType, playedAt)`, which an import never regenerates.

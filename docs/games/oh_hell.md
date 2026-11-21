@@ -8,6 +8,9 @@
   - ✅ = made the contract exactly (score `5 + 2 × contract`).
   - ❌ repeated once per trick missed, over or under (score `-2` per cross).
 - Highest total after all rounds wins.
+- Score sheet: shows only a window of 5 players above 5 players, so the capture sets `captureAll`
+  (all players, equal column weights) before the snapshot and restores the normal display afterwards
+  (see `score_sheets.md`).
 
 ## Grid layout
 

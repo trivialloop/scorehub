@@ -12,10 +12,11 @@
 - **DB** : Room (SQLite)
 - **License** : GPL v3
 
-This file covers rules that apply to the **whole project**. Game-specific notes
-(scoring rules, layout quirks, player counts, help text, etc.) live in
-`docs/games/<game>.md` — one file per game. Read the relevant per-game doc
-before touching that game's code, in addition to this file.
+This file covers rules that apply to the **whole project**. Specific topics live in `docs/`:
+
+- `docs/games/<game>.md` — game-specific notes (scoring rules, layout quirks, player counts, help text, etc.), one file per game. Read the relevant per-game doc before touching that game's code, in addition to this file.
+- `docs/score_sheets.md` — saved score sheets (picture of the final grid of a finished game).
+- `docs/backup.md` — JSON export / import of players and results.
 
 ---
 
@@ -25,27 +26,45 @@ before touching that game's code, in addition to this file.
 app/src/main/java/com/github/trivialloop/scorehub/
 ├── MainActivity.kt                  # Home screen, game selection
 ├── GeneralStatsActivity.kt          # Cross-game general statistics
-├── SettingsActivity.kt              # Language + theme
+├── SettingsActivity.kt              # Language, theme, score sheets limit, backup
+├── ScoreSheetsActivity.kt           # List of saved score sheets (filters: game / player)
+├── ScoreSheetViewerActivity.kt      # Browse, zoom and delete score sheets
+├── BackupImportActivity.kt          # Merge screen of the backup import
 ├── ScoreHubApplication.kt           # Application class (theme init)
 ├── GameRegistry.kt                  # Central registry of all games
 ├── data/
-│   ├── AppDatabase.kt               # Room database singleton
-│   ├── Player.kt                    # Player entity (id, name, color ARGB, createdAt)
+│   ├── AppDatabase.kt               # Room database singleton (version 3)
+│   ├── Player.kt                    # Player entity (id, name, color ARGB, createdAt, uuid, extraUuids)
 │   ├── GameResult.kt                # Result entity (gameType, playerId, score, isWinner, isDraw)
+│   ├── ScoreSheet.kt                # Score sheet entity (gameType, playedAt, fileName)
 │   ├── PlayerDao.kt                 # Player CRUD
 │   ├── GameResultDao.kt             # Stats + top20 queries
-│   └── PlayersColors.kt             # Available color palette
+│   ├── ScoreSheetDao.kt             # Score sheets queries
+│   ├── PlayersColors.kt             # Available color palette
+│   └── backup/                      # Backup export / import (models, serializer, merge planner, repository)
 ├── games/
-│   ├── akropolis/  cactus/  cribbage/  escoba/  farkle/  flip7/
-│   ├── freegame/    ligretto/  oh_hell/  qwixx/  skyjo/  tarot/
-│   └── wingspan/  yahtzee/
+│   ├── akropolis/  belote/  cactus/  cribbage/  escoba/  farkle/  flip7/
+│   ├── freegame/  hanginggardens/  harmonies/  ligretto/  oh_hell/  qwixx/
+│   ├── scrabble/  sevenwonders/  skyjo/  tarot/  tickettoride/  wingspan/
+│   └── yahtzee/
+├── ui/
+│   ├── HelpDialogs.kt               # Game rules + app usage help
+│   ├── GameResultsDialog.kt         # Shared end-of-game results dialog
+│   ├── ColorPickerView.kt
+│   └── ZoomImageView.kt             # Pinch / drag / double-tap zoom (score sheet viewer)
 └── utils/
     ├── GeneralStatsCalculator.kt
+    ├── GameSymbols.kt               # Shared row-label emoji
     ├── LocaleHelper.kt              # Runtime language switching
     ├── ScoreColorHelper.kt          # Shared utility: ScoreColorRole
+    ├── ScoreProgressHelper.kt       # Progress bars toward a score limit
+    ├── ScoreSheetManager.kt         # ScoreSheetManager (capture / save / prune) + ScoreSheetPrefs (limit)
     └── ThemeHelper.kt               # Light / Dark / System
 
-docs/games/                          # One markdown file per game (rules, UI notes)
+docs/
+├── games/                           # One markdown file per game (rules, UI notes)
+├── score_sheets.md
+└── backup.md
 ```
 
 ---
@@ -57,7 +76,7 @@ docs/games/                          # One markdown file per game (rules, UI not
 
 ### Database
 - **Never modify** `AppDatabase` without creating a **Room migration** (`addMigrations(...)` in the builder).
-- Current version is **`version = 2`** — any column or table addition must increment this number and provide the SQL migration script.
+- Current version is **`version = 3`** — any column or table addition must increment this number and provide the SQL migration script. Commit the generated `app/schemas/.../<version>.json`.
 - `GameResult.gameType` is a plain string (`"yahtzee"`, `"skyjo"`, `"ligretto"`, etc., not an enum).
 
 ---
@@ -149,6 +168,12 @@ ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
 ```
 
 This applies to **every screen with a toolbar/appBarLayout**, including one-off screens like Free Game that don't follow the round-based grid pattern.
+
+### Menus
+
+- **Player-selection menus** (`menu_<game>_player_selection.xml`): game statistics, Top 20 and score sheets (`action_score_sheets`) are `app:showAsAction="never"` (3-dot overflow menu). Only the help item is `always`, so it stays visible.
+- `menu_<game>_game.xml` contains only the help item. `menu_main.xml` is unchanged (`ifRoom`).
+- Free Game has no stats, Top 20, score sheets or help.
 
 ## Localisation
 
@@ -304,12 +329,32 @@ Games with an in-play phase (Cribbage, Escoba, Farkle) use a `[−] score [+]` c
 
 ---
 
+## Score sheets
+
+A score sheet is a WebP picture of the final grid of a finished game. **Disabled by default**
+(limit = 0), limit **per game**, stored in `noBackupFilesDir` and **not** part of the backup.
+Full details in `docs/score_sheets.md`. Rules that apply to every game:
+
+- Call `ScoreSheetManager.captureAndSave(...)` in `saveResultsAndShowSummary()`, with the **same `playedAt`** as the `GameResult` rows, **after** the final grid has been built:
+  ```kotlin
+  // grid in headerContainer + tableContainer
+  ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
+  // one-shot grid in scoreTableContainer (Akropolis, Qwixx, Wingspan, Yahtzee)
+  ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.scoreTableContainer)
+  ```
+- A game that only displays a **window of players** (`getVisiblePlayers()`, above 5 players: Farkle, Flip 7, Oh Hell, Yahtzee, and Ligretto if it has one) must expose everybody on the sheet: keep a `captureAll` flag that makes `getVisiblePlayers()` return all players and `columnWeight()` return `1f`, and pass `views = listOf(...)`, `prepare = { captureAll = true; buildTable() }`, `restore = { captureAll = false; buildTable() }`.
+- Free Game does not save results, so it has no score sheet.
+- Every player-selection menu has the `action_score_sheets` item, handled with `ScoreSheetsActivity.start(this, GAME_TYPE)`.
+
+---
+
 ## Tests
 
 - Unit tests in `app/src/test/` (JVM, no Android context).
 - Instrumented tests in `app/src/androidTest/` (Room in-memory).
 - Test file naming: `<Game>ScoreManagerTest.kt` (e.g. `YahtzeeScoreManagerTest.kt`).
 - One test file per game score manager, plus `DatabaseTest.kt` for Room DAOs.
+- Shared logic is tested too: `ScoreSheetPrefsTest`, `ScoreProgressHelperTest`, `GeneralStatsCalculatorTest`, backup tests.
 
 ### `playedAt` — mandatory shared timestamp per game session
 
@@ -326,6 +371,9 @@ than their teammates is silently excluded from "Counted" games in the stats
 screen, even though their score appears correctly in the Top 20 (which doesn't
 group by `playedAt`).
 
+The same `playedAt` is also the key of a score sheet and of a game in the backup
+(`(gameType, playedAt)`), so it must never be regenerated.
+
 **Always compute `playedAt` once, before the `.map`, and pass it explicitly:**
 
 ```kotlin
@@ -333,6 +381,7 @@ private fun saveResultsAndShowSummary() {
     val totals   = players.associate { it to it.getTotal(rounds) }
     ...
     val playedAt = System.currentTimeMillis()   // computed ONCE
+    ScoreSheetManager.captureAndSave(...)       // same playedAt (see "Score sheets")
     lifecycleScope.launch {
         database.gameResultDao().insertGameResults(players.map { player ->
             GameResult(
@@ -393,14 +442,15 @@ The main screen reads its game list from a **central registry** — no change to
    - If the game has **no rounds** (one-shot scoring like Wingspan/Akropolis): use a single scrollable or horizontal container as appropriate.
 4. **Declare the activities** in `AndroidManifest.xml`.
 5. **Add menus**:
-   - `menu_<game>_player_selection.xml` — must include game statistics, top 20, and the help item.
+   - `menu_<game>_player_selection.xml` — game statistics, top 20 and score sheets (`action_score_sheets`), all with `app:showAsAction="never"` (3-dot menu), plus the help item (`always`). Handle `R.id.action_score_sheets` with `ScoreSheetsActivity.start(this, GAME_TYPE)` in `onOptionsItemSelected`.
    - `menu_<game>_game.xml` — contains only the help item.
 6. **Add strings** in `values/strings.xml` and `values-fr/strings.xml`.
 7. **Add a drawable icon** referenced by `GameDefinition.iconResId`.
 8. Set lowerIsBetter = true in the GameDefinition if the lowest score wins — general stats pick the game up automatically.
 9. **Add unit tests** in `<Game>ScoreManagerTest.kt`. Mandatory — cover scoring logic, state helpers, and edge cases.
 10. **Add help content** in `ui/HelpDialogs.kt` (see below).
-11. **Write `docs/games/<game>.md`** — a short doc following the template of the existing per-game files, covering scoring rules, player counts, and any UI quirks specific to that game.
+11. **Save the score sheet**: call `ScoreSheetManager.captureAndSave(...)` in `saveResultsAndShowSummary()` (see "Score sheets" above and `docs/score_sheets.md`). If the game only shows a window of players, use the `captureAll` / `prepare` / `restore` pattern.
+12. **Write `docs/games/<game>.md`** — a short doc following the template of the existing per-game files, covering scoring rules, player counts, and any UI quirks specific to that game.
 
 ### Help content (`ui/HelpDialogs.kt`)
 
