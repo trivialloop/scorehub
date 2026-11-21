@@ -1,0 +1,3 @@
+### Added
+- Add parameter to keep screen on
+- Add history sheet
