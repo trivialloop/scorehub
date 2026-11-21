@@ -10,14 +10,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import java.util.UUID
 
 @Database(
-    entities = [Player::class, GameResult::class],
-    version = 2,
+    entities = [Player::class, GameResult::class, ScoreSheet::class],
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(StringListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
     abstract fun gameResultDao(): GameResultDao
+    abstract fun scoreSheetDao(): ScoreSheetDao
 
     companion object {
         @Volatile
@@ -45,6 +46,19 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /** Adds the score_sheets table. */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `score_sheets` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`gameType` TEXT NOT NULL, `playedAt` INTEGER NOT NULL, " +
+                        "`fileName` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)"
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_score_sheets_gameType` ON `score_sheets` (`gameType`)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -52,7 +66,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "scorehub_database"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance

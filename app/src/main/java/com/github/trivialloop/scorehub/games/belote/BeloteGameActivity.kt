@@ -392,6 +392,7 @@ class BeloteGameActivity : AppCompatActivity() {
         val winningTeams = totals.filter { it.value == maxScore }.keys
         val isDraw = winningTeams.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
 
         lifecycleScope.launch {
             val results = playerIds.indices.map { i ->

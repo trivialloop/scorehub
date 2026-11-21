@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.trivialloop.scorehub.R
+import com.github.trivialloop.scorehub.ScoreSheetsActivity
 import com.github.trivialloop.scorehub.data.AppDatabase
 import com.github.trivialloop.scorehub.data.Player
 import com.github.trivialloop.scorehub.databinding.ActivityPlayerSelectionBinding
@@ -281,6 +282,7 @@ class ScrabblePlayerSelectionActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> { finish(); true }
+            R.id.action_score_sheets -> { ScoreSheetsActivity.start(this, GAME_TYPE); true }
             R.id.action_scrabble_game_stats -> { startActivity(Intent(this, ScrabbleStatsActivity::class.java)); true }
             R.id.action_scrabble_top20 -> { startActivity(Intent(this, ScrabbleTop20Activity::class.java)); true }
             R.id.action_help -> { HelpDialogs.showGameHelp(this, GAME_TYPE); true }

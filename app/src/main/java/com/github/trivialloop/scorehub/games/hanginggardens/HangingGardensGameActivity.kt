@@ -360,7 +360,8 @@ class HangingGardensGameActivity : AppCompatActivity() {
         val maxScore = totals.values.maxOrNull() ?: 0
         val winners = totals.filter { it.value == maxScore }.keys
         val isDraw = winners.size > 1
-        val playedAt = System.currentTimeMillis()   // computed ONCE for all players
+        val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(

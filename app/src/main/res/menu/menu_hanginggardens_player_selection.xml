@@ -15,6 +15,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_score_sheets"
+        android:title="@string/score_sheets_title"
+        android:icon="@drawable/ic_sheet"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_help"
         android:title="@string/help_game_title"
         android:icon="@drawable/ic_help"

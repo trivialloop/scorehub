@@ -567,7 +567,8 @@ class ScrabbleGameActivity : AppCompatActivity() {
         val maxScore  = totals.values.maxOrNull() ?: 0
         val winnerIds = totals.filter { it.value == maxScore }.keys
         val isDraw    = winnerIds.size > 1
-        val playedAt  = System.currentTimeMillis()   // computed ONCE for the whole session
+        val playedAt  = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(

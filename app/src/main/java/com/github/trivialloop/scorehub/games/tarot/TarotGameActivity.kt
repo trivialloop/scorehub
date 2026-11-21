@@ -523,6 +523,7 @@ class TarotGameActivity : AppCompatActivity() {
         val winners  = totals.filter { it.value == maxScore }.keys
         val isDraw   = winners.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(gameType = GAME_TYPE, playerId = player.playerId,

@@ -423,6 +423,17 @@
     <string name="keep_screen_on">Keep screen on</string>
     <string name="keep_screen_on_hint">Prevents the screen from turning off and locking while ScoreHub is open.</string>
 
+    <!-- Score sheets -->
+    <string name="score_sheets_title">Score sheets</string>
+    <string name="score_sheets_empty">No score sheets saved yet.\nFinished games are kept here.</string>
+    <string name="score_sheets_setting_title">Score sheets kept per game</string>
+    <string name="score_sheets_setting_hint">When the limit is reached, the oldest sheet of that game is deleted. Lowering the limit takes effect when the next game is saved.</string>
+    <string name="score_sheets_limit_none">None (don\'t keep any)</string>
+    <string name="score_sheets_limit_unlimited">Unlimited</string>
+    <string name="score_sheet_delete">Delete this sheet</string>
+    <string name="score_sheet_delete_message">This sheet will be permanently deleted. Game statistics are not affected.</string>
+    <string name="score_sheet_deleted">Score sheet deleted</string>
+
     <!-- Common -->
     <string name="yes">Yes</string>
     <string name="no">No</string>

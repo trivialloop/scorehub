@@ -587,6 +587,7 @@ class QwixxGameActivity : AppCompatActivity() {
         val winners  = totals.filter { it.value == maxScore }.keys
         val isDraw   = winners.size > 1
         val playedAt = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.scoreTableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(gameState.players.map { player ->
                 GameResult(

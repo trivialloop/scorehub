@@ -87,6 +87,7 @@ class SettingsActivity : AppCompatActivity() {
         setupLanguageSpinner()
         setupThemeSpinner()
         setupKeepScreenOnSwitch()
+        setupSheetLimitSpinner()
 
         backupRepo = BackupRepository(AppDatabase.getDatabase(this))
         binding.btnExportBackup.setOnClickListener {
@@ -165,6 +166,24 @@ class SettingsActivity : AppCompatActivity() {
             // Apply immediately on this screen
             if (isChecked) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    private fun setupSheetLimitSpinner() {
+        val labels = ScoreSheetPrefs.LIMITS.map { ScoreSheetPrefs.label(this, it) }.toTypedArray()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSheetLimit.adapter = adapter
+        binding.spinnerSheetLimit.setSelection(ScoreSheetPrefs.indexOf(ScoreSheetPrefs.getLimit(this)))
+
+        binding.spinnerSheetLimit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val newLimit = ScoreSheetPrefs.LIMITS[position]
+                if (newLimit != ScoreSheetPrefs.getLimit(this@SettingsActivity)) {
+                    ScoreSheetPrefs.setLimit(this@SettingsActivity, newLimit)
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 

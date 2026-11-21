@@ -540,6 +540,7 @@ class FarkleGameActivity : AppCompatActivity() {
         val winnerIds = totals.filter { it.value == maxScore }.keys
         val isDraw    = winnerIds.size > 1
         val playedAt  = System.currentTimeMillis()
+        ScoreSheetManager.captureAndSave(this, GAME_TYPE, playedAt, binding.headerContainer, binding.tableContainer)
         lifecycleScope.launch {
             database.gameResultDao().insertGameResults(players.map { player ->
                 GameResult(

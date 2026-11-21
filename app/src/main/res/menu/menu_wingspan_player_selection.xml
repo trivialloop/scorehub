@@ -13,6 +13,12 @@
         android:title="@string/top_20"
         android:icon="@drawable/ic_trophy"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_score_sheets"
+        android:title="@string/score_sheets_title"
+        android:icon="@drawable/ic_sheet"
+        app:showAsAction="ifRoom" />
         
     <item
         android:id="@+id/action_help"

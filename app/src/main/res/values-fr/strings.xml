@@ -422,6 +422,17 @@
     <string name="keep_screen_on">Garder l\'écran allumé</string>
     <string name="keep_screen_on_hint">Empêche l\'écran de s\'éteindre et de se verrouiller tant que ScoreHub est ouvert.</string>
 
+    <!-- Feuilles de score -->
+    <string name="score_sheets_title">Feuilles de score</string>
+    <string name="score_sheets_empty">Aucune feuille de score enregistrée.\nLes parties terminées sont conservées ici.</string>
+    <string name="score_sheets_setting_title">Feuilles de score conservées par jeu</string>
+    <string name="score_sheets_setting_hint">Quand la limite est atteinte, la plus ancienne feuille de ce jeu est supprimée. Une limite réduite s\'applique à l\'enregistrement de la prochaine partie.</string>
+    <string name="score_sheets_limit_none">Aucune (ne rien conserver)</string>
+    <string name="score_sheets_limit_unlimited">Illimité</string>
+    <string name="score_sheet_delete">Supprimer cette feuille</string>
+    <string name="score_sheet_delete_message">Cette feuille sera définitivement supprimée. Les statistiques ne sont pas affectées.</string>
+    <string name="score_sheet_deleted">Feuille supprimée</string>
+
     <!-- Common -->
     <string name="yes">Oui</string>
     <string name="no">Non</string>
