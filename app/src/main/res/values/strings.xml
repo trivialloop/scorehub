@@ -426,6 +426,7 @@
     <!-- Score sheets -->
     <string name="score_sheets_title">Score sheets</string>
     <string name="score_sheets_empty">No score sheets saved.\nFinished games are kept here.</string>
+    <string name="score_sheets_empty_game">No score sheets saved for this game.\nFinished games are kept here.</string>
     <string name="score_sheets_setting_title">Score sheets kept per game</string>
     <string name="score_sheets_setting_hint">Keeps a picture of the final grid of finished games (about 15–40 KB each). When the limit is reached, the oldest sheet of that game is deleted. Lowering the limit takes effect when the next game is saved.</string>
     <string name="score_sheets_limit_none">Disabled</string>

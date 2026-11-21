@@ -425,6 +425,7 @@
     <!-- Feuilles de score -->
     <string name="score_sheets_title">Feuilles de score</string>
     <string name="score_sheets_empty">Aucune feuille de score enregistrée.\nLes parties terminées sont conservées ici.</string>
+    <string name="score_sheets_empty_game">Aucune feuille de score enregistrée pour ce jeu.\nLes parties terminées sont conservées ici.</string>
     <string name="score_sheets_setting_title">Feuilles de score conservées par jeu</string>
     <string name="score_sheets_setting_hint">Conserve une image de la grille finale des parties terminées (environ 15 à 40 Ko chacune). Quand la limite est atteinte, la plus ancienne feuille de ce jeu est supprimée. Une limite réduite s\'applique à l\'enregistrement de la prochaine partie.</string>
     <string name="score_sheets_limit_none">Désactivé</string>

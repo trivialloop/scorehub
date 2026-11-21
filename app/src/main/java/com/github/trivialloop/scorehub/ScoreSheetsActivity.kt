@@ -41,6 +41,7 @@ class ScoreSheetsActivity : AppCompatActivity() {
     private var playerValues: List<Long?> = listOf(null)
     private var gameFilter: String? = null
     private var playerFilter: Long? = null
+    private val fixedGame: String? get() = intent.getStringExtra(EXTRA_GAME_TYPE)
 
     companion object {
         /** Optional: restrict the list to one game (used by the "History" button of each game). */
@@ -121,13 +122,20 @@ class ScoreSheetsActivity : AppCompatActivity() {
         GameRegistry.findByType(type)?.let { getString(it.nameResId) } ?: type
 
     private fun refreshSpinners() {
-        val games = items.map { it.sheet.gameType }.distinct().sortedBy { gameName(it) }
-        gameValues = listOf<String?>(null) + games
+        val fixed = fixedGame
+
+        // Opened from a game: the spinner only offers that game, even without any sheet
+        val games = if (fixed != null) listOf(fixed)
+        else items.map { it.sheet.gameType }.distinct().sortedBy { gameName(it) }
+        gameValues = if (fixed != null) games else listOf<String?>(null) + games
         binding.spinnerGameFilter.adapter = spinnerAdapter(
-            listOf(getString(R.string.filter_all_games)) + games.map { gameName(it) })
+            (if (fixed != null) emptyList() else listOf(getString(R.string.filter_all_games))) +
+                games.map { gameName(it) })
         binding.spinnerGameFilter.setSelection(gameValues.indexOf(gameFilter).coerceAtLeast(0))
 
-        val players = items.flatMap { it.players }.distinctBy { it.first }.sortedBy { it.second.lowercase() }
+        // Players: only those who played this game when opened from a game
+        val scoped = if (fixed != null) items.filter { it.sheet.gameType == fixed } else items
+        val players = scoped.flatMap { it.players }.distinctBy { it.first }.sortedBy { it.second.lowercase() }
         playerValues = listOf<Long?>(null) + players.map { it.first }
         binding.spinnerPlayerFilter.adapter = spinnerAdapter(
             listOf(getString(R.string.filter_all_players)) + players.map { it.second })
@@ -146,8 +154,11 @@ class ScoreSheetsActivity : AppCompatActivity() {
         }
         binding.textEmpty.visibility = if (shown.isEmpty()) View.VISIBLE else View.GONE
         binding.textEmpty.setText(
-            if (items.isEmpty() && !ScoreSheetPrefs.isEnabled(this)) R.string.score_sheets_disabled
-            else R.string.score_sheets_empty
+            when {
+                !ScoreSheetPrefs.isEnabled(this) -> R.string.score_sheets_disabled
+                fixedGame != null -> R.string.score_sheets_empty_game
+                else -> R.string.score_sheets_empty
+            }
         )
     }
 
