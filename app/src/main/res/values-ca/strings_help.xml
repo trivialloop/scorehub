@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="help_label_players">👥 Jugadors</string>
+    <string name="help_label_objective">🎯 Objectiu</string>
+    <string name="help_label_scoring">🔢 Puntuació</string>
+    <string name="help_wikipedia_link">📖 Més informació a la Viquipèdia</string>
+    <string name="help_akropolis_players">De 2 a 4 jugadors.</string>
+    <string name="help_cactus_players">De 2 a 8 jugadors.</string>
+    <string name="help_cribbage_players">2 jugadors.</string>
+    <string name="help_escoba_players">2 jugadors.</string>
+    <string name="app_help_escoba_3">Quan un jugador arriba als 21, el joc s\'ha acabat.</string>
+    <string name="help_farkle_players">De 2 a 8 jugadors.</string>
+    <string name="help_flip7_players">De 3 a 10 jugadors.</string>
+    <string name="help_hanginggardens_players">D\'1 a 5 jugadors.</string>
+    <string name="help_harmonies_players">D\'1 a 4 jugadors.</string>
+    <string name="help_ligretto_players">De 2 a 12 jugadors.</string>
+    <string name="help_ohhell_players">De 3 a 8 jugadors.</string>
+    <string name="help_qwixx_players">De 2 a 5 jugadors.</string>
+    <string name="help_scrabble_players">De 2 a 4 jugadors.</string>
+    <string name="help_sevenwonders_players">De 3 a 7 jugadors.</string>
+    <string name="help_skyjo_players">De 2 a 8 jugadors.</string>
+    <string name="app_help_skyjo_4">Quan algú arriba als 100 punts, el joc s\'ha acabat.</string>
+    <string name="help_tarot_players">De 3 a 5 jugadors.</string>
+    <string name="tarot_hint_title">ℹ️ Símbols</string>
+    <string name="help_tickettoride_players">De 2 a 5 jugadors.</string>
+    <string name="help_wingspan_players">De 2 a 5 jugadors.</string>
+    <string name="help_yahtzee_players">D\'1 a 8 jugadors.</string>
+    <string name="help_game_title">ℹ️ Regles de joc</string>
+    <string name="help_app_title">ℹ️ Com usar l\'aplicació</string>
+    <string name="help_label_end">🏁 Final de la partida</string>
+    <string name="help_belote_wikipedia_url">https://en.wikipedia.org/wiki/Belote</string>
+    <string name="belote_hint_title">ℹ️ Símbols</string>
+    <string name="help_cribbage_wikipedia_url">https://en.wikipedia.org/wiki/Cribbage</string>
+    <string name="app_help_cribbage_1">"Useu els botons  -/+ per a enregistrar els punts marcats durant la partida (en joc) per a cada jugador."</string>
+    <string name="help_escoba_wikipedia_url">https://en.wikipedia.org/wiki/Escoba</string>
+    <string name="help_farkle_wikipedia_url">https://en.wikipedia.org/wiki/Farkle</string>
+    <string name="help_yahtzee_wikipedia_url">https://ca.wikipedia.org/wiki/Carrera_de_daus</string>
+</resources>
